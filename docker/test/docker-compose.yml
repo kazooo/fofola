@@ -1,0 +1,12 @@
+version: '3'
+services:
+  solr:
+    build: .
+    image: solr:latest
+    entrypoint:
+      - bash
+      - "-c"
+      - "precreate-core kramerius; exec solr -f"
+    container_name: solr_test
+    ports:
+      - "8983:8983"
