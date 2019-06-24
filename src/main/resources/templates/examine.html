@@ -1,0 +1,14 @@
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Kramerius Data Integrity Checker</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+
+        <form action="#" th:action="@{/examine_pid}" method="post">
+            <input id="uuid" name="uuid" type="text" th:value="${uuid}">
+            <p><input type="submit" value="Submit" /></p>
+        </form>
+
+    </body>
+</html>
