@@ -2,13 +2,37 @@
     <head>
         <title>Kramerius Data Integrity Checker</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     </head>
     <body>
 
         <form action="#" th:action="@{/examine_pid}" method="post">
-            <input id="uuid" name="uuid" type="text" th:value="${uuid}">
+            <input name="uuid" type="text" th:value="${uuid}">
             <p><input type="submit" value="Submit" /></p>
         </form>
+
+        <table id="customerTable" class="table">
+            <thead>
+                <tr>
+                    <th> Uuid </th>
+                    <th> Indexed </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${session.krameriusDocs.isEmpty()}">
+                    <td colspan="2"> No uuids available </td>
+                </tr>
+
+                <tr th:each="krameriusDoc : ${session.krameriusDocs.getKrameriusDocs()}">
+                    <td><span th:text="${krameriusDoc.getUuid()}"> Uuid </span></td>
+                    <td><span th:text="${krameriusDoc.isIndexed()}"> Indexed </span></td>
+                </tr>
+            </tbody>
+        </table>
+
 
     </body>
 </html>

@@ -3,6 +3,7 @@ package cz.mzk.integrity.researcher;
 import cz.mzk.integrity.model.SolrDocument;
 import org.springframework.stereotype.Component;
 
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 
@@ -18,7 +19,13 @@ public class UuidResearcher {
     }
 
     public boolean isIndexed(String uuid) {
-        SolrDocument solrDoc = solrCommunicator.getSolrDocByUuid(uuid);
+        SolrDocument solrDoc;
+        try {
+            solrDoc = solrCommunicator.getSolrDocByUuid(uuid);
+        } catch (NoSuchElementException e) {
+            logger.info(e.getMessage());
+            solrDoc = null;
+        }
         return solrDoc != null;
     }
 }
