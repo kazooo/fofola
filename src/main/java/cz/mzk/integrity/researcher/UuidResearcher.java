@@ -58,6 +58,7 @@ public class UuidResearcher {
 
         if (solrDoc != null) {
             doc.setAccessibilityInSolr(solrDoc.getAccessibility());
+            doc.setRootTitle(solrDoc.getRootTitle());
         }
 
         if (fedoraDoc != null) {

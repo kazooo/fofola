@@ -10,21 +10,11 @@ public class KrameriusDocument {
     private String accessibilityInFedora;
 
     private String model;
+    private String rootTitle;
 
 
     public KrameriusDocument(String uuid) {
         this.uuid = uuid;
-    }
-
-    public KrameriusDocument(String uuid, boolean isIndexed) {
-        this.uuid = uuid;
-        this.isIndexed = isIndexed;
-    }
-
-    public KrameriusDocument(String uuid, boolean isIndexed, boolean isStored) {
-        this.uuid = uuid;
-        this.isIndexed = isIndexed;
-        this.isStored = isStored;
     }
 
     public void setIndexed(boolean indexed) {
@@ -69,5 +59,13 @@ public class KrameriusDocument {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getRootTitle() {
+        return rootTitle;
+    }
+
+    public void setRootTitle(String rootTitle) {
+        this.rootTitle = rootTitle;
     }
 }

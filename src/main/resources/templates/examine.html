@@ -28,6 +28,7 @@
                     <th> Stored </th>
                     <th> Accessibility in Solr </th>
                     <th> Accessibility in Fedora </th>
+                    <th> Root title </th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +43,7 @@
                     <td><span th:text="${krameriusDoc.isStored()}"> Stored </span></td>
                     <td><span th:text="${krameriusDoc.getAccessibilityInSolr()}"> Accessibility in Solr </span></td>
                     <td><span th:text="${krameriusDoc.getAccessibilityInFedora()}"> Accessibility in Solr </span></td>
+                    <td><span th:text="${krameriusDoc.getRootTitle()}"> Root title </span></td>
                 </tr>
             </tbody>
         </table>
