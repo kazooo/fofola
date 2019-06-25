@@ -8,9 +8,12 @@ import org.springframework.data.solr.core.mapping.Indexed;
 public class SolrDocument {
 
     @Id
-    @Indexed(name = "id", type = "string")  // TODO change 'id' to 'PID'
-    private String uuid;
+    @Indexed(name = "PID", type = "string")
+    public String uuid;
 
     @Indexed(name = "root_title", type = "string")
-    private String rootTitle;
+    public String rootTitle;
+
+    @Indexed(name = "dostupnost", type = "string")
+    public String accessibility;
 }

@@ -14,11 +14,19 @@
             <p><input type="submit" value="Submit" /></p>
         </form>
 
+        <form action="#" th:action="@{/examine_pid}" enctype="multipart/form-data" method="post">
+            <input type="file" name="file" /><br/><br/>
+            <input type="submit" value="Submit" />
+        </form>
+
         <table id="customerTable" class="table">
             <thead>
                 <tr>
                     <th> Uuid </th>
                     <th> Indexed </th>
+                    <th> Stored </th>
+                    <th> Accessibility in Solr </th>
+                    <th> Accessibility in Fedora </th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +37,9 @@
                 <tr th:each="krameriusDoc : ${session.krameriusDocs.getKrameriusDocs()}">
                     <td><span th:text="${krameriusDoc.getUuid()}"> Uuid </span></td>
                     <td><span th:text="${krameriusDoc.isIndexed()}"> Indexed </span></td>
+                    <td><span th:text="${krameriusDoc.isStored()}"> Stored </span></td>
+                    <td><span th:text="${krameriusDoc.getAccessibilityInSolr()}"> Accessibility in Solr </span></td>
+                    <td><span th:text="${krameriusDoc.getAccessibilityInFedora()}"> Accessibility in Solr </span></td>
                 </tr>
             </tbody>
         </table>

@@ -14,7 +14,6 @@ public class SolrCommunicator {
 
     public SolrCommunicator(SolrDocumentRepository solrRepository) {
         this.solrRepository = solrRepository;
-//        solrRepository.save(new SolrDocument("uuid:0000-0000"));
     }
 
     public SolrDocument getSolrDocByUuid(String uuid) {
