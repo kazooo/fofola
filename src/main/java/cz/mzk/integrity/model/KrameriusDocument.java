@@ -9,6 +9,8 @@ public class KrameriusDocument {
     private String accessibilityInSolr;
     private String accessibilityInFedora;
 
+    private String model;
+
 
     public KrameriusDocument(String uuid) {
         this.uuid = uuid;
@@ -59,5 +61,13 @@ public class KrameriusDocument {
 
     public String getUuid() {
         return uuid;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 }

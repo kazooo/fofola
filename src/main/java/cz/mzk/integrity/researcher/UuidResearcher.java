@@ -1,5 +1,6 @@
 package cz.mzk.integrity.researcher;
 
+import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.KrameriusDocument;
 import cz.mzk.integrity.model.SolrDocument;
 import org.springframework.stereotype.Component;
@@ -36,8 +37,8 @@ public class UuidResearcher {
         return solrDoc;
     }
 
-    private Document getFedoraDoc(String uuid) {
-        Document fedoraDoc;
+    private FedoraDocument getFedoraDoc(String uuid) {
+        FedoraDocument fedoraDoc;
         try {
             fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
         } catch (SAXException | ParserConfigurationException | IOException | NoSuchElementException e) {
@@ -50,13 +51,18 @@ public class UuidResearcher {
     public KrameriusDocument fillKrameriusDoc(KrameriusDocument doc) {
         String uuid = doc.getUuid();
         SolrDocument solrDoc = getSolrDoc(uuid);
-        Document fedoraDoc = getFedoraDoc(uuid);
+        FedoraDocument fedoraDoc = getFedoraDoc(uuid);
 
         doc.setIndexed(solrDoc != null);
         doc.setStored(fedoraDoc != null);
 
         if (solrDoc != null) {
-            doc.setAccessibilityInSolr(solrDoc.accessibility);
+            doc.setAccessibilityInSolr(solrDoc.getAccessibility());
+        }
+
+        if (fedoraDoc != null) {
+            doc.setAccessibilityInFedora(fedoraDoc.getAccesibility());
+            doc.setModel(fedoraDoc.getModel());
         }
 
         return doc;

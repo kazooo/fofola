@@ -4,6 +4,9 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import cz.mzk.integrity.model.FedoraDocument;
+import cz.mzk.integrity.service.XMLService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -20,16 +23,18 @@ import java.util.NoSuchElementException;
 @Component
 public class FedoraCommunicator {
 
+    private final XMLService xmlService;
+    private Client client;
     private String fedoraUrl;
 
-    private Client client;
-
+    @Autowired
     public FedoraCommunicator(@Value("${spring.data.fedora.host}") String fedoraUrl,
                               @Value("${spring.data.fedora.user}") String fedoraUser,
-                              @Value("${spring.data.fedora.pswd}") String fedoraPswd) {
+                              @Value("${spring.data.fedora.pswd}") String fedoraPswd, XMLService xmlService) {
         this.fedoraUrl = fedoraUrl;
         client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(fedoraUser, fedoraPswd));
+        this.xmlService = xmlService;
     }
 
     private WebResource getFedoraWebResource(String query) {
@@ -38,7 +43,7 @@ public class FedoraCommunicator {
     }
 
 
-    public Document getFedoraDocByUuid(String uuid) throws IOException, ParserConfigurationException, SAXException {
+    public FedoraDocument getFedoraDocByUuid(String uuid) throws IOException, ParserConfigurationException, SAXException {
         String query = "/objects/" + uuid + "/objectXML";
         WebResource resource = getFedoraWebResource(query);
         ClientResponse response = resource.get(ClientResponse.class);
@@ -48,13 +53,17 @@ public class FedoraCommunicator {
             if (docString == null) {
                 throw new IllegalStateException("Cannot get objectXML data.");
             }
-            return parseDocument(docString, true);
+            Document doc = parseDocument(docString, true);
+            return xmlService.parseFedoraDocument(doc);
+
         } else if (response.getStatus() == 404) {
             throw new NoSuchElementException("Can't find any Fedora document with uuid: " + uuid);
         }else {
             throw new IOException("Could not get objectXML for object " + uuid + "\nResponse status:" + response.getStatus());
         }
     }
+
+
 
     private static Document parseDocument(String xml, boolean namespaceaware)
             throws ParserConfigurationException, SAXException, IOException {

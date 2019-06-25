@@ -23,6 +23,7 @@
             <thead>
                 <tr>
                     <th> Uuid </th>
+                    <th> Model </th>
                     <th> Indexed </th>
                     <th> Stored </th>
                     <th> Accessibility in Solr </th>
@@ -36,6 +37,7 @@
 
                 <tr th:each="krameriusDoc : ${session.krameriusDocs.getKrameriusDocs()}">
                     <td><span th:text="${krameriusDoc.getUuid()}"> Uuid </span></td>
+                    <td><span th:text="${krameriusDoc.getModel()}"> Indexed </span></td>
                     <td><span th:text="${krameriusDoc.isIndexed()}"> Indexed </span></td>
                     <td><span th:text="${krameriusDoc.isStored()}"> Stored </span></td>
                     <td><span th:text="${krameriusDoc.getAccessibilityInSolr()}"> Accessibility in Solr </span></td>
