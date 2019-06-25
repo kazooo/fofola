@@ -9,6 +9,8 @@
     </head>
     <body>
 
+        <a href="/">home</a>
+
         <form action="#" th:action="@{/examine_pid}" method="post">
             <input name="uuid" type="text" th:value="${uuid}">
             <p><input type="submit" value="Submit" /></p>
@@ -19,7 +21,7 @@
             <input type="submit" value="Submit" />
         </form>
 
-        <table id="customerTable" class="table">
+        <table id="uuidInfo" class="table">
             <thead>
                 <tr>
                     <th> Uuid </th>

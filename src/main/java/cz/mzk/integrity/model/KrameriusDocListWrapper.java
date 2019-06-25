@@ -3,11 +3,11 @@ package cz.mzk.integrity.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DocListWrapper {
+public class KrameriusDocListWrapper {
 
     private List<KrameriusDocument> krameriusDocs;
 
-    public DocListWrapper() {
+    public KrameriusDocListWrapper() {
         this.krameriusDocs = new ArrayList<>();
     }
 
