@@ -2,10 +2,8 @@ package cz.mzk.integrity.service;
 
 import cz.mzk.integrity.model.SolrDocument;
 import cz.mzk.integrity.repository.SolrDocumentRepository;
-import org.apache.solr.client.solrj.response.FacetField;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.solr.core.query.Field;
 import org.springframework.data.solr.core.query.result.FacetEntry;
 import org.springframework.data.solr.core.query.result.FacetFieldEntry;
 import org.springframework.data.solr.core.query.result.FacetPage;

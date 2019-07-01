@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import cz.mzk.integrity.model.KrameriusDocListWrapper;
 import cz.mzk.integrity.model.KrameriusDocument;
+import cz.mzk.integrity.service.AsynchronousService;
 import cz.mzk.integrity.service.KrameriusApiCommunicator;
 import cz.mzk.integrity.researcher.UuidResearcher;
 import cz.mzk.integrity.service.SolrCommunicator;
@@ -32,13 +33,16 @@ public class HomeController {
     private final UuidResearcher researcher;
     private final KrameriusApiCommunicator krameriusApi;
     private final SolrCommunicator solrCommunicator;
+    private final AsynchronousService asynchronousService;
 
     public HomeController(UuidResearcher researcher,
                           KrameriusApiCommunicator krameriusApi,
-                          SolrCommunicator solrCommunicator) {
+                          SolrCommunicator solrCommunicator,
+                          AsynchronousService asynchronousService) {
         this.researcher = researcher;
         this.krameriusApi = krameriusApi;
         this.solrCommunicator = solrCommunicator;
+        this.asynchronousService = asynchronousService;
     }
 
     @GetMapping("/")
@@ -154,11 +158,12 @@ public class HomeController {
     }
 
     @GetMapping("/check_solr_integrity")
-    public String checkSolrIntegrity(Model model) throws Exception {
+    public String checkSolrIntegrity(Model model) {
 
         Map<String, Long> modelCount = solrCommunicator.facetSolrDocByModels();
         model.addAttribute("modelCount", modelCount);
 
+        asynchronousService.runSolrChecking("periodical", 10);
         return "check_solr_integrity";
     }
 
