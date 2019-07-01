@@ -1,12 +1,61 @@
-version: '3'
+version: "2"
 services:
+  kramerius:
+    image: moravianlibrary/kramerius
+    container_name: kramerius
+    ports:
+      - "80:8080"
+    environment:
+      - fedoraHost=http://fcrepo:8080/fedora
+      - fedoraUser=fedoraAdmin
+      - fedoraPass=fedoraAdmin
+      - fedora3_connectionURL=jdbc:postgresql://fedoraPostgres:5432/fedora3
+      - fedora3_connectionUser=fedoraAdmin
+      - fedora3_connectionPass=fedoraAdmin
+      - kramerius_connectionURL=jdbc:postgresql://krameriusPostgres:5432/kramerius
+      - kramerius_connectionUser=fedoraAdmin
+      - kramerius_connectionPass=fedoraAdmin
+      - driver_fedora_mpt_jdbc_url=jdbc:postgresql://riTriplesPostgres:5432/riTriples
+      - driver_fedora_mpt_jdbc_user=fedoraAdmin
+      - driver_fedora_mpt_jdbc_password=fedoraAdmin
+      - solrHost=http://solr:8983/solr/kramerius
+      - applicationUrl=http://localhost:8080/search
+  krameriusPostgres:
+    image: "postgres:9.6"
+    container_name: kramerius_postgres
+    environment:
+      - POSTGRES_USER=fedoraAdmin
+      - POSTGRES_PASSWORD=fedoraAdmin
+      - POSTGRES_DB=kramerius
+  fcrepo:
+    image: moravianlibrary/fcrepo:3.8.1
+    container_name: fedora
+    environment:
+      - FEDORA_PASSWORD=fedoraAdmin
+      - "FEDORA_DB_JDBC_URL=jdbc:postgresql://fedoraPostgres:5432/fedora3"
+      - FEDORA_DB_USER=fedoraAdmin
+      - FEDORA_DB_PASSWORD=fedoraAdmin
+      - "RITRIPLES_DB_JDBC_URL=jdbc:postgresql://riTriplesPostgres:5432/riTriples"
+      - RITRIPLES_DB_USER=fedoraAdmin
+      - RITRIPLES_DB_PASSWORD=fedoraAdmin
+    ports:
+      - "8080:8080"
+  fedoraPostgres:
+    image: "postgres:9.6"
+    container_name: fedora_postgres
+    environment:
+      - POSTGRES_USER=fedoraAdmin
+      - POSTGRES_PASSWORD=fedoraAdmin
+      - POSTGRES_DB=fedora3
+  riTriplesPostgres:
+    image: "postgres:9.6"
+    container_name: ritriples
+    environment:
+      - POSTGRES_USER=fedoraAdmin
+      - POSTGRES_PASSWORD=fedoraAdmin
+      - POSTGRES_DB=riTriples
   solr:
-    build: .
-    image: solr:latest
-    entrypoint:
-      - bash
-      - "-c"
-      - "precreate-core kramerius; exec solr -f"
-    container_name: solr_test
+    image: moravianlibrary/solr6
+    container_name: solr
     ports:
       - "8983:8983"
