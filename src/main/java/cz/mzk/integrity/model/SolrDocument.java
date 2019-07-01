@@ -7,21 +7,26 @@ import org.springframework.data.solr.core.mapping.Indexed;
 @org.springframework.data.solr.core.mapping.SolrDocument(collection = "kramerius")
 public class SolrDocument {
 
+    public final static String ID = "PID";
+    public final static String ROOT_TITLE = "root_title";
+    public final static String VISIBILITY = "dostupnost";
+    public final static String MODEL = "fedora.model";
+
     @Id
-    @Indexed(name = "PID", type = "string")
+    @Indexed(name = ID, type = "string")
     private String uuid;
 
-    @Indexed(name = "root_title", type = "string")
+    @Indexed(name = ROOT_TITLE, type = "string")
     private String rootTitle;
 
-    @Indexed(name = "dostupnost", type = "string")
-    private String accessibility;
+    @Indexed(name = VISIBILITY, type = "string")
+    private String visibility;
 
-    @Indexed(name = "fedora.model", type = "string")
+    @Indexed(name = MODEL, type = "string")
     private String model;
 
     public String getAccessibility() {
-        return accessibility;
+        return visibility;
     }
 
     public String getUuid() {
