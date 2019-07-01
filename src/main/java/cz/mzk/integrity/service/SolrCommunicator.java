@@ -4,6 +4,9 @@ import cz.mzk.integrity.model.SolrDocument;
 import cz.mzk.integrity.repository.SolrDocumentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.Query;
+import org.springframework.data.solr.core.query.result.Cursor;
 import org.springframework.data.solr.core.query.result.FacetEntry;
 import org.springframework.data.solr.core.query.result.FacetFieldEntry;
 import org.springframework.data.solr.core.query.result.FacetPage;
@@ -15,9 +18,12 @@ import java.util.*;
 public class SolrCommunicator {
 
     private final SolrDocumentRepository solrRepository;
+    private final SolrTemplate solrTemplate;
 
-    public SolrCommunicator(SolrDocumentRepository solrRepository) {
+    public SolrCommunicator(SolrDocumentRepository solrRepository,
+                            SolrTemplate solrTemplate) {
         this.solrRepository = solrRepository;
+        this.solrTemplate = solrTemplate;
     }
 
     public SolrDocument getSolrDocByUuid(String uuid) {
@@ -41,5 +47,17 @@ public class SolrCommunicator {
         }
         modelCount.put("total", docs.getTotalElements());
         return modelCount;
+    }
+
+    public List<SolrDocument> cursorQuery(String collectionName,
+                                          Query query) {
+        List<SolrDocument> result = new ArrayList<>();
+        Cursor<SolrDocument> docs =
+                solrTemplate.queryForCursor(collectionName, query, SolrDocument.class);
+        while (docs.hasNext()) {
+            SolrDocument doc = docs.next();
+            result.add(doc);
+        }
+        return result;
     }
 }
