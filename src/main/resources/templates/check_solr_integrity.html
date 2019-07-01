@@ -11,7 +11,7 @@
 
         <a href="/">home</a>
 
-        <table id="modelInfo" class="table">
+        <table id="modelInfo" class="table" th:if="${!running_process}">
             <thead>
             <tr>
                 <th> Model </th>
@@ -24,8 +24,8 @@
                 </tr>
 
                 <tr th:each="record : ${modelCount}">
-                    <td th:text="${record.key}">keyvalue</td>
-                    <td th:text="${record.value}">num</td>
+                    <td th:text="${record.key}"> Model name </td>
+                    <td th:text="${record.value}"> Doc count </td>
 
                     <td>
                         <form action="#" th:action="@{/check_solr_integrity}" method="post">
@@ -34,6 +34,26 @@
                             <button type="submit"><i>check</i></button>
                         </form>
                     </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="problemsInfo" class="table" th:if="${running_process}">
+            <thead>
+                <tr>
+                    <th> Uuid </th>
+                    <th> Problem </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:if="${modelCount.isEmpty()}">
+                    <td colspan="2"> No problems available </td>
+                </tr>
+
+                <tr th:each="problem : ${problems}">
+                    <td th:text="${problem.key}"> Uuid </td>
+                    <td th:text="${problem.value}"> Problem description </td>
                 </tr>
             </tbody>
         </table>
