@@ -26,6 +26,14 @@
                 <tr th:each="record : ${modelCount}">
                     <td th:text="${record.key}">keyvalue</td>
                     <td th:text="${record.value}">num</td>
+
+                    <td>
+                        <form action="#" th:action="@{/check_solr_integrity}" method="post">
+                            <input type="hidden" th:value="${record.key}" name="model">
+                            <input type="hidden" th:value="${record.value}" name="docCount">
+                            <button type="submit"><i>check</i></button>
+                        </form>
+                    </td>
                 </tr>
             </tbody>
         </table>

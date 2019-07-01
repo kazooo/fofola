@@ -75,6 +75,4 @@ public class SolrIntegrityCheckerThread implements Runnable {
 
         logger.info("done solr integrity checking...");
     }
-
-
 }
