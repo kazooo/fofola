@@ -3,8 +3,9 @@ package cz.mzk.integrity.researcher;
 import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.KrameriusDocument;
 import cz.mzk.integrity.model.SolrDocument;
+import cz.mzk.integrity.service.FedoraCommunicator;
+import cz.mzk.integrity.service.SolrCommunicator;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

@@ -1,13 +1,13 @@
-package cz.mzk.integrity.researcher;
+package cz.mzk.integrity.service;
 
 import cz.mzk.integrity.model.SolrDocument;
 import cz.mzk.integrity.repository.SolrDocumentRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Component
+@Service
 public class SolrCommunicator {
 
     private final SolrDocumentRepository solrRepository;

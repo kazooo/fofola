@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import cz.mzk.integrity.model.KrameriusDocListWrapper;
 import cz.mzk.integrity.model.KrameriusDocument;
-import cz.mzk.integrity.researcher.KrameriusApiCommunicator;
+import cz.mzk.integrity.service.KrameriusApiCommunicator;
 import cz.mzk.integrity.researcher.UuidResearcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

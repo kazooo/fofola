@@ -1,14 +1,13 @@
-package cz.mzk.integrity.researcher;
+package cz.mzk.integrity.service;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import cz.mzk.integrity.model.FedoraDocument;
-import cz.mzk.integrity.service.XMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -20,7 +19,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.NoSuchElementException;
 
-@Component
+@Service
 public class FedoraCommunicator {
 
     private final XMLService xmlService;

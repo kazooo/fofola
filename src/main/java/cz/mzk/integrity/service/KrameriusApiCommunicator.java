@@ -1,12 +1,12 @@
-package cz.mzk.integrity.researcher;
+package cz.mzk.integrity.service;
 
 import cz.mzk.integrity.kramerius_api.KrameriusProcessRemoteApiFactory;
 import cz.mzk.integrity.kramerius_api.ProcessRemoteApi;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
-@Component
+@Service
 public class KrameriusApiCommunicator {
 
     private ProcessRemoteApi remoteApi;
