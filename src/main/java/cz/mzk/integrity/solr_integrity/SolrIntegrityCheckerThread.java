@@ -1,6 +1,8 @@
 package cz.mzk.integrity.solr_integrity;
 
+import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.SolrDocument;
+import cz.mzk.integrity.service.FedoraCommunicator;
 import cz.mzk.integrity.service.SolrCommunicator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +23,12 @@ public class SolrIntegrityCheckerThread implements Runnable {
     private String collectionName;
 
     private final SolrCommunicator solrCommunicator;
+    private final FedoraCommunicator fedoraCommunicator;
 
-    public SolrIntegrityCheckerThread(SolrCommunicator solrCommunicator) {
+    public SolrIntegrityCheckerThread(SolrCommunicator solrCommunicator,
+                                      FedoraCommunicator fedoraCommunicator) {
         this.solrCommunicator = solrCommunicator;
+        this.fedoraCommunicator = fedoraCommunicator;
     }
 
     public void setModel(String model) {
@@ -50,13 +55,26 @@ public class SolrIntegrityCheckerThread implements Runnable {
                 .addSort(Sort.by(SolrDocument.ID)).setRows(docsPerQuery);
 
         long done = 0;
-        List<SolrDocument> docs;
+        List<SolrDocument> solrDocs;
 
         while (done < docCount) {
-            docs = solrCommunicator.cursorQuery(collectionName, query);
-            done += docs.size();
+            solrDocs = solrCommunicator.cursorQuery(collectionName, query);
+            done += solrDocs.size();
+
+            for (SolrDocument solrDoc : solrDocs) {
+                String uuid = solrDoc.getUuid();
+
+                FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
+
+                if (fedoraDoc != null) {
+                    logger.info(uuid + " -> not stored!");
+                }
+
+            }
         }
 
         logger.info("done solr integrity checking...");
     }
+
+
 }

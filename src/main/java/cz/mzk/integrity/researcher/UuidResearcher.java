@@ -39,14 +39,7 @@ public class UuidResearcher {
     }
 
     private FedoraDocument getFedoraDoc(String uuid) {
-        FedoraDocument fedoraDoc;
-        try {
-            fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
-        } catch (SAXException | ParserConfigurationException | IOException | NoSuchElementException e) {
-            logger.info(e.getMessage());
-            fedoraDoc = null;
-        }
-        return fedoraDoc;
+        return fedoraCommunicator.getFedoraDocByUuid(uuid);
     }
 
     public KrameriusDocument fillKrameriusDoc(KrameriusDocument doc) {

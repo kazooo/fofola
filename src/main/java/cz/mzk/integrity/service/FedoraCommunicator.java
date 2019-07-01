@@ -5,6 +5,9 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import cz.mzk.integrity.model.FedoraDocument;
+import cz.mzk.integrity.solr_integrity.SolrIntegrityCheckerThread;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ public class FedoraCommunicator {
     private Client client;
     private String fedoraUrl;
 
+    private static final Logger logger = LoggerFactory.getLogger(FedoraCommunicator.class);
+
     @Autowired
     public FedoraCommunicator(@Value("${spring.data.fedora.host}") String fedoraUrl,
                               @Value("${spring.data.fedora.user}") String fedoraUser,
@@ -42,7 +47,7 @@ public class FedoraCommunicator {
     }
 
 
-    public FedoraDocument getFedoraDocByUuid(String uuid) throws IOException, ParserConfigurationException, SAXException {
+    private FedoraDocument getFedoraDoc(String uuid) throws IOException, ParserConfigurationException, SAXException {
         String query = "/objects/" + uuid + "/objectXML";
         WebResource resource = getFedoraWebResource(query);
         ClientResponse response = resource.get(ClientResponse.class);
@@ -62,6 +67,28 @@ public class FedoraCommunicator {
         }
     }
 
+    public FedoraDocument getFedoraDocByUuid(String uuid) {
+        FedoraDocument fedoraDoc = null;
+        long sleepTime= 60 * 1000; // 1 minute
+
+        while (true) {
+            try {
+                fedoraDoc = getFedoraDoc(uuid);
+                break;
+            } catch (SAXException | ParserConfigurationException e) {
+                logger.warn("Can't parse document with uuid: " + uuid);
+                break;
+            } catch (NoSuchElementException e) {
+                break;
+            } catch (IOException e) {
+                logger.warn("Can't get response from Fedora, try again after 1 minute...");
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException ex) { /* ignored */ }
+            }
+        }
+        return fedoraDoc;
+    }
 
 
     private static Document parseDocument(String xml, boolean namespaceaware)
