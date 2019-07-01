@@ -2,10 +2,16 @@ package cz.mzk.integrity.service;
 
 import cz.mzk.integrity.model.SolrDocument;
 import cz.mzk.integrity.repository.SolrDocumentRepository;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.solr.core.query.Field;
+import org.springframework.data.solr.core.query.result.FacetEntry;
+import org.springframework.data.solr.core.query.result.FacetFieldEntry;
+import org.springframework.data.solr.core.query.result.FacetPage;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class SolrCommunicator {
@@ -26,5 +32,16 @@ public class SolrCommunicator {
         }
 
         return docs.get(0);
+    }
+
+    public Map<String, Long> facetSolrDocByModels() {
+        FacetPage<SolrDocument> docs = solrRepository.facetByModels(PageRequest.of(0, 1));
+        Page<FacetFieldEntry> page = docs.getFacetResultPage(SolrDocument.MODEL);
+        Map<String, Long> modelCount = new HashMap<>();
+        for (FacetEntry facetEntry : page.getContent()) {
+            modelCount.put(facetEntry.getValue(), facetEntry.getValueCount());
+        }
+        modelCount.put("total", docs.getTotalElements());
+        return modelCount;
     }
 }

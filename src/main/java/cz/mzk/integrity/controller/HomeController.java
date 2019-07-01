@@ -6,13 +6,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import cz.mzk.integrity.model.KrameriusDocListWrapper;
 import cz.mzk.integrity.model.KrameriusDocument;
 import cz.mzk.integrity.service.KrameriusApiCommunicator;
 import cz.mzk.integrity.researcher.UuidResearcher;
+import cz.mzk.integrity.service.SolrCommunicator;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,11 +31,14 @@ public class HomeController {
 
     private final UuidResearcher researcher;
     private final KrameriusApiCommunicator krameriusApi;
+    private final SolrCommunicator solrCommunicator;
 
     public HomeController(UuidResearcher researcher,
-                          KrameriusApiCommunicator krameriusApi) {
+                          KrameriusApiCommunicator krameriusApi,
+                          SolrCommunicator solrCommunicator) {
         this.researcher = researcher;
         this.krameriusApi = krameriusApi;
+        this.solrCommunicator = solrCommunicator;
     }
 
     @GetMapping("/")
@@ -145,6 +151,15 @@ public class HomeController {
 
         insertDocsIntoSession(request, null);
         return "redirect:/change_rights";
+    }
+
+    @GetMapping("/check_solr_integrity")
+    public String checkSolrIntegrity(Model model) throws Exception {
+
+        Map<String, Long> modelCount = solrCommunicator.facetSolrDocByModels();
+        model.addAttribute("modelCount", modelCount);
+
+        return "check_solr_integrity";
     }
 
     private KrameriusDocument fillKrameriusDoc(KrameriusDocument krameriusDoc) {
