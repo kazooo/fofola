@@ -1,4 +1,4 @@
-package cz.mzk.integrity.solr_integrity;
+package cz.mzk.integrity.threads;
 
 import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.SolrDocument;
@@ -45,6 +45,10 @@ public class SolrIntegrityCheckerThread implements Runnable {
 
     public void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
+    }
+
+    public void interrupt() {
+        Thread.currentThread().interrupt();
     }
 
     @Override

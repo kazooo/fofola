@@ -61,12 +61,18 @@ public class SolrController {
         return "check_solr_integrity";
     }
 
-    @PostMapping("/check_solr_integrity")
+    @PostMapping(value = "/check_solr_integrity", params = "action=run")
     public String runSolrIntegrityChecker(
             @RequestParam(name = "model", required = true) String model,
             @RequestParam(name = "docCount", required = true) long docCount) {
         asynchronousService.runSolrChecking(model, docCount);
         processRepository.save(new Process(Process.CHECK_SOLR_TYPE, model, docCount));
+        return "redirect:/check_solr_integrity";
+    }
+
+    @PostMapping(value = "/check_solr_integrity", params = "action=stop")
+    public String stopSolrIntegrityChecker() {
+        asynchronousService.stopSolrChecking();
         return "redirect:/check_solr_integrity";
     }
 }

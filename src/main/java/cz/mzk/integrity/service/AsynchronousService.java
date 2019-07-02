@@ -1,31 +1,32 @@
 package cz.mzk.integrity.service;
 
-import cz.mzk.integrity.solr_integrity.SolrIntegrityCheckerThread;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.task.TaskExecutor;
+import cz.mzk.integrity.threads.SolrIntegrityCheckerThread;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Service
 public class AsynchronousService {
 
-    private final TaskExecutor taskExecutor;
+    private final ThreadPoolExecutor threadPoolExecutor;
 
-    private final ApplicationContext applicationContext;
+    private final SolrIntegrityCheckerThread solrIntegrityCheckerThread;
 
-    public AsynchronousService(TaskExecutor taskExecutor,
-                               ApplicationContext applicationContext) {
-        this.taskExecutor = taskExecutor;
-        this.applicationContext = applicationContext;
+    public AsynchronousService(ThreadPoolExecutor threadPoolTaskExecutor,
+                               SolrIntegrityCheckerThread solrIntegrityCheckerThread) {
+        this.threadPoolExecutor = threadPoolTaskExecutor;
+        this.solrIntegrityCheckerThread = solrIntegrityCheckerThread;
     }
 
     public void runSolrChecking(String model, long docCount) {
+        solrIntegrityCheckerThread.setModel(model);
+        solrIntegrityCheckerThread.setDocCount(docCount);
+        solrIntegrityCheckerThread.setCollectionName("kramerius");
+        solrIntegrityCheckerThread.setDocsPerQuery(100);
+        threadPoolExecutor.execute(solrIntegrityCheckerThread);
+    }
 
-        SolrIntegrityCheckerThread thread =
-                applicationContext.getBean(SolrIntegrityCheckerThread.class);
-        thread.setModel(model);
-        thread.setDocCount(docCount);
-        thread.setCollectionName("kramerius");
-        thread.setDocsPerQuery(100);
-        taskExecutor.execute(thread);
+    public void stopSolrChecking() {
+        solrIntegrityCheckerThread.interrupt();
     }
 }

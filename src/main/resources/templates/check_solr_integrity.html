@@ -29,9 +29,9 @@
 
                     <td>
                         <form action="#" th:action="@{/check_solr_integrity}" method="post">
-                            <input type="hidden" th:value="${record.key}" name="model">
-                            <input type="hidden" th:value="${record.value}" name="docCount">
-                            <button type="submit"><i>check</i></button>
+                            <input type="hidden" name="model" th:value="${record.key}">
+                            <input type="hidden" name="docCount" th:value="${record.value}">
+                            <button type="submit" name="action" value="run"> Check </button>
                         </form>
                     </td>
                 </tr>
@@ -39,6 +39,11 @@
         </table>
 
         <table id="problemsInfo" class="table" th:if="${running_process}">
+
+            <form action="#" th:action="@{/check_solr_integrity}" method="post">
+                <button type="submit" name="action" value="stop"> Stop process </button>
+            </form>
+
             <thead>
                 <tr>
                     <th> Uuid </th>
