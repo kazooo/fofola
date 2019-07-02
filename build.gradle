@@ -35,7 +35,8 @@ dependencies {
     compile('com.squareup.retrofit:retrofit:1.9.0')
     compile('commons-codec:commons-codec:1.10')
     compile('com.squareup.okhttp:okhttp:2.4.0')
-    compile('postgresql:postgresql')
+    compile('org.postgresql:postgresql:42.2.6')
+
 
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')

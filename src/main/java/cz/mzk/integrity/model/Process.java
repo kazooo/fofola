@@ -1,13 +1,11 @@
 package cz.mzk.integrity.model;
 
-import org.springframework.data.annotation.Id;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@Table
+@Table(name = "fofola_process")
 public class Process implements Serializable {
 
     public static final String CHECK_SOLR_TYPE = "check_solr";
@@ -20,6 +18,9 @@ public class Process implements Serializable {
         this.model = model;
         docCount = docs;
     }
+
+    public Process() { }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

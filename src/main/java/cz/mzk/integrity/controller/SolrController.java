@@ -43,8 +43,10 @@ public class SolrController {
     public String checkSolrIntegrity(Model model) {
 
         List<Process> processes = processRepository.findByProcessType(Process.CHECK_SOLR_TYPE);
+        boolean runningProcess = processes != null && !processes.isEmpty();
+        model.addAttribute("running_process", runningProcess);
 
-        if (processes == null || processes.isEmpty()) {
+        if (!runningProcess) {
             Map<String, Long> modelCount = solrCommunicator.facetSolrDocByModels();
             model.addAttribute("modelCount", modelCount);
         } else {
@@ -54,10 +56,10 @@ public class SolrController {
             for (UuidProblem problem : problems) {
                 uuidProblemDesc.put(problem.getUuid(), problem.getProblemType());
             }
+
             model.addAttribute("problems", uuidProblemDesc);
         }
 
-        model.addAttribute("running_process", (processes != null && processes.isEmpty()));
         return "check_solr_integrity";
     }
 
@@ -65,14 +67,17 @@ public class SolrController {
     public String runSolrIntegrityChecker(
             @RequestParam(name = "model", required = true) String model,
             @RequestParam(name = "docCount", required = true) long docCount) {
-        asynchronousService.runSolrChecking(model, docCount);
-        processRepository.save(new Process(Process.CHECK_SOLR_TYPE, model, docCount));
+        Process solrProcess = new Process(Process.CHECK_SOLR_TYPE, model, docCount);
+        solrProcess = processRepository.save(solrProcess);
+        asynchronousService.runSolrChecking(solrProcess.getId(), model, docCount);
         return "redirect:/check_solr_integrity";
     }
 
     @PostMapping(value = "/check_solr_integrity", params = "action=stop")
     public String stopSolrIntegrityChecker() {
         asynchronousService.stopSolrChecking();
+        List<Process> processes = processRepository.findByProcessType(Process.CHECK_SOLR_TYPE);
+        processRepository.delete(processes.get(0));
         return "redirect:/check_solr_integrity";
     }
 }

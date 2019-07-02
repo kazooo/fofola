@@ -2,6 +2,9 @@ package cz.mzk.integrity.threads;
 
 import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.SolrDocument;
+import cz.mzk.integrity.model.UuidProblem;
+import cz.mzk.integrity.repository.ProblemRepository;
+import cz.mzk.integrity.repository.ProcessRepository;
 import cz.mzk.integrity.service.FedoraCommunicator;
 import cz.mzk.integrity.service.SolrCommunicator;
 import org.slf4j.Logger;
@@ -21,14 +24,25 @@ public class SolrIntegrityCheckerThread implements Runnable {
     private long docCount;
     private int docsPerQuery;
     private String collectionName;
+    private long processId;
 
     private final SolrCommunicator solrCommunicator;
     private final FedoraCommunicator fedoraCommunicator;
+    private final ProblemRepository problemRepository;
+    private final ProcessRepository processRepository;
 
     public SolrIntegrityCheckerThread(SolrCommunicator solrCommunicator,
-                                      FedoraCommunicator fedoraCommunicator) {
+                                      FedoraCommunicator fedoraCommunicator,
+                                      ProblemRepository problemRepository,
+                                      ProcessRepository processRepository) {
         this.solrCommunicator = solrCommunicator;
         this.fedoraCommunicator = fedoraCommunicator;
+        this.problemRepository = problemRepository;
+        this.processRepository = processRepository;
+    }
+
+    public void setProcessId(long processId) {
+        this.processId = processId;
     }
 
     public void setModel(String model) {
@@ -47,8 +61,12 @@ public class SolrIntegrityCheckerThread implements Runnable {
         this.collectionName = collectionName;
     }
 
-    public void interrupt() {
-        Thread.currentThread().interrupt();
+    public synchronized void interrupt() {
+        if (Thread.currentThread().isAlive() && !Thread.currentThread().isInterrupted()) {
+            logger.info("stopping solr integrity checking...");
+            Thread.currentThread().interrupt();
+            processRepository.deleteById(processId);
+        }
     }
 
     @Override
@@ -70,13 +88,15 @@ public class SolrIntegrityCheckerThread implements Runnable {
 
                 FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
 
-                if (fedoraDoc != null) {
-                    logger.info(uuid + " -> not stored!");
+                if (fedoraDoc == null) {
+//                    logger.info(uuid + " -> not stored!");
+                    problemRepository.save(new UuidProblem(processId, uuid, UuidProblem.NOT_STORED));
                 }
 
             }
         }
 
         logger.info("done solr integrity checking...");
+        processRepository.deleteById(processId);
     }
 }

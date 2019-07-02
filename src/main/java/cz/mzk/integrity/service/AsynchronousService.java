@@ -18,7 +18,8 @@ public class AsynchronousService {
         this.solrIntegrityCheckerThread = solrIntegrityCheckerThread;
     }
 
-    public void runSolrChecking(String model, long docCount) {
+    public void runSolrChecking(long processId, String model, long docCount) {
+        solrIntegrityCheckerThread.setProcessId(processId);
         solrIntegrityCheckerThread.setModel(model);
         solrIntegrityCheckerThread.setDocCount(docCount);
         solrIntegrityCheckerThread.setCollectionName("kramerius");

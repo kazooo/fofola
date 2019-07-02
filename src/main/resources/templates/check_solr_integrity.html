@@ -11,14 +11,15 @@
 
         <a href="/">home</a>
 
-        <table id="modelInfo" class="table" th:if="${!running_process}">
-            <thead>
-            <tr>
-                <th> Model </th>
-                <th> Count </th>
-            </tr>
-            </thead>
-            <tbody>
+        <div th:if="${not running_process}">
+            <table id="modelInfo" class="table">
+                <thead>
+                <tr>
+                    <th> Model </th>
+                    <th> Count </th>
+                </tr>
+                </thead>
+                <tbody>
                 <tr th:if="${modelCount.isEmpty()}">
                     <td colspan="2"> No models available </td>
                 </tr>
@@ -35,24 +36,27 @@
                         </form>
                     </td>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
 
-        <table id="problemsInfo" class="table" th:if="${running_process}">
 
-            <form action="#" th:action="@{/check_solr_integrity}" method="post">
-                <button type="submit" name="action" value="stop"> Stop process </button>
-            </form>
+        <div th:if="${running_process}">
+            <table id="problemsInfo" class="table">
 
-            <thead>
+                <form action="#" th:action="@{/check_solr_integrity}" method="post">
+                    <button type="submit" name="action" value="stop"> Stop process </button>
+                </form>
+
+                <thead>
                 <tr>
                     <th> Uuid </th>
                     <th> Problem </th>
                 </tr>
-            </thead>
+                </thead>
 
-            <tbody>
-                <tr th:if="${modelCount.isEmpty()}">
+                <tbody>
+                <tr th:if="${problems.isEmpty()}">
                     <td colspan="2"> No problems available </td>
                 </tr>
 
@@ -60,7 +64,9 @@
                     <td th:text="${problem.key}"> Uuid </td>
                     <td th:text="${problem.value}"> Problem description </td>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+
     </body>
 </html>
