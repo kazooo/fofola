@@ -25,20 +25,18 @@ public class SolrIntegrityCheckerThread implements Runnable {
     private int docsPerQuery;
     private String collectionName;
     private long processId;
+    private boolean keepProcess;
 
     private final SolrCommunicator solrCommunicator;
     private final FedoraCommunicator fedoraCommunicator;
     private final ProblemRepository problemRepository;
-    private final ProcessRepository processRepository;
 
     public SolrIntegrityCheckerThread(SolrCommunicator solrCommunicator,
                                       FedoraCommunicator fedoraCommunicator,
-                                      ProblemRepository problemRepository,
-                                      ProcessRepository processRepository) {
+                                      ProblemRepository problemRepository) {
         this.solrCommunicator = solrCommunicator;
         this.fedoraCommunicator = fedoraCommunicator;
         this.problemRepository = problemRepository;
-        this.processRepository = processRepository;
     }
 
     public void setProcessId(long processId) {
@@ -61,42 +59,49 @@ public class SolrIntegrityCheckerThread implements Runnable {
         this.collectionName = collectionName;
     }
 
-    public synchronized void interrupt() {
-        if (Thread.currentThread().isAlive() && !Thread.currentThread().isInterrupted()) {
-            logger.info("stopping solr integrity checking...");
-            Thread.currentThread().interrupt();
-            processRepository.deleteById(processId);
-        }
+    public void interrupt() {
+        keepProcess = false;
     }
 
     @Override
     public void run() {
         logger.info("run solr integrity checking...");
+        keepProcess = true;
 
         SimpleQuery query = new SimpleQuery(SolrDocument.MODEL + ":" + model)
                 .addSort(Sort.by(SolrDocument.ID)).setRows(docsPerQuery);
+        try {
+            processDocs(query);
+        } catch (Exception e) {
+            logger.warn("Exception occured: " + e.getMessage());
+        }
+
+        logger.info("done solr integrity checking...");
+    }
+
+    private void processDocs(SimpleQuery query) {
 
         long done = 0;
         List<SolrDocument> solrDocs;
-
-        while (done < docCount) {
+        while (done < docCount && keepProcess) {
             solrDocs = solrCommunicator.cursorQuery(collectionName, query);
             done += solrDocs.size();
 
             for (SolrDocument solrDoc : solrDocs) {
+
+                if (!keepProcess) {
+                    return;
+                }
+
                 String uuid = solrDoc.getUuid();
 
                 FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
 
                 if (fedoraDoc == null) {
-//                    logger.info(uuid + " -> not stored!");
                     problemRepository.save(new UuidProblem(processId, uuid, UuidProblem.NOT_STORED));
                 }
 
             }
         }
-
-        logger.info("done solr integrity checking...");
-        processRepository.deleteById(processId);
     }
 }
