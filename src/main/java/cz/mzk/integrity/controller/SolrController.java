@@ -44,15 +44,21 @@ public class SolrController {
 
         List<Process> processes = processRepository.findByProcessType(Process.CHECK_SOLR_TYPE);
         boolean runningProcess = processes != null && !processes.isEmpty();
-        model.addAttribute("running_process", runningProcess);
+        List<UuidProblem> problems = problemRepository.findAll();
+        boolean problemsExist = problems != null && !problems.isEmpty();
 
-        if (!runningProcess) {
+        model.addAttribute("running_process", runningProcess);
+        model.addAttribute("problems_exist", problemsExist);
+
+        if (!runningProcess && !problemsExist) {
             Map<String, Long> modelCount = solrCommunicator.facetSolrDocByModels();
             model.addAttribute("modelCount", modelCount);
         } else {
             Map<String, String> uuidProblemDesc = new HashMap<>();
-            long processId = processes.get(0).getId();
-            List<UuidProblem> problems = problemRepository.findByProcessId(processId);
+            if (runningProcess) {
+                long processId = processes.get(0).getId();
+                problems = problemRepository.findByProcessId(processId);
+            }
             for (UuidProblem problem : problems) {
                 uuidProblemDesc.put(problem.getUuid(), problem.getProblemType());
             }
@@ -67,6 +73,7 @@ public class SolrController {
     public String runSolrIntegrityChecker(
             @RequestParam(name = "model", required = true) String model,
             @RequestParam(name = "docCount", required = true) long docCount) {
+        logger.info("Run Solr integrity checking process.");
         Process solrProcess = new Process(Process.CHECK_SOLR_TYPE, model, docCount);
         solrProcess = processRepository.save(solrProcess);
         asynchronousService.runSolrChecking(solrProcess.getId(), model, docCount);
@@ -75,9 +82,17 @@ public class SolrController {
 
     @PostMapping(value = "/check_solr_integrity", params = "action=stop")
     public String stopSolrIntegrityChecker() {
+        logger.info("Stop Solr integrity checking.");
         asynchronousService.stopSolrChecking();
         List<Process> processes = processRepository.findByProcessType(Process.CHECK_SOLR_TYPE);
         processRepository.delete(processes.get(0));
+        return "redirect:/check_solr_integrity";
+    }
+
+    @PostMapping(value = "/check_solr_integrity", params = "action=clear")
+    public String clearProblems() {
+        logger.info("Clear Solr integrity problem list.");
+        problemRepository.deleteAll();
         return "redirect:/check_solr_integrity";
     }
 }

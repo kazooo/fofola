@@ -10,4 +10,6 @@ import java.util.List;
 public interface ProblemRepository extends JpaRepository<UuidProblem, Long> {
 
     public List<UuidProblem> findByProcessId(long id);
+    public List<UuidProblem> findAll();
+    public void deleteAll();
 }

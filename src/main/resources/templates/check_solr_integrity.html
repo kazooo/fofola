@@ -11,7 +11,7 @@
 
         <a href="/">home</a>
 
-        <div th:if="${not running_process}">
+        <div th:if="${not running_process and not problems_exist}">
             <table id="modelInfo" class="table">
                 <thead>
                 <tr>
@@ -41,11 +41,15 @@
         </div>
 
 
-        <div th:if="${running_process}">
+        <div th:if="${running_process or problems_exist}">
             <table id="problemsInfo" class="table">
 
-                <form action="#" th:action="@{/check_solr_integrity}" method="post">
+                <form th:if="${running_process}" action="#" th:action="@{/check_solr_integrity}" method="post">
                     <button type="submit" name="action" value="stop"> Stop process </button>
+                </form>
+
+                <form th:if="${not running_process}" action="#" th:action="@{/check_solr_integrity}" method="post">
+                    <button type="submit" name="action" value="clear"> Clear </button>
                 </form>
 
                 <thead>

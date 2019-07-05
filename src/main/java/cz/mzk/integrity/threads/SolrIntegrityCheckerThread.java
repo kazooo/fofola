@@ -65,7 +65,6 @@ public class SolrIntegrityCheckerThread implements Runnable {
 
     @Override
     public void run() {
-        logger.info("run solr integrity checking...");
         keepProcess = true;
 
         SimpleQuery query = new SimpleQuery(SolrDocument.MODEL + ":" + model)
@@ -75,8 +74,6 @@ public class SolrIntegrityCheckerThread implements Runnable {
         } catch (Exception e) {
             logger.warn("Exception occured: " + e.getMessage());
         }
-
-        logger.info("done solr integrity checking...");
     }
 
     private void processDocs(SimpleQuery query) {
