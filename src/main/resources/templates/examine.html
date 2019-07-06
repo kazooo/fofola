@@ -24,10 +24,14 @@
 
         </div>
 
-        <table id="uuidInfo" class="table">
-            <thead>
+        <div class="uuid-table-container">
+
+            <table th:if="${not session.krameriusDocs.isEmpty()}" id="uuidInfo"
+                   class="table">
+
+                <thead class="thead-dark">
                 <tr>
-                    <th> Uuid </th>
+                    <th class="uuid-column"> Uuid </th>
                     <th> Model </th>
                     <th> Indexed </th>
                     <th> Stored </th>
@@ -35,23 +39,27 @@
                     <th> Accessibility in Fedora </th>
                     <th> Root title </th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr th:if="${session.krameriusDocs.isEmpty()}">
-                    <td colspan="2"> No uuids available </td>
-                </tr>
+                </thead>
 
+                <tbody>
                 <tr th:each="krameriusDoc : ${session.krameriusDocs.getKrameriusDocs()}">
                     <td><span th:text="${krameriusDoc.getUuid()}"> Uuid </span></td>
                     <td><span th:text="${krameriusDoc.getModel()}"> Indexed </span></td>
-                    <td><span th:text="${krameriusDoc.isIndexed()}"> Indexed </span></td>
-                    <td><span th:text="${krameriusDoc.isStored()}"> Stored </span></td>
+                    <td th:classappend="${not krameriusDoc.isIndexed()} ? table-danger : null">
+                        <span th:text="${krameriusDoc.isIndexed()}"> Indexed </span>
+                    </td>
+                    <td th:classappend="${not krameriusDoc.isStored()} ? table-danger : null">
+                        <span th:text="${krameriusDoc.isStored()}"> Stored </span>
+                    </td>
                     <td><span th:text="${krameriusDoc.getAccessibilityInSolr()}"> Accessibility in Solr </span></td>
                     <td><span th:text="${krameriusDoc.getAccessibilityInFedora()}"> Accessibility in Solr </span></td>
                     <td><span th:text="${krameriusDoc.getRootTitle()}"> Root title </span></td>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+
+            </table>
+
+        </div>
 
 
     </body>
