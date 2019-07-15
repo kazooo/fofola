@@ -1,0 +1,32 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <head lang="en" th:replace="layout :: header (page_title='Fofola')"></head>
+
+    <body>
+
+        <div class="index_container">
+            <h1 class="title_text"> Fofola </h1>
+
+            <div id="services">
+
+                <div class="service">
+                    <p> Solr </p>
+                    <a href="/check_solr_integrity" class="btn btn-outline-secondary" role="button">Zkontrolovat index</a>
+                </div>
+
+                <div class="service">
+                    <p> Kramerius </p>
+                    <a href="/check_uuid" class="btn btn-outline-secondary" role="button">Vypsat základní info o UUID</a>
+                    <a href="/change_rights" class="btn btn-outline-secondary" role="button">Změnit viditelnost dokumentů</a>
+                </div>
+
+                <div class="service">
+                    <p> Fedora </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </body>
+</html>

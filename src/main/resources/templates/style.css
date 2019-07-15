@@ -1,0 +1,180 @@
+body {
+    background-image: url('back.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.title_text {
+    font-family: 'foral_proextrabold';
+    color: #6F3317;
+    text-transform: uppercase;
+    animation: fadeIn 2s ease-in both;
+}
+
+@font-face {
+    font-family: 'foral_proextrabold';
+    src: url('font/foral_pro_extrabold-webfont.woff2') format('woff2'),
+    url('font/foral_pro_extrabold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* cyrillic-ext */
+@font-face {
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Roboto Slab Regular'), local('RobotoSlab-Regular'), url(https://fonts.gstatic.com/s/robotoslab/v8/BngMUXZYTXPIvIBgJJSb6ufA5qW54A.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+.container {
+    position: relative;
+    width: max-content;
+    margin: auto;
+}
+
+.index_container {
+    padding-top: 12%;
+    padding-right: 45%;
+    text-align: center;
+}
+
+.center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.uuid-table-container {
+    padding: 3%;
+}
+
+.uuid-table-container table {
+    border-radius: 5px;
+}
+
+.uuid-table-container th, .uuid-table-container td {
+    text-align: center;
+    border-color: black;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+th.uuid-column {
+    width: auto;
+}
+
+td.root_title {
+    font-family: 'Roboto Slab';
+}
+
+.btn {
+    color: black;
+    border-color: black;
+    margin: 5px;
+}
+
+#services {
+    padding: 30px;
+    width: max-content;
+    margin: auto;
+    animation: fadeIn 2s ease-in both;
+}
+
+#services .service {
+    background: rgba(255, 255, 255, 0.5);
+
+    float: left;
+    margin: 0 5px;
+    border: 1px solid #F88F2A;
+    border-radius: 5px;
+    padding: 10px;
+    width: 170px;
+    height: 250px;
+
+    font-family: 'Roboto Slab';
+    font-weight: bold;
+    color: 	#6F3317;
+    font-size: 20px;
+}
+
+#services .service p {
+    font-family: 'foral_proextrabold';
+}
+
+.panel-bar {
+    font-family: 'Roboto Slab';
+    width: max-content;
+    font-weight: bold;
+    margin: auto;
+}
+
+.form-inline {
+    display: flex;
+    margin: 20px;
+    float: left;
+}
+
+.white-rounded-back {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    border: 1px solid black;
+
+    width: fit-content;
+    height: fit-content;
+}
+
+/* Add some margins for each label */
+.form-inline label {
+    margin: 5px 10px 5px 0;
+}
+
+/* Style the input fields */
+.form-inline input .text {
+    vertical-align: middle;
+    margin: 5px 10px 5px 0;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+/* Add responsiveness - display the form controls vertically instead of horizontally on screens that are less than 800px wide */
+@media (max-width: 800px) {
+    .form-inline input {
+        margin: 10px 0;
+    }
+
+    .form-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -20%, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
