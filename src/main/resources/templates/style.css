@@ -32,6 +32,16 @@ body {
     font-style: normal;
 }
 
+/* cyrillic-ext */
+@font-face {
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Roboto Slab Regular'), local('RobotoSlab-Regular'), url(https://fonts.gstatic.com/s/robotoslab/v8/BngMUXZYTXPIvIBgJJSb6ufA5qW54A.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
 .container {
     position: relative;
     width: max-content;
@@ -54,7 +64,7 @@ body {
 }
 
 .uuid-table-container {
-    padding: 10px;
+    padding: 3%;
 }
 
 .uuid-table-container table {
@@ -64,10 +74,16 @@ body {
 .uuid-table-container th, .uuid-table-container td {
     text-align: center;
     border-color: black;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 th.uuid-column {
-    width: 42pt;
+    width: auto;
+}
+
+td.root_title {
+    font-family: 'Roboto Slab';
 }
 
 .btn {
@@ -84,7 +100,7 @@ th.uuid-column {
 }
 
 #services .service {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.5);
 
     float: left;
     margin: 0 5px;
@@ -94,20 +110,36 @@ th.uuid-column {
     width: 170px;
     height: 250px;
 
-    font-family: 'foral_proextrabold';
+    font-family: 'Roboto Slab';
+    font-weight: bold;
     color: 	#6F3317;
     font-size: 20px;
 }
 
-.panel-bar {
+#services .service p {
     font-family: 'foral_proextrabold';
+}
+
+.panel-bar {
+    font-family: 'Roboto Slab';
     width: max-content;
+    font-weight: bold;
+    margin: auto;
 }
 
 .form-inline {
     display: flex;
     margin: 20px;
     float: left;
+}
+
+.white-rounded-back {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    border: 1px solid black;
+
+    width: fit-content;
+    height: fit-content;
 }
 
 /* Add some margins for each label */

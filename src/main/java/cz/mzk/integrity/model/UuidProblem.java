@@ -9,7 +9,9 @@ import java.io.Serializable;
 @Table(name = "uuid_problem")
 public class UuidProblem implements Serializable {
 
-    public static final String NOT_STORED = "not_stored";
+    public static final String NOT_STORED = "Není uloženo ve Fedoře";
+
+    public static final String NOT_STORED_FILE_NAME = "not_stored_in_fedora.txt";
 
     public UuidProblem() { }
 

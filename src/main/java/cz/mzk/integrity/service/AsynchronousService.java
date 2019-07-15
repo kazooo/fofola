@@ -30,4 +30,7 @@ public class AsynchronousService {
     public void stopSolrChecking() {
         solrIntegrityCheckerThread.interrupt();
     }
+    public boolean isCheckSolrProcessRunning() { return solrIntegrityCheckerThread.running(); }
+    public long getCheckSolrStatusDone() { return solrIntegrityCheckerThread.getDone(); }
+    public long getCheckSolrStatusTotal() { return solrIntegrityCheckerThread.getDocCount(); }
 }

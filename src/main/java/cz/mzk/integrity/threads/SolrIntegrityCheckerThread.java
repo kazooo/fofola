@@ -26,6 +26,7 @@ public class SolrIntegrityCheckerThread implements Runnable {
     private String collectionName;
     private long processId;
     private boolean keepProcess;
+    private long done;
 
     private final SolrCommunicator solrCommunicator;
     private final FedoraCommunicator fedoraCommunicator;
@@ -37,6 +38,10 @@ public class SolrIntegrityCheckerThread implements Runnable {
         this.solrCommunicator = solrCommunicator;
         this.fedoraCommunicator = fedoraCommunicator;
         this.problemRepository = problemRepository;
+    }
+
+    public boolean running() {
+        return keepProcess;
     }
 
     public void setProcessId(long processId) {
@@ -63,6 +68,12 @@ public class SolrIntegrityCheckerThread implements Runnable {
         keepProcess = false;
     }
 
+    public long getDone() { return done; }
+
+    public long getDocCount() {
+        return docCount;
+    }
+
     @Override
     public void run() {
         keepProcess = true;
@@ -74,15 +85,16 @@ public class SolrIntegrityCheckerThread implements Runnable {
         } catch (Exception e) {
             logger.warn("Exception occured: " + e.getMessage());
         }
+
+        keepProcess = false;
     }
 
     private void processDocs(SimpleQuery query) {
 
-        long done = 0;
+        done = 0;
         List<SolrDocument> solrDocs;
         while (done < docCount && keepProcess) {
             solrDocs = solrCommunicator.cursorQuery(collectionName, query);
-            done += solrDocs.size();
 
             for (SolrDocument solrDoc : solrDocs) {
 
@@ -98,7 +110,10 @@ public class SolrIntegrityCheckerThread implements Runnable {
                     problemRepository.save(new UuidProblem(processId, uuid, UuidProblem.NOT_STORED));
                 }
 
+                done++;
             }
         }
+
+        logger.info("Solr integrity checking complete!");
     }
 }
