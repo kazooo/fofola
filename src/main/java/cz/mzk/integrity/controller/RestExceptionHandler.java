@@ -15,7 +15,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = { Exception.class, Exception.class })
     protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
 
-        String bodyOfResponse = "There is an error! Check the console!";
+        String bodyOfResponse = ex.getMessage();
 
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);

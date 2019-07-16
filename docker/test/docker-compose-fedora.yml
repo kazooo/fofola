@@ -1,23 +1,5 @@
 version: "2"
 services:
-
-  fofola:
-    image: "ermak/fofola:latest"
-    container_name: fofola
-    ports:
-      - "8081:8081"
-    environment:
-      - POSTGRES_DB_JDBC_URL=jdbc:postgresql://db:5432/fofola
-      - POSTGRES_DB_USER=postgres
-      - POSTGRES_DB_PSWD=postgres
-      - SOLR_HOST=http://solr:8983/solr
-      - KRAMERIUS_HOST=localhost:80
-      - KRAMERIUS_USER=krameriusAdmin
-      - KRAMERIUS_PSWD=krameriusAdmin
-      - FEDORA_HOST=http://fcrepo:8080/fedora
-      - FEDORA_USER=fedoraAdmin
-      - FEDORA_PSWD=fedoraAdmin
-
   db:
     image: "postgres:9.6"
     container_name: db
@@ -57,9 +39,3 @@ services:
       - POSTGRES_USER=fedoraAdmin
       - POSTGRES_PASSWORD=fedoraAdmin
       - POSTGRES_DB=riTriples
-
-  solr:
-    image: moravianlibrary/solr6
-    container_name: solr
-    ports:
-      - "8983:8983"
