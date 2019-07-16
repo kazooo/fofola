@@ -1,24 +1,37 @@
 package cz.mzk.integrity.model;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Entity
 @Table(name = "uuid_problem")
-public class UuidProblem implements Serializable {
+public class UuidProblem {
 
-    public static final String NOT_STORED = "Není uloženo ve Fedoře";
+    public static final String NOT_STORED = "not_stored";
+    public static final String DIFF_VISIBILITY = "diff_visibility";
+    public static final String ROOT_NOT_STORED = "root_not_stored";
+    public static final String ROOT_NOT_INDEXED = "root_not_indexed";
+    public static final String NO_ROOT = "no_root";
 
-    public static final String NOT_STORED_FILE_NAME = "not_stored_in_fedora.txt";
+    private static final Map<String, String> problemShortDescs =
+            new HashMap<String, String>() {
+        {
+            put(NOT_STORED, "Není uloženo ve Fedoře");
+            put(DIFF_VISIBILITY, "Různá viditelnost ve Fedoře a v Solru");
+            put(ROOT_NOT_STORED, "Kořenový dokument není ve Fedoře");
+            put(ROOT_NOT_INDEXED, "Kořenový dokument není v Solru");
+            put(NO_ROOT, "Nemá kořenový dokument");
+        }
+    };
 
     public UuidProblem() { }
 
-    public UuidProblem(long processId, String uuid, String type) {
-        this.processId = processId;
-        this.uuid = uuid;
-        this.problemType = type;
+    public UuidProblem(String type) {
+        this.type = type;
+        this.shortDesc = problemShortDescs.get(type);
     }
 
     @Id
@@ -26,21 +39,16 @@ public class UuidProblem implements Serializable {
     private long problemId;
 
     @NotNull
-    private long processId;
-
-    @NotNull
-    @Column(name = "uuid")
-    private String uuid;
-
-    @NotNull
     @Column(name = "type")
-    private String problemType;
+    private String type;
 
-    public String getUuid() {
-        return uuid;
-    }
+    @NotNull
+    @Column(name = "short_desc")
+    private String shortDesc;
 
-    public String getProblemType() {
-        return problemType;
+    public String getType() { return type; }
+
+    public String getShortDesc() {
+        return shortDesc;
     }
 }

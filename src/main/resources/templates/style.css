@@ -84,7 +84,7 @@ body {
 }
 
 th.uuid-column {
-    width: auto;
+    width: 23em;
 }
 
 td.root_title {

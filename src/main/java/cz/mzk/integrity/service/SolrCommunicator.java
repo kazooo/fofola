@@ -30,7 +30,8 @@ public class SolrCommunicator {
         List<SolrDocument> docs = solrRepository.findByUuid(uuid);
 
         if (docs == null || docs.isEmpty()) {
-            throw new NoSuchElementException("Can't find any Solr document with uuid: " + uuid);
+//            throw new NoSuchElementException("Can't find any Solr document with uuid: " + uuid);
+            return null;
         } else if (docs.size() > 1) {
             throw new IllegalStateException("Can not be more than one document with uuid: " + uuid);
         }

@@ -3,16 +3,18 @@ package cz.mzk.integrity.threads;
 import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.SolrDocument;
 import cz.mzk.integrity.model.UuidProblem;
+import cz.mzk.integrity.model.UuidProblemRecord;
 import cz.mzk.integrity.repository.ProblemRepository;
-import cz.mzk.integrity.repository.ProcessRepository;
 import cz.mzk.integrity.service.FedoraCommunicator;
 import cz.mzk.integrity.service.SolrCommunicator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.solr.core.query.Field;
 import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -79,7 +81,8 @@ public class SolrIntegrityCheckerThread implements Runnable {
         keepProcess = true;
 
         SimpleQuery query = new SimpleQuery(SolrDocument.MODEL + ":" + model)
-                .addSort(Sort.by(SolrDocument.ID)).setRows(docsPerQuery);
+                .addSort(Sort.by(SolrDocument.ID))
+                .setRows(docsPerQuery);
         try {
             processDocs(query);
         } catch (Exception e) {
@@ -96,6 +99,7 @@ public class SolrIntegrityCheckerThread implements Runnable {
         while (done < docCount && keepProcess) {
             solrDocs = solrCommunicator.cursorQuery(collectionName, query);
 
+            List<UuidProblem> problems = new ArrayList<>();
             for (SolrDocument solrDoc : solrDocs) {
 
                 if (!keepProcess) {
@@ -106,14 +110,51 @@ public class SolrIntegrityCheckerThread implements Runnable {
 
                 FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
 
+                // check if stored in Fedora
                 if (fedoraDoc == null) {
-                    problemRepository.save(new UuidProblem(processId, uuid, UuidProblem.NOT_STORED));
+                    problems.add(new UuidProblem(UuidProblem.NOT_STORED));
                 }
 
+                // check if doc in Fedora has the same visibility as doc in Solr
+                if (fedoraDoc != null && !fedoraDoc.getAccesibility().equals(solrDoc.getAccessibility())) {
+                    problems.add(new UuidProblem(UuidProblem.DIFF_VISIBILITY));
+                }
+
+                // check doc root
+                checkUuidExistence(solrDoc.getRootPid(), problems);
+
+                if (!problems.isEmpty()) {
+                    problemRepository.save(
+                            new UuidProblemRecord(processId, uuid,
+                                    solrDoc.getRootTitle(), model,
+                                    problems));
+                    problems.clear();
+                }
                 done++;
             }
         }
 
         logger.info("Solr integrity checking complete!");
+    }
+
+    private void checkUuidExistence(String uuid, List<UuidProblem> problems) {
+
+        // check if uuid exists
+        if (uuid == null || uuid.isEmpty()) {
+            problems.add(new UuidProblem(UuidProblem.NO_ROOT));
+            return;
+        }
+
+        // check if uuid indexed
+        SolrDocument uuidSolrDoc = solrCommunicator.getSolrDocByUuid(uuid);
+        if (uuidSolrDoc == null) {
+            problems.add(new UuidProblem(UuidProblem.ROOT_NOT_INDEXED));
+        }
+
+        // check if uuid stored
+        FedoraDocument uuidFedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
+        if (uuidFedoraDoc == null) {
+            problems.add(new UuidProblem(UuidProblem.ROOT_NOT_STORED));
+        }
     }
 }

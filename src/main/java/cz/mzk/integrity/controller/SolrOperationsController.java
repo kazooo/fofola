@@ -2,6 +2,7 @@ package cz.mzk.integrity.controller;
 
 import cz.mzk.integrity.model.CheckProcess;
 import cz.mzk.integrity.model.UuidProblem;
+import cz.mzk.integrity.model.UuidProblemRecord;
 import cz.mzk.integrity.repository.ProblemRepository;
 import cz.mzk.integrity.repository.ProcessRepository;
 import cz.mzk.integrity.service.AsynchronousService;
@@ -17,11 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Controller
 public class SolrOperationsController {
@@ -51,7 +50,7 @@ public class SolrOperationsController {
         CheckProcess process = processRepository.findFirstByProcessType(CheckProcess.CHECK_SOLR_TYPE);
         boolean runningProcess = process != null && process.isRunning();
 
-        List<UuidProblem> problems = problemRepository.findAll();
+        List<UuidProblemRecord> problems = problemRepository.findAll();
         boolean problemsExist = problems != null && !problems.isEmpty();
 
         model.addAttribute("running_process", runningProcess);
@@ -64,13 +63,14 @@ public class SolrOperationsController {
             model.addAttribute("total", total);
             model.addAttribute("modelCount", modelCount);
         } else {
-            Map<String, String> uuidProblemDesc = new HashMap<>();
+            Map<UuidProblemRecord, String> uuidProblemDesc = new HashMap<>();
             if (runningProcess) {
                 long processId = process.getId();
                 problems = problemRepository.findByProcessId(processId);
             }
-            for (UuidProblem problem : problems) {
-                uuidProblemDesc.put(problem.getUuid(), problem.getProblemType());
+            for (UuidProblemRecord problem : problems) {
+                List<UuidProblem> problemTypes = problem.getProblems();
+                uuidProblemDesc.put(problem, generateShortProblemDesc(problemTypes));
             }
             model.addAttribute("done", asynchronousService.getCheckSolrStatusDone());
             model.addAttribute("total", asynchronousService.getCheckSolrStatusTotal());
@@ -115,16 +115,19 @@ public class SolrOperationsController {
         logger.info("Clear Solr integrity problem list.");
         CheckProcess process = processRepository.findFirstByProcessType(CheckProcess.CHECK_SOLR_TYPE);
 
-        List<UuidProblem> problems = problemRepository.findByProcessId(process.getId());
+        List<UuidProblemRecord> problems = problemRepository.findByProcessId(process.getId());
 
         List<String> notStoredUuids = new ArrayList<>();
-        for (UuidProblem problem : problems) {
-            if (problem.getProblemType().equals(UuidProblem.NOT_STORED)) {
-                notStoredUuids.add(problem.getUuid());
+        for (UuidProblemRecord problem : problems) {
+            List<UuidProblem> problemTypes = problem.getProblems();
+            for (UuidProblem p : problemTypes) {
+                if (p.getType().equals(UuidProblem.NOT_STORED)) {
+                    notStoredUuids.add(problem.getUuid());
+                }
             }
         }
 
-        String notStoredFilePath = "/tmp/" + UuidProblem.NOT_STORED_FILE_NAME;
+        String notStoredFilePath = "/tmp/" + UuidProblemRecord.NOT_STORED_FILE_NAME;
         writeUuidsIntoFile(notStoredFilePath, notStoredUuids);
 
         File file = new File(notStoredFilePath);
@@ -143,5 +146,10 @@ public class SolrOperationsController {
             writer.write(uuid + "\n");
         }
         writer.close();
+    }
+
+    private String generateShortProblemDesc(List<UuidProblem> problems) {
+        return problems.stream().map(UuidProblem::getShortDesc)
+                .collect(Collectors.joining(", "));
     }
 }
