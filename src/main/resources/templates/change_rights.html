@@ -45,9 +45,9 @@
             </div>
         </div>
 
-        <div th:if="${!session.krameriusDocs.isEmpty()}" style="padding-top: 3%; margin: auto; width: fit-content;">
+        <div th:if="${!session.krameriusDocs.isEmpty()}" style="padding-top: 1%; margin: auto; width: fit-content;">
 
-            <div class="card">
+            <div class="card scrollable-list">
                 <table id="uuidToChangeRights" class="table table-light" style="text-align: center">
                     <tbody>
                     <tr th:each="krameriusDoc : ${session.krameriusDocs.getKrameriusDocs()}">

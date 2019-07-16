@@ -16,7 +16,7 @@
             </div>
 
             <div style="padding: 3% 0">
-                <div class="card" style="width:700px;">
+                <div class="card scrollable-list" style="width:700px;">
                     <table id="modelInfo" class="table table-light" style="text-align: center;">
                         <thead class="thead-light">
                         <tr>
@@ -91,8 +91,8 @@
                 </div>
 
                 <div th:if="${problems_exist}" style="padding: 3% 0">
-                    <div class="card" style="width:700px;">
-                        <table id="problemsInfo" class="table table-light">
+                    <div class="card scrollable-list" style="width:700px;">
+                        <table class="table table-light">
 
                             <thead class="thead-light">
                             <tr>
@@ -102,16 +102,13 @@
                             </thead>
 
                             <tbody>
-                            <tr th:if="${problems.isEmpty()}">
-                                <td colspan="2"> No problems available </td>
-                            </tr>
-
-                            <tr th:each="problem : ${problems}">
-                                <td th:text="${problem.key}"> Uuid </td>
-                                <td th:text="${problem.value}"> Problem description </td>
-                            </tr>
+                                <tr th:each="problem : ${problems}">
+                                    <td th:text="${problem.key}"> Uuid </td>
+                                    <td th:text="${problem.value}"> Problem description </td>
+                                </tr>
                             </tbody>
                         </table>
+
                     </div>
                 </div>
 

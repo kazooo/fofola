@@ -35,39 +35,39 @@
 
         <div class="uuid-table-container">
 
-            <table th:if="${not session.krameriusDocs.isEmpty()}" id="uuidInfo"
-                   class="table table-light table-hover">
+            <div class="card scrollable-list">
+                <table th:if="${not session.krameriusDocs.isEmpty()}" id="uuidInfo"
+                       class="table table-light table-hover">
 
-                <thead class="thead-light">
-                <tr>
-                    <th class="uuid-column"> Uuid </th>
-                    <th> Model </th>
-                    <th> Indexovaný v Solru </th>
-                    <th> Uložený ve Fedoře </th>
-                    <th> Viditelnost v Solru </th>
-                    <th> Viditelnost ve Fedoře </th>
-                    <th> Název dokumentu </th>
-                </tr>
-                </thead>
+                    <thead class="thead-light">
+                    <tr>
+                        <th class="uuid-column"> Uuid </th>
+                        <th> Model </th>
+                        <th> Indexovaný v Solru </th>
+                        <th> Uložený ve Fedoře </th>
+                        <th> Viditelnost v Solru </th>
+                        <th> Viditelnost ve Fedoře </th>
+                        <th> Název dokumentu </th>
+                    </tr>
+                    </thead>
 
-                <tbody>
-                <tr th:each="krameriusDoc : ${session.krameriusDocs.getKrameriusDocs()}" >
-                    <td><span th:text="${krameriusDoc.getUuid()}"> Uuid </span></td>
-                    <td><span th:text="${krameriusDoc.getModel()}"> Indexed </span></td>
-                    <td th:classappend="${not krameriusDoc.isIndexed()} ? table-danger : null">
-                        <span th:text="${krameriusDoc.isIndexed()}"> Indexed </span>
-                    </td>
-                    <td th:classappend="${not krameriusDoc.isStored()} ? table-danger : null">
-                        <span th:text="${krameriusDoc.isStored()}"> Stored </span>
-                    </td>
-                    <td><span th:text="${krameriusDoc.getAccessibilityInSolr()}"> Accessibility in Solr </span></td>
-                    <td><span th:text="${krameriusDoc.getAccessibilityInFedora()}"> Accessibility in Solr </span></td>
-                    <td class="root_title"><span th:text="${krameriusDoc.getRootTitle()}"> Root title </span></td>
-                </tr>
-                </tbody>
-
-            </table>
-
+                    <tbody>
+                    <tr th:each="krameriusDoc : ${session.krameriusDocs.getKrameriusDocs()}" >
+                        <td><span th:text="${krameriusDoc.getUuid()}"> Uuid </span></td>
+                        <td><span th:text="${krameriusDoc.getModel()}"> Indexed </span></td>
+                        <td th:classappend="${not krameriusDoc.isIndexed()} ? table-danger : null">
+                            <span th:text="${krameriusDoc.isIndexed()}"> Indexed </span>
+                        </td>
+                        <td th:classappend="${not krameriusDoc.isStored()} ? table-danger : null">
+                            <span th:text="${krameriusDoc.isStored()}"> Stored </span>
+                        </td>
+                        <td><span th:text="${krameriusDoc.getAccessibilityInSolr()}"> Accessibility in Solr </span></td>
+                        <td><span th:text="${krameriusDoc.getAccessibilityInFedora()}"> Accessibility in Solr </span></td>
+                        <td class="root_title"><span th:text="${krameriusDoc.getRootTitle()}"> Root title </span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
 

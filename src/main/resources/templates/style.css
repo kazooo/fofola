@@ -64,11 +64,16 @@ body {
 }
 
 .uuid-table-container {
-    padding: 3%;
+    padding: 3% 1%;
 }
 
 .uuid-table-container table {
     border-radius: 5px;
+}
+
+.scrollable-list {
+    overflow: auto;
+    height: 60%;
 }
 
 .uuid-table-container th, .uuid-table-container td {
