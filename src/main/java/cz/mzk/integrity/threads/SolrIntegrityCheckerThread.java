@@ -1,16 +1,12 @@
 package cz.mzk.integrity.threads;
 
-import cz.mzk.integrity.model.FedoraDocument;
-import cz.mzk.integrity.model.SolrDocument;
-import cz.mzk.integrity.model.UuidProblem;
-import cz.mzk.integrity.model.UuidProblemRecord;
+import cz.mzk.integrity.model.*;
 import cz.mzk.integrity.repository.ProblemRepository;
 import cz.mzk.integrity.service.FedoraCommunicator;
 import cz.mzk.integrity.service.SolrCommunicator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.solr.core.query.Field;
 import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.stereotype.Component;
 
@@ -18,16 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SolrIntegrityCheckerThread implements Runnable {
-
-    private static final Logger logger = LoggerFactory.getLogger(SolrIntegrityCheckerThread.class);
+public class SolrIntegrityCheckerThread extends FofolaThread {
 
     private String model;
     private long docCount;
     private int docsPerQuery;
     private String collectionName;
     private long processId;
-    private boolean keepProcess;
     private long done;
 
     private final SolrCommunicator solrCommunicator;
@@ -36,14 +29,13 @@ public class SolrIntegrityCheckerThread implements Runnable {
 
     public SolrIntegrityCheckerThread(SolrCommunicator solrCommunicator,
                                       FedoraCommunicator fedoraCommunicator,
-                                      ProblemRepository problemRepository) {
+                                      ProblemRepository problemRepository,
+                                      FofolaThreadEventPublisher eventPublisher) {
+        super(eventPublisher);
+        super.setType(FofolaProcess.CHECK_SOLR_TYPE);
         this.solrCommunicator = solrCommunicator;
         this.fedoraCommunicator = fedoraCommunicator;
         this.problemRepository = problemRepository;
-    }
-
-    public boolean running() {
-        return keepProcess;
     }
 
     public void setProcessId(long processId) {
@@ -66,10 +58,6 @@ public class SolrIntegrityCheckerThread implements Runnable {
         this.collectionName = collectionName;
     }
 
-    public void interrupt() {
-        keepProcess = false;
-    }
-
     public long getDone() { return done; }
 
     public long getDocCount() {
@@ -77,32 +65,20 @@ public class SolrIntegrityCheckerThread implements Runnable {
     }
 
     @Override
-    public void run() {
-        keepProcess = true;
-
+    protected void process() {
         SimpleQuery query = new SimpleQuery(SolrDocument.MODEL + ":" + model)
                 .addSort(Sort.by(SolrDocument.ID))
                 .setRows(docsPerQuery);
-        try {
-            processDocs(query);
-        } catch (Exception e) {
-            logger.warn("Exception occured: " + e.getMessage());
-        }
-
-        keepProcess = false;
-    }
-
-    private void processDocs(SimpleQuery query) {
 
         done = 0;
         List<SolrDocument> solrDocs;
-        while (done < docCount && keepProcess) {
+        while (done < docCount && super.keepProcess) {
             solrDocs = solrCommunicator.cursorQuery(collectionName, query);
 
             List<UuidProblem> problems = new ArrayList<>();
             for (SolrDocument solrDoc : solrDocs) {
 
-                if (!keepProcess) {
+                if (!super.keepProcess) {
                     return;
                 }
 
@@ -133,8 +109,6 @@ public class SolrIntegrityCheckerThread implements Runnable {
                 done++;
             }
         }
-
-        logger.info("Solr integrity checking complete!");
     }
 
     private void checkUuidExistence(String uuid, List<UuidProblem> problems) {

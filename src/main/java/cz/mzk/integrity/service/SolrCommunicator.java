@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.Query;
+import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.data.solr.core.query.result.Cursor;
 import org.springframework.data.solr.core.query.result.FacetEntry;
 import org.springframework.data.solr.core.query.result.FacetFieldEntry;
@@ -60,5 +61,9 @@ public class SolrCommunicator {
             result.add(doc);
         }
         return result;
+    }
+
+    public long docCount(SimpleQuery query) {
+        return solrTemplate.count("kramerius", query);
     }
 }

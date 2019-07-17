@@ -3,11 +3,16 @@ package cz.mzk.integrity.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 
+import java.util.Date;
+import java.util.List;
+
 
 @org.springframework.data.solr.core.mapping.SolrDocument(collection = "kramerius")
 public class SolrDocument {
 
     public final static String ID = "PID";
+    public final static String PARENT_PID = "parent_pid";
+    public final static String MODIFIED_DATE = "modified_date";
     public final static String ROOT_TITLE = "root_title";
     public final static String VISIBILITY = "dostupnost";
     public final static String MODEL = "fedora.model";
@@ -28,6 +33,12 @@ public class SolrDocument {
 
     @Indexed(name = ROOT_PID, type = "string")
     private String rootPid;
+
+    @Indexed(name = PARENT_PID, type = "multivalued")
+    private List<String> parentPids;
+
+    @Indexed(name = MODIFIED_DATE, type = "date")
+    private Date modifiedDate;
 
     public String getAccessibility() {
         return visibility;
@@ -50,5 +61,13 @@ public class SolrDocument {
 
     public String getRootPid() {
         return rootPid;
+    }
+
+    public List<String> getParentPids() {
+        return parentPids;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
     }
 }

@@ -1,15 +1,12 @@
 package cz.mzk.integrity.controller;
 
-import cz.mzk.integrity.model.CheckProcess;
+import cz.mzk.integrity.model.FofolaProcess;
 import cz.mzk.integrity.model.UuidProblem;
 import cz.mzk.integrity.model.UuidProblemRecord;
 import cz.mzk.integrity.repository.ProblemRepository;
-import cz.mzk.integrity.repository.ProcessRepository;
-import cz.mzk.integrity.service.AsynchronousService;
+import cz.mzk.integrity.service.AsynchronousFofolaProcessService;
+import cz.mzk.integrity.service.FileService;
 import cz.mzk.integrity.service.SolrCommunicator;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -28,18 +26,18 @@ public class SolrOperationsController {
     private static final Logger logger = Logger.getLogger(SolrOperationsController.class.getName());
 
     private final SolrCommunicator solrCommunicator;
-    private final AsynchronousService asynchronousService;
-    private final ProcessRepository processRepository;
+    private final AsynchronousFofolaProcessService asynchronousFofolaProcessService;
     private final ProblemRepository problemRepository;
 
+    private static final String sitemapDirName = "sitemaps";
+    private static final String pathToSitemaps = "/tmp/" + sitemapDirName;
+
     public SolrOperationsController(SolrCommunicator solrCommunicator,
-                                    AsynchronousService asynchronousService,
-                                    ProcessRepository processRepository,
+                                    AsynchronousFofolaProcessService asynchronousFofolaProcessService,
                                     ProblemRepository problemRepository) {
 
         this.solrCommunicator = solrCommunicator;
-        this.asynchronousService = asynchronousService;
-        this.processRepository = processRepository;
+        this.asynchronousFofolaProcessService = asynchronousFofolaProcessService;
         this.problemRepository = problemRepository;
     }
 
@@ -47,7 +45,7 @@ public class SolrOperationsController {
     @GetMapping("/check_solr_integrity")
     public String checkSolrIntegrity(Model model) {
 
-        CheckProcess process = processRepository.findFirstByProcessType(CheckProcess.CHECK_SOLR_TYPE);
+        FofolaProcess process = asynchronousFofolaProcessService.getProcess(FofolaProcess.CHECK_SOLR_TYPE);
         boolean runningProcess = process != null && process.isRunning();
 
         List<UuidProblemRecord> problems = problemRepository.findAll();
@@ -72,8 +70,8 @@ public class SolrOperationsController {
                 List<UuidProblem> problemTypes = problem.getProblems();
                 uuidProblemDesc.put(problem, generateShortProblemDesc(problemTypes));
             }
-            model.addAttribute("done", asynchronousService.getCheckSolrStatusDone());
-            model.addAttribute("total", asynchronousService.getCheckSolrStatusTotal());
+            model.addAttribute("done", asynchronousFofolaProcessService.getCheckSolrStatusDone());
+            model.addAttribute("total", asynchronousFofolaProcessService.getCheckSolrStatusTotal());
             model.addAttribute("problems", uuidProblemDesc);
         }
 
@@ -84,36 +82,27 @@ public class SolrOperationsController {
     public String runSolrIntegrityChecker(
             @RequestParam(name = "model", required = true) String model,
             @RequestParam(name = "docCount", required = true) long docCount) {
-        logger.info("Run Solr integrity checking process.");
-        CheckProcess solrProcess = new CheckProcess(CheckProcess.CHECK_SOLR_TYPE, model, docCount);
-        solrProcess = processRepository.save(solrProcess);
-        asynchronousService.runSolrChecking(solrProcess.getId(), model, docCount);
+        asynchronousFofolaProcessService.runSolrChecking(model, docCount);
         return "redirect:/check_solr_integrity";
     }
 
     @PostMapping(value = "/check_solr_integrity", params = "action=stop")
     public String stopSolrIntegrityChecker() {
-        logger.info("Stop Solr integrity checking.");
-        CheckProcess process = processRepository.findFirstByProcessType(CheckProcess.CHECK_SOLR_TYPE);
-        process.stop();
-        processRepository.saveAndFlush(process);
-        asynchronousService.stopSolrChecking();
+        asynchronousFofolaProcessService.stopSolrChecking();
         return "redirect:/check_solr_integrity";
     }
 
     @PostMapping(value = "/check_solr_integrity", params = "action=clear")
     public String clearProblems() {
-        logger.info("Clear Solr integrity problem list.");
-        CheckProcess process = processRepository.findFirstByProcessType(CheckProcess.CHECK_SOLR_TYPE);
-        processRepository.delete(process);
+        asynchronousFofolaProcessService.clearSolrChecking();
         problemRepository.deleteAll();
         return "redirect:/check_solr_integrity";
     }
 
     @PostMapping(value = "/check_solr_integrity", params = "action=download")
     public ResponseEntity downloadListWithProblems() throws IOException {
-        logger.info("Clear Solr integrity problem list.");
-        CheckProcess process = processRepository.findFirstByProcessType(CheckProcess.CHECK_SOLR_TYPE);
+        logger.info("Download Solr integrity problem list.");
+        FofolaProcess process = asynchronousFofolaProcessService.getProcess(FofolaProcess.CHECK_SOLR_TYPE);
 
         List<UuidProblemRecord> problems = problemRepository.findByProcessId(process.getId());
 
@@ -128,24 +117,51 @@ public class SolrOperationsController {
         }
 
         String notStoredFilePath = "/tmp/" + UuidProblemRecord.NOT_STORED_FILE_NAME;
-        writeUuidsIntoFile(notStoredFilePath, notStoredUuids);
-
-        File file = new File(notStoredFilePath);
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
-                .contentLength(file.length())
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(resource);
+        FileService.writeUuidsIntoFile(notStoredFilePath, notStoredUuids);
+        return FileService.sendFile(notStoredFilePath);
     }
 
-    private void writeUuidsIntoFile(String filename, List<String> uuids) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        for (String uuid : uuids) {
-            writer.write(uuid + "\n");
+    @GetMapping("/generate_sitemap")
+    public String generateSitemapHome(Model model) {
+        FofolaProcess process = asynchronousFofolaProcessService.getProcess(FofolaProcess.GENERATE_SITEMAP_TYPE);
+        boolean runningGeneration = process != null && process.isRunning();
+        model.addAttribute("running_generation", runningGeneration);
+
+        boolean hasGenerated = new File(pathToSitemaps).exists() && !runningGeneration;
+        model.addAttribute("has_generated", hasGenerated);
+
+        if (runningGeneration) {
+            model.addAttribute("done", asynchronousFofolaProcessService.getSitemapGenStatusDone());
+            model.addAttribute("total", asynchronousFofolaProcessService.getSitemapGenStatusTotal());
         }
-        writer.close();
+        return "generate_sitemap";
+    }
+
+    @PostMapping(value = "/generate_sitemap", params = "action=run")
+    public String runSitemapGeneration() throws IOException {
+        Files.createTempDirectory(sitemapDirName);
+        asynchronousFofolaProcessService.runSitemapGenerationProcess(pathToSitemaps);
+        return "redirect:/generate_sitemap";
+    }
+
+    @PostMapping(value = "/generate_sitemap", params = "action=stop")
+    public String stopSitemapGeneration() {
+        asynchronousFofolaProcessService.stopSitemapGeneration();
+        return "redirect:/generate_sitemap";
+    }
+
+    @PostMapping(value = "/generate_sitemap", params = "action=download")
+    public ResponseEntity downloadGeneratedSitemap() throws IOException {
+        String outZipFileName = pathToSitemaps + ".zip";
+        FileService.zipFolder(pathToSitemaps, outZipFileName);
+        return FileService.sendFile(outZipFileName);
+    }
+
+    @PostMapping(value = "/generate_sitemap", params = "action=clear")
+    public String clearGeneratedSitemaps() {
+        FileService.deleteDir(pathToSitemaps);
+        asynchronousFofolaProcessService.clearSitemapGen();
+        return "redirect:/generate_sitemap";
     }
 
     private String generateShortProblemDesc(List<UuidProblem> problems) {
