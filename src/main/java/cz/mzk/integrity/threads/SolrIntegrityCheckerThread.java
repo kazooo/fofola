@@ -11,8 +11,7 @@ import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.data.solr.core.query.result.Cursor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class SolrIntegrityCheckerThread extends FofolaThread {
@@ -27,6 +26,25 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
     private final SolrCommunicator solrCommunicator;
     private final FedoraCommunicator fedoraCommunicator;
     private final ProblemRepository problemRepository;
+
+    private final List<String> mustHaveParent = Arrays.asList(
+            "page", "periodicalitem",
+            "periodicalvolume", "article",
+            "supplement", "monographunit",
+            "track", "soundunit",
+            "internalpart", "picture"
+    );
+
+    private final List<String> mustHaveChild = Arrays.asList(
+            "monograph", "periodical",
+            "soundrecording", "archive",
+            "sheetmusic", "manuscript",
+            "map", "graphic",
+
+            "periodicalitem", "periodicalvolume",
+            "article", "supplement",
+            "monographunit", "internalpart"
+    );
 
     public SolrIntegrityCheckerThread(SolrCommunicator solrCommunicator,
                                       FedoraCommunicator fedoraCommunicator,
@@ -72,7 +90,7 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
                 .setRows(docsPerQuery);
 
         done = 0;
-        List<UuidProblem> problems = new ArrayList<>();
+        Set<UuidProblem> problems = new HashSet<>();
         Cursor<SolrDocument> solrDocs = solrCommunicator.getDocCursor(collectionName, query);
 
         while (done < docCount && super.keepProcess && solrDocs.hasNext()) {
@@ -92,37 +110,62 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
             }
 
             // check doc root
-            checkRootExistence(solrDoc.getRootPid(), problems);
+            checkUuidExistence(solrDoc.getRootPid(), problems,
+                    UuidProblem.NO_ROOT,
+                    UuidProblem.ROOT_NOT_INDEXED,
+                    UuidProblem.ROOT_NOT_STORED);
+
+            // check doc parent
+            if (mustHaveParent.contains(model)) {
+                checkUuidExistence(solrDoc.getParentPids().get(0), problems,
+                        UuidProblem.NO_PARENT,
+                        UuidProblem.PARENT_NOT_INDEXED,
+                        UuidProblem.PARENT_NOT_STORED);
+            }
+
+            // check child
+            if (mustHaveChild.contains(model) && fedoraDoc != null) {
+                List<String> child = fedoraCommunicator.getChildrenUuids(uuid);
+                for (String childUuid : child) {
+                    checkUuidExistence(childUuid, problems,
+                            UuidProblem.NO_CHILD,
+                            UuidProblem.CHILD_NOT_INDEXED,
+                            UuidProblem.CHILD_NOT_STORED);
+                }
+            }
 
             if (!problems.isEmpty()) {
                 problemRepository.save(
                         new UuidProblemRecord(processId, uuid,
                                 solrDoc.getRootTitle(), model,
-                                problems));
+                                new ArrayList<>(problems)));
                 problems.clear();
             }
             done++;
         }
     }
 
-    private void checkRootExistence(String uuid, List<UuidProblem> problems) {
+    private void checkUuidExistence(String uuid, Set<UuidProblem> problems,
+                                    String notExistProblemType,
+                                    String notStoredProblemType,
+                                    String notIndexedProblemType) {
 
         // check if uuid exists
         if (uuid == null || uuid.isEmpty()) {
-            problems.add(new UuidProblem(UuidProblem.NO_ROOT));
+            problems.add(new UuidProblem(notExistProblemType));
             return;
         }
 
         // check if uuid indexed
         SolrDocument uuidSolrDoc = solrCommunicator.getSolrDocByUuid(uuid);
         if (uuidSolrDoc == null) {
-            problems.add(new UuidProblem(UuidProblem.ROOT_NOT_INDEXED));
+            problems.add(new UuidProblem(notIndexedProblemType));
         }
 
         // check if uuid stored
         FedoraDocument uuidFedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
         if (uuidFedoraDoc == null) {
-            problems.add(new UuidProblem(UuidProblem.ROOT_NOT_STORED));
+            problems.add(new UuidProblem(notStoredProblemType));
         }
     }
 }
