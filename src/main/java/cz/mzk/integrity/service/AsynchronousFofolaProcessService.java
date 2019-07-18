@@ -82,7 +82,7 @@ public class AsynchronousFofolaProcessService {
         solrIntegrityCheckerThread.setModel(model);
         solrIntegrityCheckerThread.setDocCount(docCount);
         solrIntegrityCheckerThread.setCollectionName("kramerius");
-        solrIntegrityCheckerThread.setDocsPerQuery(100);
+        solrIntegrityCheckerThread.setDocsPerQuery(5000);
         threadPoolExecutor.execute(solrIntegrityCheckerThread);
     }
 

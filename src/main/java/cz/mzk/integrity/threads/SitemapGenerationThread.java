@@ -29,7 +29,7 @@ public class SitemapGenerationThread extends FofolaThread {
     private long total;
     private final static int maxDocPerSitemap = 50_000;
     private final static int maxSitemaps = 50_000;
-    private final static int docPerQuery = 1000;
+    private final static int docPerQuery = 5000;
     private static SimpleQuery query;
     private final static SimpleDateFormat sitemapDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final static Logger logger = LoggerFactory.getLogger(SitemapGenerationThread.class);
@@ -39,7 +39,7 @@ public class SitemapGenerationThread extends FofolaThread {
     private static final String lastModElementName = "lastmod";
     private static final String sitemapElementName = "sitemap";
     private static final String sitemapIndexElementName = "sitemapindex";
-    private final static String digitalniKnihovnaUrl = "http://www.digitalniknihovna.cz/mzk/view";
+    private final static String digitalniKnihovnaUrl = "http://www.digitalniknihovna.cz";
     private static final String xmlnsAttrValue = "http://www.sitemaps.org/schemas/sitemap/0.9";
 
     private static final String urlElementName = "url";

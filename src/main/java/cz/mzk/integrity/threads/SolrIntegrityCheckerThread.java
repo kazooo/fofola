@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.result.Cursor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -71,47 +72,40 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
                 .setRows(docsPerQuery);
 
         done = 0;
-        List<SolrDocument> solrDocs;
-        while (done < docCount && super.keepProcess) {
-            solrDocs = solrCommunicator.cursorQuery(collectionName, query);
+        List<UuidProblem> problems = new ArrayList<>();
+        Cursor<SolrDocument> solrDocs = solrCommunicator.getDocCursor(collectionName, query);
 
-            List<UuidProblem> problems = new ArrayList<>();
-            for (SolrDocument solrDoc : solrDocs) {
+        while (done < docCount && super.keepProcess && solrDocs.hasNext()) {
+            SolrDocument solrDoc = solrDocs.next();
+            String uuid = solrDoc.getUuid();
 
-                if (!super.keepProcess) {
-                    return;
-                }
+            FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
 
-                String uuid = solrDoc.getUuid();
-
-                FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
-
-                // check if stored in Fedora
-                if (fedoraDoc == null) {
-                    problems.add(new UuidProblem(UuidProblem.NOT_STORED));
-                }
-
-                // check if doc in Fedora has the same visibility as doc in Solr
-                if (fedoraDoc != null && !fedoraDoc.getAccesibility().equals(solrDoc.getAccessibility())) {
-                    problems.add(new UuidProblem(UuidProblem.DIFF_VISIBILITY));
-                }
-
-                // check doc root
-                checkUuidExistence(solrDoc.getRootPid(), problems);
-
-                if (!problems.isEmpty()) {
-                    problemRepository.save(
-                            new UuidProblemRecord(processId, uuid,
-                                    solrDoc.getRootTitle(), model,
-                                    problems));
-                    problems.clear();
-                }
-                done++;
+            // check if stored in Fedora
+            if (fedoraDoc == null) {
+                problems.add(new UuidProblem(UuidProblem.NOT_STORED));
             }
+
+            // check if doc in Fedora has the same visibility as doc in Solr
+            if (fedoraDoc != null && !fedoraDoc.getAccesibility().equals(solrDoc.getAccessibility())) {
+                problems.add(new UuidProblem(UuidProblem.DIFF_VISIBILITY));
+            }
+
+            // check doc root
+            checkRootExistence(solrDoc.getRootPid(), problems);
+
+            if (!problems.isEmpty()) {
+                problemRepository.save(
+                        new UuidProblemRecord(processId, uuid,
+                                solrDoc.getRootTitle(), model,
+                                problems));
+                problems.clear();
+            }
+            done++;
         }
     }
 
-    private void checkUuidExistence(String uuid, List<UuidProblem> problems) {
+    private void checkRootExistence(String uuid, List<UuidProblem> problems) {
 
         // check if uuid exists
         if (uuid == null || uuid.isEmpty()) {
