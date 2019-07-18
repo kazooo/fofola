@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -154,8 +153,8 @@ public class SolrOperationsController {
     }
 
     @PostMapping(value = "/generate_sitemap", params = "action=run")
-    public String runSitemapGeneration() throws IOException {
-        Files.createTempDirectory(sitemapDirName);
+    public String runSitemapGeneration() {
+        new File(pathToSitemaps).mkdir();
         asynchronousFofolaProcessService.runSitemapGenerationProcess(pathToSitemaps);
         return "redirect:/generate_sitemap";
     }

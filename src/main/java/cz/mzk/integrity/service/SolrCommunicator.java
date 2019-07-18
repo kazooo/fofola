@@ -63,6 +63,11 @@ public class SolrCommunicator {
         return result;
     }
 
+    public Cursor<SolrDocument> getDocCursor(String collectionName,
+                                             Query query) {
+        return solrTemplate.queryForCursor(collectionName, query, SolrDocument.class);
+    }
+
     public long docCount(SimpleQuery query) {
         return solrTemplate.count("kramerius", query);
     }

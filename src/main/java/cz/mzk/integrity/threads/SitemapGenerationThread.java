@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.result.Cursor;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -16,7 +17,6 @@ import org.w3c.dom.Element;
 import javax.xml.transform.TransformerException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class SitemapGenerationThread extends FofolaThread {
@@ -39,7 +39,7 @@ public class SitemapGenerationThread extends FofolaThread {
     private static final String lastModElementName = "lastmod";
     private static final String sitemapElementName = "sitemap";
     private static final String sitemapIndexElementName = "sitemapindex";
-    private final static String digitalniKnihovnaUrl = "http://www.digitalniknihovna.cz";
+    private final static String digitalniKnihovnaUrl = "http://www.digitalniknihovna.cz/mzk/view";
     private static final String xmlnsAttrValue = "http://www.sitemaps.org/schemas/sitemap/0.9";
 
     private static final String urlElementName = "url";
@@ -56,6 +56,7 @@ public class SitemapGenerationThread extends FofolaThread {
         query = new SimpleQuery("details:/.*TitlePage.*/");
         query.addSort(new Sort(Sort.Direction.ASC, SolrDocument.ID));
         query.addProjectionOnFields(SolrDocument.PARENT_PID, SolrDocument.MODIFIED_DATE);
+        query.setRows(docPerQuery);
     }
 
     public void setCollectionName(String collectionName) {
@@ -79,7 +80,7 @@ public class SitemapGenerationThread extends FofolaThread {
         sitemapCounter = 0;
         total = solrCommunicator.docCount(query);
 
-        String folderName = outDirPath + "/maps/";
+        String folderName = outDirPath + "/";
         String sitemapSuffix = ".xml";
         String sitemapNamePrefix = "sitemap_";
 
@@ -91,29 +92,34 @@ public class SitemapGenerationThread extends FofolaThread {
         attr.setValue(xmlnsAttrValue);
         sitemapIndexElement.setAttributeNode(attr);
 
+        Cursor<SolrDocument> solrDocs = solrCommunicator.getDocCursor(collectionName, query);
+
         while (sitemapCounter < maxSitemaps) {
             String outFileName = sitemapNamePrefix + sitemapCounter + sitemapSuffix;
             String path = folderName + "/" + outFileName;
 
-            boolean generated = generateSitemap(path, maxDocPerSitemap);
+            boolean generated = generateSitemap(solrDocs, path, maxDocPerSitemap);
             if (!generated) {
-                break;
+                break; // no more uuids
             }
 
             Element sitemap = xmlService.createElement(sitemapIndex, sitemapIndexElement, sitemapElementName);
             Element loc = xmlService.createElement(sitemapIndex, sitemap, locElementName);
 
-            xmlService.setTextNode(sitemapIndex, loc, generateLocUrl(outFileName));
+            xmlService.setTextNode(sitemapIndex, loc, generateSitemapLocUrl(outFileName));
 
             Element lastMod = xmlService.createElement(sitemapIndex, sitemap, lastModElementName);
             xmlService.setTextNode(sitemapIndex, lastMod, sitemapDateFormat.format(new Date()));
             sitemapCounter++;
         }
 
-        xmlService.saveDoc(sitemapIndex, outDirPath + "/sitemap_index.xml");
+        if (sitemapCounter != 0) {
+            xmlService.saveDoc(sitemapIndex, outDirPath + "/sitemap_index.xml");
+        }
     }
 
-    private boolean generateSitemap(String outFileName, int maxDocs) throws TransformerException {
+    private boolean generateSitemap(Cursor<SolrDocument> solrDocs,
+                                    String outFileName, int maxDocs) throws TransformerException {
         int done = 0;
 
         Document sitemap = xmlService.newDoc();
@@ -124,38 +130,37 @@ public class SitemapGenerationThread extends FofolaThread {
         attr.setValue(xmlnsAttrValue);
         urlSet.setAttributeNode(attr);
 
-        while (done < maxDocs) {
-            query.setRows(batchSize(docPerQuery, done, maxDocs));
-            List<SolrDocument> solrDocs = solrCommunicator.cursorQuery(collectionName, query);
+        while (done < maxDocs && solrDocs.hasNext()) {
 
-            for (SolrDocument solrDoc : solrDocs) {
-                Element url = xmlService.createElement(sitemap, urlSet, urlElementName);
-                Element loc = xmlService.createElement(sitemap, url, locElementName);
+            SolrDocument solrDoc = solrDocs.next();
 
-                final String parentPid = solrDoc.getParentPids().get(0);
-                xmlService.setTextNode(sitemap, loc, generateLocUrl(parentPid));
+            Element url = xmlService.createElement(sitemap, urlSet, urlElementName);
+            Element loc = xmlService.createElement(sitemap, url, locElementName);
 
-                final Date modDate = solrDoc.getModifiedDate();
-                if (modDate != null) {
-                    Element lastMod = xmlService.createElement(sitemap, url, lastModElementName);
-                    xmlService.setTextNode(sitemap, lastMod, sitemapDateFormat.format(modDate));
-                }
+            final String parentPid = solrDoc.getParentPids().get(0);
+            xmlService.setTextNode(sitemap, loc, generateViewLocUrl(parentPid));
+
+            final Date modDate = solrDoc.getModifiedDate();
+            if (modDate != null) {
+                Element lastMod = xmlService.createElement(sitemap, url, lastModElementName);
+                xmlService.setTextNode(sitemap, lastMod, sitemapDateFormat.format(modDate));
             }
 
-            done += solrDocs.size();
+            done++;
         }
 
-        logger.info("generated");
-        xmlService.saveDoc(sitemap, outFileName);
+        if (done != 0) {
+            xmlService.saveDoc(sitemap, outFileName);
+        }
         return done != 0;
     }
 
-    private int batchSize(int docPerQuery, int done, int max) {
-        return Math.min(docPerQuery, (max - done));
+    private String generateSitemapLocUrl(String sitemapName) {
+        return digitalniKnihovnaUrl + "/" + sitemapName;
     }
 
-    private String generateLocUrl(String sitemapName) {
-        return digitalniKnihovnaUrl + "/" + sitemapName;
+    private String generateViewLocUrl(String uuid) {
+        return digitalniKnihovnaUrl + "/mzk/view/" + uuid;
     }
 }
 
