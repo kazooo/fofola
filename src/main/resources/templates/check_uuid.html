@@ -33,10 +33,10 @@
 
         </div>
 
-        <div class="uuid-table-container">
+        <div th:if="${not session.krameriusDocs.isEmpty()}" class="uuid-table-container">
 
             <div class="card scrollable-list">
-                <table th:if="${not session.krameriusDocs.isEmpty()}" id="uuidInfo"
+                <table id="uuidInfo"
                        class="table table-light table-hover">
 
                     <thead class="thead-light">

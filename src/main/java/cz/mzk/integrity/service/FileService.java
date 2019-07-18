@@ -16,11 +16,21 @@ import java.util.zip.ZipOutputStream;
 public class FileService {
 
     public static void writeUuidsIntoFile(String filename, List<String> uuids) throws IOException {
+        createDirIfNotExist(filename);
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
         for (String uuid : uuids) {
             writer.write(uuid + "\n");
         }
         writer.close();
+    }
+
+    private static void createDirIfNotExist(String filename) {
+        File file = new File(filename);
+        String directoryName = file.getParent();
+        File directory = new File(directoryName);
+        if (!directory.exists()){
+            directory.mkdir();
+        }
     }
 
     public static ResponseEntity sendFile(String pathToFile) throws FileNotFoundException {

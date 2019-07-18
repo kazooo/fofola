@@ -7,6 +7,7 @@ import cz.mzk.integrity.repository.ProblemRepository;
 import cz.mzk.integrity.service.AsynchronousFofolaProcessService;
 import cz.mzk.integrity.service.FileService;
 import cz.mzk.integrity.service.SolrCommunicator;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -41,14 +43,17 @@ public class SolrOperationsController {
         this.problemRepository = problemRepository;
     }
 
-
     @GetMapping("/check_solr_integrity")
-    public String checkSolrIntegrity(Model model) {
+    public String checkSolrIntegrity(Model model, HttpServletRequest request) {
+        Object pageOffsetAttr = request.getSession().getAttribute("page_num");
+        int pageOffset = pageOffsetAttr != null ? (int) pageOffsetAttr : 0;
+        int pageMax = 100;
 
         FofolaProcess process = asynchronousFofolaProcessService.getProcess(FofolaProcess.CHECK_SOLR_TYPE);
         boolean runningProcess = process != null && process.isRunning();
 
-        List<UuidProblemRecord> problems = problemRepository.findAll();
+        List<UuidProblemRecord> problems = problemRepository
+                .findAll(PageRequest.of(pageOffset, pageMax)).getContent();
         boolean problemsExist = problems != null && !problems.isEmpty();
 
         model.addAttribute("running_process", runningProcess);
@@ -64,7 +69,8 @@ public class SolrOperationsController {
             Map<UuidProblemRecord, String> uuidProblemDesc = new HashMap<>();
             if (runningProcess) {
                 long processId = process.getId();
-                problems = problemRepository.findByProcessId(processId);
+                problems = problemRepository
+                        .findAllByProcessId(processId, PageRequest.of(pageOffset, pageMax));
             }
             for (UuidProblemRecord problem : problems) {
                 List<UuidProblem> problemTypes = problem.getProblems();
@@ -101,24 +107,34 @@ public class SolrOperationsController {
 
     @PostMapping(value = "/check_solr_integrity", params = "action=download")
     public ResponseEntity downloadListWithProblems() throws IOException {
-        logger.info("Download Solr integrity problem list.");
-        FofolaProcess process = asynchronousFofolaProcessService.getProcess(FofolaProcess.CHECK_SOLR_TYPE);
 
+        FofolaProcess process = asynchronousFofolaProcessService.getProcess(FofolaProcess.CHECK_SOLR_TYPE);
         List<UuidProblemRecord> problems = problemRepository.findByProcessId(process.getId());
 
-        List<String> notStoredUuids = new ArrayList<>();
+        Map<String, List<String>> problemTypeUuidMap = new HashMap<>();
+
+        // sort by problem type
         for (UuidProblemRecord problem : problems) {
             List<UuidProblem> problemTypes = problem.getProblems();
+
             for (UuidProblem p : problemTypes) {
-                if (p.getType().equals(UuidProblem.NOT_STORED)) {
-                    notStoredUuids.add(problem.getUuid());
+
+                String listName = UuidProblemRecord.fileNameByType.get(p.getType());
+                if (!problemTypeUuidMap.containsKey(listName)) {
+                    problemTypeUuidMap.put(listName, new ArrayList<>());
                 }
+                problemTypeUuidMap.get(listName).add(problem.getUuid());
             }
         }
 
-        String notStoredFilePath = "/tmp/" + UuidProblemRecord.NOT_STORED_FILE_NAME;
-        FileService.writeUuidsIntoFile(notStoredFilePath, notStoredUuids);
-        return FileService.sendFile(notStoredFilePath);
+        // save lists into files
+        for (Map.Entry<String, List<String>> entry : problemTypeUuidMap.entrySet()) {
+            String filePath = "/tmp/problems/" + entry.getKey();
+            FileService.writeUuidsIntoFile(filePath, entry.getValue());
+        }
+
+        FileService.zipFolder("/tmp/problems", "/tmp/problems.zip");
+        return FileService.sendFile("/tmp/problems.zip");
     }
 
     @GetMapping("/generate_sitemap")

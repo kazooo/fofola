@@ -2,7 +2,9 @@ package cz.mzk.integrity.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 

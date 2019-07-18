@@ -4,13 +4,21 @@ package cz.mzk.integrity.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "uuid_problem_record")
 public class UuidProblemRecord implements Serializable {
 
-    public static final String NOT_STORED_FILE_NAME = "not_stored_in_fedora.txt";
+    public static final Map<String, String> fileNameByType = new HashMap<String, String>() {{
+        put(UuidProblem.NOT_STORED, "not_stored.txt");
+        put(UuidProblem.ROOT_NOT_STORED, "root_not_stored.txt");
+        put(UuidProblem.ROOT_NOT_INDEXED, "root_not_indexed.txt");
+        put(UuidProblem.DIFF_VISIBILITY, "diff_visibility.txt");
+        put(UuidProblem.NO_ROOT, "no_root.txt");
+    }};
 
     public UuidProblemRecord() { }
 
