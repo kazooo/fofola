@@ -83,6 +83,8 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
         return docCount;
     }
 
+    public String getModel() { return model; }
+
     @Override
     protected void process() {
         SimpleQuery query = new SimpleQuery(SolrDocument.MODEL + ":" + model)

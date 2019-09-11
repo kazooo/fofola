@@ -58,6 +58,8 @@
                     <div th:if="${running_process}">
 
                         <div class="panel-bar">
+                            <p class="form-inline" style="padding-top: 3%"> Model:  <span th:text="${model}"></span></p>
+                            <p class="form-inline" style="padding-top: 3%"> Problemů:  <span th:text="${problem_count}"></span></p>
                             <p class="form-inline" style="padding-top: 3%"> Celkem:  <span th:text="${total}"></span></p>
                             <p class="form-inline" style="padding-top: 3%"> Zkontrolovano:  <span th:text="${done}"></span></p>
 

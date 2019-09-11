@@ -75,8 +75,10 @@ public class SolrOperationsController {
                 List<UuidProblem> problemTypes = problem.getProblems();
                 uuidProblemDesc.put(problem, generateShortProblemDesc(problemTypes));
             }
+            model.addAttribute("model", asynchronousFofolaProcessService.getCheckSolrModel());
             model.addAttribute("done", asynchronousFofolaProcessService.getCheckSolrStatusDone());
             model.addAttribute("total", asynchronousFofolaProcessService.getCheckSolrStatusTotal());
+            model.addAttribute("problem_amount", problems.size());
             model.addAttribute("problems", uuidProblemDesc);
         }
 

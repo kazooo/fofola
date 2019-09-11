@@ -71,7 +71,7 @@ public class FedoraCommunicator {
 
     public FedoraDocument getFedoraDocByUuid(String uuid) {
         FedoraDocument fedoraDoc = null;
-        long sleepTime= 60 * 1000; // 1 minute
+        long sleepTime = 60 * 1000; // 1 minute
 
         while (true) {
             try {

@@ -127,7 +127,7 @@ td.root_title {
 
 .panel-bar {
     font-family: 'Roboto Slab';
-    width: max-content;
+    width: fit-content;
     font-weight: bold;
     margin: auto;
 }

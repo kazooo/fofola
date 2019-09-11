@@ -49,7 +49,7 @@ public class AsynchronousFofolaProcessService {
             case FofolaThreadEvent.CHECK_SOLR_EXC:
                 finishProcess(FofolaProcess.CHECK_SOLR_TYPE);
                 logger.severe("Solr integrity checking exception:");
-                logger.severe(event.getMessage());
+                logger.severe(event.toString());
                 break;
 
             case FofolaThreadEvent.GEN_SITEMAPS_EXC:
@@ -88,7 +88,6 @@ public class AsynchronousFofolaProcessService {
 
     public void stopSolrChecking() {
         logger.info("Stop Solr integrity checking.");
-
         solrIntegrityCheckerThread.interrupt();
         FofolaProcess process = getProcess(FofolaProcess.CHECK_SOLR_TYPE);
         process.stop();
@@ -97,7 +96,6 @@ public class AsynchronousFofolaProcessService {
 
     public void clearSolrChecking() {
         logger.info("Clear Solr integrity problem list.");
-
         FofolaProcess process = getProcess(FofolaProcess.CHECK_SOLR_TYPE);
         processRepository.delete(process);
     }
@@ -105,6 +103,8 @@ public class AsynchronousFofolaProcessService {
     public long getCheckSolrStatusDone() { return solrIntegrityCheckerThread.getDone(); }
 
     public long getCheckSolrStatusTotal() { return solrIntegrityCheckerThread.getDocCount(); }
+
+    public String getCheckSolrModel() { return solrIntegrityCheckerThread.getModel(); }
 
     /*************** SITEMAP GENERATION ***************/
 

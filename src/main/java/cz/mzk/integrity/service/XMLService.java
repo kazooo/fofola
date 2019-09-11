@@ -66,7 +66,9 @@ public class XMLService {
 
         String uuid = getElementTextContent(getElementsByNameFromList(doc, uuidElementNames), 0);
 
-        String accessibility = getElementTextContent(getElementsByNameFromList(doc, accessibilityElementNames), 0);
+        NodeList accessibilityNodes = getElementsByNameFromList(doc, accessibilityElementNames);
+        // get the last element in list, because the last element is the latest accessibility
+        String accessibility = getElementTextContent(accessibilityNodes, accessibilityNodes.getLength()-1);
         accessibility = accessibility.substring(accessibility.indexOf(":")+1);  // policy:private
 
         String model = getElementTextContent(getElementsByNameFromList(doc, modelElementNames), 0);
