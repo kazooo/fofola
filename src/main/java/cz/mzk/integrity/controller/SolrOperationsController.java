@@ -78,7 +78,7 @@ public class SolrOperationsController {
             model.addAttribute("model", asynchronousFofolaProcessService.getCheckSolrModel());
             model.addAttribute("done", asynchronousFofolaProcessService.getCheckSolrStatusDone());
             model.addAttribute("total", asynchronousFofolaProcessService.getCheckSolrStatusTotal());
-            model.addAttribute("problem_amount", problems.size());
+            model.addAttribute("problem_amount", uuidProblemDesc.size());
             model.addAttribute("problems", uuidProblemDesc);
         }
 
