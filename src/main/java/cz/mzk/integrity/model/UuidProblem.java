@@ -10,6 +10,8 @@ import java.util.Map;
 @Table(name = "uuid_problem")
 public class UuidProblem {
 
+    public static final String NO_MODEL = "no_model";
+
     public static final String NOT_STORED = "not_stored";
     public static final String DIFF_VISIBILITY = "diff_visibility";
 
@@ -28,6 +30,8 @@ public class UuidProblem {
     private static final Map<String, String> problemShortDescs =
             new HashMap<String, String>() {
         {
+            put(NO_MODEL, "Nemá model v DC datastreamu");
+
             put(NOT_STORED, "Není uloženo ve Fedoře");
             put(DIFF_VISIBILITY, "Různá viditelnost ve Fedoře a v Solru");
 

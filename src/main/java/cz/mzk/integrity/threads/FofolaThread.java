@@ -3,7 +3,9 @@ package cz.mzk.integrity.threads;
 import cz.mzk.integrity.model.FofolaProcess;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -52,13 +54,24 @@ public abstract class FofolaThread implements Runnable {
         try {
             process();
         } catch (Exception e) {
-            eventPublisher.publishEvent(exceptionEvent.get(threadType), e.getMessage());
+            String exceptionDescStr = "Exception: " + e.toString() + "\n" + stackTraceToStr(e);
+            eventPublisher.publishEvent(exceptionEvent.get(threadType), exceptionDescStr);
             return;
         } finally {
             keepProcess = false;
         }
 
         eventPublisher.publishEvent(finishEvent.get(threadType), "finished_successfully");
+    }
+
+    private String stackTraceToStr(Exception e) {
+        StackTraceElement[] stackTrace = e.getStackTrace();
+        StringBuilder stackTraceStr = new StringBuilder();
+        for (StackTraceElement ste : stackTrace) {
+            stackTraceStr.append(ste.toString());
+            stackTraceStr.append("\n");
+        }
+        return stackTraceStr.toString();
     }
 
     protected abstract void process() throws Exception;

@@ -18,6 +18,7 @@ public class UuidProblemRecord implements Serializable {
         put(UuidProblem.ROOT_NOT_INDEXED, "root_not_indexed.txt");
         put(UuidProblem.DIFF_VISIBILITY, "diff_visibility.txt");
         put(UuidProblem.NO_ROOT, "no_root.txt");
+        put(UuidProblem.NO_MODEL, "no_model.txt");
     }};
 
     public UuidProblemRecord() { }

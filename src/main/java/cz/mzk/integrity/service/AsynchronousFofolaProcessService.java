@@ -49,7 +49,7 @@ public class AsynchronousFofolaProcessService {
             case FofolaThreadEvent.CHECK_SOLR_EXC:
                 finishProcess(FofolaProcess.CHECK_SOLR_TYPE);
                 logger.severe("Solr integrity checking exception:");
-                logger.severe(event.toString());
+                logger.severe(event.getMessage());
                 break;
 
             case FofolaThreadEvent.GEN_SITEMAPS_EXC:

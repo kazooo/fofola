@@ -27,6 +27,8 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
     private final FedoraCommunicator fedoraCommunicator;
     private final ProblemRepository problemRepository;
 
+    private final Logger logger = LoggerFactory.getLogger(SolrIntegrityCheckerThread.class);
+
     private final List<String> mustHaveParent = Arrays.asList(
             "page", "periodicalitem",
             "periodicalvolume", "article",
@@ -99,11 +101,18 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
             SolrDocument solrDoc = solrDocs.next();
             String uuid = solrDoc.getUuid();
 
+            logger.info("Process: " + uuid);
+
             FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
 
             // check if stored in Fedora
             if (fedoraDoc == null) {
                 problems.add(new UuidProblem(UuidProblem.NOT_STORED));
+            }
+
+            // check model
+            if (fedoraDoc != null && fedoraDoc.getModel().equals(UuidProblem.NO_MODEL)) {
+                problems.add(new UuidProblem(UuidProblem.NO_MODEL));
             }
 
             // check if doc in Fedora has the same visibility as doc in Solr
@@ -137,10 +146,10 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
             }
 
             if (!problems.isEmpty()) {
-                problemRepository.save(
-                        new UuidProblemRecord(processId, uuid,
-                                solrDoc.getRootTitle(), model,
-                                new ArrayList<>(problems)));
+                UuidProblemRecord p = new UuidProblemRecord(
+                        processId, uuid, solrDoc.getRootTitle(), model,
+                        new ArrayList<>(problems));
+                problemRepository.save(p);
                 problems.clear();
             }
             done++;

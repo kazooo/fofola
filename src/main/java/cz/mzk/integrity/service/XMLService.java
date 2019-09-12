@@ -1,9 +1,11 @@
 package cz.mzk.integrity.service;
 
 import cz.mzk.integrity.model.FedoraDocument;
+import cz.mzk.integrity.model.UuidProblem;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -66,12 +68,11 @@ public class XMLService {
 
         String uuid = getElementTextContent(getElementsByNameFromList(doc, uuidElementNames), 0);
 
-        NodeList accessibilityNodes = getElementsByNameFromList(doc, accessibilityElementNames);
         // get the last element in list, because the last element is the latest accessibility
-        String accessibility = getElementTextContent(accessibilityNodes, accessibilityNodes.getLength()-1);
+        String accessibility = getLastElementTextContent(getElementsByNameFromList(doc, accessibilityElementNames));
         accessibility = accessibility.substring(accessibility.indexOf(":")+1);  // policy:private
 
-        String model = getElementTextContent(getElementsByNameFromList(doc, modelElementNames), 0);
+        String model = getLastElementTextContent(getElementsByNameFromList(doc, modelElementNames));
         model = model.substring(model.indexOf(":")+1);  // model:periodical
 
         FedoraDocument fedoraDoc = new FedoraDocument(uuid);
@@ -94,5 +95,12 @@ public class XMLService {
 
     private String getElementTextContent(NodeList nodeList, int i) {
         return nodeList.item(i).getTextContent();
+    }
+
+    private String getLastElementTextContent(NodeList nodeList) {
+        if (nodeList == null || nodeList.getLength() < 1) {
+            return UuidProblem.NO_MODEL;
+        }
+        return nodeList.item(nodeList.getLength()-1).getTextContent();
     }
 }
