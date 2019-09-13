@@ -138,10 +138,14 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
             if (mustHaveChild.contains(model) && fedoraDoc != null) {
                 List<String> child = fedoraCommunicator.getChildrenUuids(uuid);
                 for (String childUuid : child) {
-                    checkUuidExistence(childUuid, problems,
+                    boolean problemFound = checkUuidExistence(childUuid, problems,
                             UuidProblem.NO_CHILD,
                             UuidProblem.CHILD_NOT_INDEXED,
                             UuidProblem.CHILD_NOT_STORED);
+
+                    if (problemFound) {
+                        break;  // otherwise can be duplicities, one problem is enough to check child later...
+                    }
                 }
             }
 
@@ -156,7 +160,7 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
         }
     }
 
-    private void checkUuidExistence(String uuid, Set<UuidProblem> problems,
+    private boolean checkUuidExistence(String uuid, Set<UuidProblem> problems,
                                     String notExistProblemType,
                                     String notStoredProblemType,
                                     String notIndexedProblemType) {
@@ -164,19 +168,25 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
         // check if uuid exists
         if (uuid == null || uuid.isEmpty()) {
             problems.add(new UuidProblem(notExistProblemType));
-            return;
+            return true;  // problem found
         }
+
+        boolean problemFound = false;
 
         // check if uuid indexed
         SolrDocument uuidSolrDoc = solrCommunicator.getSolrDocByUuid(uuid);
         if (uuidSolrDoc == null) {
+            problemFound = true;
             problems.add(new UuidProblem(notIndexedProblemType));
         }
 
         // check if uuid stored
         FedoraDocument uuidFedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
         if (uuidFedoraDoc == null) {
+            problemFound = true;
             problems.add(new UuidProblem(notStoredProblemType));
         }
+
+        return problemFound;
     }
 }
