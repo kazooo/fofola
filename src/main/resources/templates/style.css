@@ -53,13 +53,49 @@ body {
     margin: auto;
 }
 
-#tree_container {
-    border: 2px solid lightsteelblue;
+#tree_page_container {
+    border: 2px solid #6F3317;
     height: calc(95% - 100px); /* TODO (height - margin-bottom) - home image height */
     border-radius: 5px;
     margin-left: 5%;
     margin-right: 5%;
     background-color: white;
+}
+
+#tree_container {
+    float: left;
+    width: 75%;
+    height: 100%
+}
+
+#info_container {
+    border-left: 2px solid #6F3317;
+    visibility: hidden;
+    float: right;
+    width: 25%;
+    height: 100%
+}
+
+#info_container td
+{
+    text-align: center;
+    vertical-align: middle;
+}
+
+#info_container td button
+{
+    background: url("copyclip.png");
+    width:20px;
+    height:20px;
+    border: 0;
+    background-size: 100%;
+}
+
+#info_container td a:link {
+    color: green;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .index_container {

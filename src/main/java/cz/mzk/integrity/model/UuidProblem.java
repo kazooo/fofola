@@ -10,7 +10,9 @@ import java.util.Map;
 @Table(name = "uuid_problem")
 public class UuidProblem {
 
-    public static final String NO_MODEL = "no_model";
+    public static final String NO_MODEL = "no model";
+    public static final String NO_ACCESS = "no accessibility";
+    public static final String NO_IMAGE = "no image";
 
     public static final String NOT_STORED = "not_stored";
     public static final String DIFF_VISIBILITY = "diff_visibility";

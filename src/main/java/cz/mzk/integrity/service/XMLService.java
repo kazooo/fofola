@@ -29,6 +29,7 @@ public class XMLService {
     private List<String> uuidElementNames = Arrays.asList("dc:identifier");
     private List<String> accessibilityElementNames = Arrays.asList("dc:rights");
     private List<String> modelElementNames = Arrays.asList("dc:type");
+    private List<String> imageUrlElementNames = Arrays.asList("tiles-url");
 
     static {
         try {
@@ -69,15 +70,19 @@ public class XMLService {
         String uuid = getElementTextContent(getElementsByNameFromList(doc, uuidElementNames), 0);
 
         // get the last element in list, because the last element is the latest accessibility
-        String accessibility = getLastElementTextContent(getElementsByNameFromList(doc, accessibilityElementNames));
+        String accessibility = getLastElementTextContent(
+                getElementsByNameFromList(doc, accessibilityElementNames), UuidProblem.NO_ACCESS);
         accessibility = accessibility.substring(accessibility.indexOf(":")+1);  // policy:private
 
-        String model = getLastElementTextContent(getElementsByNameFromList(doc, modelElementNames));
+        String model = getLastElementTextContent(getElementsByNameFromList(doc, modelElementNames), UuidProblem.NO_MODEL);
         model = model.substring(model.indexOf(":")+1);  // model:periodical
+
+        String imageUrl = getLastElementTextContent(getElementsByNameFromList(doc, imageUrlElementNames), UuidProblem.NO_IMAGE);
 
         FedoraDocument fedoraDoc = new FedoraDocument(uuid);
         fedoraDoc.setAccesibility(accessibility);
         fedoraDoc.setModel(model);
+        fedoraDoc.setImageUrl(imageUrl);
 
         return fedoraDoc;
     }
@@ -97,9 +102,9 @@ public class XMLService {
         return nodeList.item(i).getTextContent();
     }
 
-    private String getLastElementTextContent(NodeList nodeList) {
+    private String getLastElementTextContent(NodeList nodeList, String problem) {
         if (nodeList == null || nodeList.getLength() < 1) {
-            return UuidProblem.NO_MODEL;
+            return problem;
         }
         return nodeList.item(nodeList.getLength()-1).getTextContent();
     }

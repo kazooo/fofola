@@ -2,7 +2,9 @@ package cz.mzk.integrity.controller;
 
 import com.google.gson.Gson;
 import cz.mzk.integrity.model.DocTreeModel;
+import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.SolrDocument;
+import cz.mzk.integrity.service.FedoraCommunicator;
 import cz.mzk.integrity.service.SolrCommunicator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +24,11 @@ public class DocTreeController {
     private static final Logger logger = Logger.getLogger(SolrOperationsController.class.getName());
 
     private final SolrCommunicator solrCommunicator;
+    private final FedoraCommunicator fedoraCommunicator;
 
-    public DocTreeController(SolrCommunicator solrCommunicator) {
+    public DocTreeController(SolrCommunicator solrCommunicator, FedoraCommunicator fedoraCommunicator) {
         this.solrCommunicator = solrCommunicator;
+        this.fedoraCommunicator = fedoraCommunicator;
     }
 
     @GetMapping("/tree")
@@ -45,9 +49,20 @@ public class DocTreeController {
 
     private DocTreeModel generateTree(List<SolrDocument> docs, String parentUuid) {
         SolrDocument parentDoc = docs.stream().filter(d -> d.getUuid().equals(parentUuid)).findFirst().orElse(null);
+        FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(parentUuid);
         assert parentDoc != null;
+
         String nodeName = parentDoc.getModel() + " : " + parentDoc.getDcTitle();
         DocTreeModel parentNode = new DocTreeModel(nodeName);
+        parentNode.setUuid(parentUuid);
+        parentNode.setVisibilitySolr(parentDoc.getAccessibility());
+        parentNode.setModel(parentDoc.getModel());
+
+        if (fedoraDoc != null) {
+            parentNode.setStored("true");
+            parentNode.setVisibilityFedora(fedoraDoc.getAccesibility());
+            parentNode.setImageUrl(fedoraDoc.getImageUrl());
+        }
 
         // filter children for given parent
         Stream<SolrDocument> childs = docs.stream()
