@@ -71,4 +71,12 @@ public class SolrCommunicator {
     public long docCount(SimpleQuery query) {
         return solrTemplate.count("kramerius", query);
     }
+
+    public List<SolrDocument> getSolrDocsByRootPid(String rootUuid) {
+        return solrRepository.findByRootPid(rootUuid);
+    }
+
+    public List<SolrDocument> getSolrDocsByParentPid(String parentUuid) {
+        return solrRepository.findByParentPids(parentUuid);
+    }
 }

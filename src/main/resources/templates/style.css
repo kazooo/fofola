@@ -1,8 +1,13 @@
+html {
+    height:100%;
+}
+
 body {
     background-image: url('back.jpg');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
+    height: 100%;
 }
 
 .text-left {
@@ -46,6 +51,15 @@ body {
     position: relative;
     width: max-content;
     margin: auto;
+}
+
+#tree_container {
+    border: 2px solid lightsteelblue;
+    height: calc(95% - 100px); /* TODO (height - margin-bottom) - home image height */
+    border-radius: 5px;
+    margin-left: 5%;
+    margin-right: 5%;
+    background-color: white;
 }
 
 .index_container {
@@ -113,7 +127,7 @@ td.root_title {
     border-radius: 5px;
     padding: 10px;
     width: 170px;
-    height: 250px;
+    height: max-content;
 
     font-family: 'Roboto Slab';
     font-weight: bold;

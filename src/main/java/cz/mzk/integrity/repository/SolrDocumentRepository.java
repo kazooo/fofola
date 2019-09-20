@@ -16,4 +16,8 @@ public interface SolrDocumentRepository extends SolrCrudRepository<SolrDocument,
     @Query(value = "*:*")
     @Facet(fields = {SolrDocument.MODEL})
     public FacetPage<SolrDocument> facetByModels(Pageable page);
+
+    public List<SolrDocument> findByRootPid(String uuid);
+
+    public List<SolrDocument> findByParentPids(String uuid);
 }

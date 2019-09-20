@@ -17,6 +17,8 @@ public class SolrDocument {
     public final static String VISIBILITY = "dostupnost";
     public final static String MODEL = "fedora.model";
     public static final String ROOT_PID = "root_pid";
+    public static final String DC_TITLE = "dc.title";
+    public static final String RELS_EXT_INDEX = "rels_ext_index";
 
     @Id
     @Indexed(name = ID, type = "string")
@@ -39,6 +41,12 @@ public class SolrDocument {
 
     @Indexed(name = MODIFIED_DATE, type = "date")
     private Date modifiedDate;
+
+    @Indexed(name = DC_TITLE, type = "string")
+    private String dcTitle;
+
+    @Indexed(name = RELS_EXT_INDEX, type = "multivalued")
+    private List<Integer> relsExtIndex;
 
     public String getAccessibility() {
         return visibility;
@@ -69,5 +77,17 @@ public class SolrDocument {
 
     public Date getModifiedDate() {
         return modifiedDate;
+    }
+
+    public String getDcTitle() { return dcTitle; }
+
+    public Integer getRelsExtIndexForParent(String parentUuid) {
+        int index = 0;  // looking for the right parent
+        for(int i = 0; i < parentPids.size(); ++i){
+            if (parentPids.get(i).contains("searchString")) {
+                index = i;
+            }
+        }
+        return relsExtIndex.get(index);
     }
 }
