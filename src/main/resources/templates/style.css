@@ -3,7 +3,7 @@ html {
 }
 
 body {
-    background-image: url('back.jpg');
+    background-image: url('img/back.jpg');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -55,10 +55,11 @@ body {
 
 #tree_page_container {
     border: 2px solid #6F3317;
-    height: calc(95% - 100px); /* TODO (height - margin-bottom) - home image height */
+    height: calc(93% - 100px); /* TODO (height - margin-bottom) - home image height */
     border-radius: 5px;
     margin-left: 5%;
     margin-right: 5%;
+    margin-top: 1%;
     background-color: white;
 }
 
@@ -84,11 +85,36 @@ body {
 
 #info_container td button
 {
-    background: url("copyclip.png");
+    background: url("img/copyclip.png");
     width:20px;
     height:20px;
     border: 0;
     background-size: 100%;
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.ok {
+    background: url("img/tick.png");
+    width:20px;
+    height:20px;
+    border: 0;
+    background-size: 100%;
+    display:block;
+    margin:auto;
+}
+
+.error {
+    background: url("img/cross.png");
+    width:20px;
+    height:20px;
+    border: 0;
+    background-size: 100%;
+    display:block;
+    margin:auto;
 }
 
 #info_container td a:link {

@@ -29,7 +29,7 @@ public class XMLService {
     private List<String> uuidElementNames = Arrays.asList("dc:identifier");
     private List<String> accessibilityElementNames = Arrays.asList("dc:rights");
     private List<String> modelElementNames = Arrays.asList("dc:type");
-    private List<String> imageUrlElementNames = Arrays.asList("tiles-url");
+    private List<String> imageUrlElementNames = Arrays.asList("tiles-url", "kramerius4:tiles-url");
 
     static {
         try {

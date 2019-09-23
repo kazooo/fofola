@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import cz.mzk.integrity.model.DocTreeModel;
 import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.SolrDocument;
+import cz.mzk.integrity.model.UuidProblem;
 import cz.mzk.integrity.service.FedoraCommunicator;
 import cz.mzk.integrity.service.SolrCommunicator;
 import org.springframework.stereotype.Controller;
@@ -39,9 +40,10 @@ public class DocTreeController {
 
     @PostMapping("/tree")
     public String getTree(Model model, @RequestParam(name = "uuid", required = true) String uuid) {
-
-        List<SolrDocument> docs = solrCommunicator.getSolrDocsByRootPid(uuid);
-        DocTreeModel tree = generateTree(docs, uuid);
+        // uuid must not be root
+        String rootUuid = getRoot(uuid);
+        List<SolrDocument> docs = solrCommunicator.getSolrDocsByRootPid(rootUuid);
+        DocTreeModel tree = generateTree(docs, rootUuid);
         String json = gson.toJson(tree);
         model.addAttribute("tree_data", json);
         return "tree_page";
@@ -62,6 +64,10 @@ public class DocTreeController {
             parentNode.setStored("true");
             parentNode.setVisibilityFedora(fedoraDoc.getAccesibility());
             parentNode.setImageUrl(fedoraDoc.getImageUrl());
+        } else {
+            parentNode.setStored("false");
+            parentNode.setVisibilityFedora("unknown");
+            parentNode.setImageUrl(UuidProblem.NO_IMAGE);
         }
 
         // filter children for given parent
@@ -75,6 +81,13 @@ public class DocTreeController {
                 parentNode.addChild(generateTree(docs, uuid));
             }
         });
+
+        parentNode.checkProblems();
         return parentNode;
+    }
+
+    private String getRoot(String uuid) {
+        SolrDocument doc = solrCommunicator.getSolrDocByUuid(uuid);
+        return doc.getRootPid();
     }
 }
