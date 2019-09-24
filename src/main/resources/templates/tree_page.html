@@ -1,6 +1,10 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-    <head lang="en" th:replace="layout :: header (page_title='Fofola')"></head>
+    <head lang="en">
+        <th:block th:include="layout :: standard (page_title='Fofola')"></th:block>
+        <th:block th:include="layout :: websocket"></th:block>
+        <script src="/js/tree-websocket.js"></script>
+    </head>
 
     <style>
         .node {
@@ -32,6 +36,14 @@
             top: 0;
             left: 0;
         }
+
+        #wait-spin {
+            position: absolute;
+            height: 4rem;
+            width: 4rem;
+            left: 50%;
+            top: 50%;
+        }
     </style>
 
     <body>
@@ -41,10 +53,10 @@
                 <div class="white-rounded-back">
 
                     <div class="panel-bar">
-                        <form class="form-inline" action="#" th:action="@{/tree}" method="post">
+                        <form class="form-inline" action="#" method="post">
                             <label>Zadejte UUID</label>
-                            <input class="text" name="uuid" type="text" th:value="${uuid}" size="33">
-                            <button class="btn btn-outline-secondary btn-light" type="submit">Vypsat údaje</button>
+                            <input class="text" id="enter_uuid" type="text" size="33"/>
+                            <button class="btn btn-outline-secondary btn-light" id="enter_uuid_submit">Vypsat údaje</button>
                         </form>
                     </div>
 
@@ -53,9 +65,12 @@
             </div>
         </div>
 
-        <div th:if="${tree_data != null}">
+        <div id="tree_page_container">
 
-            <div id="tree_page_container">
+            <div id="wait-spin" class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+
                 <div id="tree_container"></div>
                 <div id="info_container">
                     <table class="table table-bordered" id="info_table">
@@ -94,23 +109,17 @@
                         </tr>
                     </table>
                 </div>
-            </div>
-
-            <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
-            <script th:inline="javascript">
-                /*<![CDATA[*/
-                /*[+ [# th:insert="~{/js/tree.js}" /] +]*/
-                /*]]>*/
-            </script>
-            <script>
-                function copyToClipboard(element) {
-                    var $temp = $("<input>");
-                    $("body").append($temp);
-                    $temp.val($(element).text()).select();
-                    document.execCommand("copy");
-                    $temp.remove();
-                }
-            </script>
         </div>
+
+        <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
+        <script>
+            function copyToClipboard(element) {
+                var $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val($(element).text()).select();
+                document.execCommand("copy");
+                $temp.remove();
+            }
+        </script>
     </body>
 </html>

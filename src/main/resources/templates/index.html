@@ -1,9 +1,10 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-    <head lang="en" th:replace="layout :: header (page_title='Fofola')"></head>
+    <head lang="en">
+        <th:block th:include="layout :: standard (page_title='Fofola')"></th:block>
+    </head>
 
     <body>
-
         <div class="index_container">
             <h1 class="title_text"> Fofola </h1>
 
@@ -25,10 +26,7 @@
                 <div class="service">
                     <p> Fedora </p>
                 </div>
-
             </div>
-
         </div>
-
     </body>
 </html>

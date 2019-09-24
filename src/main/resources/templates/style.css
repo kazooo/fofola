@@ -54,6 +54,7 @@ body {
 }
 
 #tree_page_container {
+    position: relative;
     border: 2px solid #6F3317;
     height: calc(93% - 100px); /* TODO (height - margin-bottom) - home image height */
     border-radius: 5px;

@@ -7,6 +7,8 @@ import cz.mzk.integrity.model.SolrDocument;
 import cz.mzk.integrity.model.UuidProblem;
 import cz.mzk.integrity.service.FedoraCommunicator;
 import cz.mzk.integrity.service.SolrCommunicator;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,8 @@ import java.util.stream.Stream;
 
 @Controller
 public class DocTreeController {
+
+    private static int c = 0;
 
     private static final Gson gson = new Gson();
     private static final Logger logger = Logger.getLogger(SolrOperationsController.class.getName());
@@ -37,7 +41,6 @@ public class DocTreeController {
         return "tree_page";
     }
 
-
     @PostMapping("/tree")
     public String getTree(Model model, @RequestParam(name = "uuid", required = true) String uuid) {
         // uuid must not be root
@@ -47,6 +50,16 @@ public class DocTreeController {
         String json = gson.toJson(tree);
         model.addAttribute("tree_data", json);
         return "tree_page";
+    }
+
+    @MessageMapping("/tree-websocket")
+    @SendTo("/tree/data")
+    public String getTreeDataWebSocket(String uuid) {
+        // uuid must not be root
+        String rootUuid = getRoot(uuid);
+        List<SolrDocument> docs = solrCommunicator.getSolrDocsByRootPid(rootUuid);
+        DocTreeModel tree = generateTree(docs, rootUuid);
+        return gson.toJson(tree);
     }
 
     private DocTreeModel generateTree(List<SolrDocument> docs, String parentUuid) {

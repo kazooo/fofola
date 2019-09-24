@@ -1,0 +1,11 @@
+version: "2"
+services:
+  db:
+    image: "postgres:9.6"
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fofola
+    ports:
+      - "5432:5432"

@@ -1,5 +1,9 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-    <head lang="en" th:replace="layout :: header (page_title='Fofola')"></head>
+
+    <head lang="en">
+        <th:block th:include="layout :: standard (page_title='Fofola')"></th:block>
+    </head>
+
     <body>
 
         <a href="/"><img src="img/home.png" width="100" height="100"></a>
