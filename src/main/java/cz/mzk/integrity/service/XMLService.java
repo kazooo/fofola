@@ -74,15 +74,21 @@ public class XMLService {
                 getElementsByNameFromList(doc, accessibilityElementNames), UuidProblem.NO_ACCESS);
         accessibility = accessibility.substring(accessibility.indexOf(":")+1);  // policy:private
 
-        String model = getLastElementTextContent(getElementsByNameFromList(doc, modelElementNames), UuidProblem.NO_MODEL);
+        String model = getLastElementTextContent(
+                getElementsByNameFromList(doc, modelElementNames),
+                UuidProblem.NO_MODEL
+        );
         model = model.substring(model.indexOf(":")+1);  // model:periodical
 
-        String imageUrl = getLastElementTextContent(getElementsByNameFromList(doc, imageUrlElementNames), UuidProblem.NO_IMAGE);
+        String imageUrl = getLastElementTextContent(
+                getElementsByNameFromList(doc, imageUrlElementNames),
+                UuidProblem.NO_IMAGE
+        );
 
         FedoraDocument fedoraDoc = new FedoraDocument(uuid);
         fedoraDoc.setAccesibility(accessibility);
         fedoraDoc.setModel(model);
-        fedoraDoc.setImageUrl(imageUrl);
+        fedoraDoc.setImageUrl(imageUrl + "/big.jpg");
 
         return fedoraDoc;
     }
@@ -92,7 +98,7 @@ public class XMLService {
 
         for (String elementName : elementNames) {
             nodes = doc.getElementsByTagName(elementName);
-            if (nodes != null) { break; }
+            if (nodes != null && nodes.getLength() > 0) { break; }
         }
 
         return nodes;

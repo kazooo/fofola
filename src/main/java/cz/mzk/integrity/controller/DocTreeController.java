@@ -41,16 +41,16 @@ public class DocTreeController {
         return "tree_page";
     }
 
-    @PostMapping("/tree")
-    public String getTree(Model model, @RequestParam(name = "uuid", required = true) String uuid) {
-        // uuid must not be root
-        String rootUuid = getRoot(uuid);
-        List<SolrDocument> docs = solrCommunicator.getSolrDocsByRootPid(rootUuid);
-        DocTreeModel tree = generateTree(docs, rootUuid);
-        String json = gson.toJson(tree);
-        model.addAttribute("tree_data", json);
-        return "tree_page";
-    }
+//    @PostMapping("/tree")
+//    public String getTree(Model model, @RequestParam(name = "uuid", required = true) String uuid) {
+//         uuid must not be root
+//        String rootUuid = getRoot(uuid);
+//        List<SolrDocument> docs = solrCommunicator.getSolrDocsByRootPid(rootUuid);
+//        DocTreeModel tree = generateTree(docs, rootUuid);
+//        String json = gson.toJson(tree);
+//        model.addAttribute("tree_data", json);
+//        return "tree_page";
+//    }
 
     @MessageMapping("/tree-websocket")
     @SendTo("/tree/data")
