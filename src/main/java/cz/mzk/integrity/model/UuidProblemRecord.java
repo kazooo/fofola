@@ -19,6 +19,14 @@ public class UuidProblemRecord implements Serializable {
         put(UuidProblem.DIFF_VISIBILITY, "diff_visibility.txt");
         put(UuidProblem.NO_ROOT, "no_root.txt");
         put(UuidProblem.NO_MODEL, "no_model.txt");
+        put(UuidProblem.NO_ACCESS, "no_access.txt");
+        put(UuidProblem.NO_IMAGE, "no_images.txt");
+        put(UuidProblem.NO_PARENT, "no_parent.txt");
+        put(UuidProblem.PARENT_NOT_INDEXED, "parent_not_indexed.txt");
+        put(UuidProblem.PARENT_NOT_STORED, "parent_not_stored.txt");
+        put(UuidProblem.NO_CHILD, "no_child.txt");
+        put(UuidProblem.CHILD_NOT_INDEXED, "child_not_indexed.txt");
+        put(UuidProblem.CHILD_NOT_STORED, "child_not_stored.txt");
     }};
 
     public UuidProblemRecord() { }
