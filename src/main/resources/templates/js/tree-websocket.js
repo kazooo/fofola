@@ -19,6 +19,12 @@ function showSpin(show) {
     }
 }
 
+$(window).on('beforeunload', function(e) {
+    if (stompClient != null) {
+        stompClient.close();
+    }
+});
+
 $(function () {
     showSpin(false);
 
