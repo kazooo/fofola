@@ -4,6 +4,7 @@ import cz.mzk.integrity.model.SolrDocument;
 import cz.mzk.integrity.repository.SolrDocumentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.Query;
 import org.springframework.data.solr.core.query.SimpleQuery;
@@ -20,6 +21,7 @@ public class SolrCommunicator {
 
     private final SolrDocumentRepository solrRepository;
     private final SolrTemplate solrTemplate;
+    private final String collectionName = "kramerius";
 
     public SolrCommunicator(SolrDocumentRepository solrRepository,
                             SolrTemplate solrTemplate) {
@@ -69,7 +71,7 @@ public class SolrCommunicator {
     }
 
     public long docCount(SimpleQuery query) {
-        return solrTemplate.count("kramerius", query);
+        return solrTemplate.count(collectionName, query);
     }
 
     public List<SolrDocument> getSolrDocsByRootPid(String rootUuid) {
@@ -78,5 +80,11 @@ public class SolrCommunicator {
 
     public List<SolrDocument> getSolrDocsByParentPid(String parentUuid) {
         return solrRepository.findByParentPids(parentUuid);
+    }
+
+    public long getDocNumByRootPid(String rootUuid) {
+        SimpleQuery query = new SimpleQuery(SolrDocument.ROOT_PID + ":\"" + rootUuid + "\"");
+        query.setRows(0);
+        return solrTemplate.count(collectionName, query);
     }
 }

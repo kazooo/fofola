@@ -10,10 +10,7 @@ import cz.mzk.integrity.service.SolrCommunicator;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
 import java.util.List;
@@ -23,10 +20,11 @@ import java.util.stream.Stream;
 @Controller
 public class DocTreeController {
 
-    private static int c = 0;
+    private static int docCounter = 0;
+    private static int docsToCallGC = 1000;
 
     private static final Gson gson = new Gson();
-    private static final Logger logger = Logger.getLogger(SolrOperationsController.class.getName());
+    private static final Logger logger = Logger.getLogger(DocTreeController.class.getName());
 
     private final SolrCommunicator solrCommunicator;
     private final FedoraCommunicator fedoraCommunicator;
@@ -77,10 +75,19 @@ public class DocTreeController {
             parentNode.setStored("true");
             parentNode.setVisibilityFedora(fedoraDoc.getAccesibility());
             parentNode.setImageUrl(fedoraDoc.getImageUrl());
+            fedoraDoc = null;
         } else {
             parentNode.setStored("false");
             parentNode.setVisibilityFedora("unknown");
             parentNode.setImageUrl(UuidProblem.NO_IMAGE);
+        }
+
+        docCounter++;
+        if (docCounter >= docsToCallGC) {
+            // requesting JVM for running Garbage Collector
+            logger.info("Run system garbage collector...");
+            System.gc();
+            docCounter = 0;
         }
 
         // filter children for given parent

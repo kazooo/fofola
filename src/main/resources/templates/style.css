@@ -26,7 +26,7 @@ body {
     font-family: 'foral_proextrabold';
     color: #6F3317;
     text-transform: uppercase;
-    animation: fadeIn 2s ease-in both;
+    animation: fadeIn 0.5s ease-in both;
 }
 
 @font-face {
@@ -178,7 +178,7 @@ td.root_title {
     padding: 30px;
     width: max-content;
     margin: auto;
-    animation: fadeIn 2s ease-in both;
+    animation: fadeIn 0.5s ease-in both;
 }
 
 #services .service {
