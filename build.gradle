@@ -76,6 +76,7 @@ task createDockerfile(type: Dockerfile) {
     from('openjdk:jre-alpine')
     label(['maintainer': 'Aleksei Ermak "aleksei.ermak@gmail.com"'])
     copyFile(jar.archiveName, '/app/' + jar.archiveName)
+    runCommand('apk --update --no-cache add curl nmap')
     entryPoint('java')
     exposePort(8081)
     defaultCommand('-jar', '/app/' + jar.archiveName)
