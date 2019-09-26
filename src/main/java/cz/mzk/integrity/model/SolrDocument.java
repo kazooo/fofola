@@ -84,7 +84,7 @@ public class SolrDocument {
     public Integer getRelsExtIndexForParent(String parentUuid) {
         int index = 0;  // looking for the right parent
         for(int i = 0; i < parentPids.size(); ++i){
-            if (parentPids.get(i).contains("searchString")) {
+            if (parentPids.get(i).contains(parentUuid)) {
                 index = i;
             }
         }
