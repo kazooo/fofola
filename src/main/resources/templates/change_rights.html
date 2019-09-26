@@ -33,7 +33,7 @@
                     <div style="clear: both"></div>
                 </div>
 
-                <div class="panel-bar" th:if="${!session.krameriusDocs.isEmpty()}">
+                <div class="panel-bar" th:if="${session.docsToChange != null && !session.docsToChange.isEmpty()}">
                     <form class="form-inline" action="#" data-th-action="@{/change_rights}" method="post">
                         <button class="btn btn-outline-secondary btn-light" type="submit" name="action" value="public">Zveřejnit</button>
                     </form>
@@ -52,12 +52,12 @@
             </div>
         </div>
 
-        <div th:if="${!session.krameriusDocs.isEmpty()}" style="padding-top: 1%; margin: auto; width: fit-content;">
+        <div th:if="${session.docsToChange != null && !session.docsToChange.isEmpty()}" style="padding-top: 1%; margin: auto; width: fit-content;">
 
             <div class="card scrollable-list">
                 <table id="uuidToChangeRights" class="table table-light" style="text-align: center">
                     <tbody>
-                    <tr th:each="krameriusDoc : ${session.krameriusDocs.getKrameriusDocs()}">
+                    <tr th:each="krameriusDoc : ${session.docsToChange.getKrameriusDocs()}">
                         <td><span th:text="${krameriusDoc.getUuid()}"> Uuid </span></td>
                     </tr>
                     </tbody>

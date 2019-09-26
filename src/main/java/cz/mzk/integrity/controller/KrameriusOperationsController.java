@@ -4,6 +4,7 @@ import cz.mzk.integrity.model.KrameriusDocListWrapper;
 import cz.mzk.integrity.model.KrameriusDocument;
 import cz.mzk.integrity.researcher.UuidResearcher;
 import cz.mzk.integrity.service.KrameriusApiCommunicator;
+import org.aspectj.weaver.patterns.ExactAnnotationFieldTypePattern;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,8 @@ public class KrameriusOperationsController {
 
     private final UuidResearcher researcher;
     private final KrameriusApiCommunicator krameriusApi;
+    private String EXAMINE_FLAG = "docsToExamine";
+    private String CHANGE_RIGHTS_FLAG = "docsToChange";
 
     public KrameriusOperationsController(UuidResearcher researcher,
                           KrameriusApiCommunicator krameriusApi) {
@@ -36,13 +39,10 @@ public class KrameriusOperationsController {
 
     @GetMapping("/check_uuid")
     public String examineForm(HttpServletRequest request) {
-
-        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request);
-
+        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request, EXAMINE_FLAG);
         if (krameriusDocs.size() < 1) {
-            insertDocsIntoSession(request, krameriusDocs);
+            insertDocsIntoSession(request, krameriusDocs, EXAMINE_FLAG);
         }
-
         return "check_uuid";
     }
 
@@ -52,7 +52,7 @@ public class KrameriusOperationsController {
                              @RequestParam(value = "file", required = false) MultipartFile file) {
 
 
-        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request);
+        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request, EXAMINE_FLAG);
 
         if (file != null && !file.isEmpty()) {
             try {
@@ -68,23 +68,23 @@ public class KrameriusOperationsController {
             krameriusDocs.add(krameriusDoc);
         }
 
-        insertDocsIntoSession(request, krameriusDocs);
+        insertDocsIntoSession(request, krameriusDocs, EXAMINE_FLAG);
 
         return "redirect:/check_uuid";
     }
 
     @PostMapping(value = "/check_uuid", params="action=clear")
     public String clearListExaminedUuids(HttpServletRequest request) {
-        clearDocsInSession(request);
+        clearDocsInSession(request, EXAMINE_FLAG);
         return "redirect:/check_uuid";
     }
 
     @GetMapping("/change_rights")
     public String changeRightsForm(HttpServletRequest request) {
-        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request);
+        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request, CHANGE_RIGHTS_FLAG);
 
         if (krameriusDocs.size() < 1) {
-            insertDocsIntoSession(request, krameriusDocs);
+            insertDocsIntoSession(request, krameriusDocs, CHANGE_RIGHTS_FLAG);
         }
         return "change_rights";
     }
@@ -94,7 +94,7 @@ public class KrameriusOperationsController {
                                    HttpServletRequest request,
                                    @RequestParam(value = "file", required = false) MultipartFile file) {
 
-        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request);
+        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request, CHANGE_RIGHTS_FLAG);
 
         if (file != null && !file.isEmpty()) {
             try {
@@ -110,7 +110,7 @@ public class KrameriusOperationsController {
             krameriusDocs.add(krameriusDoc);
         }
 
-        insertDocsIntoSession(request, krameriusDocs);
+        insertDocsIntoSession(request, krameriusDocs, CHANGE_RIGHTS_FLAG);
 
         return "redirect:/change_rights";
     }
@@ -118,7 +118,7 @@ public class KrameriusOperationsController {
     @PostMapping(value = "/change_rights", params="action=private")
     public String makePrivate(HttpServletRequest request) throws Exception {
 
-        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request);
+        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request, CHANGE_RIGHTS_FLAG);
         List<KrameriusDocument> docs = krameriusDocs.getKrameriusDocs();
 
         for (KrameriusDocument d : docs) {
@@ -127,14 +127,14 @@ public class KrameriusOperationsController {
             krameriusApi.makePrivate(d.getUuid());
         }
 
-        insertDocsIntoSession(request, null);
+        insertDocsIntoSession(request, null, CHANGE_RIGHTS_FLAG);
         return "redirect:/change_rights";
     }
 
     @PostMapping(value = "/change_rights", params="action=public")
     public String makePublic(HttpServletRequest request) throws Exception {
 
-        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request);
+        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request, CHANGE_RIGHTS_FLAG);
         List<KrameriusDocument> docs = krameriusDocs.getKrameriusDocs();
 
         for (KrameriusDocument d : docs) {
@@ -143,13 +143,13 @@ public class KrameriusOperationsController {
             krameriusApi.makePublic(d.getUuid());
         }
 
-        insertDocsIntoSession(request, null);
+        insertDocsIntoSession(request, null, CHANGE_RIGHTS_FLAG);
         return "redirect:/change_rights";
     }
 
     @PostMapping(value = "/change_rights", params="action=clear")
     public String clearListTOChangeRight(HttpServletRequest request) {
-        clearDocsInSession(request);
+        clearDocsInSession(request, CHANGE_RIGHTS_FLAG);
         return "redirect:/change_rights";
     }
 
@@ -182,19 +182,19 @@ public class KrameriusOperationsController {
         return uuidList;
     }
 
-    private KrameriusDocListWrapper extractDocsFromSession(HttpServletRequest request) {
-        KrameriusDocListWrapper krameriusDocs = (KrameriusDocListWrapper) request.getSession().getAttribute("krameriusDocs");
+    private KrameriusDocListWrapper extractDocsFromSession(HttpServletRequest request, String flag) {
+        KrameriusDocListWrapper krameriusDocs = (KrameriusDocListWrapper) request.getSession().getAttribute(flag);
         if (krameriusDocs == null) {
             krameriusDocs = new KrameriusDocListWrapper();
         }
         return krameriusDocs;
     }
 
-    private void insertDocsIntoSession(HttpServletRequest request, KrameriusDocListWrapper docs) {
-        request.getSession().setAttribute("krameriusDocs", docs);
+    private void insertDocsIntoSession(HttpServletRequest request, KrameriusDocListWrapper docs, String flag) {
+        request.getSession().setAttribute(flag, docs);
     }
 
-    private void clearDocsInSession(HttpServletRequest request) {
-        request.getSession().setAttribute("krameriusDocs", null);
+    private void clearDocsInSession(HttpServletRequest request, String flag) {
+        request.getSession().setAttribute(flag, null);
     }
 }

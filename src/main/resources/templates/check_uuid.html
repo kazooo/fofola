@@ -26,7 +26,7 @@
                         <button class="btn btn-outline-secondary btn-light" type="submit">Načíst uuid ze souboru</button>
                     </form>
 
-                    <form class="form-inline" action="#" data-th-action="@{/check_uuid}" method="post" th:if="${not session.krameriusDocs.isEmpty()}">
+                    <form class="form-inline" action="#" data-th-action="@{/check_uuid}" method="post" th:if="${not session.docsToExamine.isEmpty()}">
                         <button class="btn btn-outline-secondary btn-light" type="submit" name="action" value="clear">Vyčistit</button>
                     </form>
 
@@ -37,7 +37,7 @@
 
         </div>
 
-        <div th:if="${not session.krameriusDocs.isEmpty()}" class="uuid-table-container">
+        <div th:if="${not session.docsToExamine.isEmpty()}" class="uuid-table-container">
 
             <div class="card scrollable-list">
                 <table id="uuidInfo"
@@ -56,7 +56,7 @@
                     </thead>
 
                     <tbody>
-                    <tr th:each="krameriusDoc : ${session.krameriusDocs.getKrameriusDocs()}" >
+                    <tr th:each="krameriusDoc : ${session.docsToExamine.getKrameriusDocs()}" >
                         <td><span th:text="${krameriusDoc.getUuid()}"> Uuid </span></td>
                         <td><span th:text="${krameriusDoc.getModel()}"> Indexed </span></td>
                         <td th:classappend="${not krameriusDoc.isIndexed()} ? table-danger : null">
