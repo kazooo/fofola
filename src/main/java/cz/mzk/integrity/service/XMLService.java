@@ -88,7 +88,7 @@ public class XMLService {
         FedoraDocument fedoraDoc = new FedoraDocument(uuid);
         fedoraDoc.setAccesibility(accessibility);
         fedoraDoc.setModel(model);
-        fedoraDoc.setImageUrl(imageUrl + "/big.jpg");
+        fedoraDoc.setImageUrl(imageUrl.equals(UuidProblem.NO_IMAGE) ? imageUrl : imageUrl + "/big.jpg");
 
         return fedoraDoc;
     }

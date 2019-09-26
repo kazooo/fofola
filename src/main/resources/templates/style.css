@@ -93,11 +93,6 @@ body {
     background-size: 100%;
 }
 
-.disabled {
-    pointer-events: none;
-    cursor: default;
-}
-
 .ok {
     background: url("img/tick.png");
     width:20px;
@@ -123,6 +118,12 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: default;
+    color: black !important;
 }
 
 .index_container {
