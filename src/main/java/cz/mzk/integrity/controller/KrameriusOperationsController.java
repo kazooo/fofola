@@ -1,10 +1,14 @@
 package cz.mzk.integrity.controller;
 
+import com.google.gson.Gson;
 import cz.mzk.integrity.model.KrameriusDocListWrapper;
 import cz.mzk.integrity.model.KrameriusDocument;
 import cz.mzk.integrity.researcher.UuidResearcher;
 import cz.mzk.integrity.service.KrameriusApiCommunicator;
 import org.aspectj.weaver.patterns.ExactAnnotationFieldTypePattern;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +29,7 @@ import java.util.logging.Logger;
 public class KrameriusOperationsController {
 
     private static final Logger logger = Logger.getLogger(KrameriusOperationsController.class.getName());
+    private static final Gson gson = new Gson();
 
     private final UuidResearcher researcher;
     private final KrameriusApiCommunicator krameriusApi;
@@ -151,6 +156,17 @@ public class KrameriusOperationsController {
     public String clearListTOChangeRight(HttpServletRequest request) {
         clearDocsInSession(request, CHANGE_RIGHTS_FLAG);
         return "redirect:/change_rights";
+    }
+
+    @GetMapping("/reindex")
+    public String getReindexPage() {
+        return "reindex";
+    }
+
+    @MessageMapping("/reindex-websocket")
+    public void loadDataToReindex(@Payload String uuid) throws Exception {
+        logger.info("Reindex: " + uuid);
+        krameriusApi.reindex(uuid);
     }
 
     private KrameriusDocument fillKrameriusDoc(KrameriusDocument krameriusDoc) {

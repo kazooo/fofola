@@ -24,4 +24,8 @@ public class KrameriusApiCommunicator {
     public void makePrivate(String uuid) throws Exception {
         remoteApi.setPrivate(uuid);
     }
+
+    public void reindex(String uuid) throws Exception {
+        remoteApi.reindex(uuid);
+    }
 }

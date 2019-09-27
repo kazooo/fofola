@@ -19,6 +19,10 @@ public class ProcessRemoteApi {
     public Process setPrivate(String pid_path) throws Exception {
         return api.planProcess("setprivate", new Parameters(pid_path, pid_path));
     }
+
+    public Process reindex(String pid_path) throws Exception {
+        return api.planProcess("reindex", new Parameters("fromKrameriusModelNoCheck", pid_path, pid_path));
+    }
 }
 
 
