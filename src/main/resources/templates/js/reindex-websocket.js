@@ -51,10 +51,12 @@ function insertRowUuid(table, uuid) {
 }
 
 function sendUuids() {
+    setWaiting(true);
     for(var i = 0; i < uuids.length; i++) {
         stompClient.send("/reindex-websocket", {}, uuids[i]);
     }
-    clearTable()
+    clearTable();
+    setWaiting(false);
 }
 
 function showSpin(show) {
@@ -89,4 +91,17 @@ function clearTable() {
         table.deleteRow(i);
     }
     uuids = []
+}
+
+function setWaiting(set) {
+    showSpin(set);
+    var table = document.getElementById('uuid_table');
+    var reindex_button = document.getElementById('reindex_button');
+    if (set) {
+        table.style.opacity = "0.5";
+        reindex_button.disabled = true;
+    } else {
+        table.style.opacity = "1.0";
+        reindex_button.disabled = false;
+    }
 }
