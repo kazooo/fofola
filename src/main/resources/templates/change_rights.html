@@ -24,7 +24,7 @@
                         <label>Vyberte soubor s UUID</label>
                         <label class="btn btn-outline-secondary btn-light" for="file">Vybrat</label>
                         <input type="file" name="file" id="file" style="width:0; visibility:hidden; display: none"/>
-                        <button class="btn btn-outline-secondary btn-light" id="submit_button"
+                        <button class="btn btn-outline-secondary btn-light" id="load_file_submit"
                                 type="submit" style="visibility:hidden; display: none">
                             Načíst uuid ze souboru
                         </button>
@@ -68,8 +68,15 @@
 
         <script>
             var file = document.getElementById('file');
-            var submit = document.getElementById('submit_button');
+            var submit = document.getElementById('load_file_submit');
             file.onchange = function(){
+                var filePath = file.value;
+                var allowedExtensions = /(\.txt)$/i;
+                if(!allowedExtensions.exec(filePath)){
+                    alert('Please upload file having extensions .txt only.');
+                    file.value = '';
+                    return false;
+                }
                 submit.style.display = "block";
                 submit.style.visibility = 'visible';
             };

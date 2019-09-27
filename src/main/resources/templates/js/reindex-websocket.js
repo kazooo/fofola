@@ -63,12 +63,10 @@ function showSpin(show) {
 }
 
 function showReindexPanel(show) {
-    var button = document.getElementById("reindex_button_form");
+    var reindexPanel = document.getElementById("reindex_panel");
     var table = document.getElementById('uuid_table_container');
-    var info = document.getElementById('info_div');
-    showElement(button, show);
+    showElement(reindexPanel, show);
     showElement(table, show);
-    showElement(info, show);
 }
 
 function showElement(element, show) {
