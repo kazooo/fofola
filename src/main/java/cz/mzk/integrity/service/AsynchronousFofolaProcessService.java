@@ -38,12 +38,10 @@ public class AsynchronousFofolaProcessService {
 
             case FofolaThreadEvent.CHECK_SOLR_FINISH:
                 finishProcess(FofolaProcess.CHECK_SOLR_TYPE);
-                logger.info("Solr integrity checking complete!");
                 break;
 
             case FofolaThreadEvent.GEN_SITEMAPS_FINISH:
                 finishProcess(FofolaProcess.GENERATE_SITEMAP_TYPE);
-                logger.info("Sitemap generation complete!");
                 break;
 
             case FofolaThreadEvent.CHECK_SOLR_EXC:
@@ -73,8 +71,6 @@ public class AsynchronousFofolaProcessService {
     /*************** SOLR CHECKING ***************/
 
     public void runSolrChecking(String model, long docCount) {
-        logger.info("Run Solr checking process.");
-
         FofolaProcess solrProcess = new FofolaProcess(FofolaProcess.CHECK_SOLR_TYPE);
         solrProcess = processRepository.save(solrProcess);
 
@@ -87,7 +83,6 @@ public class AsynchronousFofolaProcessService {
     }
 
     public void stopSolrChecking() {
-        logger.info("Stop Solr integrity checking.");
         solrIntegrityCheckerThread.interrupt();
         FofolaProcess process = getProcess(FofolaProcess.CHECK_SOLR_TYPE);
         process.stop();
@@ -95,7 +90,6 @@ public class AsynchronousFofolaProcessService {
     }
 
     public void clearSolrChecking() {
-        logger.info("Clear Solr integrity problem list.");
         FofolaProcess process = getProcess(FofolaProcess.CHECK_SOLR_TYPE);
         processRepository.delete(process);
     }
@@ -109,8 +103,6 @@ public class AsynchronousFofolaProcessService {
     /*************** SITEMAP GENERATION ***************/
 
     public void runSitemapGenerationProcess(String outPath) {
-        logger.info("Run sitemaps generation.");
-
         FofolaProcess generationProcess = new FofolaProcess(FofolaProcess.GENERATE_SITEMAP_TYPE);
         processRepository.save(generationProcess);
 
@@ -120,8 +112,6 @@ public class AsynchronousFofolaProcessService {
     }
 
     public void stopSitemapGeneration() {
-        logger.info("Stop sitemap generation process.");
-
         FofolaProcess generationProcess = getProcess(FofolaProcess.GENERATE_SITEMAP_TYPE);
         generationProcess.stop();
         processRepository.saveAndFlush(generationProcess);
@@ -130,8 +120,6 @@ public class AsynchronousFofolaProcessService {
     }
 
     public void clearSitemapGen() {
-        logger.info("Clear generated sitemaps.");
-
         FofolaProcess generationProcess = getProcess(FofolaProcess.GENERATE_SITEMAP_TYPE);
         processRepository.delete(generationProcess);
     }
