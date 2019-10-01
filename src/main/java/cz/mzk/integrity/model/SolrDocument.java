@@ -88,6 +88,6 @@ public class SolrDocument {
                 index = i;
             }
         }
-        return relsExtIndex.get(index); // todo fix it for uuid:f1c7c08d-8f64-4b66-be28-5f209c2c7021
+        return relsExtIndex != null ? relsExtIndex.get(index) : 0;
     }
 }
