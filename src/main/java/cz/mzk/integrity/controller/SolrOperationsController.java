@@ -6,6 +6,7 @@ import cz.mzk.integrity.model.UuidProblemRecord;
 import cz.mzk.integrity.repository.ProblemRepository;
 import cz.mzk.integrity.service.AsynchronousFofolaProcessService;
 import cz.mzk.integrity.service.FileService;
+import cz.mzk.integrity.service.IpLogger;
 import cz.mzk.integrity.service.SolrCommunicator;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,7 @@ public class SolrOperationsController {
 
     @GetMapping("/check_solr_integrity")
     public String checkSolrIntegrity(Model model, HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Entry Solr index checking section.");
         Object pageOffsetAttr = request.getSession().getAttribute("page_num");
         int pageOffset = pageOffsetAttr != null ? (int) pageOffsetAttr : 0;
         int pageMax = 100;
@@ -88,27 +90,30 @@ public class SolrOperationsController {
     @PostMapping(value = "/check_solr_integrity", params = "action=run")
     public String runSolrIntegrityChecker(
             @RequestParam(name = "model", required = true) String model,
-            @RequestParam(name = "docCount", required = true) long docCount) {
+            @RequestParam(name = "docCount", required = true) long docCount, HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Run Solr index checking.");
         asynchronousFofolaProcessService.runSolrChecking(model, docCount);
         return "redirect:/check_solr_integrity";
     }
 
     @PostMapping(value = "/check_solr_integrity", params = "action=stop")
-    public String stopSolrIntegrityChecker() {
+    public String stopSolrIntegrityChecker(HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Stop Solr index checking.");
         asynchronousFofolaProcessService.stopSolrChecking();
         return "redirect:/check_solr_integrity";
     }
 
     @PostMapping(value = "/check_solr_integrity", params = "action=clear")
-    public String clearProblems() {
+    public String clearProblems(HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Clear Solr index checking output.");
         asynchronousFofolaProcessService.clearSolrChecking();
         problemRepository.deleteAll();
         return "redirect:/check_solr_integrity";
     }
 
     @PostMapping(value = "/check_solr_integrity", params = "action=download")
-    public ResponseEntity downloadListWithProblems() throws IOException {
-
+    public ResponseEntity downloadListWithProblems(HttpServletRequest request) throws IOException {
+        IpLogger.logIp(request.getRemoteAddr(), "Download Solr index checking output.");
         FofolaProcess process = asynchronousFofolaProcessService.getProcess(FofolaProcess.CHECK_SOLR_TYPE);
         List<UuidProblemRecord> problems = problemRepository.findByProcessId(process.getId());
 
@@ -139,7 +144,8 @@ public class SolrOperationsController {
     }
 
     @GetMapping("/generate_sitemap")
-    public String generateSitemapHome(Model model) {
+    public String generateSitemapHome(Model model, HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Entry sitemap generation section.");
         FofolaProcess process = asynchronousFofolaProcessService.getProcess(FofolaProcess.GENERATE_SITEMAP_TYPE);
         boolean runningGeneration = process != null && process.isRunning();
         model.addAttribute("running_generation", runningGeneration);
@@ -155,27 +161,31 @@ public class SolrOperationsController {
     }
 
     @PostMapping(value = "/generate_sitemap", params = "action=run")
-    public String runSitemapGeneration() {
+    public String runSitemapGeneration(HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Run sitemap generation.");
         new File(pathToSitemaps).mkdir();
         asynchronousFofolaProcessService.runSitemapGenerationProcess(pathToSitemaps);
         return "redirect:/generate_sitemap";
     }
 
     @PostMapping(value = "/generate_sitemap", params = "action=stop")
-    public String stopSitemapGeneration() {
+    public String stopSitemapGeneration(HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Stop sitemap generation.");
         asynchronousFofolaProcessService.stopSitemapGeneration();
         return "redirect:/generate_sitemap";
     }
 
     @PostMapping(value = "/generate_sitemap", params = "action=download")
-    public ResponseEntity downloadGeneratedSitemap() throws IOException {
+    public ResponseEntity downloadGeneratedSitemap(HttpServletRequest request) throws IOException {
+        IpLogger.logIp(request.getRemoteAddr(), "Download sitemap generation output.");
         String outZipFileName = pathToSitemaps + ".zip";
         FileService.zipFolder(pathToSitemaps, outZipFileName);
         return FileService.sendFile(outZipFileName);
     }
 
     @PostMapping(value = "/generate_sitemap", params = "action=clear")
-    public String clearGeneratedSitemaps() {
+    public String clearGeneratedSitemaps(HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Clear sitemap generation output.");
         FileService.deleteDir(pathToSitemaps);
         asynchronousFofolaProcessService.clearSitemapGen();
         return "redirect:/generate_sitemap";

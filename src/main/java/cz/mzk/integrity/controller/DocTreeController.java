@@ -6,12 +6,15 @@ import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.SolrDocument;
 import cz.mzk.integrity.model.UuidProblem;
 import cz.mzk.integrity.service.FedoraCommunicator;
+import cz.mzk.integrity.service.IpLogger;
 import cz.mzk.integrity.service.SolrCommunicator;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -36,14 +39,16 @@ public class DocTreeController {
     }
 
     @GetMapping("/tree")
-    public String home() {
+    public String home(HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Entry document tree section.");
         return "tree_page";
     }
 
     @MessageMapping("/tree-websocket")
     @SendTo("/tree/data")
-    public String getTreeDataWebSocket(String uuid) {
+    public String getTreeDataWebSocket(String uuid, SimpMessageHeaderAccessor ha) {
         // uuid must not be root
+        IpLogger.logIp((String) ha.getSessionAttributes().get("IP"), "Checking: " + uuid);
         String rootUuid = getRoot(uuid);
         List<SolrDocument> docs = new ArrayList<>();
         docs.addAll(solrCommunicator.getSolrDocsByRootPid(rootUuid));

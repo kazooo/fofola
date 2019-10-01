@@ -1,4 +1,4 @@
-package cz.mzk.integrity.controller;
+package cz.mzk.integrity.configuration;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
