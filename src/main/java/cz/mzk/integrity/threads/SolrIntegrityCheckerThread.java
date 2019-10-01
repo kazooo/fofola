@@ -101,8 +101,6 @@ public class SolrIntegrityCheckerThread extends FofolaThread {
             SolrDocument solrDoc = solrDocs.next();
             String uuid = solrDoc.getUuid();
 
-            logger.info("Process: " + uuid);
-
             FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(uuid);
 
             // check if stored in Fedora

@@ -3,10 +3,7 @@ package cz.mzk.integrity.service;
 import cz.mzk.integrity.model.FedoraDocument;
 import cz.mzk.integrity.model.UuidProblem;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,6 +11,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ public class XMLService {
     private List<String> accessibilityElementNames = Arrays.asList("dc:rights");
     private List<String> modelElementNames = Arrays.asList("dc:type");
     private List<String> imageUrlElementNames = Arrays.asList("tiles-url", "kramerius4:tiles-url");
+    private List<String> rdfDescElementNames = Arrays.asList("rdf:Description");
 
     static {
         try {
@@ -89,8 +91,53 @@ public class XMLService {
         fedoraDoc.setAccesibility(accessibility);
         fedoraDoc.setModel(model);
         fedoraDoc.setImageUrl(imageUrl.equals(UuidProblem.NO_IMAGE) ? imageUrl : imageUrl + "/big.jpg");
+        extractChildsFromDoc(doc, fedoraDoc);
 
         return fedoraDoc;
+    }
+
+    private void extractChildsFromDoc(Document doc, FedoraDocument fedoraDoc) {
+        NodeList rdfDesc = getElementsByNameFromList(doc, rdfDescElementNames);
+        if (rdfDesc == null || rdfDesc.getLength() < 1) {
+            fedoraDoc.addChild(UuidProblem.NO_CHILD);
+            return;
+        }
+        Node rdfDescNode = rdfDesc.item(rdfDesc.getLength()-1);
+        NodeList nodeList = rdfDescNode.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node currentNode = nodeList.item(i);
+            if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+                String tagName = currentNode.getNodeName();
+                if (tagName.contains("has") &&
+                        hasAttribute((Element) currentNode, "http://www.nsdl.org/ontologies/relationships#")) {
+                    String childUuid = getStringAttrValue((Element)currentNode, "rdf:resource");
+                    childUuid = childUuid.replace("info:fedora/", "");
+                    fedoraDoc.addChild(childUuid);
+                }
+            }
+        }
+    }
+
+    private static boolean hasAttribute(Element element, String value) {
+        NamedNodeMap attributes = element.getAttributes();
+        for (int i = 0; i < attributes.getLength(); i++) {
+            Node node = attributes.item(i);
+            if (value.equals(node.getNodeValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static String getStringAttrValue(Element element, String attrName) {
+        NamedNodeMap attributes = element.getAttributes();
+        for (int i = 0; i < attributes.getLength(); i++) {
+            Node node = attributes.item(i);
+            if (attrName.equals(node.getNodeName())) {
+                return node.getTextContent();
+            }
+        }
+        return "";
     }
 
     private NodeList getElementsByNameFromList(Document doc, List<String> elementNames) {

@@ -214,8 +214,7 @@ function generateTree(data) {
         // Enter any new links at the parent's previous position.
         link.enter().insert("path", "g")
             .attr("class", function (d) {
-                var set_red_color = source.hasProblem || source.hasProblematicChild;
-                return set_red_color ? "link error" : "link";
+                return "link";
             })
             .attr("d", function(d) {
                 var o = {x: source.x0, y: source.y0};

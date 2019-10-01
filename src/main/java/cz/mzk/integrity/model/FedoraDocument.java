@@ -1,14 +1,19 @@
 package cz.mzk.integrity.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FedoraDocument {
 
     private String uuid;
     private String accesibility;
     private String model;
     private String imageUrl;
+    private List<String> childs;
 
     public FedoraDocument(String uuid) {
         this.uuid = uuid;
+        this.childs = new ArrayList<>();
     }
 
     public void setAccesibility(String accesibility) {
@@ -41,5 +46,13 @@ public class FedoraDocument {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public void addChild(String uuid) {
+        this.childs.add(uuid);
+    }
+
+    public List<String> getChilds() {
+        return childs;
     }
 }

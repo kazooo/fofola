@@ -135,7 +135,7 @@ public class SolrOperationsController {
         }
 
         FileService.zipFolder("/tmp/problems", "/tmp/problems.zip");
-        return FileService.sendFile("/tmp/problems.zip");
+        return FileService.sendFile("/tmp/" + asynchronousFofolaProcessService.getCheckSolrModel() + "_problems.zip");
     }
 
     @GetMapping("/generate_sitemap")

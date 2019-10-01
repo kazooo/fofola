@@ -12,9 +12,10 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Controller
@@ -44,15 +45,17 @@ public class DocTreeController {
     public String getTreeDataWebSocket(String uuid) {
         // uuid must not be root
         String rootUuid = getRoot(uuid);
-        List<SolrDocument> docs = solrCommunicator.getSolrDocsByRootPid(rootUuid);
+        List<SolrDocument> docs = new ArrayList<>();
+        docs.addAll(solrCommunicator.getSolrDocsByRootPid(rootUuid));
         DocTreeModel tree = generateTree(docs, rootUuid);
         return gson.toJson(tree);
     }
 
     private DocTreeModel generateTree(List<SolrDocument> docs, String parentUuid) {
         SolrDocument parentDoc = docs.stream().filter(d -> d.getUuid().equals(parentUuid)).findFirst().orElse(null);
-        FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(parentUuid);
         assert parentDoc != null;
+        docs.remove(parentDoc);
+        FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(parentUuid);
 
         String nodeName = parentDoc.getModel() + " : " + parentDoc.getDcTitle();
         DocTreeModel parentNode = new DocTreeModel(nodeName);
@@ -60,15 +63,22 @@ public class DocTreeController {
         parentNode.setVisibilitySolr(parentDoc.getAccessibility());
         parentNode.setModel(parentDoc.getModel());
 
+        // filter children for given parent
+        Supplier<Stream<SolrDocument>> childs = () -> docs.stream()
+                .filter(d -> d.getParentPids().contains(parentUuid))
+                .sorted(Comparator.comparing(o -> o.getRelsExtIndexForParent(parentUuid)));
+
         if (fedoraDoc != null) {
             parentNode.setStored("true");
             parentNode.setVisibilityFedora(fedoraDoc.getAccesibility());
             parentNode.setImageUrl(fedoraDoc.getImageUrl());
+            checkFedoraChilds(parentNode, fedoraDoc, childs);
             fedoraDoc = null;
         } else {
             parentNode.setStored("false");
             parentNode.setVisibilityFedora("unknown");
             parentNode.setImageUrl(UuidProblem.NO_IMAGE);
+            parentNode.hasProblem = true;
         }
 
         docCounter++;
@@ -79,12 +89,8 @@ public class DocTreeController {
             docCounter = 0;
         }
 
-        // filter children for given parent
-        Stream<SolrDocument> childs = docs.stream()
-                .filter(d -> d.getParentPids().contains(parentUuid))
-                .sorted(Comparator.comparing(o -> o.getRelsExtIndexForParent(parentUuid)));
         // recursively get children of children and add it to parent generating tree
-        childs.forEach(c -> {
+        childs.get().forEach(c -> {
             String uuid = c.getUuid();
             if (!uuid.equals(parentUuid)) {
                 parentNode.addChild(generateTree(docs, uuid));
@@ -98,5 +104,43 @@ public class DocTreeController {
     private String getRoot(String uuid) {
         SolrDocument doc = solrCommunicator.getSolrDocByUuid(uuid);
         return doc.getRootPid();
+    }
+
+    private void checkFedoraChilds(DocTreeModel parentNode, FedoraDocument fedoraDoc, Supplier<Stream<SolrDocument>> childs) {
+        List<String> fedoraChilds = fedoraDoc.getChilds();
+        List<String> missInSolr = childs.get()
+                .filter(d -> !fedoraChilds.contains(d.getUuid()))
+                .map(SolrDocument::getUuid)
+                .collect(Collectors.toList());
+
+        if (!missInSolr.isEmpty()) {
+            parentNode.hasProblematicChild = true;
+        }
+
+        for (String childUuid : missInSolr) {
+            FedoraDocument childFedoraDoc = fedoraCommunicator.getFedoraDocByUuid(childUuid);
+
+            DocTreeModel childNode = new DocTreeModel(childUuid);
+            childNode.setUuid(childUuid);
+            childNode.setIndexed("false");
+            childNode.setVisibilitySolr("unknown");
+            childNode.hasProblem = true;
+
+            if (childFedoraDoc != null) {
+                childNode.setModel(childFedoraDoc.getModel());
+                childNode.setStored("true");
+                childNode.setVisibilityFedora(childFedoraDoc.getAccesibility());
+                childNode.setImageUrl(childFedoraDoc.getImageUrl());
+                childFedoraDoc = null;
+            } else {
+                childNode.setModel("unknown");
+                childNode.setStored("false");
+                childNode.setVisibilityFedora("unknown");
+                childNode.setImageUrl(UuidProblem.NO_IMAGE);
+            }
+
+            parentNode.addChild(childNode);
+            docCounter++;
+        }
     }
 }
