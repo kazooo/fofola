@@ -12,13 +12,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/tree");
+        config.enableSimpleBroker("/tree", "/check");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/tree-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
         registry.addEndpoint("/reindex-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
+        registry.addEndpoint("/check-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
+        registry.addEndpoint("/rights-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
     }
 
 }

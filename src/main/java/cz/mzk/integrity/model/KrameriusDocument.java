@@ -12,6 +12,10 @@ public class KrameriusDocument {
     private String model;
     private String rootTitle;
 
+    private String imgUrl;
+    private String solrModifiedDate;
+    private String fedoraModifiedDate;
+
 
     public KrameriusDocument(String uuid) {
         this.uuid = uuid;
@@ -67,5 +71,17 @@ public class KrameriusDocument {
 
     public void setRootTitle(String rootTitle) {
         this.rootTitle = rootTitle;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public void setSolrModifiedDate(String solrModifiedDate) {
+        this.solrModifiedDate = solrModifiedDate;
+    }
+
+    public void setFedoraModifiedDate(String fedoraModifiedDate) {
+        this.fedoraModifiedDate = fedoraModifiedDate;
     }
 }

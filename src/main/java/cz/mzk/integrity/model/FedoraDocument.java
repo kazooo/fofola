@@ -10,6 +10,7 @@ public class FedoraDocument {
     private String model;
     private String imageUrl;
     private List<String> childs;
+    private String modifiedDateStr;
 
     public FedoraDocument(String uuid) {
         this.uuid = uuid;
@@ -54,5 +55,13 @@ public class FedoraDocument {
 
     public List<String> getChilds() {
         return childs;
+    }
+
+    public void setModifiedDateStr(String modifiedDateStr) {
+        this.modifiedDateStr = modifiedDateStr;
+    }
+
+    public String getModifiedDateStr() {
+        return modifiedDateStr;
     }
 }

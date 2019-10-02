@@ -6,7 +6,7 @@ import cz.mzk.integrity.model.KrameriusDocument;
 import cz.mzk.integrity.researcher.UuidResearcher;
 import cz.mzk.integrity.service.IpLogger;
 import cz.mzk.integrity.service.KrameriusApiCommunicator;
-import org.aspectj.weaver.patterns.ExactAnnotationFieldTypePattern;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -35,7 +35,6 @@ public class KrameriusOperationsController {
 
     private final UuidResearcher researcher;
     private final KrameriusApiCommunicator krameriusApi;
-    private String EXAMINE_FLAG = "docsToExamine";
     private String CHANGE_RIGHTS_FLAG = "docsToChange";
 
     public KrameriusOperationsController(UuidResearcher researcher,
@@ -45,50 +44,35 @@ public class KrameriusOperationsController {
     }
 
     @GetMapping("/check_uuid")
-    public String examineForm(HttpServletRequest request) {
+    public String getCheckUuidPage(HttpServletRequest request) {
         IpLogger.logIp(request.getRemoteAddr(), "Entry uuid checking section.");
-        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request, EXAMINE_FLAG);
-        if (krameriusDocs.size() < 1) {
-            insertDocsIntoSession(request, krameriusDocs, EXAMINE_FLAG);
-        }
         return "check_uuid";
     }
 
-    @PostMapping("/check_uuid")
-    public String examinePID(@RequestParam(name = "uuid", required = false) String uuid,
-                             HttpServletRequest request,
-                             @RequestParam(value = "file", required = false) MultipartFile file) {
-
-
-        KrameriusDocListWrapper krameriusDocs = extractDocsFromSession(request, EXAMINE_FLAG);
-        String logMsg = "Checking: ";
-        if (file != null && !file.isEmpty()) {
-            logMsg += "file";
-            try {
-                List<KrameriusDocument> kDocs = krameriusDocsForUuidsFromFile(file, true);
-                for (KrameriusDocument doc : kDocs) {
-                    krameriusDocs.add(doc);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else if (uuid != null && !uuid.isEmpty()) {
-            logMsg += uuid;
-            KrameriusDocument krameriusDoc = fillKrameriusDoc(new KrameriusDocument(uuid));
-            krameriusDocs.add(krameriusDoc);
-        }
-
-        IpLogger.logIp(request.getRemoteAddr(), logMsg);
-        insertDocsIntoSession(request, krameriusDocs, EXAMINE_FLAG);
-
-        return "redirect:/check_uuid";
+    @MessageMapping("/check-websocket")
+    @SendTo("/check/data")
+    public String getTreeDataWebSocket(String uuid, SimpMessageHeaderAccessor ha) {
+        Object ipAdress = ha.getSessionAttributes().get("IP");
+        IpLogger.logIp(ipAdress.toString(), "Checking: " + uuid);
+        KrameriusDocument krameriusDoc = fillKrameriusDoc(new KrameriusDocument(uuid));
+        IpLogger.logIp(ipAdress.toString(), "Finish checking: " + uuid);
+        return gson.toJson(krameriusDoc);
     }
 
-    @PostMapping(value = "/check_uuid", params="action=clear")
-    public String clearListExaminedUuids(HttpServletRequest request) {
-        IpLogger.logIp(request.getRemoteAddr(), "Clear checking section.");
-        clearDocsInSession(request, EXAMINE_FLAG);
-        return "redirect:/check_uuid";
+    @MessageMapping("/rights-websocket")
+    public void changeRight(@Payload String uuid, @Header("action") String action,
+                            SimpMessageHeaderAccessor ha) throws Exception {
+        Object ipAdress = ha.getSessionAttributes().get("IP");
+        switch (action) {
+            case "public":
+                IpLogger.logIp(ipAdress.toString(), "Make public: " + uuid);
+                krameriusApi.makePublic(uuid);
+                break;
+            case "private":
+                IpLogger.logIp(ipAdress.toString(), "Make private: " + uuid);
+                krameriusApi.makePrivate(uuid);
+                break;
+        }
     }
 
     @GetMapping("/change_rights")

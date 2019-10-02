@@ -32,6 +32,7 @@ public class XMLService {
     private List<String> modelElementNames = Arrays.asList("dc:type");
     private List<String> imageUrlElementNames = Arrays.asList("tiles-url", "kramerius4:tiles-url");
     private List<String> rdfDescElementNames = Arrays.asList("rdf:Description");
+    private List<String> lastModDateElementNames = Arrays.asList("audit:date");
 
     static {
         try {
@@ -87,10 +88,16 @@ public class XMLService {
                 UuidProblem.NO_IMAGE
         );
 
+        String lastModDateStr = getLastElementTextContent(
+                getElementsByNameFromList(doc, lastModDateElementNames),
+                UuidProblem.NO_MODIF_DATE
+        );
+
         FedoraDocument fedoraDoc = new FedoraDocument(uuid);
         fedoraDoc.setAccesibility(accessibility);
         fedoraDoc.setModel(model);
         fedoraDoc.setImageUrl(imageUrl.equals(UuidProblem.NO_IMAGE) ? imageUrl : imageUrl + "/big.jpg");
+        fedoraDoc.setModifiedDateStr(lastModDateStr);
         extractChildsFromDoc(doc, fedoraDoc);
 
         return fedoraDoc;

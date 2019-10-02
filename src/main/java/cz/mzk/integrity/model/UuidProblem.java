@@ -29,6 +29,8 @@ public class UuidProblem {
     public static final String CHILD_NOT_INDEXED = "child_not_indexed";
     public static final String CHILD_NOT_STORED = "child_not_stored";
 
+    public static final String NO_MODIF_DATE = "no modified date";
+
     private static final Map<String, String> problemShortDescs =
             new HashMap<String, String>() {
         {
