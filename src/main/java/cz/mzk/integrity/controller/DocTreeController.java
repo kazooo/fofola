@@ -49,11 +49,12 @@ public class DocTreeController {
     public String getTreeDataWebSocket(String uuid, SimpMessageHeaderAccessor ha) {
         // uuid must not be root
         String rootUuid = getRoot(uuid);
-        IpLogger.logIp((String) ha.getSessionAttributes().get("IP"), "Checking: " + rootUuid);
+        Object ipAdress = ha.getSessionAttributes().get("IP");
+        IpLogger.logIp(ipAdress.toString(), "Checking: " + rootUuid);
         List<SolrDocument> docs = new ArrayList<>();
         docs.addAll(solrCommunicator.getSolrDocsByRootPid(rootUuid));
         DocTreeModel tree = generateTree(docs, rootUuid);
-        IpLogger.logIp((String) ha.getSessionAttributes().get("IP"), "Finish checking: " + rootUuid);
+        IpLogger.logIp(ipAdress.toString(), "Finish checking: " + rootUuid);
         return gson.toJson(tree);
     }
 

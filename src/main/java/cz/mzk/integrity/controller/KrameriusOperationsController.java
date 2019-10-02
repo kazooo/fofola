@@ -176,7 +176,8 @@ public class KrameriusOperationsController {
 
     @MessageMapping("/reindex-websocket")
     public void loadDataToReindex(@Payload String uuid, SimpMessageHeaderAccessor ha) throws Exception {
-        IpLogger.logIp((String) ha.getSessionAttributes().get("IP"), "Reindex: " + uuid);
+        Object ipAdress = ha.getSessionAttributes().get("IP");
+        IpLogger.logIp(ipAdress.toString(), "Reindex: " + uuid);
         krameriusApi.reindex(uuid);
     }
 
