@@ -82,6 +82,10 @@ function insertRowUuid(table, data) {
     cell = row.insertCell(6);
     cell.innerHTML = data.solrModifiedDate + ' / ' + data.fedoraModifiedDate;
     cell.title = data.solrModifiedDate + ' / ' + data.fedoraModifiedDate;
+    if (data.hasOwnProperty('solrModifiedDate') === false ||
+        data.hasOwnProperty('fedoraModifiedDate') === false) {
+        cell.className = 'table-danger'
+    }
 
     cell = row.insertCell(7);
     setOperationButtons(cell)
