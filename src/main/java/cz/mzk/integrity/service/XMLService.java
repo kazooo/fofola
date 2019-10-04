@@ -70,7 +70,7 @@ public class XMLService {
     public FedoraDocument parseFedoraDocument(Document doc) {
         doc.getDocumentElement().normalize();
 
-        String uuid = getElementTextContent(getElementsByNameFromList(doc, uuidElementNames), 0);
+        String uuid = extractUuidFromRelsExt(doc);
 
         // get the last element in list, because the last element is the latest accessibility
         String accessibility = getLastElementTextContent(
@@ -103,6 +103,14 @@ public class XMLService {
         return fedoraDoc;
     }
 
+    private String extractUuidFromRelsExt(Document doc) {
+        NodeList rdfDesc = getElementsByNameFromList(doc, rdfDescElementNames);
+        Node rdfDescNode = rdfDesc.item(rdfDesc.getLength()-1);
+        String uuid = getStringAttrValue((Element)rdfDescNode, "rdf:about");
+        uuid = uuid.replace("info:fedora/", "");
+        return uuid;
+    }
+
     private void extractChildsFromDoc(Document doc, FedoraDocument fedoraDoc) {
         NodeList rdfDesc = getElementsByNameFromList(doc, rdfDescElementNames);
         if (rdfDesc == null || rdfDesc.getLength() < 1) {
@@ -116,7 +124,8 @@ public class XMLService {
             if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
                 String tagName = currentNode.getNodeName();
                 if (tagName.contains("has") &&
-                        hasAttribute((Element) currentNode, "http://www.nsdl.org/ontologies/relationships#")) {
+                        hasAttribute((Element) currentNode, "http://www.nsdl.org/ontologies/relationships#")
+                    || tagName.contains("kramerius:has")) {
                     String childUuid = getStringAttrValue((Element)currentNode, "rdf:resource");
                     childUuid = childUuid.replace("info:fedora/", "");
                     fedoraDoc.addChild(childUuid);

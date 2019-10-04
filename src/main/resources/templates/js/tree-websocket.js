@@ -262,8 +262,12 @@ function generateTree(data) {
         document.getElementsByTagName("span").namedItem("vis_solr").textContent = d.visibilitySolr;
         document.getElementsByTagName("span").namedItem("vis_fedora").textContent = d.visibilityFedora;
 
-        document.getElementsByTagName("div").namedItem("indexed").className = d.indexed === "true" ? 'ok' : 'error';
-        document.getElementsByTagName("div").namedItem("stored").className = d.stored === "true" ? 'ok' : 'error';
+        document.getElementsByTagName("div")
+            .namedItem("indexed").className = d.indexed === "true" ? 'ok' : 'error';
+        document.getElementsByTagName("div")
+            .namedItem("stored").className = d.stored === "true" ? 'ok' : 'error';
+        document.getElementsByTagName("div")
+            .namedItem("rels_ext").className = d.linkInRelsExt === "true" ? 'ok' : 'error';
 
         var hasNoImage = d.imageUrl === "no image";
 

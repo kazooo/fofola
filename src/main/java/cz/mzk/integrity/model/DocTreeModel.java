@@ -11,6 +11,7 @@ public class DocTreeModel {
     public String model;
     public String stored;
     public String indexed;
+    public String linkInRelsExt;
     public String visibilitySolr;
     public String visibilityFedora;
     public String imageUrl;
@@ -22,6 +23,8 @@ public class DocTreeModel {
         this.hasProblem = false;
         this.indexed = "true";
         this.hasProblematicChild = false;
+        this.linkInRelsExt = "true";
+        this.stored = "false";
     }
 
     public void setChildren(List<DocTreeModel> children) {
@@ -66,8 +69,18 @@ public class DocTreeModel {
         this.imageUrl = imageUrl;
     }
 
+    public void setLinkInRelsExt(String linkInRelsExt) {
+        this.linkInRelsExt = linkInRelsExt;
+        checkProblems();
+    }
+
     public void checkProblems() {
-        if (!this.visibilityFedora.equals(this.visibilitySolr)) {
+        if (this.visibilityFedora == null || this.visibilitySolr == null) {
+            this.hasProblem = true;
+        } else if (!this.visibilityFedora.equals(this.visibilitySolr)) {
+            this.hasProblem = true;
+        }
+        if (this.linkInRelsExt.equals("false")) {
             this.hasProblem = true;
         }
         if (this.stored.equals("false")) {

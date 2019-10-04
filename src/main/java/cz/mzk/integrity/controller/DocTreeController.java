@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 public class DocTreeController {
 
     private static int docCounter = 0;
-    private static int docsToCallGC = 1000;
+    private static int docsToCallGC = 3000;
 
     private static final Gson gson = new Gson();
     private static final Logger logger = Logger.getLogger(DocTreeController.class.getName());
@@ -75,11 +75,12 @@ public class DocTreeController {
                 .filter(d -> d.getParentPids().contains(parentUuid))
                 .sorted(Comparator.comparing(o -> o.getRelsExtIndexForParent(parentUuid)));
 
+        List<String> notInRelsExt = null;
         if (fedoraDoc != null) {
             parentNode.setStored("true");
             parentNode.setVisibilityFedora(fedoraDoc.getAccesibility());
             parentNode.setImageUrl(fedoraDoc.getImageUrl());
-            checkFedoraChilds(parentNode, fedoraDoc, childs);
+            notInRelsExt = checkFedoraChilds(parentNode, fedoraDoc, childs);
             fedoraDoc = null;
         } else {
             parentNode.setStored("false");
@@ -97,10 +98,15 @@ public class DocTreeController {
         }
 
         // recursively get children of children and add it to parent generating tree
+        List<String> finalNotInRelsExt = notInRelsExt;
         childs.get().forEach(c -> {
             String uuid = c.getUuid();
             if (!uuid.equals(parentUuid)) {
-                parentNode.addChild(generateTree(docs, uuid));
+                DocTreeModel childNode = generateTree(docs, uuid);
+                if (finalNotInRelsExt != null && finalNotInRelsExt.contains(uuid)) {
+                    childNode.setLinkInRelsExt("false");
+                }
+                parentNode.addChild(childNode);
             }
         });
 
@@ -113,11 +119,17 @@ public class DocTreeController {
         return doc.getRootPid();
     }
 
-    private void checkFedoraChilds(DocTreeModel parentNode, FedoraDocument fedoraDoc, Supplier<Stream<SolrDocument>> childs) {
+    private List<String> checkFedoraChilds(DocTreeModel parentNode, FedoraDocument fedoraDoc,
+                                   Supplier<Stream<SolrDocument>> childs) {
         List<String> fedoraChilds = fedoraDoc.getChilds();
-        List<String> missInSolr = childs.get()
+
+        List<String> notInRelsExt = childs.get()
                 .filter(d -> !fedoraChilds.contains(d.getUuid()))
                 .map(SolrDocument::getUuid)
+                .collect(Collectors.toList());
+
+        List<String> missInSolr = fedoraChilds.stream()
+                .filter(f -> childs.get().noneMatch(s -> s.getUuid().equals(f)))
                 .collect(Collectors.toList());
 
         if (!missInSolr.isEmpty()) {
@@ -132,6 +144,7 @@ public class DocTreeController {
             childNode.setIndexed("false");
             childNode.setVisibilitySolr("unknown");
             childNode.hasProblem = true;
+            childNode.setLinkInRelsExt("false");
 
             if (childFedoraDoc != null) {
                 childNode.setModel(childFedoraDoc.getModel());
@@ -149,5 +162,7 @@ public class DocTreeController {
             parentNode.addChild(childNode);
             docCounter++;
         }
+
+        return notInRelsExt;
     }
 }
