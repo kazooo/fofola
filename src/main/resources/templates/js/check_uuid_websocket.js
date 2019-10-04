@@ -80,7 +80,7 @@ function insertRowUuid(table, data) {
     cell.title = data.rootTitle;  // to display long text on hover
 
     cell = row.insertCell(6);
-    cell.innerHTML = data.solrModifiedDate + ' / ' + data.fedoraModifiedDate;
+    cell.innerHTML = data.solrModifiedDate + '<br/>' + data.fedoraModifiedDate;
     cell.title = data.solrModifiedDate + ' / ' + data.fedoraModifiedDate;
     if (data.hasOwnProperty('solrModifiedDate') === false ||
         data.hasOwnProperty('fedoraModifiedDate') === false) {

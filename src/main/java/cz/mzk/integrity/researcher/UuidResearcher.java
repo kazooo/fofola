@@ -21,14 +21,12 @@ public class UuidResearcher {
 
     private final SolrCommunicator solrCommunicator;
     private final FedoraCommunicator fedoraCommunicator;
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private static final Logger logger = Logger.getLogger(UuidResearcher.class.getName());
 
 
     public UuidResearcher(SolrCommunicator solrCommunicator, FedoraCommunicator fedoraCommunicator) {
         this.solrCommunicator = solrCommunicator;
         this.fedoraCommunicator = fedoraCommunicator;
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     private SolrDocument getSolrDoc(String uuid) {
@@ -56,7 +54,7 @@ public class UuidResearcher {
 
         if (solrDoc != null) {
             if (solrDoc.getModifiedDate() != null) {
-                doc.setSolrModifiedDate(sdf.format(solrDoc.getModifiedDate()));
+                doc.setSolrModifiedDate(solrDoc.getModifiedDate());
             }
             doc.setAccessibilityInSolr(solrDoc.getAccessibility());
             doc.setRootTitle(solrDoc.getRootTitle());

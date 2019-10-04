@@ -140,10 +140,10 @@ public class SitemapGenerationThread extends FofolaThread {
             final String parentPid = solrDoc.getParentPids().get(0);
             xmlService.setTextNode(sitemap, loc, generateViewLocUrl(parentPid));
 
-            final Date modDate = solrDoc.getModifiedDate();
+            final String modDate = solrDoc.getModifiedDate();
             if (modDate != null) {
                 Element lastMod = xmlService.createElement(sitemap, url, lastModElementName);
-                xmlService.setTextNode(sitemap, lastMod, sitemapDateFormat.format(modDate));
+                xmlService.setTextNode(sitemap, lastMod, modDate);
             }
 
             done++;

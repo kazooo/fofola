@@ -51,8 +51,7 @@ public class DocTreeController {
         String rootUuid = getRoot(uuid);
         Object ipAdress = ha.getSessionAttributes().get("IP");
         IpLogger.logIp(ipAdress.toString(), "Checking: " + rootUuid);
-        List<SolrDocument> docs = new ArrayList<>();
-        docs.addAll(solrCommunicator.getSolrDocsByRootPid(rootUuid));
+        List<SolrDocument> docs = new ArrayList<>(solrCommunicator.getSolrDocsByRootPid(rootUuid));
         DocTreeModel tree = generateTree(docs, rootUuid);
         IpLogger.logIp(ipAdress.toString(), "Finish checking: " + rootUuid);
         return gson.toJson(tree);

@@ -3,6 +3,7 @@ package cz.mzk.integrity.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,8 @@ public class SolrDocument {
     @Indexed(name = RELS_EXT_INDEX, type = "multivalued")
     private List<Integer> relsExtIndex;
 
+    private final SimpleDateFormat toFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     public String getAccessibility() {
         return visibility;
     }
@@ -75,8 +78,8 @@ public class SolrDocument {
         return parentPids;
     }
 
-    public Date getModifiedDate() {
-        return modifiedDate;
+    public String getModifiedDate() {
+        return toFmt.format(modifiedDate);
     }
 
     public String getDcTitle() { return dcTitle; }

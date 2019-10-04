@@ -12,7 +12,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/tree", "/check");
+        config.enableSimpleBroker("/tree", "/check", "/processes");
     }
 
     @Override
@@ -21,6 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/reindex-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
         registry.addEndpoint("/check-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
         registry.addEndpoint("/rights-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
+        registry.addEndpoint("/process-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
     }
 
 }

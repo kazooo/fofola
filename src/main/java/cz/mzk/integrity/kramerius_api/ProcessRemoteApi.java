@@ -3,6 +3,7 @@ package cz.mzk.integrity.kramerius_api;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class ProcessRemoteApi {
 
@@ -22,6 +23,10 @@ public class ProcessRemoteApi {
 
     public Process reindex(String pid_path) throws Exception {
         return api.planProcess("reindex", new Parameters("fromKrameriusModelNoCheck", pid_path, pid_path));
+    }
+
+    public List<Process> listProcesses(Map<String, String> fields) throws Exception {
+        return api.filterProcesses(fields);
     }
 }
 

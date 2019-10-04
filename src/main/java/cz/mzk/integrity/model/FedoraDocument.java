@@ -1,7 +1,12 @@
 package cz.mzk.integrity.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 public class FedoraDocument {
 
@@ -11,6 +16,9 @@ public class FedoraDocument {
     private String imageUrl;
     private List<String> childs;
     private String modifiedDateStr;
+
+    private final SimpleDateFormat fromFmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private final SimpleDateFormat toFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public FedoraDocument(String uuid) {
         this.uuid = uuid;
@@ -58,6 +66,10 @@ public class FedoraDocument {
     }
 
     public void setModifiedDateStr(String modifiedDateStr) {
+        try {
+            Date d = fromFmt.parse(modifiedDateStr);
+            modifiedDateStr = toFmt.format(d);
+        } catch (ParseException ignored) {}
         this.modifiedDateStr = modifiedDateStr;
     }
 
