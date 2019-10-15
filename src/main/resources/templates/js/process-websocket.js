@@ -4,6 +4,8 @@ var interval = 5 * 1000;
 var refreshIntervalId = null;
 
 $(function () {
+    setWaiting(true);
+
     var socket = new SockJS('/process-websocket');
     stompClient = Stomp.over(socket);
 
@@ -25,6 +27,8 @@ $(function () {
 
     updatePageNum();
     check();
+
+    setWaiting(false);
 });
 
 function requestForDataByCheckBox() {
@@ -34,13 +38,16 @@ function requestForDataByCheckBox() {
     }
 }
 
-function requestForData() {
+function requestNewData() {
     setWaiting(true);
+    requestForData();
+}
+
+function requestForData() {
     stompClient.send("/process-websocket", {}, lastPage);
 }
 
 function insertData(json) {
-    clearTable();
     var table = document.getElementById('uuid_table');
     for (var i = 0; i < json.length; i++) {
         insertProcessInfo(table, json[i])
@@ -49,12 +56,27 @@ function insertData(json) {
 }
 
 function insertProcessInfo(table, data) {
+
+    if (table.rows.length > 1) {  // 1 because of header row
+        for (var i = 1; i < table.rows.length; i++) {
+            var uuid = table.rows[i].cells[0].textContent;
+            if (uuid === data.uuid) {  // update only state and dates
+                var cells = table.rows[i].cells;
+                cells[3].innerHTML = data.state;
+                cells[5].innerHTML = data.started;
+                cells[6].innerHTML = data.finished;
+                return;
+            }
+        }
+    }
+
     var row = table.getElementsByTagName('tbody')[0].insertRow(-1);
 
     var cell = row.insertCell(0);
-    cell.innerHTML = data.pid;
+    cell.innerHTML = data.uuid;
+    cell.style.display = 'none';
 
-    var cell = row.insertCell(1);
+    cell = row.insertCell(1);
     cell.innerHTML = data.def;
 
     cell = row.insertCell(2);
@@ -63,6 +85,7 @@ function insertProcessInfo(table, data) {
 
     cell = row.insertCell(3);
     cell.innerHTML = data.state;
+    cell.style.color = colorByState(data.state);
 
     cell = row.insertCell(4);
     cell.innerHTML = data.planned;
@@ -72,6 +95,55 @@ function insertProcessInfo(table, data) {
 
     cell = row.insertCell(6);
     cell.innerHTML = data.finished;
+
+    cell = row.insertCell(7);
+    setOperationButtons(cell, data)
+}
+
+function setOperationButtons(cell, data) {
+
+    var checkbox = document.createElement('div');
+    checkbox.className = 'form-check';
+    checkbox.style = 'display: inline';
+    var checkinput = document.createElement('input');
+    checkinput.className = 'form-check-input process-check';
+    checkinput.type = 'checkbox';
+    checkinput.name = 'radio';
+    checkbox.appendChild(checkinput);
+    cell.appendChild(checkbox);
+
+    var btn = document.createElement('button');
+    btn.className = 'kill_btn';
+    btn.title = 'Zastavit';
+    btn.setAttribute( "onClick", "javascript: operate(this, 'kill');" );
+    cell.appendChild(btn);
+
+    btn = document.createElement('button');
+    btn.className = 'remove_btn';
+    btn.title = 'Smazat';
+    btn.setAttribute( "onClick", "javascript: operate(this, 'remove');" );
+    cell.appendChild(btn);
+
+    btn = document.createElement('button');
+    btn.className = 'logs_btn';
+    btn.title = 'Logy';
+    btn.setAttribute( "onClick", "window.open('" + data.logUrl + "')");
+    cell.appendChild(btn);
+}
+
+function operate(element, action) {
+    var table = document.getElementById('uuid_table');
+    var i = element.parentNode.parentNode.rowIndex;
+    var pid = table.rows[i].cells[0].textContent;
+    switch (action) {
+        case 'kill':
+            stompClient.send("/process-manipulation-websocket", {'action': 'kill'}, pid);
+            break;
+        case 'remove':
+            stompClient.send("/process-manipulation-websocket", {'action': 'remove'}, pid);
+            table.deleteRow(i);
+            break;
+    }
 }
 
 function clearTable() {
@@ -108,17 +180,70 @@ function showElement(element, show) {
 function previousProcessPage() {
     if (lastPage > 0) {
         lastPage--;
-        requestForData();
+        clearTable();
+        requestNewData();
         updatePageNum();
     }
 }
 
 function nextProcessPage() {
     lastPage++;
-    requestForData();
+    clearTable();
+    requestNewData();
     updatePageNum();
 }
 
 function updatePageNum() {
-    document.getElementById('page_num').textContent = lastPage + 1; // +1 because lastPage is counting from 0
+    document.getElementById('page_num').value = (lastPage+1).toString(10); // +1 because lastPage is counting from 0
+}
+
+function goToPage(page) {
+    lastPage = parseInt(page, 10)-1;  // -1 because lastPage is counting from 0
+    clearTable();
+    requestNewData();
+}
+
+function updateSelect(element) {
+    var checked = element.checked;
+    var checkBoxes = document.getElementsByClassName('process-check');
+    for(var i = 0; i < checkBoxes.length; i++) {
+        checkBoxes[i].checked = checked;
+    }
+}
+
+function operateChecked(operation) {
+    var checkBoxes = document.getElementsByClassName('process-check');
+    for(var i = checkBoxes.length-1; i >= 0; i--) {  // count from the end of list because operate('remove') erases rows
+        if (checkBoxes[i].checked) {
+            operate(checkBoxes[i].parentElement, operation)
+        }
+    }
+    document.getElementById('operation_checkbox').checked = false;
+    requestNewData();
+}
+
+function colorByState(state) {
+    switch (state) {
+        case 'RUNNING': return 'yellow';
+        case 'FAILED': return 'red';
+        case 'FINISHED': return 'green'
+    }
+}
+
+function applyStateFilter() {
+    var filter = document.getElementById('state_filter');
+    var state = filter.options[filter.selectedIndex].text;
+    applyFilter(state, 3)
+}
+
+function applyFilter(state, cellNum) {
+    var table = document.getElementById('uuid_table');
+    var rowCount = table.rows.length;
+    for(var i = rowCount-1; i > 0; i--) {   // -2 to dont remove table header
+        if (state !== table.rows[i].cells[cellNum].textContent) {
+            table.rows[i].style.visibility = 'hidden'
+        } else {
+            table.rows[i].style.visibility = 'visible'
+        }
+    }
 }

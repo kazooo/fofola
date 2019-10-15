@@ -15,11 +15,13 @@ import java.util.Map;
 public class KrameriusApiCommunicator {
 
     private ProcessRemoteApi remoteApi;
+    private final String krameriusUrl;
 
     public KrameriusApiCommunicator(@Value("${spring.data.kramerius.host}") String krameriusUrl,
                                     @Value("${spring.data.kramerius.user}") String krameriusUser,
                                     @Value("${spring.data.kramerius.pswd}") String krameriusPswd) {
         this.remoteApi = KrameriusProcessRemoteApiFactory.getProcessRemoteApi(krameriusUrl, krameriusUser, krameriusPswd);
+        this.krameriusUrl = krameriusUrl;
     }
 
     public void makePublic(String uuid) throws Exception {
@@ -40,6 +42,16 @@ public class KrameriusApiCommunicator {
             put("resultSize", Integer.toString(processes));
             put("offset", Integer.toString(offset));
         }};
-        return remoteApi.listProcesses(filterFields);
+        List<Process> processList = remoteApi.listProcesses(filterFields);
+        processList.forEach(p -> p.generateLogUrl(krameriusUrl));
+        return processList;
+    }
+
+    public void stopProcess(String pid) throws Exception {
+        remoteApi.stopProcess(pid);
+    }
+
+    public void removeProcess(String pid) throws Exception {
+        remoteApi.removeProcess(pid);
     }
 }

@@ -20,6 +20,7 @@ public class Process {
     String userFirstname;
     String userSurname;
     List<Process> children;
+    String logUrl;
 
     public String getUuid() {
         return uuid;
@@ -123,6 +124,10 @@ public class Process {
 
     public void setChildren(List<Process> children) {
         this.children = children;
+    }
+
+    public void generateLogUrl(String krameriusUrl) {
+        this.logUrl = "http://" + krameriusUrl + "/search/inc/admin/_processes_outputs.jsp?uuid=" + this.uuid;
     }
 
     @Override

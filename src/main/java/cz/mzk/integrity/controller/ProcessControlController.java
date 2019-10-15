@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import cz.mzk.integrity.kramerius_api.Process;
 import cz.mzk.integrity.service.IpLogger;
 import cz.mzk.integrity.service.KrameriusApiCommunicator;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -18,7 +20,7 @@ import java.util.logging.Logger;
 public class ProcessControlController {
 
     private static final Gson gson = new Gson();
-    private static final int processPerPage = 16;
+    private static final int processPerPage = 15;
     private final KrameriusApiCommunicator krameriusApi;
     private static final Logger logger = Logger.getLogger(ProcessControlController.class.getName());
 
@@ -34,8 +36,24 @@ public class ProcessControlController {
 
     @MessageMapping("/process-websocket")
     @SendTo("/processes/info")
-    public String getTreeDataWebSocket(@Payload int pageNum) throws Exception {
+    public String getProcessList(@Payload int pageNum) throws Exception {
         List<Process> processList = krameriusApi.getProcessList(pageNum * processPerPage, processPerPage);
         return gson.toJson(processList);
+    }
+
+    @MessageMapping("/process-manipulation-websocket")
+    public void applyOperation(@Payload String processUuid, @Header("action") String action,
+                               SimpMessageHeaderAccessor ha) throws Exception {
+        Object ipAdress = ha.getSessionAttributes().get("IP");
+        switch (action) {
+            case "kill":
+                IpLogger.logIp(ipAdress.toString(), "Kill process: " + processUuid);
+                krameriusApi.stopProcess(processUuid);
+                break;
+            case "remove":
+                IpLogger.logIp(ipAdress.toString(), "Remove process: " + processUuid);
+                krameriusApi.removeProcess(processUuid);
+                break;
+        }
     }
 }

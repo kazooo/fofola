@@ -28,8 +28,15 @@ public class ProcessRemoteApi {
     public List<Process> listProcesses(Map<String, String> fields) throws Exception {
         return api.filterProcesses(fields);
     }
-}
 
+    public Process stopProcess(String processUuid) throws Exception {
+        return api.stopProcess(processUuid, new Parameters(""));
+    }
+
+    public void removeProcess(String processUuid) throws Exception {
+        api.deleteProcessLog(processUuid);
+    }
+}
 
 class Parameters {
     // {"parameters":["first","second","third"]}

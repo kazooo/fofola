@@ -114,7 +114,6 @@ function setOperationButtons(cell) {
 function operate(element, action) {
     var table = document.getElementById('uuid_table');
     var uuid = table.rows[element.parentNode.parentNode.rowIndex].cells[0].textContent;
-    console.log(uuid, action);
     switch (action) {
         case 'reindex':
             stompClient.send("/reindex-websocket", {}, uuid);

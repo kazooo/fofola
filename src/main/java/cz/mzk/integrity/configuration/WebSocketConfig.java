@@ -22,6 +22,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/check-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
         registry.addEndpoint("/rights-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
         registry.addEndpoint("/process-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
+        registry.addEndpoint("/process-manipulation-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
     }
 
 }
