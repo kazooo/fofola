@@ -50,19 +50,19 @@ function requestForData() {
 function insertData(json) {
     var table = document.getElementById('uuid_table');
     for (var i = 0; i < json.length; i++) {
-        insertProcessInfo(table, json[i])
+        insertProcessInfo(table, json[i], null)
     }
     setWaiting(false);
 }
 
-function insertProcessInfo(table, data) {
+function insertProcessInfo(table, data, className) {
 
     if (table.rows.length > 1) {  // 1 because of header row
         for (var i = 1; i < table.rows.length; i++) {
             var uuid = table.rows[i].cells[0].textContent;
             if (uuid === data.uuid) {  // update only state and dates
                 var cells = table.rows[i].cells;
-                cells[3].innerHTML = data.state;
+                cells[3].innerHTML = data.batchState === 'NO_BATCH'? data.state : data.batchState;
                 cells[5].innerHTML = data.started;
                 cells[6].innerHTML = data.finished;
                 return;
@@ -71,33 +71,48 @@ function insertProcessInfo(table, data) {
     }
 
     var row = table.getElementsByTagName('tbody')[0].insertRow(-1);
+    row.className = className;
+    var hasChildren = data.hasOwnProperty('children');
 
+    insertCells(row, data);
+    fillCells(row.cells, data);
+
+    if (hasChildren) {
+        row.className = 'parent';
+        var children = data.children;
+        for (var j = 0; j < children.length; j++) {
+            insertProcessInfo(table, children[j], 'child ' + data.uuid);
+        }
+    }
+}
+
+function insertCells(row, data) {
     var cell = row.insertCell(0);
-    cell.innerHTML = data.uuid;
     cell.style.display = 'none';
 
-    cell = row.insertCell(1);
-    cell.innerHTML = data.def;
-
-    cell = row.insertCell(2);
-    cell.innerHTML = data.name;
-    cell.title = data.name;
+    row.insertCell(1);
+    row.insertCell(2);
 
     cell = row.insertCell(3);
-    cell.innerHTML = data.state;
     cell.style.color = colorByState(data.state);
 
-    cell = row.insertCell(4);
-    cell.innerHTML = data.planned;
-
-    cell = row.insertCell(5);
-    cell.innerHTML = data.started;
-
-    cell = row.insertCell(6);
-    cell.innerHTML = data.finished;
+    row.insertCell(4);
+    row.insertCell(5);
+    row.insertCell(6);
 
     cell = row.insertCell(7);
-    setOperationButtons(cell, data)
+    setOperationButtons(cell, data);
+}
+
+function fillCells(cells, data) {
+    cells[0].innerHTML = data.uuid;
+    cells[1].innerHTML = data.def;
+    cells[2].innerHTML = data.name;
+    cells[2].title = data.name;
+    cells[3].innerHTML = data.batchState === 'NO_BATCH'? data.state : data.batchState;
+    cells[4].innerHTML = data.planned;
+    cells[5].innerHTML = data.started;
+    cells[6].innerHTML = data.finished;
 }
 
 function setOperationButtons(cell, data) {
@@ -224,9 +239,10 @@ function operateChecked(operation) {
 
 function colorByState(state) {
     switch (state) {
-        case 'RUNNING': return 'yellow';
+        case 'RUNNING': return 'green';
         case 'FAILED': return 'red';
-        case 'FINISHED': return 'green'
+        case 'FINISHED': return 'black';
+        case 'BATCH_FINISHED': return 'black';
     }
 }
 

@@ -48,6 +48,22 @@
             margin-left: 5px;
             margin-right: 5px;
         }
+
+        .open {
+            display: table-row !important;
+        }
+        .parent ~ .child {
+            display: none;
+        }
+        .parent {
+            cursor: pointer;
+            background-color: #F2F2F4;
+        }
+        .child {
+            border-bottom: 1px dashed black;
+            border-right: 1px dashed black;
+            border-left: 1px dashed black;
+        }
     </style>
 
     <body>
@@ -137,6 +153,13 @@
             if (event.keyCode === 13) {
                 event.preventDefault();
                 goToPage(pageNum.value)
+            }
+        });
+        $('table').on('click', 'tr.parent', function(){
+            var uuid = this.cells[0].textContent;
+            var els = document.getElementsByClassName(uuid);
+            for (var i = 0; i < els.length; i++) {
+                els[i].classList.toggle('open');
             }
         });
     </script>
