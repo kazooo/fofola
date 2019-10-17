@@ -4,13 +4,14 @@
         <th:block th:include="layout :: standard (page_title='Fofola')"></th:block>
         <th:block th:include="layout :: websocket"></th:block>
         <script src="/js/change_rights_websocket.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/processes.css">
     </head>
 
     <style>
         .scrollable-list {
             width: 45em;
             margin-left: 30%;
-            margin-right: 40%;
+            margin-right: 30%;
         }
         #wait-spin {
             position: absolute;
@@ -18,6 +19,17 @@
             width: 4rem;
             left: 45%;
             top: 45%;
+        }
+        #change-rights-progress {
+            display: none;
+            margin-left: 20%;
+            margin-right: 20%;
+        }
+        td {
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     </style>
 
@@ -74,8 +86,26 @@
             <span class="sr-only">Loading...</span>
         </div>
 
-        <div class="card scrollable-list">
+        <div id="change-rights-table" class="card scrollable-list">
             <table id="uuid_table" class="table table-light table-hover"></table>
+        </div>
+
+        <div id="change-rights-progress" class="card">
+            <table id="progress-table" class="table table-light table-hover table-borderless">
+                <thead class="thead-light">
+                <tr>
+                    <th style="display: none"> uuid </th>
+                    <th> Typ </th>
+                    <th> Popis </th>
+                    <th> Stav </th>
+                    <th> Naplánováno </th>
+                    <th> Spuštěno </th>
+                    <th> Ukončeno </th>
+                    <th> Operace </th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 

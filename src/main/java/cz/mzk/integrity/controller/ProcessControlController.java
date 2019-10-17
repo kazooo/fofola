@@ -41,6 +41,12 @@ public class ProcessControlController {
         return gson.toJson(processList);
     }
 
+    @MessageMapping("/process-info")
+    @SendTo("/processes/one-p-info")
+    public String getProcessInfo(@Payload String processUuid) throws Exception {
+        return gson.toJson(krameriusApi.getProcessInfo(processUuid));
+    }
+
     @MessageMapping("/process-manipulation-websocket")
     public void applyOperation(@Payload String processUuid, @Header("action") String action,
                                SimpMessageHeaderAccessor ha) throws Exception {

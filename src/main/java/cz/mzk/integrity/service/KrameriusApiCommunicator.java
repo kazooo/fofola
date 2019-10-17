@@ -24,12 +24,12 @@ public class KrameriusApiCommunicator {
         this.krameriusUrl = krameriusUrl;
     }
 
-    public void makePublic(String uuid) throws Exception {
-        remoteApi.setPublic(uuid);
+    public Process makePublic(String uuid) throws Exception {
+        return remoteApi.setPublic(uuid);
     }
 
-    public void makePrivate(String uuid) throws Exception {
-        remoteApi.setPrivate(uuid);
+    public Process makePrivate(String uuid) throws Exception {
+        return remoteApi.setPrivate(uuid);
     }
 
     public void reindex(String uuid) throws Exception {
@@ -45,6 +45,12 @@ public class KrameriusApiCommunicator {
         List<Process> processList = remoteApi.listProcesses(filterFields);
         processList.forEach(p -> p.generateLogUrl(krameriusUrl));
         return processList;
+    }
+
+    public Process getProcessInfo(String processUuid) throws Exception {
+        Process p = remoteApi.getProcessInfo(processUuid);
+        p.generateLogUrl(krameriusUrl);
+        return p;
     }
 
     public void stopProcess(String pid) throws Exception {

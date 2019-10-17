@@ -1,5 +1,7 @@
 package cz.mzk.integrity.kramerius_api;
 
+import org.apache.tomcat.jni.Proc;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +29,10 @@ public class ProcessRemoteApi {
 
     public List<Process> listProcesses(Map<String, String> fields) throws Exception {
         return api.filterProcesses(fields);
+    }
+
+    public Process getProcessInfo(String processUuid) throws Exception {
+        return api.getProcess(processUuid);
     }
 
     public Process stopProcess(String processUuid) throws Exception {

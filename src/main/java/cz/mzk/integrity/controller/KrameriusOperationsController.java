@@ -1,7 +1,7 @@
 package cz.mzk.integrity.controller;
 
 import com.google.gson.Gson;
-import cz.mzk.integrity.model.KrameriusDocListWrapper;
+import cz.mzk.integrity.kramerius_api.Process;
 import cz.mzk.integrity.model.KrameriusDocument;
 import cz.mzk.integrity.researcher.UuidResearcher;
 import cz.mzk.integrity.service.IpLogger;
@@ -13,17 +13,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -34,6 +25,7 @@ public class KrameriusOperationsController {
 
     private final UuidResearcher researcher;
     private final KrameriusApiCommunicator krameriusApi;
+    private static final Logger logger = Logger.getLogger(KrameriusOperationsController.class.getName());
 
     public KrameriusOperationsController(UuidResearcher researcher,
                           KrameriusApiCommunicator krameriusApi) {
@@ -64,19 +56,22 @@ public class KrameriusOperationsController {
     }
 
     @MessageMapping("/rights-websocket")
-    public void changeRight(@Payload String uuid, @Header("action") String action,
+    @SendTo("/processes/rights")
+    public Process changeRight(@Payload String uuid, @Header("action") String action,
                             SimpMessageHeaderAccessor ha) throws Exception {
         Object ipAdress = ha.getSessionAttributes().get("IP");
+        Process p = null;
         switch (action) {
             case "public":
                 IpLogger.logIp(ipAdress.toString(), "Make public: " + uuid);
-                krameriusApi.makePublic(uuid);
+                p = krameriusApi.makePublic(uuid);
                 break;
             case "private":
                 IpLogger.logIp(ipAdress.toString(), "Make private: " + uuid);
-                krameriusApi.makePrivate(uuid);
+                p = krameriusApi.makePrivate(uuid);
                 break;
         }
+        return p;  // return process info to display progress on page
     }
 
     @GetMapping("/reindex")
