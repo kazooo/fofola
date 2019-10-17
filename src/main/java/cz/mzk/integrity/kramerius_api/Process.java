@@ -128,6 +128,9 @@ public class Process {
 
     public void generateLogUrl(String krameriusUrl) {
         this.logUrl = "http://" + krameriusUrl + "/search/inc/admin/_processes_outputs.jsp?uuid=" + this.uuid;
+        if (this.children != null && !this.children.isEmpty()) {
+            this.children.forEach(ch -> ch.generateLogUrl(krameriusUrl));
+        }
     }
 
     @Override

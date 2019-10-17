@@ -57,6 +57,7 @@ function insertData(json) {
 
 function insertProcessInfo(table, data, className) {
 
+    var hasChildren = data.hasOwnProperty('children');
     if (table.rows.length > 1) {  // 1 because of header row
         for (var i = 1; i < table.rows.length; i++) {
             var uuid = table.rows[i].cells[0].textContent;
@@ -65,14 +66,19 @@ function insertProcessInfo(table, data, className) {
                 cells[3].innerHTML = data.batchState === 'NO_BATCH'? data.state : data.batchState;
                 cells[5].innerHTML = data.started;
                 cells[6].innerHTML = data.finished;
+                if (hasChildren) {
+                    var children = data.children;
+                    for (var j = 0; j < children.length; j++) {
+                        insertProcessInfo(table, children[j], 'child ' + data.uuid);
+                    }
+                }
                 return;
             }
         }
-    }
 
+    }
     var row = table.getElementsByTagName('tbody')[0].insertRow(-1);
     row.className = className;
-    var hasChildren = data.hasOwnProperty('children');
 
     insertCells(row, data);
     fillCells(row.cells, data);
