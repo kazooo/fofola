@@ -8,6 +8,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     height: 100%;
+    font-family: 'ProximaNova Regular';
 }
 
 .text-left {
@@ -33,6 +34,20 @@ body {
     font-family: 'foral_proextrabold';
     src: url('font/foral_pro_extrabold-webfont.woff2') format('woff2'),
     url('font/foral_pro_extrabold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans Regular';
+    url('font/OpenSans-Regular.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ProximaNova Regular';
+    url('font/ProximaNova-Regular.otf') format('otf');
     font-weight: normal;
     font-style: normal;
 }
@@ -170,10 +185,6 @@ th.uuid-column {
     width: 23em;
 }
 
-td.root_title {
-    font-family: 'Roboto Slab';
-}
-
 .btn {
     color: black;
     border-color: black;
@@ -198,7 +209,6 @@ td.root_title {
     width: 170px;
     height: max-content;
 
-    font-family: 'Roboto Slab';
     font-weight: bold;
     color: 	#6F3317;
     font-size: 20px;
@@ -209,7 +219,6 @@ td.root_title {
 }
 
 .panel-bar {
-    font-family: 'Roboto Slab';
     width: fit-content;
     font-weight: bold;
     margin: auto;
