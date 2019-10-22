@@ -5,6 +5,7 @@ $(function () {
 
     var socket = new SockJS('/check-websocket');
     stompClient = Stomp.over(socket);
+    stompClient.debug = null;
     stompClient.connect({}, function (frame) {
         stompClient.subscribe('/check/data', function (data) {
             insertUuidIntoTable(JSON.parse(data.body));

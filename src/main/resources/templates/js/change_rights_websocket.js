@@ -10,6 +10,7 @@ $(function () {
 
     var socket = new SockJS('/rights-websocket');
     stompClient = Stomp.over(socket);
+    stompClient.debug = null;
     stompClient.connect({}, function (frame) {
         stompClient.subscribe('/processes/rights', function (data) {
             fillProgressTable(JSON.parse(data.body));

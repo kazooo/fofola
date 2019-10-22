@@ -8,7 +8,7 @@ $(function () {
 
     var socket = new SockJS('/process-websocket');
     stompClient = Stomp.over(socket);
-
+    stompClient.debug = null;
     stompClient.connect({}, function (frame) {
         stompClient.subscribe('/processes/info', function (data) {
             insertData(JSON.parse(data.body));

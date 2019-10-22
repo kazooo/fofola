@@ -30,6 +30,7 @@ $(function () {
 
     var socket = new SockJS('/tree-websocket');
     stompClient = Stomp.over(socket);
+    stompClient.debug = null;
     stompClient.connect({}, function (frame) {
         stompClient.subscribe('/tree/data', function (data) {
             showSpin(false);

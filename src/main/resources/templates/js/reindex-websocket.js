@@ -7,7 +7,7 @@ $(function () {
 
     var socket = new SockJS('/reindex-websocket');
     stompClient = Stomp.over(socket);
-
+    stompClient.debug = null;
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
