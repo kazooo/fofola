@@ -1,7 +1,7 @@
 version: "2"
 services:
   db:
-    image: "postgres:9.6"
+    image: "postgres:11.5"
     container_name: db
     environment:
       - POSTGRES_USER=postgres
@@ -9,3 +9,7 @@ services:
       - POSTGRES_DB=fofola
     ports:
       - "5432:5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "log_statement=all"
