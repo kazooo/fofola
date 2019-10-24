@@ -79,7 +79,7 @@ task createDockerfile(type: Dockerfile) {
     runCommand('apk --update --no-cache add curl nmap')
     entryPoint('java')
     exposePort(8081)
-    defaultCommand('-jar', '/app/' + jar.archiveName)
+    defaultCommand('-Xmx2g', '-jar', '/app/' + jar.archiveName)
 }
 
 task buildImage(type: DockerBuildImage) {
