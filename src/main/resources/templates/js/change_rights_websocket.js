@@ -86,8 +86,13 @@ function loadUuidsFromFile() {
     var table = document.getElementById('uuid_table');
     reader.onload = function(progressEvent){
         var lines = this.result.split('\n');
-        for(var line = 0; line < lines.length; line++){
-            insertRowUuid(table, lines[line])
+        for(var lineIdx = 0; lineIdx < lines.length; lineIdx++){
+            var line = lines[lineIdx].replace(/^\s+|\s+$/g, '');
+            if (!line.startsWith("uuid:")) {
+                console.log("can't operate with: " + line);
+                continue
+            }
+            insertRowUuid(table, line)
         }
         updateTotal();
         var submit = document.getElementById('load_file_submit');
