@@ -10,7 +10,9 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.NoSuchElementException;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 
@@ -51,6 +53,9 @@ public class UuidResearcher {
         doc.setStored(fedoraDoc != null);
 
         if (solrDoc != null) {
+            if (solrDoc.getModifiedDate() != null) {
+                doc.setSolrModifiedDate(solrDoc.getModifiedDate());
+            }
             doc.setAccessibilityInSolr(solrDoc.getAccessibility());
             doc.setRootTitle(solrDoc.getRootTitle());
         }
@@ -58,6 +63,8 @@ public class UuidResearcher {
         if (fedoraDoc != null) {
             doc.setAccessibilityInFedora(fedoraDoc.getAccesibility());
             doc.setModel(fedoraDoc.getModel());
+            doc.setFedoraModifiedDate(fedoraDoc.getModifiedDateStr());
+            doc.setImgUrl(fedoraDoc.getImageUrl());
         }
 
         return doc;

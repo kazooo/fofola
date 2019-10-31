@@ -1,8 +1,11 @@
 package cz.mzk.integrity.kramerius_api;
 
+import org.apache.tomcat.jni.Proc;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class ProcessRemoteApi {
 
@@ -19,8 +22,27 @@ public class ProcessRemoteApi {
     public Process setPrivate(String pid_path) throws Exception {
         return api.planProcess("setprivate", new Parameters(pid_path, pid_path));
     }
-}
 
+    public Process reindex(String pid_path) throws Exception {
+        return api.planProcess("reindex", new Parameters("fromKrameriusModelNoCheck", pid_path, pid_path));
+    }
+
+    public List<Process> listProcesses(Map<String, String> fields) throws Exception {
+        return api.filterProcesses(fields);
+    }
+
+    public Process getProcessInfo(String processUuid) throws Exception {
+        return api.getProcess(processUuid);
+    }
+
+    public Process stopProcess(String processUuid) throws Exception {
+        return api.stopProcess(processUuid, new Parameters(""));
+    }
+
+    public void removeProcess(String processUuid) throws Exception {
+        api.deleteProcessLog(processUuid);
+    }
+}
 
 class Parameters {
     // {"parameters":["first","second","third"]}

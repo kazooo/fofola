@@ -1,0 +1,51 @@
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <head lang="en">
+        <th:block th:include="layout :: standard (page_title='Fofola')"></th:block>
+    </head>
+
+    <body>
+        <a href="/"><img src="img/home.png" width="100" height="100"></a>
+
+        <div class="container">
+
+            <div class="white-rounded-back">
+
+                <div class="panel-bar">
+
+                    <div th:if="${not running_generation}">
+                        <form th:if="${has_generated}" class="form-inline" action="#" th:action="@{/generate_sitemap}" method="post">
+                            <label> V systému je uložen vygenerovaný sitemap index </label>
+                            <button class="btn btn-outline-secondary btn-light" type="submit" name="action" value="download"> Stahnout </button>
+                        </form>
+
+
+                        <form class="form-inline" action="#" th:action="@{/generate_sitemap}" method="post">
+                            <button class="btn btn-outline-secondary btn-light"
+                                    type="submit" name="action" value="run"
+                                    th:text="${has_generated} ? 'Vygenerovat znovu' : 'Vygenerovat'"> Vygenerovat </button>
+                        </form>
+                    </div>
+
+                    <div th:if="${running_generation}">
+                        <p class="form-inline" style="padding-top: 3%"> Celkem zaznamů:  <span th:text="${total}"></span></p>
+                        <p class="form-inline" style="padding-top: 3%"> Vygenerovano sitemap:  <span th:text="${done}"></span></p>
+
+                        <form class="form-inline" action="#" th:action="@{/generate_sitemap}" method="post">
+                            <button class="btn btn-outline-secondary btn-light" type="submit" name="action" value="stop"> Pozastavit proces </button>
+                        </form>
+
+                        <form class="form-inline">
+                            <button class="btn btn-outline-secondary btn-light" onClick="window.location.reload();"> Obnovit stránku </button>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div style="clear: both"></div>
+            </div>
+
+        </div>
+
+    </body>
+</html>

@@ -4,8 +4,10 @@ import cz.mzk.integrity.model.SolrDocument;
 import cz.mzk.integrity.repository.SolrDocumentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.Query;
+import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.data.solr.core.query.result.Cursor;
 import org.springframework.data.solr.core.query.result.FacetEntry;
 import org.springframework.data.solr.core.query.result.FacetFieldEntry;
@@ -19,6 +21,7 @@ public class SolrCommunicator {
 
     private final SolrDocumentRepository solrRepository;
     private final SolrTemplate solrTemplate;
+    private final String collectionName = "kramerius";
 
     public SolrCommunicator(SolrDocumentRepository solrRepository,
                             SolrTemplate solrTemplate) {
@@ -30,7 +33,8 @@ public class SolrCommunicator {
         List<SolrDocument> docs = solrRepository.findByUuid(uuid);
 
         if (docs == null || docs.isEmpty()) {
-            throw new NoSuchElementException("Can't find any Solr document with uuid: " + uuid);
+//            throw new NoSuchElementException("Can't find any Solr document with uuid: " + uuid);
+            return null;
         } else if (docs.size() > 1) {
             throw new IllegalStateException("Can not be more than one document with uuid: " + uuid);
         }
@@ -59,5 +63,28 @@ public class SolrCommunicator {
             result.add(doc);
         }
         return result;
+    }
+
+    public Cursor<SolrDocument> getDocCursor(String collectionName,
+                                             Query query) {
+        return solrTemplate.queryForCursor(collectionName, query, SolrDocument.class);
+    }
+
+    public long docCount(SimpleQuery query) {
+        return solrTemplate.count(collectionName, query);
+    }
+
+    public List<SolrDocument> getSolrDocsByRootPid(String rootUuid) {
+        return solrRepository.findByRootPid(rootUuid);
+    }
+
+    public List<SolrDocument> getSolrDocsByParentPid(String parentUuid) {
+        return solrRepository.findByParentPids(parentUuid);
+    }
+
+    public long getDocNumByRootPid(String rootUuid) {
+        SimpleQuery query = new SimpleQuery(SolrDocument.ROOT_PID + ":\"" + rootUuid + "\"");
+        query.setRows(0);
+        return solrTemplate.count(collectionName, query);
     }
 }

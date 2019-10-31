@@ -1,15 +1,15 @@
 package cz.mzk.integrity.repository;
 
-import cz.mzk.integrity.model.CheckProcess;
+import cz.mzk.integrity.model.FofolaProcess;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ProcessRepository extends JpaRepository<CheckProcess, Long> {
+public interface ProcessRepository extends JpaRepository<FofolaProcess, Long> {
 
-    public List<CheckProcess> findByProcessType(String type);
+    public List<FofolaProcess> findByProcessType(String type);
 
-    public CheckProcess findFirstByProcessType(String type);
+    public FofolaProcess findFirstByProcessType(String type);
 }
