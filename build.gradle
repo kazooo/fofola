@@ -32,7 +32,7 @@ configurations {
 }
 
 bootJar {
-    mainClassName = 'cz.mzk.integrity.Application'
+    mainClassName = 'cz.mzk.fofola.Application'
     destinationDir = project.file('docker/build')
 }
 
