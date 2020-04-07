@@ -18,6 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/remove-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
+        registry.addEndpoint("/transfer-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
         registry.addEndpoint("/tree-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
         registry.addEndpoint("/reindex-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
         registry.addEndpoint("/check-websocket").addInterceptors(new IpHandshakeInterceptor()).withSockJS();
