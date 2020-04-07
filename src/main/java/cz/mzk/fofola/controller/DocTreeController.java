@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import cz.mzk.fofola.model.DocTreeModel;
 import cz.mzk.fofola.model.FedoraDocument;
 import cz.mzk.fofola.model.SolrDocument;
-import cz.mzk.fofola.model.UuidProblem;
 import cz.mzk.fofola.service.FedoraCommunicator;
 import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.service.SolrCommunicator;
@@ -84,7 +83,7 @@ public class DocTreeController {
         } else {
             parentNode.setStored("false");
             parentNode.setVisibilityFedora("unknown");
-            parentNode.setImageUrl(UuidProblem.NO_IMAGE);
+            parentNode.setImageUrl("no_image");
             parentNode.hasProblem = true;
         }
 
@@ -155,7 +154,7 @@ public class DocTreeController {
                 childNode.setModel("unknown");
                 childNode.setStored("false");
                 childNode.setVisibilityFedora("unknown");
-                childNode.setImageUrl(UuidProblem.NO_IMAGE);
+                childNode.setImageUrl("no_image");
             }
 
             parentNode.addChild(childNode);

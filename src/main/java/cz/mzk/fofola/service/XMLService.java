@@ -1,7 +1,6 @@
 package cz.mzk.fofola.service;
 
 import cz.mzk.fofola.model.FedoraDocument;
-import cz.mzk.fofola.model.UuidProblem;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
 
@@ -69,29 +68,29 @@ public class XMLService {
 
         // get the last element in list, because the last element is the latest accessibility
         String accessibility = getLastElementTextContent(
-                getElementsByNameFromList(doc, accessibilityElementNames), UuidProblem.NO_ACCESS);
+                getElementsByNameFromList(doc, accessibilityElementNames), "no_access");
         accessibility = accessibility.substring(accessibility.indexOf(":")+1);  // policy:private
 
         String model = getLastElementTextContent(
                 getElementsByNameFromList(doc, modelElementNames),
-                UuidProblem.NO_MODEL
+                "no_model"
         );
         model = model.substring(model.indexOf(":")+1);  // model:periodical
 
         String imageUrl = getLastElementTextContent(
                 getElementsByNameFromList(doc, imageUrlElementNames),
-                UuidProblem.NO_IMAGE
+                "no_image"
         );
 
         String lastModDateStr = getLastElementTextContent(
                 getElementsByNameFromList(doc, lastModDateElementNames),
-                UuidProblem.NO_MODIF_DATE
+                "no_modif_date"
         );
 
         FedoraDocument fedoraDoc = new FedoraDocument(uuid);
         fedoraDoc.setAccesibility(accessibility);
         fedoraDoc.setModel(model);
-        fedoraDoc.setImageUrl(imageUrl.equals(UuidProblem.NO_IMAGE) ? imageUrl : imageUrl + "/big.jpg");
+        fedoraDoc.setImageUrl(imageUrl.equals("no_image") ? imageUrl : imageUrl + "/big.jpg");
         fedoraDoc.setModifiedDateStr(lastModDateStr);
         extractChildsFromDoc(doc, fedoraDoc);
 
@@ -109,7 +108,7 @@ public class XMLService {
     private void extractChildsFromDoc(Document doc, FedoraDocument fedoraDoc) {
         NodeList rdfDesc = getElementsByNameFromList(doc, rdfDescElementNames);
         if (rdfDesc == null || rdfDesc.getLength() < 1) {
-            fedoraDoc.addChild(UuidProblem.NO_CHILD);
+            fedoraDoc.addChild("no_child");
             return;
         }
         Node rdfDescNode = rdfDesc.item(rdfDesc.getLength()-1);

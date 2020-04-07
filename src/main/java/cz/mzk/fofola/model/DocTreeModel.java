@@ -86,7 +86,7 @@ public class DocTreeModel {
         if (this.stored.equals("false")) {
             this.hasProblem = true;
         }
-        if (this.model != null && this.model.equals("page") && this.imageUrl.equals(UuidProblem.NO_IMAGE)) {
+        if (this.model != null && this.model.equals("page") && this.imageUrl.equals("no_image")) {
             this.hasProblem = true;
         }
         if (this.model != null && this.model.equals("page")) {
