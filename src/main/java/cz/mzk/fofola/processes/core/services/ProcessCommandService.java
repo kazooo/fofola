@@ -15,12 +15,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 
 @Service
 public class ProcessCommandService {
 
     private final CommandGateway commandGateway;
     private final EventGateway eventGateway;
+    private static final Logger logger = Logger.getLogger(ProcessCommandService.class.getName());
 
     public ProcessCommandService(CommandGateway commandGateway, EventGateway eventGateway) {
         this.commandGateway = commandGateway;

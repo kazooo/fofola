@@ -7,7 +7,7 @@ import org.axonframework.eventhandling.gateway.EventGateway;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -20,7 +20,7 @@ public abstract class Process {
     private static final String logDirPath = "logs/";
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public Process(HashMap<String, Object> params) throws IOException {
+    public Process(LinkedHashMap<String, Object> params) throws IOException {
         this.processId = (String) params.get("processId");
         this.eventGateway = (EventGateway) params.get("eventGateway");
 
@@ -68,5 +68,5 @@ public abstract class Process {
 
     public abstract void process() throws Exception;
 
-    protected abstract void setupParams(HashMap<String, Object> params);
+    protected abstract void setupParams(LinkedHashMap<String, Object> params);
 }

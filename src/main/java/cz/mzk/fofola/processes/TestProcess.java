@@ -4,14 +4,14 @@ import cz.mzk.fofola.processes.core.exceptions.FinishProcessException;
 import cz.mzk.fofola.processes.core.models.Process;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 public class TestProcess extends Process {
 
     private final Logger logger = Logger.getLogger(TestProcess.class.getName());
 
-    public TestProcess(HashMap<String, Object> params) throws IOException {
+    public TestProcess(LinkedHashMap<String, Object> params) throws IOException {
         super(params);
     }
 
@@ -31,7 +31,7 @@ public class TestProcess extends Process {
     }
 
     @Override
-    protected void setupParams(HashMap<String, Object> params) {
+    protected void setupParams(LinkedHashMap<String, Object> params) {
 
     }
 }

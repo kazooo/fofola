@@ -9,29 +9,32 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/processes")
-public class ProcessController {
+public class InternalProcessesController {
 
     private final ProcessCommandService processCommandService;
     private final ProcessQueryService processQueryService;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public ProcessController(ProcessCommandService processCommandService,
-                             ProcessQueryService processQueryService) {
+    public InternalProcessesController(ProcessCommandService processCommandService,
+                                       ProcessQueryService processQueryService) {
         this.processCommandService = processCommandService;
         this.processQueryService = processQueryService;
     }
 
-    @GetMapping("/new/{processTypeAlias}")
+    @PostMapping("/new/{processTypeAlias}")
     @ResponseBody
-    public String startNewProcess(@PathVariable String processTypeAlias)
+    public String startNewProcess(@PathVariable String processTypeAlias, @RequestBody Map<String, Object> params)
             throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         ProcessType type = ProcessType.findByAlias(processTypeAlias);
         if (type == null)
             throw new IllegalStateException("Can't determine process for alias \"" + processTypeAlias + "\"!");
-        return processCommandService.startNewProcess(type, new HashMap<>());
+        return processCommandService.startNewProcess(type, params);
     }
 
     @GetMapping("/all")
@@ -39,21 +42,21 @@ public class ProcessController {
         return processQueryService.findAllProcess();
     }
 
-    @GetMapping("/suspend/{processId}")
+    @PutMapping("/suspend/{processId}")
     @ResponseBody
     public String suspendRunningProcess(@PathVariable String processId) {
         processCommandService.suspendRunningProcess(processId);
         return processId;
     }
 
-    @GetMapping("/activate/{processId}")
+    @PutMapping("/activate/{processId}")
     @ResponseBody
     public String activateRunningProcess(@PathVariable String processId) {
         processCommandService.activateSuspendedProcess(processId);
         return processId;
     }
 
-    @GetMapping("/terminate/{processId}")
+    @PutMapping("/terminate/{processId}")
     @ResponseBody
     public String terminateRunningProcess(@PathVariable String processId) {
         processCommandService.terminateProcess(processId);
