@@ -45,13 +45,16 @@ dependencies {
     compile('org.glassfish.jersey.core:jersey-client:2.28')
     compile('com.google.code.gson:gson:2.8.5')
 
-    compile('org.springframework.boot:spring-boot-devtools')
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-websocket')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('org.springframework.boot:spring-boot-starter-data-solr')
+
+    def withoutAxonServer = { exclude group: 'org.axonframework', module: 'axon-server-connector' }
+    compile group: 'org.axonframework', name: 'axon-spring-boot-starter', version: '4.3.1', withoutAxonServer
 
     compile("org.webjars:jquery:3.1.0")
     compile("org.webjars:bootstrap:3.3.7")
