@@ -18,7 +18,7 @@ public abstract class Process {
     private final String processId;
     private final EventGateway eventGateway;
     private static final String logDirPath = "logs/";
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public Process(LinkedHashMap<String, Object> params) throws IOException {
         this.processId = (String) params.get("processId");

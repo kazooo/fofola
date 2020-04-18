@@ -5,15 +5,16 @@ import cz.mzk.fofola.processes.core.models.Process;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.logging.Logger;
+
 
 public class TestProcess extends Process {
-
-    private final Logger logger = Logger.getLogger(TestProcess.class.getName());
 
     public TestProcess(LinkedHashMap<String, Object> params) throws IOException {
         super(params);
     }
+
+    @Override
+    protected void setupParams(LinkedHashMap<String, Object> params) { }
 
     @Override
     public void process() throws Exception {
@@ -28,10 +29,5 @@ public class TestProcess extends Process {
             throw new FinishProcessException(e);
         }
         logger.info("finish");
-    }
-
-    @Override
-    protected void setupParams(LinkedHashMap<String, Object> params) {
-
     }
 }
