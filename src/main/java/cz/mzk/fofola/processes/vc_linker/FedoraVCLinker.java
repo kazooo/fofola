@@ -1,6 +1,6 @@
 package cz.mzk.fofola.processes.vc_linker;
 
-import okhttp3.*;
+import com.squareup.okhttp.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -14,6 +14,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.Proxy;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -47,15 +48,25 @@ public class FedoraVCLinker {
     }
 
     private static OkHttpClient createAuthenticatedClient(final String username, final String password) {
-        return new OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .writeTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(1, TimeUnit.MINUTES)
-                .connectionPool(new ConnectionPool(1, 1, TimeUnit.MINUTES))
-                .authenticator((route, response) -> {
-                    String credential = Credentials.basic(username, password);
-                    return response.request().newBuilder().header("Authorization", credential).build(); })
-                .build();
+        OkHttpClient client = new OkHttpClient();
+        client.setConnectTimeout(1, TimeUnit.MINUTES);
+        client.setWriteTimeout(1, TimeUnit.MINUTES);
+        client.setReadTimeout(1, TimeUnit.MINUTES);
+        client.setConnectionPool(new ConnectionPool(1, 60000));
+        client.setAuthenticator(new Authenticator() {
+            @Override
+            public Request authenticate(Proxy proxy, Response response) {
+                String credential = Credentials.basic(username, password);
+                return response.request().newBuilder().header("Authorization", credential).build();
+            }
+
+            @Override
+            public Request authenticateProxy(Proxy proxy, Response response) {
+                String credential = Credentials.basic(username, password);
+                return response.request().newBuilder().header("Authorization", credential).build();
+            }
+        });
+        return client;
     }
 
     public boolean writeVCFor(String uuid, String vcId) throws TransformerException, IOException, SAXException {
@@ -92,17 +103,16 @@ public class FedoraVCLinker {
     private Document getRelsExt(String uuid) throws IOException, SAXException {
         String queryUrl = fedoraHost + "/get/" + uuid + "/RELS-EXT";
         Request request = new Request.Builder().url(queryUrl).build();
-        try (Response response = fedoraClient.newCall(request).execute()) {
-            if (!response.isSuccessful())
-                throw new IOException("Cannot get RELS EXT data, unexpected code " + response);
-            String xmlStr = Objects.requireNonNull(response.body()).string();
-            response.close();
-            return xmlParser.parse(new InputSource(new StringReader(xmlStr)));
-        }
+        Response response = fedoraClient.newCall(request).execute();
+        if (!response.isSuccessful())
+            throw new IOException("Cannot get RELS EXT data, unexpected code " + response);
+        String xmlStr = Objects.requireNonNull(response.body()).string();
+        response.body().close();
+        return xmlParser.parse(new InputSource(new StringReader(xmlStr)));
     }
 
     @SuppressWarnings("deprecation")
-    private void setRelsExt(String uuid, Document relsExt) throws TransformerException {
+    private void setRelsExt(String uuid, Document relsExt) throws TransformerException, IOException {
         String postUrlStr = fedoraHost + "/objects/" + uuid + "/datastreams/RELS-EXT";
         String mimeType = "application/rdf+xml";
         String versionable = "true";
@@ -118,15 +128,12 @@ public class FedoraVCLinker {
         RequestBody body = RequestBody.create(MediaType.parse(mimeType), docToString(relsExt));
 
         Request request = new Request.Builder().url(postUrl).post(body).build();
-        try (Response response = fedoraClient.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Cannot set RELS EXT data for " + uuid + ", unexpected code " + response);
-            }
-            response.close();
-            fedoraClient.connectionPool().evictAll(); // unknown problem with Fedora connection pool
-        } catch (IOException e) {
-            e.printStackTrace();
+        Response response = fedoraClient.newCall(request).execute();
+        if (!response.isSuccessful()) {
+            throw new IOException("Cannot set RELS EXT data for " + uuid + ", unexpected code " + response);
         }
+        response.body().close();
+        fedoraClient.getConnectionPool().evictAll(); // unknown problem with Fedora connection pool
     }
 
     private String docToString(Document doc) throws TransformerException {
@@ -137,7 +144,7 @@ public class FedoraVCLinker {
     }
 
     public void close() {
-        fedoraClient.connectionPool().evictAll();
+        fedoraClient.getConnectionPool().evictAll();
     }
 }
 

@@ -40,7 +40,6 @@ dependencies {
     compile('commons-codec:commons-codec:1.10')
     compile('com.squareup.okhttp:okhttp:2.4.0')
     compile('org.postgresql:postgresql:42.2.6')
-    compile('com.squareup.okhttp3:okhttp:4.4.1')
     compile('com.sun.jersey:jersey-client:1.19.4')
     compile('com.squareup.retrofit:retrofit:1.9.0')
     compile('org.glassfish.jersey.core:jersey-client:2.28')

@@ -40,7 +40,7 @@ public abstract class Process {
             eventGateway.publish(
                     new TerminateProcessEvent(processId, FinishReason.FINISH_SUCCESSFULLY, null)
             );
-        } catch (FinishProcessException ignored) { } catch (Exception e) {
+        } catch (FinishProcessException ignored) { } catch (Throwable e) {
             String stackTraceStr = stackTraceToStr(e);
             logger.severe(stackTraceStr);
             eventGateway.publish(
@@ -49,9 +49,9 @@ public abstract class Process {
         }
     }
 
-    private String stackTraceToStr(Exception e) {
+    private String stackTraceToStr(Throwable e) {
         StackTraceElement[] stackTrace = e.getStackTrace();
-        StringBuilder stackTraceStr = new StringBuilder();
+        StringBuilder stackTraceStr = new StringBuilder(e.getMessage() + "\n");
         for (StackTraceElement ste : stackTrace) {
             stackTraceStr.append(ste.toString());
             stackTraceStr.append("\n");

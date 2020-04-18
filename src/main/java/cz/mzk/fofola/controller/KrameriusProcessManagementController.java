@@ -17,14 +17,14 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
-public class KrameriusProcessesController {
+public class KrameriusProcessManagementController {
 
     private static final Gson gson = new Gson();
     private static final int processPerPage = 15;
     private final KrameriusApiCommunicator krameriusApi;
-    private static final Logger logger = Logger.getLogger(KrameriusProcessesController.class.getName());
+    private static final Logger logger = Logger.getLogger(KrameriusProcessManagementController.class.getName());
 
-    public KrameriusProcessesController(KrameriusApiCommunicator krameriusApi) {
+    public KrameriusProcessManagementController(KrameriusApiCommunicator krameriusApi) {
         this.krameriusApi = krameriusApi;
     }
 
