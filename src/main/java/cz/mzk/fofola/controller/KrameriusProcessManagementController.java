@@ -28,7 +28,7 @@ public class KrameriusProcessManagementController {
         this.krameriusApi = krameriusApi;
     }
 
-    @GetMapping("/processes")
+    @GetMapping("/kramerius-processes")
     public String getProcessControlPage(HttpServletRequest request) {
         IpLogger.logIp(request.getRemoteAddr(), "Entry process control section.");
         return "processes";

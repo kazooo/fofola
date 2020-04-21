@@ -1,10 +1,8 @@
 package cz.mzk.fofola.processes.core;
 
+import cz.mzk.fofola.processes.core.commands.RemoveInfoCommand;
 import cz.mzk.fofola.processes.core.constants.ProcessState;
-import cz.mzk.fofola.processes.core.events.ActivateProcessEvent;
-import cz.mzk.fofola.processes.core.events.StartProcessEvent;
-import cz.mzk.fofola.processes.core.events.SuspendProcessEvent;
-import cz.mzk.fofola.processes.core.events.TerminateProcessEvent;
+import cz.mzk.fofola.processes.core.events.*;
 import cz.mzk.fofola.processes.core.models.ProcessDTO;
 import cz.mzk.fofola.processes.core.queries.FindAllProcessQuery;
 import cz.mzk.fofola.processes.core.services.ProcessRepository;
@@ -56,11 +54,19 @@ public class ProcessProjection {
     @EventHandler
     public void on(TerminateProcessEvent event) {
         ProcessDTO process = processRepository.getOne(event.getProcessId());
+        if (process.getProcessState() == ProcessState.FINISHED ||
+                process.getProcessState() == ProcessState.TERMINATED) return;
         process.setProcessState(ProcessState.TERMINATED);
         process.setFinishDate(new Date());
         process.setFinishReason(event.getFinishReason());
         processRepository.save(process);
         logger.info("new process finished: " + process.getProcessId());
+    }
+
+    @EventHandler
+    public void on(RemoveInfoEvent event) {
+        processRepository.deleteById(event.getProcessId());
+        logger.info("remove process info: " + event.getProcessId());
     }
 
     @QueryHandler

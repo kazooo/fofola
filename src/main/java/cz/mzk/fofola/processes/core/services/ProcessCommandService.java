@@ -1,9 +1,6 @@
 package cz.mzk.fofola.processes.core.services;
 
-import cz.mzk.fofola.processes.core.commands.ActivateProcessCommand;
-import cz.mzk.fofola.processes.core.commands.StartProcessCommand;
-import cz.mzk.fofola.processes.core.commands.SuspendProcessCommand;
-import cz.mzk.fofola.processes.core.commands.TerminateProcessCommand;
+import cz.mzk.fofola.processes.core.commands.*;
 import cz.mzk.fofola.processes.core.constants.ProcessType;
 import cz.mzk.fofola.processes.core.models.Process;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -22,11 +19,15 @@ public class ProcessCommandService {
 
     private final CommandGateway commandGateway;
     private final EventGateway eventGateway;
+    private final ProcessManagementService processManagementService;
     private static final Logger logger = Logger.getLogger(ProcessCommandService.class.getName());
 
-    public ProcessCommandService(CommandGateway commandGateway, EventGateway eventGateway) {
+    public ProcessCommandService(CommandGateway commandGateway,
+                                 EventGateway eventGateway,
+                                 ProcessManagementService processManagementService) {
         this.commandGateway = commandGateway;
         this.eventGateway = eventGateway;
+        this.processManagementService = processManagementService;
     }
 
     public String startNewProcess(ProcessType type, Map<String, Object> params)
@@ -36,19 +37,26 @@ public class ProcessCommandService {
         params.put("eventGateway", eventGateway);
         Process process = instantiate(type, params);
         commandGateway.send(new StartProcessCommand(processId, type, process));
+        processManagementService.run(processId, process);
         return processId;
     }
 
     public CompletableFuture<Process> suspendRunningProcess(String processId) {
-        return commandGateway.send(new SuspendProcessCommand(processId));
+        CompletableFuture<Process> result = commandGateway.send(new SuspendProcessCommand(processId));
+        processManagementService.suspend(processId);
+        return result;
     }
 
     public CompletableFuture<Process> activateSuspendedProcess(String processId) {
-        return commandGateway.send(new ActivateProcessCommand(processId));
+        CompletableFuture<Process> result = commandGateway.send(new ActivateProcessCommand(processId));
+        processManagementService.activate(processId);
+        return result;
     }
 
     public CompletableFuture<Process> terminateProcess(String processId) {
-        return commandGateway.send(new TerminateProcessCommand(processId));
+        CompletableFuture<Process> result = commandGateway.send(new TerminateProcessCommand(processId));
+        processManagementService.terminate(processId);
+        return result;
     }
 
     public static Process instantiate(ProcessType type, Map<String, Object> params)
@@ -60,5 +68,9 @@ public class ProcessCommandService {
         Constructor<?> ctor = processClass.getConstructor(params.getClass());
         Object object = ctor.newInstance(params);
         return (Process) object;
+    }
+
+    public CompletableFuture<Process> removeInfoFromDB(String processId) {
+        return commandGateway.send(new RemoveInfoCommand(processId));
     }
 }

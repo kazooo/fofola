@@ -61,7 +61,7 @@ function sendUuids() {
     $.ajax({
         type: "POST",
         contentType: "application/json",
-        url: "/processes/new/vc_link",
+        url: "/internal-processes/new/vc_link",
         data: JSON.stringify(process_params),
         dataType: 'json',
         cache: false,

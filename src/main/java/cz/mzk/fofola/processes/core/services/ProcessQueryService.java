@@ -7,7 +7,6 @@ import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ProcessQueryService {
@@ -18,10 +17,10 @@ public class ProcessQueryService {
         this.queryGateway = queryGateway;
     }
 
-    public CompletableFuture<List<ProcessDTO>> findAllProcess() {
+    public List<ProcessDTO> findAllProcess() {
         return queryGateway.query(
                 new FindAllProcessQuery(),
                 ResponseTypes.multipleInstancesOf(ProcessDTO.class)
-        );
+        ).join();
     }
 }

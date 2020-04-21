@@ -1,15 +1,8 @@
 package cz.mzk.fofola.processes.core;
 
-import cz.mzk.fofola.processes.core.commands.ActivateProcessCommand;
-import cz.mzk.fofola.processes.core.commands.StartProcessCommand;
-import cz.mzk.fofola.processes.core.commands.SuspendProcessCommand;
-import cz.mzk.fofola.processes.core.commands.TerminateProcessCommand;
+import cz.mzk.fofola.processes.core.commands.*;
 import cz.mzk.fofola.processes.core.constants.FinishReason;
-import cz.mzk.fofola.processes.core.events.ActivateProcessEvent;
-import cz.mzk.fofola.processes.core.events.StartProcessEvent;
-import cz.mzk.fofola.processes.core.events.SuspendProcessEvent;
-import cz.mzk.fofola.processes.core.events.TerminateProcessEvent;
-import cz.mzk.fofola.processes.core.services.ProcessManagementService;
+import cz.mzk.fofola.processes.core.events.*;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -28,28 +21,29 @@ public class ProcessAggregate {
     private String processId;
 
     @CommandHandler
-    public ProcessAggregate(StartProcessCommand command, ProcessManagementService processManagementService) {
+    public ProcessAggregate(StartProcessCommand command) {
         processId = command.getProcessId();
         apply(new StartProcessEvent(command.getProcessId(), command.getProcessType()));
-        processManagementService.run(command.getProcessId(), command.getProcess());
     }
 
     @CommandHandler
-    public void handle(SuspendProcessCommand command, ProcessManagementService processManagementService) {
+    public void handle(SuspendProcessCommand command) {
         apply(new SuspendProcessEvent(command.getProcessId()));
-        processManagementService.suspend(command.getProcessId());
     }
 
     @CommandHandler
-    public void handle(ActivateProcessCommand command, ProcessManagementService processManagementService) {
+    public void handle(ActivateProcessCommand command) {
         apply(new ActivateProcessEvent(command.getProcessId()));
-        processManagementService.activate(command.getProcessId());
     }
 
     @CommandHandler
-    public void handle(TerminateProcessCommand command, ProcessManagementService processManagementService) {
+    public void handle(TerminateProcessCommand command) {
         apply(new TerminateProcessEvent(command.getProcessId(), FinishReason.USER_COMMAND, null));
-        processManagementService.terminate(command.getProcessId());
+    }
+
+    @CommandHandler
+    public void handle(RemoveInfoCommand command) {
+        apply(new RemoveInfoEvent(command.getProcessId()));
     }
 
     @EventSourcingHandler
@@ -72,6 +66,10 @@ public class ProcessAggregate {
         processId = event.getProcessId();
     }
 
+    @EventSourcingHandler
+    public void on(RemoveInfoEvent event) {
+        processId = event.getProcessId();
+    }
     protected ProcessAggregate() {
         // Required by Axon to build a default Aggregate prior to Event Sourcing
     }
