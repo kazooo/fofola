@@ -1,5 +1,6 @@
 package cz.mzk.fofola.processes.vc_linker;
 
+import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.processes.core.models.Process;
 
 import java.io.IOException;
@@ -8,26 +9,22 @@ import java.util.List;
 
 public class VCLinkerProcess extends Process {
 
-    private String vcUuid;
-    private List<String> rootUuids;
-    private String solrHost;
-    private String fedoraHost;
-    private String fedoraUser;
-    private String fedoraPswd;
+    private final String vcUuid;
+    private final List<String> rootUuids;
+    private final String solrHost;
+    private final String fedoraHost;
+    private final String fedoraUser;
+    private final String fedoraPswd;
 
-    public VCLinkerProcess(LinkedHashMap<String, Object> params) throws IOException {
+    public VCLinkerProcess(LinkedHashMap<String, Object> params,
+                           FofolaConfiguration fofolaConfiguration) throws IOException {
         super(params);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked") // cast Object to List<String> for rootUuids
-    protected void setupParams(LinkedHashMap<String, Object> params) {
         vcUuid = (String) params.get("vc_uuid");
-        solrHost = (String) params.get("solr_host");
-        fedoraHost = (String) params.get("fedora_host");
-        fedoraUser = (String) params.get("fedora_user");
-        fedoraPswd = (String) params.get("fedora_pswd");
         rootUuids = (List<String>) params.get("root_uuids");
+        solrHost = fofolaConfiguration.getSolrHost();
+        fedoraHost = fofolaConfiguration.getFedoraHost();
+        fedoraUser = fofolaConfiguration.getFedoraUser();
+        fedoraPswd = fofolaConfiguration.getFedoraPswd();
     }
 
     @Override

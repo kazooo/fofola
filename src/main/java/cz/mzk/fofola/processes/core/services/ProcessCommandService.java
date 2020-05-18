@@ -1,5 +1,6 @@
 package cz.mzk.fofola.processes.core.services;
 
+import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.processes.core.commands.*;
 import cz.mzk.fofola.processes.core.constants.ProcessType;
 import cz.mzk.fofola.processes.core.models.Process;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 @Service
 public class ProcessCommandService {
 
+    private final FofolaConfiguration fofolaConfiguration;
     private final CommandGateway commandGateway;
     private final EventGateway eventGateway;
     private final ProcessManagementService processManagementService;
@@ -24,10 +26,12 @@ public class ProcessCommandService {
 
     public ProcessCommandService(CommandGateway commandGateway,
                                  EventGateway eventGateway,
-                                 ProcessManagementService processManagementService) {
+                                 ProcessManagementService processManagementService,
+                                 FofolaConfiguration fofolaConfiguration) {
         this.commandGateway = commandGateway;
         this.eventGateway = eventGateway;
         this.processManagementService = processManagementService;
+        this.fofolaConfiguration = fofolaConfiguration;
     }
 
     public String startNewProcess(ProcessType type, Map<String, Object> params)
@@ -59,14 +63,13 @@ public class ProcessCommandService {
         return result;
     }
 
-    public static Process instantiate(ProcessType type, Map<String, Object> params)
-            throws NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException, InstantiationException {
+    public Process instantiate(ProcessType type, Map<String, Object> params)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Class processClass = type.getProcessClass();
         if (processClass == null)
             throw new IllegalStateException("No defined process class for type \"" + type.toString() + "\"!");
-        Constructor<?> ctor = processClass.getConstructor(params.getClass());
-        Object object = ctor.newInstance(params);
+        Constructor<?> ctor = processClass.getConstructor(params.getClass(), FofolaConfiguration.class);
+        Object object = ctor.newInstance(params, fofolaConfiguration);
         return (Process) object;
     }
 

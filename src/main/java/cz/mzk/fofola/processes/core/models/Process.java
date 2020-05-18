@@ -30,8 +30,6 @@ public abstract class Process {
         fileHandler.setFormatter(formatter);
         logger.addHandler(fileHandler);
         logger.setUseParentHandlers(false);
-
-        setupParams(params);
     }
 
     public void run() {
@@ -67,6 +65,4 @@ public abstract class Process {
     }
 
     public abstract void process() throws Exception;
-
-    protected abstract void setupParams(LinkedHashMap<String, Object> params);
 }

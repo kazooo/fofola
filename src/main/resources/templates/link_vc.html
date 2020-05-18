@@ -27,28 +27,20 @@
 <div class="container">
     <div class="white-rounded-back">
         <div class="panel-bar">
-            <form class="form-inline" style="display: inline-block" action="#">
-                <label for="fedora_host">Adresa Fedory</label>
-                <input class="text" id="fedora_host" type="text" size="20"/>
-                <label for="fedora_user">Uživatel</label>
-                <input class="text" id="fedora_user" type="text" size="20"/>
-                <label for="fedora_pswd">Heslo</label>
-                <input class="text" id="fedora_pswd" type="text" size="20"/>
-            </form>
-
-            <form class="form-inline" style="display: inline-block" action="#">
-                <label for="solr_host">Adresa indexu</label>
-                <input class="text" id="solr_host" type="text" size="20"/>
+            <form class="form-inline" style="float: none" action="#">
                 <label for="vc_uuid">UUID virtuální sbírky</label>
-                <input class="text" id="vc_uuid" type="text" size="20"/>
+                <input class="text" id="vc_uuid" type="text" size="30"/>
             </form>
 
-            <form class="form-inline" action="#" style="display: inline-block" enctype="multipart/form-data">
-                <label>UUID kořene</label>
-                <input class="text" id="enter_uuid" type="text" size="20"/>
+            <form class="form-inline" style="float: none" action="#">
+                <label for="enter_uuid">UUID kořene</label>
+                <input class="text" id="enter_uuid" type="text" size="30"/>
                 <button class="btn btn-outline-secondary btn-light" id="load_uuid_submit">Načíst uuid</button>
-                <label>Vyberte soubor s UUID kořenů</label>
-                <label class="btn btn-outline-secondary btn-light" for="enter_file">Vybrat</label>
+            </form>
+
+            <form class="form-inline" style="float: none" action="#" enctype="multipart/form-data">
+                <label for="load_button">Vyberte soubor s UUID kořenů</label>
+                <label id="load_button" class="btn btn-outline-secondary btn-light" for="enter_file">Vybrat</label>
                 <input type="file" name="file" id="enter_file" style="width:0; visibility:hidden; display: none"/>
                 <button class="btn btn-outline-secondary btn-light" id="load_file_submit"
                         type="submit" style="visibility:hidden; display: none">
@@ -74,7 +66,7 @@
     </div>
 </div>
 
-<script>
+    <script>
         var file = document.getElementById('enter_file');
         var submit = document.getElementById('load_file_submit');
         file.onchange = function(){

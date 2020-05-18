@@ -14,9 +14,6 @@ public class TestProcess extends Process {
     }
 
     @Override
-    protected void setupParams(LinkedHashMap<String, Object> params) { }
-
-    @Override
     public void process() throws Exception {
         logger.info("invocation");
         try {

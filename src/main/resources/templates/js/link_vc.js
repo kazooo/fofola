@@ -13,8 +13,9 @@ $(function () {
 });
 
 function loadOneUuid() {
-    var uuid = document.getElementById('enter_uuid').value;
-    if (uuid !== '') {
+    const uuid = $("#enter_uuid").val()
+    const vc_uuid = $("#vc_uuid").val()
+    if (uuid !== '' && vc_uuid !== '') {
         uuids.push(uuid)
         updateTotal();
         return true;
@@ -52,10 +53,6 @@ function sendUuids() {
     var process_params = {
         'vc_uuid': $("#vc_uuid").val(),
         'root_uuids': uuids,
-        'solr_host': $("#solr_host").val(),
-        'fedora_host': $("#fedora_host").val(),
-        'fedora_user': $("#fedora_user").val(),
-        'fedora_pswd': $("#fedora_pswd").val(),
     }
 
     $.ajax({
