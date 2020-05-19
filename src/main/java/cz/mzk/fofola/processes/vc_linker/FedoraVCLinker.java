@@ -115,14 +115,11 @@ public class FedoraVCLinker {
     private void setRelsExt(String uuid, Document relsExt) throws TransformerException, IOException {
         String postUrlStr = fedoraHost + "/objects/" + uuid + "/datastreams/RELS-EXT";
         String mimeType = "application/rdf+xml";
-        String versionable = "true";
-        String controlGroup = "X";
-        String dsState = "A";
 
         HttpUrl postUrl = Objects.requireNonNull(HttpUrl.parse(postUrlStr)).newBuilder()
-                .addQueryParameter("controlGroup", controlGroup)
-                .addQueryParameter("versionable", versionable)
-                .addQueryParameter("dsState", dsState)
+                .addQueryParameter("controlGroup", "X")
+                .addQueryParameter("versionable", "false")
+                .addQueryParameter("dsState", "A")
                 .addQueryParameter("mimeType", mimeType)
                 .build();
         RequestBody body = RequestBody.create(MediaType.parse(mimeType), docToString(relsExt));
