@@ -7,12 +7,14 @@ $(function () {
         e.preventDefault();
     });
 
-    $( "#load_uuid_submit" ).click(function() { if (loadOneUuid()) { showLinkPanel(true); } });
-    $( "#load_file_submit" ).click(function() { if (loadUuidsFromFile()) { showLinkPanel(true); } });
+    $( "#load_uuid_submit" ).click(function() { showLinkPanel(loadOneUuid()) });
+    $( "#load_file_submit" ).click(function() { loadUuidsFromFile();  showLinkPanel(true); });
     $( "#link_button" ).click(function() { sendUuids(); showLinkPanel(false); });
 });
 
 function loadOneUuid() {
+    uuids = []
+    updateTotal();
     const uuid = $("#enter_uuid").val()
     const vc_uuid = $("#vc_uuid").val()
     if (uuid !== '' && vc_uuid !== '') {
@@ -24,24 +26,22 @@ function loadOneUuid() {
 }
 
 function loadUuidsFromFile() {
-    clearTable();
-    var file_el = $("#enter_file")[0];
-    var file = file_el.files[0];
-    var reader = new FileReader();
+    uuids = []
+    updateTotal();
+    const file_el = $("#enter_file")[0];
+    const file = file_el.files[0];
+    const reader = new FileReader();
     reader.onload = function(progressEvent){
-        var lines = this.result.split('\n');
-        for(var line = 0; line < lines.length; line++){
-            if (lines[line] !== '') {
-                uuids.push(lines[line])
+        const lines = this.result.split('\n');
+        for(let i = 0; i < lines.length; i++){
+            if (lines[i] !== '') {
+                uuids.push(lines[i])
             }
         }
         if (uuids.length > 0) {
             updateTotal();
-            var submit = document.getElementById('load_file_submit');
+            const submit = document.getElementById('load_file_submit');
             showElement(submit, false);
-            return true;
-        } else {
-            return false;
         }
     };
     reader.readAsText(file);
@@ -75,7 +75,7 @@ function sendUuids() {
 }
 
 function showLinkPanel(show) {
-    var reindexPanel = document.getElementById("link_panel");
+    const reindexPanel = document.getElementById("link_panel");
     showElement(reindexPanel, show);
 }
 
