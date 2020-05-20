@@ -45,18 +45,6 @@ public class ProcessCommandService {
         return processId;
     }
 
-    public CompletableFuture<Process> suspendRunningProcess(String processId) {
-        CompletableFuture<Process> result = commandGateway.send(new SuspendProcessCommand(processId));
-        processManagementService.suspend(processId);
-        return result;
-    }
-
-    public CompletableFuture<Process> activateSuspendedProcess(String processId) {
-        CompletableFuture<Process> result = commandGateway.send(new ActivateProcessCommand(processId));
-        processManagementService.activate(processId);
-        return result;
-    }
-
     public CompletableFuture<Process> terminateProcess(String processId) {
         CompletableFuture<Process> result = commandGateway.send(new TerminateProcessCommand(processId));
         processManagementService.terminate(processId);

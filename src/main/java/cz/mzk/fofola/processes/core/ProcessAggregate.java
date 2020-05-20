@@ -27,16 +27,6 @@ public class ProcessAggregate {
     }
 
     @CommandHandler
-    public void handle(SuspendProcessCommand command) {
-        apply(new SuspendProcessEvent(command.getProcessId()));
-    }
-
-    @CommandHandler
-    public void handle(ActivateProcessCommand command) {
-        apply(new ActivateProcessEvent(command.getProcessId()));
-    }
-
-    @CommandHandler
     public void handle(TerminateProcessCommand command) {
         apply(new TerminateProcessEvent(command.getProcessId(), FinishReason.USER_COMMAND, null));
     }
@@ -48,16 +38,6 @@ public class ProcessAggregate {
 
     @EventSourcingHandler
     public void on(StartProcessEvent event) {
-        processId = event.getProcessId();
-    }
-
-    @EventSourcingHandler
-    public void on(SuspendProcessEvent event) {
-        processId = event.getProcessId();
-    }
-
-    @EventSourcingHandler
-    public void on(ActivateProcessEvent event) {
         processId = event.getProcessId();
     }
 

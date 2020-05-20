@@ -93,4 +93,5 @@ task buildImage(type: DockerBuildImage) {
 
 clean.doFirst {
     delete(project.file('docker/build'))
+    delete(project.file('logs'))
 }

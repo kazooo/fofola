@@ -24,24 +24,12 @@ public class ProcessManagementService {
         });
     }
 
-    public void suspend(String processId) {
-        Thread thread = getThreadByName(processId);
-        if (thread != null) {
-            thread.suspend();
-        }
-    }
-
-    public void activate(String processId) {
-        Thread thread = getThreadByName(processId);
-        if (thread != null) {
-            thread.resume();
-        }
-    }
-
     public void terminate(String processId) {
         Thread thread = getThreadByName(processId);
         if (thread != null) {
+            logger.info("Terminating process " + processId + "...");
             thread.interrupt();
+            logger.info("Process " + processId + " is terminated!");
         }
     }
 

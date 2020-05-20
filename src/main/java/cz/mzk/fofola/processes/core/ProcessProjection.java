@@ -1,6 +1,5 @@
 package cz.mzk.fofola.processes.core;
 
-import cz.mzk.fofola.processes.core.commands.RemoveInfoCommand;
 import cz.mzk.fofola.processes.core.constants.ProcessState;
 import cz.mzk.fofola.processes.core.events.*;
 import cz.mzk.fofola.processes.core.models.ProcessDTO;
@@ -32,41 +31,28 @@ public class ProcessProjection {
         process.setProcessState(ProcessState.ACTIVE);
         process.setStartDate(new Date());
         processRepository.save(process);
-        logger.info("new process started: " + process.getProcessId());
-    }
-
-    @EventHandler
-    public void on(SuspendProcessEvent event) {
-        ProcessDTO process = processRepository.getOne(event.getProcessId());
-        process.setProcessState(ProcessState.SUSPENDED);
-        process.setNotes(process.getNotes() + "\n\nSuspended at " + new Date().toString());
-        processRepository.save(process);
-    }
-
-    @EventHandler
-    public void on(ActivateProcessEvent event) {
-        ProcessDTO process = processRepository.getOne(event.getProcessId());
-        process.setProcessState(ProcessState.ACTIVE);
-        process.setNotes(process.getNotes() + "\n\nActivated at " + new Date().toString());
-        processRepository.save(process);
+        logger.info("New process started: " + process.getProcessId());
     }
 
     @EventHandler
     public void on(TerminateProcessEvent event) {
         ProcessDTO process = processRepository.getOne(event.getProcessId());
         if (process.getProcessState() == ProcessState.FINISHED ||
-                process.getProcessState() == ProcessState.TERMINATED) return;
+                process.getProcessState() == ProcessState.TERMINATED) {
+            logger.info("Process " + process.getProcessId() + " is already terminated in database!");
+            return;
+        }
         process.setProcessState(ProcessState.TERMINATED);
         process.setFinishDate(new Date());
         process.setFinishReason(event.getFinishReason());
         processRepository.save(process);
-        logger.info("new process finished: " + process.getProcessId());
+        logger.info("Process " + process.getProcessId() + " has been terminated in database!");
     }
 
     @EventHandler
     public void on(RemoveInfoEvent event) {
         processRepository.deleteById(event.getProcessId());
-        logger.info("remove process info: " + event.getProcessId());
+        logger.info("Remove process info: " + event.getProcessId());
     }
 
     @QueryHandler

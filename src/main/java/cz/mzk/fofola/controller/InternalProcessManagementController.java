@@ -51,23 +51,10 @@ public class InternalProcessManagementController {
         return processQueryService.findAllProcess();
     }
 
-    @PutMapping("/suspend/{processId}")
-    @ResponseBody
-    public String suspendRunningProcess(@PathVariable String processId) {
-        processCommandService.suspendRunningProcess(processId);
-        return processId;
-    }
-
-    @PutMapping("/activate/{processId}")
-    @ResponseBody
-    public String activateRunningProcess(@PathVariable String processId) {
-        processCommandService.activateSuspendedProcess(processId);
-        return processId;
-    }
-
     @PutMapping("/terminate/{processId}")
     @ResponseBody
     public String terminateRunningProcess(@PathVariable String processId) {
+        logger.info("Got terminate process command for pid: " + processId);
         processCommandService.terminateProcess(processId);
         return processId;
     }
@@ -75,6 +62,7 @@ public class InternalProcessManagementController {
     @DeleteMapping("/remove/{processId}")
     @ResponseBody
     public String removeProcessFromDB(@PathVariable String processId) {
+        logger.info("Got remove process command for pid: " + processId);
         processCommandService.removeInfoFromDB(processId);
         return processId;
     }
