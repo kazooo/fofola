@@ -16,16 +16,14 @@ public class TestProcess extends Process {
     }
 
     @Override
-    public void process() throws Exception {
+    public void process() {
         logger.info("test process invocation");
-        try {
-            for (int i = 0; i < 10; i++) {
-                logger.info("" + i);
-                Thread.sleep(10000);
+        for (int i = 0; i < 1000000000; i++) {
+            logger.info("" + i);
+            if (Thread.interrupted()) {
+                logger.info("test process has been interupted!");
+                return;
             }
-        } catch (InterruptedException e) {
-            logger.info("catch interrupted exception");
-            throw new FinishProcessException(e);
         }
         logger.info("test process finish");
     }

@@ -35,6 +35,7 @@ public abstract class Process {
     public void run() {
         try {
             process();
+            logger.info("Process job is successfully finished!");
             eventGateway.publish(
                     new TerminateProcessEvent(processId, FinishReason.FINISH_SUCCESSFULLY, null)
             );

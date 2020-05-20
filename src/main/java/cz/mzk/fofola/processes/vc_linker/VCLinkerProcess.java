@@ -35,6 +35,7 @@ public class VCLinkerProcess extends Process {
         );
         for (String rootUuid : rootUuids) {
             vcLinker.linkRootAndChildrenToVc(vcUuid, rootUuid);
+            if (Thread.interrupted()) break;
         }
         vcLinker.close();
     }
