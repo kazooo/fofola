@@ -59,32 +59,50 @@ public class FedoraClient {
     }
 
     public Document getRelsExt(String uuid) throws IOException, SAXException {
-        String queryUrl = fedoraHost + "/get/" + uuid + "/RELS-EXT";
+        return getDatastream(uuid, "RELS-EXT");
+    }
+
+    public Document getDc(String uuid) throws IOException, SAXException {
+        return getDatastream(uuid, "DC");
+    }
+
+    private Document getDatastream(String uuid, String dsName) throws IOException, SAXException {
+        String queryUrl = fedoraHost + "/get/" + uuid + "/" + dsName;
         Request request = new Request.Builder().url(queryUrl).build();
         Response response = okHttpClient.newCall(request).execute();
         if (!response.isSuccessful())
-            throw new IOException("Cannot get RELS EXT data, unexpected code " + response);
+            throw new IOException("Cannot get " + dsName + " data, unexpected code " + response);
         String xmlStr = Objects.requireNonNull(response.body()).string();
         response.body().close();
         return xmlParser.parse(new InputSource(new StringReader(xmlStr)));
     }
 
     public void setRelsExt(String uuid, Document relsExt) throws TransformerException, IOException {
-        String postUrlStr = fedoraHost + "/objects/" + uuid + "/datastreams/RELS-EXT";
-        String mimeType = "application/rdf+xml";
+        setDatastream(uuid, "RELS-EXT", relsExt,
+                "X", "false", "A", "application/rdf+xml");
+    }
 
+    public void setDc(String uuid, Document dc) throws IOException, TransformerException {
+        setDatastream(uuid, "DC", dc,
+                "X", "false", "A", "text/xml");
+    }
+
+    private void setDatastream(String uuid, String dsName, Document doc,
+                               String controlGroup, String versionable, String dsState, String mimeType)
+            throws IOException, TransformerException {
+        String postUrlStr = fedoraHost + "/objects/" + uuid + "/datastreams/" + dsName;
         HttpUrl postUrl = Objects.requireNonNull(HttpUrl.parse(postUrlStr)).newBuilder()
-                .addQueryParameter("controlGroup", "X")
-                .addQueryParameter("versionable", "false")
-                .addQueryParameter("dsState", "A")
+                .addQueryParameter("controlGroup", controlGroup)
+                .addQueryParameter("versionable", versionable)
+                .addQueryParameter("dsState", dsState)
                 .addQueryParameter("mimeType", mimeType)
                 .build();
-        RequestBody body = RequestBody.create(MediaType.parse(mimeType), docToString(relsExt));
+        RequestBody body = RequestBody.create(MediaType.parse(mimeType), docToString(doc));
 
         Request request = new Request.Builder().url(postUrl).post(body).build();
         Response response = okHttpClient.newCall(request).execute();
         if (!response.isSuccessful()) {
-            throw new IOException("Cannot set RELS EXT data for " + uuid + ", unexpected code " + response);
+            throw new IOException("Cannot set " + dsName + " data for " + uuid + ", unexpected code " + response);
         }
         response.body().close();
         okHttpClient.getConnectionPool().evictAll(); // unknown problem with Fedora connection pool

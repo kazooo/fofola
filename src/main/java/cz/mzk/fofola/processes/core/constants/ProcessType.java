@@ -1,12 +1,14 @@
 package cz.mzk.fofola.processes.core.constants;
 
 import cz.mzk.fofola.processes.TestProcess;
+import cz.mzk.fofola.processes.perio_parts_publishing.PerioPartsPublishingProcess;
 import cz.mzk.fofola.processes.vc_linker.VCLinkerProcess;
 
 public enum ProcessType {
 
     TEST("Process for testing purposes", "test", TestProcess.class),
-    VC_LINKING("Virtual collection linking process", "vc_link", VCLinkerProcess.class);
+    VC_LINKING("Virtual collection linking process", "vc_link", VCLinkerProcess.class),
+    PERIO_PARTS_PUBLISHING("Periodical parts publishing process", "perio_parts_pub", PerioPartsPublishingProcess.class);
 
     private final String description;
     private final String alias;

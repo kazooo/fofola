@@ -1,5 +1,6 @@
 package cz.mzk.fofola.processes.vc_linker;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.SolrInputDocument;
@@ -20,10 +21,10 @@ import java.util.Map;
  */
 public class SolrVCLinker {
 
-    private final HttpSolrClient solrClient;
+    private final SolrClient solrClient;
     private final SimpleDateFormat dateFormat;
 
-    public SolrVCLinker(HttpSolrClient solrClient) {
+    public SolrVCLinker(SolrClient solrClient) {
         this.solrClient = solrClient;
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     }

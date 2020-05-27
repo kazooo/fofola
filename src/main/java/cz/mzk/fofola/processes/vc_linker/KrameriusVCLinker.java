@@ -1,9 +1,9 @@
 package cz.mzk.fofola.processes.vc_linker;
 
 import cz.mzk.fofola.processes.utils.SolrUtils;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.SolrDocument;
 import org.xml.sax.SAXException;
 
@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class KrameriusVCLinker {
 
     // Solr client to collect children uuids
-    private final HttpSolrClient solrClient;
+    private final SolrClient solrClient;
 
     private final SolrVCLinker solrVCLinker;
     private final FedoraVCLinker fedoraVCLinker;
@@ -40,14 +40,9 @@ public class KrameriusVCLinker {
     public KrameriusVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd,
                              String solrHost, int maxDocsPerQuery, Logger logger)
             throws ParserConfigurationException, TransformerConfigurationException {
-        this.solrClient = new HttpSolrClient.Builder(solrHost)
-                .withConnectionTimeout(10000)
-                .withSocketTimeout(60000)
-                .build();
-
+        this.solrClient = SolrUtils.buildClient(solrHost);
         this.solrVCLinker = new SolrVCLinker(solrClient);
         this.fedoraVCLinker = new FedoraVCLinker(fedoraHost, fedoraUser, fedoraPswd);
-
         this.maxDocsPerQuery = maxDocsPerQuery;
         this.logger = logger;
     }
@@ -59,7 +54,7 @@ public class KrameriusVCLinker {
         query.addField("PID");
 
         Consumer<SolrDocument> publisher = generateConsumer(vcId);
-        SolrUtils.fetchByCursorIfMoreDocsElseByRequestAndApply(
+        SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
                 query, solrClient, publisher, maxDocsPerQuery
         );
 
