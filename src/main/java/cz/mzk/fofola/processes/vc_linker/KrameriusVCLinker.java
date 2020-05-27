@@ -1,5 +1,6 @@
 package cz.mzk.fofola.processes.vc_linker;
 
+import cz.mzk.fofola.processes.SolrUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -15,6 +16,8 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 
@@ -60,47 +63,20 @@ public class KrameriusVCLinker {
         SolrQuery query = new SolrQuery(allPartsQueryStr);
         query.addField("PID");
 
-        long numFound = queryForNumFound(query);
+        Consumer<SolrDocument> publisher = generateConsumer(vcId);
+        SolrUtils.fetchByCursorIfMoreDocsElseByRequestAndApply(
+                query, solrClient, publisher, maxDocsPerQuery
+        );
 
-        if (numFound != 0) {
-            if (numFound > maxDocsPerQuery) {
-                query.setRows(maxDocsPerQuery);
-                fetchByCursorAndLink(query, vcId);
-            } else {
-                query.setRows(Math.toIntExact(numFound));
-                fetchByRequestAndLink(query, vcId);
-            }
+        try {
+            solrVCLinker.commitChanges();
+        } catch (IOException | SolrServerException e) {
+            logger.warning(Arrays.toString(e.getStackTrace()));
         }
     }
 
-    private void fetchByCursorAndLink(SolrQuery query, String vcId)
-            throws IOException, SolrServerException {
-        query.setSort(SolrQuery.SortClause.asc("PID"));
-        String cursorMark = CursorMarkParams.CURSOR_MARK_START;
-        boolean done = false;
-        while (!done) {
-            query.set(CursorMarkParams.CURSOR_MARK_PARAM, cursorMark);
-            QueryResponse rsp = querySolrClient(query);
-
-            SolrDocumentList solrDocs = rsp.getResults();
-            linkUuidsFromSolrDocs(solrDocs, vcId);
-
-            String nextCursorMark = rsp.getNextCursorMark();
-            if (cursorMark.equals(nextCursorMark)) {
-                done = true;
-            }
-            cursorMark = nextCursorMark;
-        }
-    }
-
-    private void fetchByRequestAndLink(SolrQuery query, String vcId)
-            throws IOException, SolrServerException {
-        SolrDocumentList solrDocs = queryForSolrDocList(query);
-        linkUuidsFromSolrDocs(solrDocs, vcId);
-    }
-
-    private void linkUuidsFromSolrDocs(SolrDocumentList solrDocs, String vcId) {
-        for (SolrDocument solrDoc : solrDocs) {
+    private Consumer<SolrDocument> generateConsumer(String vcId) {
+        return solrDoc -> {
             String docPID = (String) solrDoc.getFieldValue("PID");
             boolean tripletCreated = false;
             try {
@@ -119,27 +95,7 @@ public class KrameriusVCLinker {
             } catch (IOException | SolrServerException e) {
                 logger.warning(Arrays.toString(e.getStackTrace()));
             }
-        }
-        try {
-            solrVCLinker.commitChanges();
-        } catch (IOException | SolrServerException e) {
-            logger.warning(Arrays.toString(e.getStackTrace()));
-        }
-    }
-
-    private long queryForNumFound(SolrQuery query) throws IOException, SolrServerException {
-        query.setRows(0);
-        SolrDocumentList docs = queryForSolrDocList(query);
-        return docs.getNumFound();
-    }
-
-    private SolrDocumentList queryForSolrDocList(SolrQuery query) throws IOException, SolrServerException {
-        QueryResponse response = querySolrClient(query);
-        return response.getResults();
-    }
-
-    private QueryResponse querySolrClient(SolrQuery query) throws IOException, SolrServerException {
-        return solrClient.query(query);
+        };
     }
 
     public void close() throws IOException {
