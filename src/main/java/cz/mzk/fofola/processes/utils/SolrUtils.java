@@ -1,4 +1,4 @@
-package cz.mzk.fofola.processes;
+package cz.mzk.fofola.processes.utils;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;

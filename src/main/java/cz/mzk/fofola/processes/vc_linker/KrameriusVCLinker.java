@@ -1,23 +1,18 @@
 package cz.mzk.fofola.processes.vc_linker;
 
-import cz.mzk.fofola.processes.SolrUtils;
+import cz.mzk.fofola.processes.utils.SolrUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.params.CursorMarkParams;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
 
