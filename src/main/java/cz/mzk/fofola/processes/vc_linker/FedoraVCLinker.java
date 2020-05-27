@@ -33,6 +33,7 @@ public class FedoraVCLinker {
     private final OkHttpClient fedoraClient;
     private final DocumentBuilder xmlParser;
     private final Transformer xmlTransformer;
+    private final String rdfNs = "rdf";
 
     public FedoraVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd)
             throws ParserConfigurationException, TransformerConfigurationException {
@@ -72,13 +73,13 @@ public class FedoraVCLinker {
     public boolean writeVCFor(String uuid, String vcId) throws TransformerException, IOException, SAXException {
         Document relsExt = getRelsExt(uuid);
         if (relsExt == null) return false;
-        Element descriptionElement = (Element) relsExt.getElementsByTagName("rdf:Description").item(0);
-        NodeList collectionNodes = descriptionElement.getElementsByTagName("rdf:isMemberOfCollection");
+        Element descriptionElement = (Element) relsExt.getElementsByTagNameNS(rdfNs, "Description").item(0);
+        NodeList collectionNodes = descriptionElement.getElementsByTagNameNS(rdfNs, "isMemberOfCollection");
         String vcIdElementAttrName = "info:fedora/" + vcId;
         boolean canBeAdded = collectionNodes == null || !containsVC(collectionNodes, vcIdElementAttrName);
         if (canBeAdded) {
-            Element childElement = relsExt.createElement("rdf:isMemberOfCollection");
-            childElement.setAttribute("rdf:resource", vcIdElementAttrName);
+            Element childElement = relsExt.createElementNS(rdfNs, "isMemberOfCollection");
+            childElement.setAttributeNS(rdfNs, "resource", vcIdElementAttrName);
             descriptionElement.appendChild(childElement);
             setRelsExt(uuid, relsExt);
         }
@@ -92,7 +93,7 @@ public class FedoraVCLinker {
             if (attributes.getLength() < 1) {
                 continue;
             }
-            Node attribute = attributes.getNamedItem("rdf:resource");
+            Node attribute = attributes.getNamedItemNS(rdfNs, "resource");
             if (attribute.getTextContent().equals(vcIdElementAttrName)) {
                 return true;
             }
