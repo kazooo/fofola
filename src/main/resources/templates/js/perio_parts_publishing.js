@@ -1,15 +1,15 @@
 var uuids = [];
 
 $(function () {
-    showLinkPanel(false);
+    showPublishPanel(false);
 
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
 
     $( "#load_uuid_submit" ).click(function() { showPublishPanel(loadOneUuid()) });
-    $( "#load_file_submit" ).click(function() { loadUuidsFromFile();  showLinkPanel(true); });
-    $( "#publish_button" ).click(function() { sendUuids(); showLinkPanel(false); });
+    $( "#load_file_submit" ).click(function() { loadUuidsFromFile();  showPublishPanel(true); });
+    $( "#publish_button" ).click(function() { sendUuids(); showPublishPanel(false); });
 });
 
 function loadOneUuid() {
