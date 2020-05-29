@@ -18,6 +18,7 @@ public abstract class Process {
     private final String processId;
     private final EventGateway eventGateway;
     private static final String logDirPath = "logs/";
+    private final FileHandler fileHandler;
     protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public Process(LinkedHashMap<String, Object> params) throws IOException {
@@ -25,8 +26,8 @@ public abstract class Process {
         this.eventGateway = (EventGateway) params.get("eventGateway");
 
         createLogDirIfDoesnExist();
-        FileHandler fileHandler = new FileHandler(logDirPath + processId + ".log");
         SimpleFormatter formatter = new SimpleFormatter();
+        fileHandler = new FileHandler(logDirPath + processId + ".log");
         fileHandler.setFormatter(formatter);
         logger.addHandler(fileHandler);
         logger.setUseParentHandlers(false);
@@ -46,6 +47,8 @@ public abstract class Process {
             eventGateway.publish(
                     new TerminateProcessEvent(processId, FinishReason.EXCEPTION, stackTraceStr)
             );
+        } finally {
+            fileHandler.close();
         }
     }
 
