@@ -41,6 +41,7 @@ public abstract class Process {
             );
         } catch (FinishProcessException ignored) { } catch (Throwable e) {
             String stackTraceStr = stackTraceToStr(e);
+            logger.severe("Process job is has been terminated by exception!");
             logger.severe(stackTraceStr);
             eventGateway.publish(
                     new TerminateProcessEvent(processId, FinishReason.EXCEPTION, stackTraceStr)

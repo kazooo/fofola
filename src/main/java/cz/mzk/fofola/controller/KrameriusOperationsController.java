@@ -91,10 +91,4 @@ public class KrameriusOperationsController {
         krameriusDoc = researcher.fillKrameriusDoc(krameriusDoc);
         return krameriusDoc;
     }
-
-    @GetMapping("/perio-parts-publish")
-    public String getPerioPartsPublishingPage(HttpServletRequest request) {
-        IpLogger.logIp(request.getRemoteAddr(), "Entry private periodical parts publishing section.");
-        return "perio_parts_publishing";
-    }
 }
