@@ -1,5 +1,6 @@
 package cz.mzk.fofola.service;
 
+import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.kramerius_api.KrameriusProcessRemoteApiFactory;
 import cz.mzk.fofola.kramerius_api.ProcessRemoteApi;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +18,13 @@ public class KrameriusApiCommunicator {
     private ProcessRemoteApi remoteApi;
     private final String krameriusUrl;
 
-    public KrameriusApiCommunicator(@Value("${spring.data.kramerius.host}") String krameriusUrl,
-                                    @Value("${spring.data.kramerius.user}") String krameriusUser,
-                                    @Value("${spring.data.kramerius.pswd}") String krameriusPswd) {
-        this.remoteApi = KrameriusProcessRemoteApiFactory.getProcessRemoteApi(krameriusUrl, krameriusUser, krameriusPswd);
-        this.krameriusUrl = krameriusUrl;
+    public KrameriusApiCommunicator(FofolaConfiguration fofolaConfig) {
+        this.remoteApi = KrameriusProcessRemoteApiFactory.getProcessRemoteApi(
+                fofolaConfig.getKrameriusHost(),
+                fofolaConfig.getKrameriusUser(),
+                fofolaConfig.getKrameriusPswd()
+        );
+        this.krameriusUrl = fofolaConfig.getKrameriusHost();
     }
 
     public Process makePublic(String uuid) throws Exception {

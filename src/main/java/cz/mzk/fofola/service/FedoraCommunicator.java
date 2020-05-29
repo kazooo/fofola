@@ -4,6 +4,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.fedora_api.RelationshipTuple;
 import cz.mzk.fofola.model.FedoraDocument;
 import org.slf4j.Logger;
@@ -34,12 +35,10 @@ public class FedoraCommunicator {
     private static final Logger logger = LoggerFactory.getLogger(FedoraCommunicator.class);
 
     @Autowired
-    public FedoraCommunicator(@Value("${spring.data.fedora.host}") String fedoraUrl,
-                              @Value("${spring.data.fedora.user}") String fedoraUser,
-                              @Value("${spring.data.fedora.pswd}") String fedoraPswd, XMLService xmlService) {
-        this.fedoraUrl = fedoraUrl;
+    public FedoraCommunicator(FofolaConfiguration fofolaConfig, XMLService xmlService) {
+        this.fedoraUrl = fofolaConfig.getFedoraHost();
         client = Client.create();
-        client.addFilter(new HTTPBasicAuthFilter(fedoraUser, fedoraPswd));
+        client.addFilter(new HTTPBasicAuthFilter(fofolaConfig.getFedoraUser(), fofolaConfig.getFedoraPswd()));
         this.xmlService = xmlService;
     }
 

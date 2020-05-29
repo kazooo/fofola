@@ -2,7 +2,7 @@ version: "2"
 services:
   db:
     image: "postgres:11.5"
-    container_name: db
+    container_name: fofola-db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
