@@ -37,6 +37,6 @@ public class VCLinkerProcess extends Process {
             vcLinker.linkRootAndChildrenToVc(vcUuid, rootUuid);
             if (Thread.interrupted()) break;
         }
-        vcLinker.close();
+        vcLinker.commitAndClose();
     }
 }

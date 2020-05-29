@@ -1,9 +1,6 @@
 package cz.mzk.fofola.processes.utils;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.TransformerException;
@@ -42,12 +39,12 @@ public class FedoraUtils {
         fedoraClient.setDc(uuid, dc);
     }
 
-    private static Node getFirstNodeNS(Element doc, String ns, String nodeName) {
+    public static Node getFirstNodeNS(Element doc, String ns, String nodeName) {
         NodeList nodeList = doc.getElementsByTagNameNS(ns, nodeName);
         return nodeList.getLength() > 0 ? nodeList.item(0) : null;
     }
 
-    private static void iterateChildNodes(Node root, Consumer<Node> nodeConsumer) {
+    public static void iterateChildNodes(Node root, Consumer<Node> nodeConsumer) {
         iterateNodes(root.getChildNodes(), nodeConsumer);
     }
 
@@ -56,5 +53,18 @@ public class FedoraUtils {
         for (int i = 0; i < nodeListLength; i++) {
             nodeConsumer.accept(nodes.item(i));
         }
+    }
+
+    public static Attr getAttributeWithName(Node node, String attrName) {
+        if (node == null) return null;
+        NamedNodeMap attributes = node.getAttributes();
+        int numAttrs = attributes.getLength();
+        for (int i = 0; i < numAttrs; i++) {
+            Attr attr = (Attr) attributes.item(i);
+            if (attrName.equals(attr.getName())) {
+                return attr;
+            }
+        }
+        return null;
     }
 }

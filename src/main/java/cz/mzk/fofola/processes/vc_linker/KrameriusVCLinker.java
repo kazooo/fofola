@@ -57,12 +57,6 @@ public class KrameriusVCLinker {
         SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
                 query, solrClient, publisher, maxDocsPerQuery
         );
-
-        try {
-            solrVCLinker.commitChanges();
-        } catch (IOException | SolrServerException e) {
-            logger.warning(Arrays.toString(e.getStackTrace()));
-        }
     }
 
     private Consumer<SolrDocument> generateConsumer(String vcId) {
@@ -88,7 +82,8 @@ public class KrameriusVCLinker {
         };
     }
 
-    public void close() throws IOException {
+    public void commitAndClose() throws IOException, SolrServerException {
+        solrVCLinker.commitChanges();
         solrVCLinker.close(); // automatically closes 'solrClient'
         fedoraVCLinker.close();
     }
