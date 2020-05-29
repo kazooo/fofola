@@ -4,15 +4,18 @@ buildscript {
     }
     dependencies {
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE'
-        classpath 'com.bmuschko:gradle-docker-plugin:4.10.0'
+        classpath 'com.bmuschko:gradle-docker-plugin:6.4.0'
     }
+}
+
+plugins {
+    id 'com.bmuschko.docker-remote-api' version '6.4.0'
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'com.bmuschko.docker-remote-api'
 
 group = 'cz.mzk'
 version = '1.0.4'
@@ -86,9 +89,8 @@ task createDockerfile(type: Dockerfile) {
 
 task buildImage(type: DockerBuildImage) {
     dependsOn createDockerfile
-
     inputDir = project.file('docker/build')
-    tags.add('ermak/fofola:' + version)
+    images.add('ermak/fofola:' + version)
 }
 
 clean.doFirst {
