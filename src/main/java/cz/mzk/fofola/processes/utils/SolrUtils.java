@@ -79,7 +79,7 @@ public class SolrUtils {
 
     public static long queryForNumFound(SolrQuery query, SolrClient solrClient)
             throws IOException, SolrServerException {
-        int oldRows = query.getRows();
+        Integer oldRows = query.getRows();
         query.setRows(0);
         SolrDocumentList docs = queryForSolrDocList(query, solrClient);
         query.setRows(oldRows);
