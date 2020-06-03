@@ -22,7 +22,7 @@ public class FedoraUtils {
     private static void changeAccessibility(String uuid, FedoraClient fedoraClient, String accessibility)
             throws IOException, SAXException, TransformerException {
         Document relsExt = fedoraClient.getRelsExt(uuid);
-        Node descriptionRootNode = getFirstNodeNS(relsExt.getDocumentElement(), "rdf", "Description");
+        Node descriptionRootNode = getFirstNodeNS(relsExt.getDocumentElement(), "*", "Description");
         iterateChildNodes(descriptionRootNode, node -> {
             if (node.getNodeName().equals("policy")) {
                 node.setTextContent("policy:"+accessibility);

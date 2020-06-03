@@ -62,6 +62,7 @@ public class KrameriusVCLinker {
     private Consumer<SolrDocument> generateConsumer(String vcId) {
         return solrDoc -> {
             String docPID = (String) solrDoc.getFieldValue("PID");
+            logger.info("Try " + docPID + "...");
             boolean tripletCreated = false;
             try {
                 tripletCreated = fedoraVCLinker.writeVCFor(docPID, vcId);

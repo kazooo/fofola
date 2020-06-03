@@ -19,7 +19,7 @@ import java.io.IOException;
 public class FedoraVCLinker {
 
     private final FedoraClient fedoraClient;
-    private final String rdfNs = "rdf";
+    private final String rdfNs = "*";
 
     public FedoraVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd)
             throws ParserConfigurationException, TransformerConfigurationException {
