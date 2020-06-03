@@ -35,8 +35,8 @@ public class FedoraVCLinker {
         String vcIdElementAttrName = "info:fedora/" + vcId;
         canBeAdded = collectionNodes == null || !containsVC(collectionNodes, vcIdElementAttrName);
         if (canBeAdded) {
-            Element childElement = relsExt.createElementNS(rdfNs, "isMemberOfCollection");
-            childElement.setAttributeNS(rdfNs, "resource", vcIdElementAttrName);
+            Element childElement = relsExt.createElement("rdf:isMemberOfCollection");
+            childElement.setAttribute("resource", vcIdElementAttrName);
             descriptionElement.appendChild(childElement);
             fedoraClient.setRelsExt(uuid, relsExt);
         }
