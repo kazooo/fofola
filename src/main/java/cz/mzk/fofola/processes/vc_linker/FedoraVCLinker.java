@@ -19,7 +19,6 @@ import java.io.IOException;
 public class FedoraVCLinker {
 
     private final FedoraClient fedoraClient;
-    private final String rdfNs = "*";
 
     public FedoraVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd)
             throws ParserConfigurationException, TransformerConfigurationException {
@@ -30,13 +29,13 @@ public class FedoraVCLinker {
         boolean canBeAdded = false;
         Document relsExt = fedoraClient.getRelsExt(uuid);
         if (relsExt == null) return canBeAdded;
-        Element descriptionElement = (Element) relsExt.getElementsByTagNameNS(rdfNs, "Description").item(0);
-        NodeList collectionNodes = descriptionElement.getElementsByTagNameNS(rdfNs, "isMemberOfCollection");
+        Element descriptionElement = (Element) relsExt.getElementsByTagName("rdf:Description").item(0);
+        NodeList collectionNodes = descriptionElement.getElementsByTagName("rdf:isMemberOfCollection");
         String vcIdElementAttrName = "info:fedora/" + vcId;
         canBeAdded = collectionNodes == null || !containsVC(collectionNodes, vcIdElementAttrName);
         if (canBeAdded) {
             Element childElement = relsExt.createElement("rdf:isMemberOfCollection");
-            childElement.setAttribute("resource", vcIdElementAttrName);
+            childElement.setAttribute("rdf:resource", vcIdElementAttrName);
             descriptionElement.appendChild(childElement);
             fedoraClient.setRelsExt(uuid, relsExt);
         }
@@ -50,7 +49,7 @@ public class FedoraVCLinker {
             if (attributes.getLength() < 1) {
                 continue;
             }
-            Node attribute = attributes.getNamedItemNS(rdfNs, "resource");
+            Node attribute = attributes.getNamedItem("rdf:resource");
             if (attribute.getTextContent().equals(vcIdElementAttrName)) {
                 return true;
             }
