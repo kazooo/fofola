@@ -67,6 +67,7 @@ public class KrameriusVCLinker {
             try {
                 tripletCreated = fedoraVCLinker.writeVCFor(docPID, vcId);
             } catch (SAXException | TransformerException | IOException e) {
+                logger.warning(e.getMessage());
                 logger.warning(Arrays.toString(e.getStackTrace()));
             }
             try {
