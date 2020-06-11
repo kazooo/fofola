@@ -49,7 +49,7 @@ public class KrameriusVCLinker {
 
     public void linkRootAndChildrenToVc(String vcId, String rootUuid)
             throws IOException, SolrServerException {
-        String allPartsQueryStr = "root_pid:\"" + rootUuid.trim() + "\"";
+        String allPartsQueryStr = "pid_path:/.*" + rootUuid.trim() + ".*/";
         SolrQuery query = new SolrQuery(allPartsQueryStr);
         query.addField("PID");
 
