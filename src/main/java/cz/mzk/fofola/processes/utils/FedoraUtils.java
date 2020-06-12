@@ -39,6 +39,11 @@ public class FedoraUtils {
         fedoraClient.setDc(uuid, dc);
     }
 
+    public static Node getFirstNode(Element doc, String nodeName) {
+        NodeList nodeList = doc.getElementsByTagName(nodeName);
+        return nodeList.getLength() > 0 ? nodeList.item(0) : null;
+    }
+
     public static Node getFirstNodeNS(Element doc, String ns, String nodeName) {
         NodeList nodeList = doc.getElementsByTagNameNS(ns, nodeName);
         return nodeList.getLength() > 0 ? nodeList.item(0) : null;
