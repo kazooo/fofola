@@ -49,16 +49,13 @@ public class FedoraVCLinker {
             if (attributes.getLength() < 1) {
                 continue;
             }
-            Node attribute = attributes.getNamedItem("rdf:resource");
+            Node attribute = attributes.getNamedItem("resource");
+            if (attribute == null) attribute = attributes.getNamedItem("rdf:resource");
             if (attribute.getTextContent().equals(vcIdElementAttrName)) {
                 return true;
             }
         }
         return false;
-    }
-
-    public void close() {
-        fedoraClient.close();
     }
 }
 

@@ -87,6 +87,5 @@ public class KrameriusVCLinker {
     public void commitAndClose() throws IOException, SolrServerException {
         solrVCLinker.commitChanges();
         solrVCLinker.close(); // automatically closes 'solrClient'
-        fedoraVCLinker.close();
     }
 }

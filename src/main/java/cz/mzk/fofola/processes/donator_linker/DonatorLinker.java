@@ -116,6 +116,5 @@ public class DonatorLinker {
     public void commitAndClose() throws IOException, SolrServerException {
         solrClient.commit();
         solrClient.close();
-        fedoraClient.close();
     }
 }
