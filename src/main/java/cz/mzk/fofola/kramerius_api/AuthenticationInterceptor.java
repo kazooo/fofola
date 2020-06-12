@@ -1,20 +1,17 @@
 package cz.mzk.fofola.kramerius_api;
 
+import lombok.AllArgsConstructor;
 import org.apache.commons.codec.binary.*;
 import retrofit.*;
 
 /**
  * Created by holmanj on 8.2.15.
  */
+@AllArgsConstructor
 public class AuthenticationInterceptor implements RequestInterceptor {
 
     private String login;
     private String password;
-
-    public AuthenticationInterceptor(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
 
     @Override
     public void intercept(RequestFacade request) {

@@ -4,6 +4,7 @@ import cz.mzk.fofola.processes.core.constants.ProcessType;
 import cz.mzk.fofola.processes.core.models.ProcessDTO;
 import cz.mzk.fofola.processes.core.services.ProcessCommandService;
 import cz.mzk.fofola.processes.core.services.ProcessQueryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +15,11 @@ import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/internal-processes")
+@Slf4j
 public class InternalProcessManagementController {
 
     private final ProcessCommandService processCommandService;
     private final ProcessQueryService processQueryService;
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public InternalProcessManagementController(ProcessCommandService processCommandService,
                                                ProcessQueryService processQueryService) {
@@ -54,7 +55,7 @@ public class InternalProcessManagementController {
     @PutMapping("/terminate/{processId}")
     @ResponseBody
     public String terminateRunningProcess(@PathVariable String processId) {
-        logger.info("Got terminate process command for pid: " + processId);
+        log.info("Got terminate process command for pid: " + processId);
         processCommandService.terminateProcess(processId);
         return processId;
     }
@@ -62,7 +63,7 @@ public class InternalProcessManagementController {
     @DeleteMapping("/remove/{processId}")
     @ResponseBody
     public String removeProcessFromDB(@PathVariable String processId) {
-        logger.info("Got remove process command for pid: " + processId);
+        log.info("Got remove process command for pid: " + processId);
         processCommandService.removeInfoFromDB(processId);
         return processId;
     }

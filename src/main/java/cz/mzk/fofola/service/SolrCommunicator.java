@@ -2,6 +2,7 @@ package cz.mzk.fofola.service;
 
 import cz.mzk.fofola.model.SolrDocument;
 import cz.mzk.fofola.repository.SolrDocumentRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.solr.core.SolrTemplate;
@@ -16,23 +17,17 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class SolrCommunicator {
 
     private final SolrDocumentRepository solrRepository;
     private final SolrTemplate solrTemplate;
     private final String collectionName = "kramerius";
 
-    public SolrCommunicator(SolrDocumentRepository solrRepository,
-                            SolrTemplate solrTemplate) {
-        this.solrRepository = solrRepository;
-        this.solrTemplate = solrTemplate;
-    }
-
     public SolrDocument getSolrDocByUuid(String uuid) {
         List<SolrDocument> docs = solrRepository.findByUuid(uuid);
 
         if (docs == null || docs.isEmpty()) {
-//            throw new NoSuchElementException("Can't find any Solr document with uuid: " + uuid);
             return null;
         } else if (docs.size() > 1) {
             throw new IllegalStateException("Can not be more than one document with uuid: " + uuid);

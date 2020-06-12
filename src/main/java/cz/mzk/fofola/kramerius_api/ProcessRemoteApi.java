@@ -1,17 +1,16 @@
 package cz.mzk.fofola.kramerius_api;
 
+import lombok.AllArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 public class ProcessRemoteApi {
 
     private ProcessRemoteApiRetrofit api;
-
-    ProcessRemoteApi(ProcessRemoteApiRetrofit api) {
-        this.api = api;
-    }
 
     public Process setPublic(String pid_path) throws Exception {
         return api.planProcess("setpublic", new Parameters(pid_path, pid_path));

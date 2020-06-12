@@ -7,6 +7,7 @@ import cz.mzk.fofola.model.SolrDocument;
 import cz.mzk.fofola.service.FedoraCommunicator;
 import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.service.SolrCommunicator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -16,18 +17,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Controller
+@Slf4j
 public class DocTreeController {
 
     private static int docCounter = 0;
     private static int docsToCallGC = 3000;
-
     private static final Gson gson = new Gson();
-    private static final Logger logger = Logger.getLogger(DocTreeController.class.getName());
 
     private final SolrCommunicator solrCommunicator;
     private final FedoraCommunicator fedoraCommunicator;
@@ -90,7 +89,7 @@ public class DocTreeController {
         docCounter++;
         if (docCounter >= docsToCallGC) {
             // requesting JVM for running Garbage Collector
-            logger.info("Run system garbage collector...");
+            log.info("Run system garbage collector...");
             System.gc();
             docCounter = 0;
         }

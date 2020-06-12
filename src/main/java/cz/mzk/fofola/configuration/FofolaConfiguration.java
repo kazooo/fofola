@@ -1,9 +1,11 @@
 package cz.mzk.fofola.configuration;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Getter
 public class FofolaConfiguration {
 
     @Value("${FEDORA_HOST:http://localhost:8080/fedora}")
@@ -20,32 +22,4 @@ public class FofolaConfiguration {
     private String krameriusUser;
     @Value("${KRAMERIUS_PSWD:krameriusPswd}")
     private String krameriusPswd;
-
-    public String getFedoraHost() {
-        return fedoraHost;
-    }
-
-    public String getFedoraPswd() {
-        return fedoraPswd;
-    }
-
-    public String getFedoraUser() {
-        return fedoraUser;
-    }
-
-    public String getSolrHost() {
-        return solrHost;
-    }
-
-    public String getKrameriusHost() {
-        return krameriusHost;
-    }
-
-    public String getKrameriusUser() {
-        return krameriusUser;
-    }
-
-    public String getKrameriusPswd() {
-        return krameriusPswd;
-    }
 }

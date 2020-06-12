@@ -12,6 +12,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -21,12 +22,12 @@ public class XMLService {
     private static Transformer transformer;
     private static DocumentBuilder docBuilder;
 
-    private List<String> uuidElementNames = Arrays.asList("dc:identifier");
-    private List<String> accessibilityElementNames = Arrays.asList("dc:rights");
-    private List<String> modelElementNames = Arrays.asList("dc:type");
-    private List<String> imageUrlElementNames = Arrays.asList("tiles-url", "kramerius4:tiles-url");
-    private List<String> rdfDescElementNames = Arrays.asList("rdf:Description");
-    private List<String> lastModDateElementNames = Arrays.asList("audit:date");
+    private final List<String> uuidElementNames = Collections.singletonList("dc:identifier");
+    private final List<String> accessibilityElementNames = Collections.singletonList("dc:rights");
+    private final List<String> modelElementNames = Collections.singletonList("dc:type");
+    private final List<String> imageUrlElementNames = Arrays.asList("tiles-url", "kramerius4:tiles-url");
+    private final List<String> rdfDescElementNames = Collections.singletonList("rdf:Description");
+    private final List<String> lastModDateElementNames = Collections.singletonList("audit:date");
 
     static {
         try {

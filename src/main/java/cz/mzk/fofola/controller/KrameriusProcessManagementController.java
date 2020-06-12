@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import cz.mzk.fofola.kramerius_api.Process;
 import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.service.KrameriusApiCommunicator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -17,12 +18,12 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
+@Slf4j
 public class KrameriusProcessManagementController {
 
     private static final Gson gson = new Gson();
     private static final int processPerPage = 15;
     private final KrameriusApiCommunicator krameriusApi;
-    private static final Logger logger = Logger.getLogger(KrameriusProcessManagementController.class.getName());
 
     public KrameriusProcessManagementController(KrameriusApiCommunicator krameriusApi) {
         this.krameriusApi = krameriusApi;
