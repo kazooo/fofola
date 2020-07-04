@@ -63,25 +63,32 @@ public class KrameriusVCLinker {
         return solrDoc -> {
             String docPID = (String) solrDoc.getFieldValue("PID");
             logger.info("Try " + docPID + "...");
-            boolean tripletCreated = false;
-            try {
-                tripletCreated = fedoraVCLinker.writeVCFor(docPID, vcId);
-            } catch (SAXException | TransformerException | IOException e) {
-                logger.warning(e.getMessage());
-                logger.warning(Arrays.toString(e.getStackTrace()));
-            }
-            try {
-                if (tripletCreated) {
-                    logger.info(docPID + " : Fedora link created");
-                    solrVCLinker.indexVCFor(docPID, vcId);
-                    logger.info(docPID + " : 'collection' indexed");
-                } else {
-                    logger.info(docPID + " : collection link already exists or exception occurs");
-                }
-            } catch (IOException | SolrServerException e) {
-                logger.warning(Arrays.toString(e.getStackTrace()));
+            boolean tripletCreated = createFedoraLink(docPID, vcId);
+            if (tripletCreated) {
+                createSolrLink(docPID, vcId);
+            } else {
+                logger.info(docPID + " : collection link already exists or exception occurs");
             }
         };
+    }
+
+    private boolean createFedoraLink(String uuid, String vcId) {
+        try {
+            return fedoraVCLinker.writeVCFor(uuid, vcId);
+        } catch (Exception e) {
+            logger.warning("\n\n" + e.getMessage());
+            logger.warning(Arrays.toString(e.getStackTrace()) + "\n\n");
+            return false;
+        }
+    }
+
+    private void createSolrLink(String uuid, String vcId) {
+        try {
+            solrVCLinker.indexVCFor(uuid, vcId);
+        } catch (Exception e) {
+            logger.warning("\n\n" + e.getMessage());
+            logger.warning(Arrays.toString(e.getStackTrace()) + "\n\n");
+        }
     }
 
     public void commitAndClose() throws IOException, SolrServerException {
