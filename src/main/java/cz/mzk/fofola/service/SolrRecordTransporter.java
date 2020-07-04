@@ -10,19 +10,16 @@ import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CursorMarkParams;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class SolrRecordTransporter {
 
-    private HttpSolrClient srcSolrClient;
-    private HttpSolrClient dstSolrClient;
-    private boolean verbose;
-    private int maxDocsPerQuery;
+    private final HttpSolrClient srcSolrClient;
+    private final HttpSolrClient dstSolrClient;
+    private final boolean verbose;
+    private final int maxDocsPerQuery;
 
-    private List<String> ignoredFields = Arrays.asList("_version_");
+    private final List<String> ignoredFields = Collections.singletonList("_version_");
 
     public SolrRecordTransporter(String srcSolrHost, String dstSolrHost, int maxDocsPerQuery, boolean verbose) {
         this.verbose = verbose;

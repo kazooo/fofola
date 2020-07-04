@@ -6,6 +6,7 @@ import cz.mzk.fofola.model.KrameriusDocument;
 import cz.mzk.fofola.researcher.UuidResearcher;
 import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.service.KrameriusApiCommunicator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -19,13 +20,13 @@ import java.util.logging.Logger;
 
 
 @Controller
+@Slf4j
 public class KrameriusOperationsController {
 
     private static final Gson gson = new Gson();
 
     private final UuidResearcher researcher;
     private final KrameriusApiCommunicator krameriusApi;
-    private static final Logger logger = Logger.getLogger(KrameriusOperationsController.class.getName());
 
     public KrameriusOperationsController(UuidResearcher researcher,
                           KrameriusApiCommunicator krameriusApi) {

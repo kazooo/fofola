@@ -84,6 +84,5 @@ public class PerioPartsPublisher {
 
     public void close() throws IOException {
         solrClient.close();
-        fedoraClient.close();
     }
 }

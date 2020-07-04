@@ -1,6 +1,7 @@
 package cz.mzk.fofola.controller;
 
 import cz.mzk.fofola.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
@@ -12,13 +13,12 @@ import java.util.logging.Logger;
 
 
 @Controller
+@Slf4j
 public class SolrOperationsController {
-
-    private static final Logger logger = Logger.getLogger(SolrOperationsController.class.getName());
 
     @GetMapping("/removeTree")
     public String getRemoveTreeFromSolrPage() {
-        logger.info("Entry Solr tree removing section.");
+        log.info("Entry Solr tree removing section.");
         return "remove_tree_from_solr";
     }
 
@@ -26,7 +26,7 @@ public class SolrOperationsController {
     public void removeTreeFromSolr(Map<String, String> params) throws IOException, SolrServerException {
         String rootUuid = params.get("root_uuid");
         String solrHost = params.get("solr_host");
-        logger.info("Remove root uuid: " + rootUuid + " host: " + solrHost);
+        log.info("Remove root uuid: " + rootUuid + " host: " + solrHost);
         SolrRecordEraser recordEraser = new SolrRecordEraser(solrHost, 1500, false);
         recordEraser.archiveAndEraseWithChildren(rootUuid);
         recordEraser.close();
@@ -34,7 +34,7 @@ public class SolrOperationsController {
 
     @GetMapping("/transferTree")
     public String getTransferTreePage() {
-        logger.info("Entry Solr tree transfer section.");
+        log.info("Entry Solr tree transfer section.");
         return "solr_record_transfer";
     }
 
@@ -43,7 +43,7 @@ public class SolrOperationsController {
         String srcSolrHost = params.get("src_solr_host");
         String dstSolrHost = params.get("dst_solr_host");
         String rootUuid = params.get("root_uuid");
-        logger.info("Transfer root uuid: " + rootUuid +
+        log.info("Transfer root uuid: " + rootUuid +
                         " source host: " + srcSolrHost +
                         " dest host: " + dstSolrHost);
         SolrRecordTransporter recordTransporter = new SolrRecordTransporter(

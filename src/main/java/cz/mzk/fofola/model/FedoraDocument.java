@@ -1,11 +1,16 @@
 package cz.mzk.fofola.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Setter
+@Getter
 public class FedoraDocument {
 
     private String uuid;
@@ -23,46 +28,6 @@ public class FedoraDocument {
         this.childs = new ArrayList<>();
     }
 
-    public void setAccesibility(String accesibility) {
-        this.accesibility = accesibility;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getAccesibility() {
-        return accesibility;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public void addChild(String uuid) {
-        this.childs.add(uuid);
-    }
-
-    public List<String> getChilds() {
-        return childs;
-    }
-
     public void setModifiedDateStr(String modifiedDateStr) {
         try {
             Date d = fromFmt.parse(modifiedDateStr);
@@ -71,7 +36,7 @@ public class FedoraDocument {
         this.modifiedDateStr = modifiedDateStr;
     }
 
-    public String getModifiedDateStr() {
-        return modifiedDateStr;
+    public void addChild(String child) {
+        this.childs.add(child);
     }
 }

@@ -20,8 +20,6 @@ public class SolrConfiguration {
 
     @Value("${spring.data.solr.host}") String solrURL;
 
-    private static final Logger logger = Logger.getLogger(SolrConfiguration.class.getName());
-
     @Bean
     public SolrClient solrClient() {
         return new HttpSolrClient.Builder(solrURL).build();

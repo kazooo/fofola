@@ -1,5 +1,6 @@
 package cz.mzk.fofola.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.Connector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class ContextClosedHandler implements TomcatConnectorCustomizer,
         ApplicationListener<ContextClosedEvent> {
 

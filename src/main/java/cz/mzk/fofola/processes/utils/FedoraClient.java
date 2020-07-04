@@ -1,76 +1,70 @@
 package cz.mzk.fofola.processes.utils;
 
-import com.squareup.okhttp.*;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.http.*;
+import org.springframework.http.client.*;
+import org.springframework.http.client.support.HttpRequestWrapper;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.Proxy;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+import java.net.URI;
+import java.util.Collections;
 
 public class FedoraClient {
 
     private final String fedoraHost;
-    private final String fedoraUser;
-    private final String fedoraPassword;
-    private final OkHttpClient okHttpClient;
+    private final RestTemplate restTemplate;
     private final DocumentBuilder xmlParser;
     private final Transformer xmlTransformer;
-    private final Client relsExtClient;
 
     public FedoraClient(String fedoraHost, String fedoraUser, String fedoraPswd)
             throws ParserConfigurationException, TransformerConfigurationException {
         this.fedoraHost = fedoraHost;
-        this.fedoraUser = fedoraUser;
-        this.fedoraPassword = fedoraPswd;
-        okHttpClient = createAuthenticatedClient(fedoraUser, fedoraPswd);
+        restTemplate = new RestTemplate(getClientHttpRequestFactory(fedoraUser, fedoraPswd));
+        restTemplate.setInterceptors(Collections.singletonList(new PlusEncoderInterceptor()));
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         xmlParser = factory.newDocumentBuilder();
         xmlTransformer = TransformerFactory.newInstance().newTransformer();
         xmlTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        relsExtClient = Client.create();
-        relsExtClient.setConnectTimeout(600000);
-        relsExtClient.setReadTimeout(600000);
     }
 
-    private static OkHttpClient createAuthenticatedClient(final String username, final String password) {
-        OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(1, TimeUnit.MINUTES);
-        client.setWriteTimeout(1, TimeUnit.MINUTES);
-        client.setReadTimeout(1, TimeUnit.MINUTES);
-        client.setConnectionPool(new ConnectionPool(1, 60000));
-        client.setAuthenticator(new Authenticator() {
-            @Override
-            public Request authenticate(Proxy proxy, Response response) {
-                String credential = Credentials.basic(username, password);
-                return response.request().newBuilder().header("Authorization", credential).build();
-            }
-
-            @Override
-            public Request authenticateProxy(Proxy proxy, Response response) {
-                String credential = Credentials.basic(username, password);
-                return response.request().newBuilder().header("Authorization", credential).build();
-            }
-        });
-        return client;
+    private ClientHttpRequestFactory getClientHttpRequestFactory(String fedoraUser, String fedoraPswd) {
+        int timeout = 5000;
+        RequestConfig config = RequestConfig.custom()
+                .setConnectTimeout(timeout)
+                .setConnectionRequestTimeout(timeout)
+                .setSocketTimeout(timeout)
+                .build();
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(
+                AuthScope.ANY, new UsernamePasswordCredentials(fedoraUser, fedoraPswd)
+        );
+        CloseableHttpClient client = HttpClientBuilder
+                .create()
+                .setDefaultRequestConfig(config)
+                .setDefaultCredentialsProvider(credentialsProvider)
+                .build();
+        return new HttpComponentsClientHttpRequestFactory(client);
     }
 
     public Document getRelsExt(String uuid) throws IOException, SAXException {
@@ -82,35 +76,18 @@ public class FedoraClient {
     }
 
     private Document getDatastream(String uuid, String dsName) throws IOException, SAXException {
-        String queryUrl = fedoraHost + "/get/" + uuid + "/" + dsName;
-        Request request = new Request.Builder().url(queryUrl).build();
-        Response response = okHttpClient.newCall(request).execute();
-        if (!response.isSuccessful())
-            throw new IOException("Cannot get " + dsName + " data, unexpected code " + response);
-        String xmlStr = Objects.requireNonNull(response.body()).string();
-        response.body().close();
-        return xmlParser.parse(new InputSource(new StringReader(xmlStr)));
+        String getUrl = fedoraHost + "/get/" + uuid + "/" + dsName;
+        ResponseEntity<String> response = restTemplate.getForEntity(getUrl, String.class);
+        if (!response.getStatusCode().equals(HttpStatus.OK))
+            throw new IOException("GET " + dsName + " for " + uuid + ": Cannot get datastream, unexpected code " + response.getStatusCode());
+        if (response.getBody() == null)
+            throw new IllegalStateException("GET " + dsName + " for " + uuid + ": Get request is successful, but response body is empty!");
+        return xmlParser.parse(new InputSource(new StringReader(response.getBody())));
     }
 
-    public void setRelsExt(String uuid, Document relsExt) throws TransformerException, IOException {
-        String url = fedoraHost + "/objects/" + uuid + "/datastreams/RELS-EXT";
-        MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-        queryParams.add("controlGroup", "X");
-        queryParams.add("versionable", "false");
-        queryParams.add("dsState", "A");
-        queryParams.add("mimeType", "application/rdf+xml");
-        File tempDom = File.createTempFile("relsExt", ".rdf");
-        TransformerFactory.newInstance().newTransformer().transform(new DOMSource(relsExt), new StreamResult(tempDom));
-
-        WebResource resource = relsExtClient.resource(url);
-        BasicAuthenticationFilter credentials = new BasicAuthenticationFilter(fedoraUser, fedoraPassword);
-        resource.addFilter(credentials);
-        try {
-            resource.queryParams(queryParams).post(ClientResponse.class, tempDom);
-        } catch (UniformInterfaceException e) {
-            int status = e.getResponse().getStatus();
-            throw new IOException("Cannot set RELS-EXT data for " + uuid + ", status: " + status);
-        }
+    public void setRelsExt(String uuid, Document relsExt) throws IOException, TransformerException {
+        setDatastream(uuid, "RELS-EXT", relsExt,
+                "X", "false", "A", "application/rdf+xml");
     }
 
     public void setDc(String uuid, Document dc) throws IOException, TransformerException {
@@ -121,33 +98,43 @@ public class FedoraClient {
     private void setDatastream(String uuid, String dsName, Document doc,
                                String controlGroup, String versionable, String dsState, String mimeType)
             throws IOException, TransformerException {
-        String postUrlStr = fedoraHost + "/objects/" + uuid + "/datastreams/" + dsName;
-        HttpUrl postUrl = Objects.requireNonNull(HttpUrl.parse(postUrlStr)).newBuilder()
-                .addQueryParameter("controlGroup", controlGroup)
-                .addQueryParameter("versionable", versionable)
-                .addQueryParameter("dsState", dsState)
-                .addQueryParameter("mimeType", mimeType)
-                .build();
-        RequestBody body = RequestBody.create(MediaType.parse(mimeType), docToString(doc));
+        String postUrl = UriComponentsBuilder
+                .fromHttpUrl(fedoraHost + "/objects/" + uuid + "/datastreams/" + dsName)
+                .queryParam("controlGroup", controlGroup)
+                .queryParam("versionable", versionable)
+                .queryParam("dsState", dsState)
+                .queryParam("mimeType", mimeType).encode().build().toUri().toString();
 
-        Request request = new Request.Builder().url(postUrl).post(body).build();
-        Response response = okHttpClient.newCall(request).execute();
-        if (!response.isSuccessful()) {
-            throw new IOException("Cannot set " + dsName + " data for " + uuid + ", unexpected code " + response);
-        }
-        response.body().close();
-        okHttpClient.getConnectionPool().evictAll(); // unknown problem with Fedora connection pool
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(mimeType));
+        HttpEntity<String> request = new HttpEntity<>(docToStr(doc), headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(postUrl, request, String.class);
+        if (!response.getStatusCode().equals(HttpStatus.CREATED))
+            throw new IOException("POST " + dsName + " for " + uuid + ": Cannot set datastream, unexpected code " + response.getStatusCode());
     }
 
-    private String docToString(Document doc) throws TransformerException {
+    public String docToStr(Document doc) throws TransformerException {
         StreamResult result = new StreamResult(new StringWriter());
         DOMSource source = new DOMSource(doc);
         xmlTransformer.transform(source, result);
         return result.getWriter().toString();
     }
+}
 
-    public void close() {
-        relsExtClient.destroy();
-        okHttpClient.getConnectionPool().evictAll();
+class PlusEncoderInterceptor implements ClientHttpRequestInterceptor {
+    // https://stackoverflow.com/questions/54294843/plus-sign-not-encoded-with-resttemplate-using-string-url-but-interpreted
+    @Override
+    public ClientHttpResponse intercept(HttpRequest request, byte[] body,
+                                        ClientHttpRequestExecution execution) throws IOException {
+        return execution.execute(new HttpRequestWrapper(request) {
+            @Override
+            public URI getURI() {
+                URI u = super.getURI();
+                String strictlyEscapedQuery = StringUtils.replace(u.getRawQuery(), "+", "%2B");
+                return UriComponentsBuilder.fromUri(u)
+                        .replaceQuery(strictlyEscapedQuery)
+                        .build(true).toUri();
+            }
+        }, body);
     }
 }

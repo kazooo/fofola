@@ -42,6 +42,7 @@ public class DonatorLinker {
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorLinkingLogic = solrDoc -> {
             String docPID = (String) solrDoc.getFieldValue("PID");
+            logger.info(docPID);
             try {
                 Document relsExt = fedoraClient.getRelsExt(docPID);
                 Node descriptionRootNode = getDescRootNode(relsExt);
@@ -107,14 +108,13 @@ public class DonatorLinker {
     }
 
     private static Node getDescRootNode(Document relsExt) {
-        return FedoraUtils.getFirstNodeNS(
-                relsExt.getDocumentElement(), "rdf", "Description"
+        return FedoraUtils.getFirstNode(
+                relsExt.getDocumentElement(), "rdf:Description"
         );
     }
 
     public void commitAndClose() throws IOException, SolrServerException {
         solrClient.commit();
         solrClient.close();
-        fedoraClient.close();
     }
 }

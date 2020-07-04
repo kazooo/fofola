@@ -1,8 +1,11 @@
 package cz.mzk.fofola.model;
 
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
 public class DocTreeModel {
 
     public String name;
@@ -27,10 +30,6 @@ public class DocTreeModel {
         this.stored = "false";
     }
 
-    public void setChildren(List<DocTreeModel> children) {
-        this.children = children;
-    }
-
     public void addChild(DocTreeModel child) {
         if (this.children == null) {
             this.children = new ArrayList<>();
@@ -39,34 +38,6 @@ public class DocTreeModel {
         if (child.hasProblem) {
             this.hasProblematicChild = true;
         }
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public void setVisibilityFedora(String visibilityFedora) {
-        this.visibilityFedora = visibilityFedora;
-    }
-
-    public void setVisibilitySolr(String visibilitySolr) {
-        this.visibilitySolr = visibilitySolr;
-    }
-
-    public void setStored(String stored) {
-        this.stored = stored;
-    }
-
-    public void setIndexed(String indexed) {
-        this.indexed = indexed;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public void setLinkInRelsExt(String linkInRelsExt) {
