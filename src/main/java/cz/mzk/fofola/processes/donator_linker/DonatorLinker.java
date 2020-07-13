@@ -3,6 +3,7 @@ package cz.mzk.fofola.processes.donator_linker;
 import cz.mzk.fofola.processes.utils.FedoraClient;
 import cz.mzk.fofola.processes.utils.FedoraUtils;
 import cz.mzk.fofola.processes.utils.SolrUtils;
+import cz.mzk.fofola.processes.utils.UuidUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -39,6 +40,7 @@ public class DonatorLinker {
     }
 
     public void link(String rootUuid, String donator) throws IOException, SolrServerException {
+        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorLinkingLogic = solrDoc -> {
             String docPID = (String) solrDoc.getFieldValue("PID");

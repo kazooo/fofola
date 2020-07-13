@@ -3,6 +3,7 @@ package cz.mzk.fofola.processes.perio_parts_publishing;
 import cz.mzk.fofola.processes.utils.FedoraClient;
 import cz.mzk.fofola.processes.utils.FedoraUtils;
 import cz.mzk.fofola.processes.utils.SolrUtils;
+import cz.mzk.fofola.processes.utils.UuidUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -34,6 +35,7 @@ public class PerioPartsPublisher {
     }
 
     public void checkPartsAndMakePublic(String rootUuid) {
+        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
         SolrQuery query = new SolrQuery("PID:\"" + rootUuid + "\"");
         query.setFields("PID");
         try {

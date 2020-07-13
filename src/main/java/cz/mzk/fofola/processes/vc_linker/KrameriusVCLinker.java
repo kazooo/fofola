@@ -1,6 +1,7 @@
 package cz.mzk.fofola.processes.vc_linker;
 
 import cz.mzk.fofola.processes.utils.SolrUtils;
+import cz.mzk.fofola.processes.utils.UuidUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -49,13 +50,15 @@ public class KrameriusVCLinker {
 
     public void linkRootAndChildrenToVc(String vcId, String rootUuid)
             throws IOException, SolrServerException {
+        vcId = UuidUtils.checkAndMakeVcId(vcId);
+        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
         String allPartsQueryStr = "pid_path:/.*" + rootUuid.trim() + ".*/";
         SolrQuery query = new SolrQuery(allPartsQueryStr);
         query.addField("PID");
 
-        Consumer<SolrDocument> publisher = generateConsumer(vcId);
+        Consumer<SolrDocument> publisherLogic = generateConsumer(vcId);
         SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
-                query, solrClient, publisher, maxDocsPerQuery
+                query, solrClient, publisherLogic, maxDocsPerQuery
         );
     }
 
