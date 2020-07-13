@@ -50,7 +50,7 @@ public class DonatorLinker {
                     insertHasDonatorNode(donator, relsExt, descriptionRootNode);
                     fedoraClient.setRelsExt(docPID, relsExt);
                 }
-            } catch (IOException | SAXException | TransformerException e) {
+            } catch (Exception e) {
                 logger.severe(Arrays.toString(e.getStackTrace()));
             }
         };
