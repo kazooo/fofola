@@ -95,5 +95,14 @@ public class FedoraUtils {
             this.controlGroup = controlGroup;
             this.state = state;
         }
+
+        public static DATASTREAMS getDataStream(String dsName) {
+            for (DATASTREAMS ds : DATASTREAMS.values()) {
+                if (ds.name.equals(dsName)) {
+                    return ds;
+                }
+            }
+            return null;
+        }
     }
 }

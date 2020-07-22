@@ -26,4 +26,10 @@ public class ProcessesPageController {
         IpLogger.logIp(request.getRemoteAddr(), "Entry donator linking section.");
         return "link_donator";
     }
+
+    @GetMapping("/img-editing")
+    public String getImgEditionPage(HttpServletRequest request) {
+        IpLogger.logIp(request.getRemoteAddr(), "Entry image editing section.");
+        return "img_editing";
+    }
 }
