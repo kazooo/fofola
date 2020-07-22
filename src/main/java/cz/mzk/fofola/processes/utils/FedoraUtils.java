@@ -72,4 +72,28 @@ public class FedoraUtils {
         }
         return null;
     }
+
+    public enum DATASTREAMS {
+
+        RELS_EXT("RELS-EXT", "application/rdf+xml", "false", "X", "A"),
+        DC("DC", "text/xml", "false", "X", "A"),
+
+        THUMB_IMG("IMG_THUMB", "image/jpeg", "true", "M", "A"),
+        FULL_IMG("IMG_FULL", "image/jpeg", "true", "M", "A");
+
+        public final String name;
+        public final String mimeType;
+        public final String versionable;
+        public final String controlGroup;
+        public final String state;
+
+        DATASTREAMS(String dsStrName, String dsMimeType,
+                    String versionable, String controlGroup, String state) {
+            this.name = dsStrName;
+            this.mimeType = dsMimeType;
+            this.versionable = versionable;
+            this.controlGroup = controlGroup;
+            this.state = state;
+        }
+    }
 }

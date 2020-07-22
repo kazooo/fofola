@@ -69,11 +69,11 @@ public class FedoraClient {
     }
 
     public Document getRelsExt(String uuid) throws IOException, SAXException {
-        return getDatastream(uuid, "RELS-EXT");
+        return getDatastream(uuid, FedoraUtils.DATASTREAMS.RELS_EXT.name);
     }
 
     public Document getDc(String uuid) throws IOException, SAXException {
-        return getDatastream(uuid, "DC");
+        return getDatastream(uuid, FedoraUtils.DATASTREAMS.DC.name);
     }
 
     private Document getDatastream(String uuid, String dsName) throws IOException, SAXException {
@@ -87,37 +87,38 @@ public class FedoraClient {
     }
 
     public void setRelsExt(String uuid, Document relsExt) throws IOException, TransformerException {
-        setDatastream(uuid, "RELS-EXT", docStrEntity(relsExt, "application/rdf+xml"),
-                "X", "false", "A", "application/rdf+xml");
+        HttpEntity<Object> entity = docStrEntity(relsExt, FedoraUtils.DATASTREAMS.RELS_EXT.mimeType);
+        setDatastream(uuid, FedoraUtils.DATASTREAMS.RELS_EXT, entity);
     }
 
     public void setDc(String uuid, Document dc) throws IOException, TransformerException {
-        setDatastream(uuid, "DC", docStrEntity(dc, "application/rdf+xml"),
-                "X", "false", "A", "text/xml");
+        HttpEntity<Object> entity = docStrEntity(dc, FedoraUtils.DATASTREAMS.DC.mimeType);
+        setDatastream(uuid, FedoraUtils.DATASTREAMS.DC, entity);
     }
 
     public void setThumbnailImg(String uuid, MultipartFile image) throws IOException {
-        setDatastream(uuid, "IMG_THUMB", imageEntity(image, "image/jpeg"),
-                "M", "true", "A", "image/jpeg");
+        HttpEntity<Object> entity = imageEntity(image, FedoraUtils.DATASTREAMS.THUMB_IMG.mimeType);
+        setDatastream(uuid, FedoraUtils.DATASTREAMS.THUMB_IMG, entity);
     }
 
     public void setFullImg(String uuid, MultipartFile image) throws IOException {
-        setDatastream(uuid, "IMG_FULL", imageEntity(image, "image/jpeg"),
-                "M", "true", "A", "image/jpeg");
+        HttpEntity<Object> entity = imageEntity(image, FedoraUtils.DATASTREAMS.FULL_IMG.mimeType);
+        setDatastream(uuid, FedoraUtils.DATASTREAMS.FULL_IMG, entity);
     }
 
-    private void setDatastream(String uuid, String dsName, HttpEntity<Object> entity,
-                               String controlGroup, String versionable, String dsState, String mimeType)
+    private void setDatastream(String uuid, FedoraUtils.DATASTREAMS dataStream, HttpEntity<Object> entity)
             throws IOException {
         String postUrl = UriComponentsBuilder
-                .fromHttpUrl(fedoraHost + "/objects/" + uuid + "/datastreams/" + dsName)
-                .queryParam("controlGroup", controlGroup)
-                .queryParam("versionable", versionable)
-                .queryParam("dsState", dsState)
-                .queryParam("mimeType", mimeType).encode().build().toUri().toString();
+                .fromHttpUrl(fedoraHost + "/objects/" + uuid + "/datastreams/" + dataStream.name)
+                .queryParam("controlGroup", dataStream.controlGroup)
+                .queryParam("versionable", dataStream.versionable)
+                .queryParam("dsState", dataStream.state)
+                .queryParam("mimeType", dataStream.mimeType)
+                .encode().build().toUri().toString();
         ResponseEntity<String> response = restTemplate.postForEntity(postUrl, entity, String.class);
         if (!response.getStatusCode().equals(HttpStatus.CREATED))
-            throw new IOException("POST " + dsName + " for " + uuid + ": Cannot set datastream, unexpected code " + response.getStatusCode());
+            throw new IOException("POST " + dataStream.name + " for " + uuid +
+                    ": Cannot set datastream, unexpected code " + response.getStatusCode());
     }
 
     private HttpEntity<Object> docStrEntity(Document doc, String mimeType) throws TransformerException {
