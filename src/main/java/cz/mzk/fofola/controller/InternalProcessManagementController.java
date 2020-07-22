@@ -7,11 +7,11 @@ import cz.mzk.fofola.processes.core.services.ProcessQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/internal-processes")
@@ -35,7 +35,8 @@ public class InternalProcessManagementController {
     @PostMapping("/new/{processTypeAlias}")
     @ResponseBody
     public String startNewProcess(@PathVariable String processTypeAlias,
-                                  @RequestBody Map<String, Object> params)
+                                  @RequestPart(value = "params") Map<String, Object> params,
+                                  @RequestPart(value = "image", required = false) MultipartFile image)
             throws NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
         ProcessType type = ProcessType.findByAlias(processTypeAlias);
@@ -43,6 +44,9 @@ public class InternalProcessManagementController {
             throw new IllegalStateException(
                     "Can't determine process for alias \"" + processTypeAlias + "\"!"
             );
+        if (image != null) {
+            params.put("image", image);
+        }
         return processCommandService.startNewProcess(type, params);
     }
 

@@ -56,12 +56,16 @@ function sendUuids() {
         'root_uuids': uuids,
     }
 
+    const formData = new FormData();
+    const params = new Blob([JSON.stringify(process_params)], {type : "application/json"})
+    formData.append('params', params)
+
     $.ajax({
         type: "POST",
-        contentType: "application/json",
         url: "/internal-processes/new/donator_link",
-        data: JSON.stringify(process_params),
-        dataType: 'json',
+        data: formData,
+        contentType: false,
+        processData: false,
         cache: false,
         timeout: 600000,
         success: function (data) {
