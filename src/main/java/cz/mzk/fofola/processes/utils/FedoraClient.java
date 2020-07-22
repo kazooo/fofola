@@ -12,6 +12,7 @@ import org.springframework.http.*;
 import org.springframework.http.client.*;
 import org.springframework.http.client.support.HttpRequestWrapper;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -86,31 +87,51 @@ public class FedoraClient {
     }
 
     public void setRelsExt(String uuid, Document relsExt) throws IOException, TransformerException {
-        setDatastream(uuid, "RELS-EXT", relsExt,
+        setDatastream(uuid, "RELS-EXT", docStrEntity(relsExt, "application/rdf+xml"),
                 "X", "false", "A", "application/rdf+xml");
     }
 
     public void setDc(String uuid, Document dc) throws IOException, TransformerException {
-        setDatastream(uuid, "DC", dc,
+        setDatastream(uuid, "DC", docStrEntity(dc, "application/rdf+xml"),
                 "X", "false", "A", "text/xml");
     }
 
-    private void setDatastream(String uuid, String dsName, Document doc,
+    public void setThumbnailImg(String uuid, MultipartFile image) throws IOException {
+        setDatastream(uuid, "IMG_THUMB", imageEntity(image, "image/jpeg"),
+                "M", "true", "A", "image/jpeg");
+    }
+
+    public void setFullImg(String uuid, MultipartFile image) throws IOException {
+        setDatastream(uuid, "IMG_FULL", imageEntity(image, "image/jpeg"),
+                "M", "true", "A", "image/jpeg");
+    }
+
+    private void setDatastream(String uuid, String dsName, HttpEntity<Object> entity,
                                String controlGroup, String versionable, String dsState, String mimeType)
-            throws IOException, TransformerException {
+            throws IOException {
         String postUrl = UriComponentsBuilder
                 .fromHttpUrl(fedoraHost + "/objects/" + uuid + "/datastreams/" + dsName)
                 .queryParam("controlGroup", controlGroup)
                 .queryParam("versionable", versionable)
                 .queryParam("dsState", dsState)
                 .queryParam("mimeType", mimeType).encode().build().toUri().toString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(mimeType));
-        HttpEntity<String> request = new HttpEntity<>(docToStr(doc), headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(postUrl, request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(postUrl, entity, String.class);
         if (!response.getStatusCode().equals(HttpStatus.CREATED))
             throw new IOException("POST " + dsName + " for " + uuid + ": Cannot set datastream, unexpected code " + response.getStatusCode());
+    }
+
+    private HttpEntity<Object> docStrEntity(Document doc, String mimeType) throws TransformerException {
+        return new HttpEntity<>(docToStr(doc), mimeTypeHeader(mimeType));
+    }
+
+    private HttpEntity<Object> imageEntity(MultipartFile image, String mimeType) {
+        return new HttpEntity<>(image.getResource(), mimeTypeHeader(mimeType));
+    }
+
+    private HttpHeaders mimeTypeHeader(String mimeType) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(mimeType));
+        return headers;
     }
 
     public String docToStr(Document doc) throws TransformerException {
@@ -119,22 +140,22 @@ public class FedoraClient {
         xmlTransformer.transform(source, result);
         return result.getWriter().toString();
     }
-}
 
-class PlusEncoderInterceptor implements ClientHttpRequestInterceptor {
-    // https://stackoverflow.com/questions/54294843/plus-sign-not-encoded-with-resttemplate-using-string-url-but-interpreted
-    @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-                                        ClientHttpRequestExecution execution) throws IOException {
-        return execution.execute(new HttpRequestWrapper(request) {
-            @Override
-            public URI getURI() {
-                URI u = super.getURI();
-                String strictlyEscapedQuery = StringUtils.replace(u.getRawQuery(), "+", "%2B");
-                return UriComponentsBuilder.fromUri(u)
-                        .replaceQuery(strictlyEscapedQuery)
-                        .build(true).toUri();
-            }
-        }, body);
+    private static class PlusEncoderInterceptor implements ClientHttpRequestInterceptor {
+        // https://stackoverflow.com/questions/54294843/plus-sign-not-encoded-with-resttemplate-using-string-url-but-interpreted
+        @Override
+        public ClientHttpResponse intercept(HttpRequest request, byte[] body,
+                                            ClientHttpRequestExecution execution) throws IOException {
+            return execution.execute(new HttpRequestWrapper(request) {
+                @Override
+                public URI getURI() {
+                    URI u = super.getURI();
+                    String strictlyEscapedQuery = StringUtils.replace(u.getRawQuery(), "+", "%2B");
+                    return UriComponentsBuilder.fromUri(u)
+                            .replaceQuery(strictlyEscapedQuery)
+                            .build(true).toUri();
+                }
+            }, body);
+        }
     }
 }
