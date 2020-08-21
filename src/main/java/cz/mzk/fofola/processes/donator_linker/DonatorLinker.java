@@ -43,7 +43,7 @@ public class DonatorLinker {
         rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorLinkingLogic = solrDoc -> {
-            String docPID = (String) solrDoc.getFieldValue("PID");
+            String docPID = (String) solrDoc.getFieldValue(SolrUtils.UUID_FIELD_NAME);
             logger.info(docPID);
             try {
                 Document relsExt = fedoraClient.getRelsExt(docPID);
@@ -64,7 +64,7 @@ public class DonatorLinker {
     public void unlink(String rootUuid, String donator) throws IOException, SolrServerException {
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorUnlinkingLogic = solrDoc -> {
-            String docPID = (String) solrDoc.getFieldValue("PID");
+            String docPID = (String) solrDoc.getFieldValue(SolrUtils.UUID_FIELD_NAME);
             try {
                 Document relsExt = fedoraClient.getRelsExt(docPID);
                 Node descriptionRootNode = getDescRootNode(relsExt);
@@ -83,9 +83,9 @@ public class DonatorLinker {
     }
 
     private static SolrQuery createQueryForRootUuid(String rootUuid) {
-        String allDocsQueryStr = "root_pid:\"" + rootUuid.trim() + "\"";
+        String allDocsQueryStr = SolrUtils.wrapQueryStr(SolrUtils.ROOT_PID_FIELD_NAME, rootUuid.trim());
         SolrQuery query = new SolrQuery(allDocsQueryStr);
-        query.addField("PID");
+        query.addField(SolrUtils.UUID_FIELD_NAME);
         return query;
     }
 

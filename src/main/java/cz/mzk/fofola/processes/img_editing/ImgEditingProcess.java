@@ -1,4 +1,4 @@
-package cz.mzk.fofola.processes.img_edition;
+package cz.mzk.fofola.processes.img_editing;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.processes.core.models.Process;

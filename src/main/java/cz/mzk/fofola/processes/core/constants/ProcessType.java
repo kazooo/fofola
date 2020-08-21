@@ -2,7 +2,7 @@ package cz.mzk.fofola.processes.core.constants;
 
 import cz.mzk.fofola.processes.TestProcess;
 import cz.mzk.fofola.processes.donator_linker.DonatorLinkerProcess;
-import cz.mzk.fofola.processes.img_edition.ImgEditingProcess;
+import cz.mzk.fofola.processes.img_editing.ImgEditingProcess;
 import cz.mzk.fofola.processes.perio_parts_publishing.PerioPartsPublishingProcess;
 import cz.mzk.fofola.processes.vc_linker.VCLinkerProcess;
 

@@ -9,4 +9,6 @@ public class UuidUtils {
     public static String checkAndMakeVcId(String vc) {
         return vc.startsWith("vc:") ? vc : "vc:" + vc;
     }
+
+    public static String wrapStr(String str) { return "\"" + str + "\""; }
 }
