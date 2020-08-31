@@ -1,17 +1,34 @@
 package cz.mzk.fofola.controller;
 
+import cz.mzk.fofola.configuration.FofolaConfiguration;
+import cz.mzk.fofola.model.vc.VC;
 import cz.mzk.fofola.service.IpLogger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 @Controller
 public class ProcessesPageController {
 
+    @Autowired
+    private FofolaConfiguration fofolaConfiguration;
+
     @GetMapping("/link_vc")
-    public String getVcLinkingPage(HttpServletRequest request) {
+    public String getVcLinkingPage(HttpServletRequest request, Model model) {
         IpLogger.logIp(request.getRemoteAddr(), "Entry VC linking section.");
+
+        RestTemplate restTemplate = new RestTemplate();
+        String vcFetchUrl = fofolaConfiguration.getKrameriusHost() + "/search/api/v5.0/vc";
+        List<VC> vcList = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject(vcFetchUrl, VC[].class)));
+
+        Map<String, String> vcNameUuid = new HashMap<>();
+        vcList.forEach(vc -> vcNameUuid.put(vc.descs.cs, vc.pid));
+        model.addAttribute("vcList", vcNameUuid);
         return "link_vc";
     }
 

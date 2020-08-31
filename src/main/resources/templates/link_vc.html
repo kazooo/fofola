@@ -27,9 +27,13 @@
 <div class="container">
     <div class="white-rounded-back">
         <div class="panel-bar">
+
             <form class="form-inline" style="float: none" action="#">
-                <label for="vc_uuid">UUID virtuální sbírky</label>
-                <input class="text" id="vc_uuid" type="text" size="30"/>
+                <label for="vc_uuid">Virtuální sbírka</label>
+                <input class="text" id="vc_uuid" type="text" size="30" list="vcs"/>
+                <datalist id="vcs">
+                    <option th:each="vc : ${vcList.entrySet()}" th:value="${vc.value}" th:utext="${vc.key}"/>
+                </datalist>
             </form>
 
             <form class="form-inline" style="float: none" action="#">
