@@ -3,7 +3,6 @@ package cz.mzk.fofola.controller;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.vc.VC;
 import cz.mzk.fofola.service.IpLogger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +14,11 @@ import java.util.*;
 @Controller
 public class ProcessesPageController {
 
-    @Autowired
-    private FofolaConfiguration fofolaConfiguration;
+    private final FofolaConfiguration fofolaConfiguration;
+
+    public ProcessesPageController(FofolaConfiguration fofolaConfiguration) {
+        this.fofolaConfiguration = fofolaConfiguration;
+    }
 
     @GetMapping("/link_vc")
     public String getVcLinkingPage(HttpServletRequest request, Model model) {

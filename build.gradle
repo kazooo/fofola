@@ -99,4 +99,5 @@ task buildImage(type: DockerBuildImage) {
 clean.doFirst {
     delete(project.file('docker/build'))
     delete(project.file('logs'))
+    delete(project.file('check_donator_out'))
 }

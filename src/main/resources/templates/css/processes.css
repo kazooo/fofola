@@ -26,6 +26,16 @@
     margin-right: 5px;
 }
 
+.download_btn {
+    background: url("../img/download.png");
+    width:20px;
+    height:20px;
+    border: 0;
+    background-size: 100%;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
 .open {
     display: table-row !important;
 }

@@ -1,7 +1,6 @@
 package cz.mzk.fofola.processes;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.processes.core.exceptions.FinishProcessException;
 import cz.mzk.fofola.processes.core.models.Process;
 
 import java.io.IOException;

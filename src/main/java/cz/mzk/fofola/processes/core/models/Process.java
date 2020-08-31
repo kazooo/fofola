@@ -3,9 +3,9 @@ package cz.mzk.fofola.processes.core.models;
 import cz.mzk.fofola.processes.core.constants.FinishReason;
 import cz.mzk.fofola.processes.core.events.TerminateProcessEvent;
 import cz.mzk.fofola.processes.core.exceptions.FinishProcessException;
+import cz.mzk.fofola.processes.utils.FileUtils;
 import org.axonframework.eventhandling.gateway.EventGateway;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.logging.FileHandler;
@@ -17,7 +17,6 @@ public abstract class Process {
 
     private final String processId;
     private final EventGateway eventGateway;
-    private static final String logDirPath = "logs/";
     private final FileHandler fileHandler;
     protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -25,9 +24,8 @@ public abstract class Process {
         this.processId = (String) params.get("processId");
         this.eventGateway = (EventGateway) params.get("eventGateway");
 
-        createLogDirIfDoesnExist();
         SimpleFormatter formatter = new SimpleFormatter();
-        fileHandler = new FileHandler(logDirPath + processId + ".log");
+        fileHandler = FileUtils.getLogFileHandler(processId + ".log");
         fileHandler.setFormatter(formatter);
         logger.addHandler(fileHandler);
         logger.setUseParentHandlers(false);
@@ -60,13 +58,6 @@ public abstract class Process {
             stackTraceStr.append("\n");
         }
         return stackTraceStr.toString();
-    }
-
-    private void createLogDirIfDoesnExist() {
-        File directory = new File(logDirPath);
-        if (! directory.exists()){
-            directory.mkdirs();
-        }
     }
 
     public abstract void process() throws Exception;

@@ -1,16 +1,11 @@
 package cz.mzk.fofola.processes.donator_linker;
 
-import cz.mzk.fofola.processes.utils.FedoraClient;
-import cz.mzk.fofola.processes.utils.FedoraUtils;
-import cz.mzk.fofola.processes.utils.SolrUtils;
-import cz.mzk.fofola.processes.utils.UuidUtils;
+import cz.mzk.fofola.processes.utils.*;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocument;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -19,7 +14,6 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -47,9 +41,9 @@ public class DonatorLinker {
             logger.info(docPID);
             try {
                 Document relsExt = fedoraClient.getRelsExt(docPID);
-                Node descriptionRootNode = getDescRootNode(relsExt);
-                if (getHasDonatorNode(donator, descriptionRootNode) == null) {
-                    insertHasDonatorNode(donator, relsExt, descriptionRootNode);
+                Node descriptionRootNode = XMLUtils.getDescRootNode(relsExt);
+                if (XMLUtils.getHasDonatorNode(donator, descriptionRootNode) == null) {
+                    XMLUtils.insertHasDonatorNode(donator, relsExt, descriptionRootNode);
                     fedoraClient.setRelsExt(docPID, relsExt);
                 }
             } catch (Exception e) {
@@ -67,8 +61,8 @@ public class DonatorLinker {
             String docPID = (String) solrDoc.getFieldValue(SolrUtils.UUID_FIELD_NAME);
             try {
                 Document relsExt = fedoraClient.getRelsExt(docPID);
-                Node descriptionRootNode = getDescRootNode(relsExt);
-                Node hasDonatorNode = getHasDonatorNode(donator, descriptionRootNode);
+                Node descriptionRootNode = XMLUtils.getDescRootNode(relsExt);
+                Node hasDonatorNode = XMLUtils.getHasDonatorNode(donator, descriptionRootNode);
                 if (hasDonatorNode != null) {
                     hasDonatorNode.getParentNode().removeChild(hasDonatorNode);
                     fedoraClient.setRelsExt(docPID, relsExt);
@@ -87,32 +81,6 @@ public class DonatorLinker {
         SolrQuery query = new SolrQuery(allDocsQueryStr);
         query.addField(SolrUtils.UUID_FIELD_NAME);
         return query;
-    }
-
-    private static void insertHasDonatorNode(String donator, Document relsExt, Node descriptionRootNode) {
-        Element hasDonatorElement = relsExt.createElement("hasDonator");
-        hasDonatorElement.setAttribute("xmlns", "http://www.nsdl.org/ontologies/relationships#");
-        hasDonatorElement.setAttribute("rdf:resource", "info:fedora/donator:" + donator);
-        descriptionRootNode.appendChild(hasDonatorElement);
-    }
-
-    private static Node getHasDonatorNode(String donator, Node descriptionRootNode) {
-        AtomicReference<Node> hasDonatorNode = new AtomicReference<>();
-        FedoraUtils.iterateChildNodes(descriptionRootNode, node -> {
-            if (node.getNodeName().equals("hasDonator")) {
-                Attr donatorAttr = FedoraUtils.getAttributeWithName(node, "rdf:resource");
-                if (donatorAttr != null && donatorAttr.getValue().contains(donator)) {
-                    hasDonatorNode.set(node);
-                }
-            }
-        });
-        return hasDonatorNode.get();
-    }
-
-    private static Node getDescRootNode(Document relsExt) {
-        return FedoraUtils.getFirstNode(
-                relsExt.getDocumentElement(), "rdf:Description"
-        );
     }
 
     public void commitAndClose() throws IOException, SolrServerException {

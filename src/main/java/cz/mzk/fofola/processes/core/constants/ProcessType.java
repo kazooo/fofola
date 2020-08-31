@@ -1,6 +1,7 @@
 package cz.mzk.fofola.processes.core.constants;
 
 import cz.mzk.fofola.processes.TestProcess;
+import cz.mzk.fofola.processes.check_donator.CheckDonatorProcess;
 import cz.mzk.fofola.processes.donator_linker.DonatorLinkerProcess;
 import cz.mzk.fofola.processes.img_editing.ImgEditingProcess;
 import cz.mzk.fofola.processes.perio_parts_publishing.PerioPartsPublishingProcess;
@@ -10,9 +11,10 @@ public enum ProcessType {
 
     TEST("Process for testing purposes", "test", TestProcess.class),
     VC_LINKING("Virtual collection linking process", "vc_link", VCLinkerProcess.class),
-    PERIO_PARTS_PUBLISHING("Periodical parts publishing process", "perio_parts_pub", PerioPartsPublishingProcess.class),
+    IMG_EDITION_PROCESS("Image edition process", "img_editing", ImgEditingProcess.class),
     DONATOR_LINKING("Donator linking process", "donator_link", DonatorLinkerProcess.class),
-    IMG_EDITION_PROCESS("Image edition process", "img_editing", ImgEditingProcess.class);
+    PERIO_PARTS_PUBLISHING("Periodical parts publishing process", "perio_parts_pub", PerioPartsPublishingProcess.class),
+    DONATOR_CHECKING("Process to check if books in VC has donator node in RELS-EXT", "donator_check", CheckDonatorProcess.class);
 
     private final String description;
     private final String alias;

@@ -4,6 +4,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -15,6 +16,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -33,6 +35,7 @@ public class SolrUtils {
     public static final String LOCATION_FIELD_NAME = "location";
     public static final String MODIFIED_DATE_FIELD_NAME = "modified_date";
     public static final String DETAILS_FIELD_NAME = "details";
+    public static final String COLLECTION_FIELD_NAME = "collection";
 
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
@@ -163,5 +166,14 @@ public class SolrUtils {
     public static void insertModifiedDateNow(SolrInputDocument inputDoc) {
         inputDoc.removeField(SolrUtils.MODIFIED_DATE_FIELD_NAME);
         insertSetUpdate(inputDoc, SolrUtils.MODIFIED_DATE_FIELD_NAME, dateFormat.format(new Date()));
+    }
+
+    public static void fetchFacetApplyConsumer(SolrClient solrClient, SolrQuery query, Consumer<FacetField> consumer)
+            throws IOException, SolrServerException {
+        QueryResponse response = solrClient.query(query);
+        List<FacetField> facets = response.getFacetFields();
+        for (FacetField facet : facets) {
+            consumer.accept(facet);
+        }
     }
 }
