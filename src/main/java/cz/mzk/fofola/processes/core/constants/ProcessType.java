@@ -1,11 +1,11 @@
 package cz.mzk.fofola.processes.core.constants;
 
-import cz.mzk.fofola.processes.TestProcess;
-import cz.mzk.fofola.processes.check_donator.CheckDonatorProcess;
-import cz.mzk.fofola.processes.donator_linker.DonatorLinkerProcess;
-import cz.mzk.fofola.processes.img_editing.ImgEditingProcess;
-import cz.mzk.fofola.processes.perio_parts_publishing.PerioPartsPublishingProcess;
-import cz.mzk.fofola.processes.vc_linker.VCLinkerProcess;
+import cz.mzk.fofola.processes.internal.TestProcess;
+import cz.mzk.fofola.processes.internal.check_donator.CheckDonatorProcess;
+import cz.mzk.fofola.processes.internal.donator_linker.DonatorLinkerProcess;
+import cz.mzk.fofola.processes.internal.img_editing.ImgEditingProcess;
+import cz.mzk.fofola.processes.internal.perio_parts_publishing.PerioPartsPublishingProcess;
+import cz.mzk.fofola.processes.internal.vc_linker.VCLinkerProcess;
 
 public enum ProcessType {
 
