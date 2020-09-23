@@ -52,7 +52,7 @@ function sendUuids() {
 
     var process_params = {
         'donator': $("#donator").val(),
-        'mode': 'link',
+        'mode': $("#mode").val(),
         'root_uuids': uuids,
     }
 

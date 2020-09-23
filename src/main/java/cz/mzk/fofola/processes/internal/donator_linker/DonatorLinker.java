@@ -56,15 +56,17 @@ public class DonatorLinker {
     }
 
     public void unlink(String rootUuid, String donator) throws IOException, SolrServerException {
+        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorUnlinkingLogic = solrDoc -> {
             String docPID = (String) solrDoc.getFieldValue(SolrUtils.UUID_FIELD_NAME);
+            logger.info(docPID);
             try {
                 Document relsExt = fedoraClient.getRelsExt(docPID);
                 Node descriptionRootNode = XMLUtils.getDescRootNode(relsExt);
-                Node hasDonatorNode = XMLUtils.getHasDonatorNode(donator, descriptionRootNode);
-                if (hasDonatorNode != null) {
-                    hasDonatorNode.getParentNode().removeChild(hasDonatorNode);
+                Node donatorNode = XMLUtils.getHasDonatorNode(donator, descriptionRootNode);
+                if (donatorNode != null) {
+                    donatorNode.getParentNode().removeChild(donatorNode);
                     fedoraClient.setRelsExt(docPID, relsExt);
                 }
             } catch (IOException | SAXException | TransformerException e) {

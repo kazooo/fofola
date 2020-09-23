@@ -27,7 +27,7 @@
 <div class="container">
     <div class="white-rounded-back">
         <div class="panel-bar">
-            <form class="form-inline" style="float: none" action="#">
+            <form class="form-inline" action="#">
                 <label for="donator">Název donátoru</label>
                 <select id="donator">
                     <option value="eodopen">EODOPEN</option>
@@ -35,13 +35,22 @@
                 </select>
             </form>
 
-            <form class="form-inline" style="float: none" action="#">
+            <form class="form-inline" style="float: none; padding-top: 20px" action="#">
+                <label for="mode">Režim</label>
+                <select id="mode">
+                    <option value="link">přidat</option>
+                    <option value="unlink">odebrat</option>
+                </select>
+            </form>
+
+            <form class="form-inline" action="#">
                 <label for="enter_uuid">UUID kořene</label>
                 <input class="text" id="enter_uuid" type="text" size="30"/>
                 <button class="btn btn-outline-secondary btn-light" id="load_uuid_submit">Načíst uuid</button>
             </form>
 
-            <form class="form-inline" style="float: none" action="#" enctype="multipart/form-data">
+            <form class="form-inline" style="float: none; padding-top: 20px"
+                  action="#" enctype="multipart/form-data">
                 <label for="load_button">Vyberte soubor s UUID kořenů</label>
                 <label id="load_button" class="btn btn-outline-secondary btn-light" for="enter_file">Vybrat</label>
                 <input type="file" name="file" id="enter_file" style="width:0; visibility:hidden; display: none"/>
