@@ -4,22 +4,19 @@ import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.vc.VC;
 import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.service.VCUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
+@AllArgsConstructor
 public class ProcessesPageController {
 
     private final FofolaConfiguration fofolaConfiguration;
-
-    public ProcessesPageController(FofolaConfiguration fofolaConfiguration) {
-        this.fofolaConfiguration = fofolaConfiguration;
-    }
 
     @GetMapping("/link_vc")
     public String getVcLinkingPage(HttpServletRequest request, Model model) {

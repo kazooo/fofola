@@ -5,23 +5,22 @@ import cz.mzk.fofola.processes.core.events.*;
 import cz.mzk.fofola.processes.core.models.ProcessDTO;
 import cz.mzk.fofola.processes.core.queries.FindAllProcessQuery;
 import cz.mzk.fofola.processes.core.services.ProcessRepository;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
+
 
 @Service
+@Slf4j
+@AllArgsConstructor
 public class ProcessProjection {
 
-    private final Logger logger = Logger.getLogger(ProcessProjection.class.getName());
     private final ProcessRepository processRepository;
-
-    public ProcessProjection(ProcessRepository processRepository) {
-        this.processRepository = processRepository;
-    }
 
     @EventHandler
     public void on(StartProcessEvent event) {
@@ -31,7 +30,7 @@ public class ProcessProjection {
         process.setProcessState(ProcessState.ACTIVE);
         process.setStartDate(new Date());
         processRepository.save(process);
-        logger.info("New process started: " + process.getProcessId());
+        log.info("New process started: " + process.getProcessId());
     }
 
     @EventHandler
@@ -39,14 +38,14 @@ public class ProcessProjection {
         ProcessDTO process = processRepository.getOne(event.getProcessId());
         if (process.getProcessState() == ProcessState.FINISHED ||
                 process.getProcessState() == ProcessState.TERMINATED) {
-            logger.info("Process " + process.getProcessId() + " is already finished or terminated!");
+            log.info("Process " + process.getProcessId() + " is already finished or terminated!");
             return;
         }
         process.setProcessState(ProcessState.TERMINATED);
         process.setFinishDate(new Date());
-        process.setFinishReason(event.getReason());
+        process.setTerminationReason(event.getReason());
         processRepository.save(process);
-        logger.info("Process " + process.getProcessId() + " has been terminated!");
+        log.info("Process " + process.getProcessId() + " has been terminated!");
     }
 
     @EventHandler
@@ -54,19 +53,19 @@ public class ProcessProjection {
         ProcessDTO process = processRepository.getOne(event.getProcessId());
         if (process.getProcessState() == ProcessState.FINISHED ||
                 process.getProcessState() == ProcessState.TERMINATED) {
-            logger.info("Process " + process.getProcessId() + " is already finished or terminated!");
+            log.info("Process " + process.getProcessId() + " is already finished or terminated!");
             return;
         }
         process.setProcessState(ProcessState.FINISHED);
         process.setFinishDate(new Date());
         processRepository.save(process);
-        logger.info("Process " + process.getProcessId() + " has ended!");
+        log.info("Process " + process.getProcessId() + " has ended!");
     }
 
     @EventHandler
     public void on(RemoveInfoEvent event) {
         processRepository.deleteById(event.getProcessId());
-        logger.info("Remove process info: " + event.getProcessId());
+        log.info("Remove process info: " + event.getProcessId());
     }
 
     @QueryHandler

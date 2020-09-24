@@ -7,6 +7,7 @@ import cz.mzk.fofola.model.SolrDocument;
 import cz.mzk.fofola.service.FedoraCommunicator;
 import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.service.SolrCommunicator;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Controller
+@AllArgsConstructor
 @Slf4j
 public class DocTreeController {
 
@@ -30,11 +32,6 @@ public class DocTreeController {
 
     private final SolrCommunicator solrCommunicator;
     private final FedoraCommunicator fedoraCommunicator;
-
-    public DocTreeController(SolrCommunicator solrCommunicator, FedoraCommunicator fedoraCommunicator) {
-        this.solrCommunicator = solrCommunicator;
-        this.fedoraCommunicator = fedoraCommunicator;
-    }
 
     @GetMapping("/tree")
     public String home(HttpServletRequest request) {

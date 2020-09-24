@@ -5,6 +5,7 @@ import cz.mzk.fofola.model.vc.VC;
 import cz.mzk.fofola.processes.utils.FileUtils;
 import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.service.VCUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -25,14 +25,11 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/check-donator")
+@AllArgsConstructor
 @Slf4j
 public class CheckDonatorController {
 
     private final FofolaConfiguration fofolaConfiguration;
-
-    public CheckDonatorController(FofolaConfiguration fofolaConfiguration) {
-        this.fofolaConfiguration = fofolaConfiguration;
-    }
 
     @GetMapping("")
     public String getCheckDonatorPage(HttpServletRequest request, Model model) {

@@ -7,10 +7,10 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.fedora_api.RelationshipTuple;
 import cz.mzk.fofola.model.FedoraDocument;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -25,14 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
 @Service
+@Slf4j
 public class FedoraCommunicator {
 
     private final XMLService xmlService;
     private Client client;
     private String fedoraUrl;
-
-    private static final Logger logger = LoggerFactory.getLogger(FedoraCommunicator.class);
 
     @Autowired
     public FedoraCommunicator(FofolaConfiguration fofolaConfig, XMLService xmlService) {
@@ -77,12 +77,12 @@ public class FedoraCommunicator {
                 fedoraDoc = getFedoraDoc(uuid);
                 break;
             } catch (SAXException | ParserConfigurationException e) {
-                logger.warn("Can't parse document with uuid: " + uuid);
+                log.warn("Can't parse document with uuid: " + uuid);
                 break;
             } catch (NoSuchElementException e) {
                 break;
             } catch (IOException e) {
-                logger.warn("Can't get response from Fedora, try again after 1 minute...");
+                log.warn("Can't get response from Fedora, try again after 1 minute...");
                 try {
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException ex) { /* ignored */ }

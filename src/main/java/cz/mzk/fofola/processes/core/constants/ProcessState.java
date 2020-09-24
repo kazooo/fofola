@@ -1,5 +1,11 @@
 package cz.mzk.fofola.processes.core.constants;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+
+@AllArgsConstructor
+@Getter
 public enum ProcessState {
 
     ACTIVE("Active"),
@@ -8,12 +14,4 @@ public enum ProcessState {
     FINISHED("Finished");
 
     private final String state;
-
-    private ProcessState(String state) {
-        this.state = state;
-    }
-
-    public String getState() {
-        return state;
-    }
 }

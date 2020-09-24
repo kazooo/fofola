@@ -4,6 +4,7 @@ import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.processes.core.commands.*;
 import cz.mzk.fofola.processes.core.constants.ProcessType;
 import cz.mzk.fofola.processes.core.models.Process;
+import lombok.AllArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.stereotype.Service;
@@ -13,26 +14,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
+
 
 @Service
+@AllArgsConstructor
 public class ProcessCommandService {
 
     private final FofolaConfiguration fofolaConfiguration;
     private final CommandGateway commandGateway;
     private final EventGateway eventGateway;
     private final ProcessManagementService processManagementService;
-    private static final Logger logger = Logger.getLogger(ProcessCommandService.class.getName());
-
-    public ProcessCommandService(CommandGateway commandGateway,
-                                 EventGateway eventGateway,
-                                 ProcessManagementService processManagementService,
-                                 FofolaConfiguration fofolaConfiguration) {
-        this.commandGateway = commandGateway;
-        this.eventGateway = eventGateway;
-        this.processManagementService = processManagementService;
-        this.fofolaConfiguration = fofolaConfiguration;
-    }
 
     public String startNewProcess(ProcessType type, Map<String, Object> params)
             throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {

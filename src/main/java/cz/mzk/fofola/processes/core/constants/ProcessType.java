@@ -6,7 +6,12 @@ import cz.mzk.fofola.processes.internal.donator_linker.DonatorLinkerProcess;
 import cz.mzk.fofola.processes.internal.img_editing.ImgEditingProcess;
 import cz.mzk.fofola.processes.internal.perio_parts_publishing.PerioPartsPublishingProcess;
 import cz.mzk.fofola.processes.internal.vc_linker.VCLinkerProcess;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+
+@AllArgsConstructor
+@Getter
 public enum ProcessType {
 
     TEST("Process for testing purposes", "test", TestProcess.class),
@@ -19,20 +24,6 @@ public enum ProcessType {
     private final String description;
     private final String alias;
     private final Class processClass;
-
-    ProcessType(String desc, String alias, Class processClass) {
-        description = desc;
-        this.alias = alias;
-        this.processClass = processClass;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Class getProcessClass() {
-        return processClass;
-    }
 
     public static ProcessType findByAlias(String alias){
         for(ProcessType t : values()){

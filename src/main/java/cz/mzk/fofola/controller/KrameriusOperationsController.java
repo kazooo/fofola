@@ -6,6 +6,7 @@ import cz.mzk.fofola.model.KrameriusDocument;
 import cz.mzk.fofola.researcher.UuidResearcher;
 import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.service.KrameriusApiCommunicator;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -16,10 +17,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.logging.Logger;
 
 
 @Controller
+@AllArgsConstructor
 @Slf4j
 public class KrameriusOperationsController {
 
@@ -27,12 +28,6 @@ public class KrameriusOperationsController {
 
     private final UuidResearcher researcher;
     private final KrameriusApiCommunicator krameriusApi;
-
-    public KrameriusOperationsController(UuidResearcher researcher,
-                          KrameriusApiCommunicator krameriusApi) {
-        this.researcher = researcher;
-        this.krameriusApi = krameriusApi;
-    }
 
     @GetMapping("/check_uuid")
     public String getCheckUuidPage(HttpServletRequest request) {

@@ -26,13 +26,11 @@ public class SolrCommunicator {
 
     public SolrDocument getSolrDocByUuid(String uuid) {
         List<SolrDocument> docs = solrRepository.findByUuid(uuid);
-
         if (docs == null || docs.isEmpty()) {
             return null;
         } else if (docs.size() > 1) {
             throw new IllegalStateException("Can not be more than one document with uuid: " + uuid);
         }
-
         return docs.get(0);
     }
 

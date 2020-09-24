@@ -1,17 +1,18 @@
 package cz.mzk.fofola.processes.core.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import cz.mzk.fofola.processes.core.models.Process;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.logging.Logger;
+
 
 @Service
+@Slf4j
 public class ProcessManagementService {
 
     private final ThreadPoolExecutor threadPoolExecutor;
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public ProcessManagementService() {
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
@@ -27,9 +28,9 @@ public class ProcessManagementService {
     public void terminate(String processId) {
         Thread thread = getThreadByName(processId);
         if (thread != null) {
-            logger.info("Terminating process " + processId + "...");
+            log.info("Terminating process " + processId + "...");
             thread.interrupt();
-            logger.info("Process " + processId + " is terminated!");
+            log.info("Process " + processId + " is terminated!");
         }
     }
 
