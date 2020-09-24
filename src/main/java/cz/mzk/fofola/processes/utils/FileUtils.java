@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class FileUtils {
 
-    private static final String logDirPath = "logs/";
+    public static final String logDirPath = "logs/";
     private static final String checkDonatorOutDirPath = "check_donator_out/";
     private static final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH:mm");
 
@@ -27,11 +27,6 @@ public class FileUtils {
     public static FileHandler getLogFileHandler(String fileName) throws IOException {
         createDirIfDoesntExist(logDirPath);
         return new FileHandler(logDirPath + fileName);
-    }
-
-    public static PrintWriter getCheckDonatorOutWriterFor(String fileName) throws IOException {
-        createDirIfDoesntExist(checkDonatorOutDirPath);
-        return new PrintWriter(new FileWriter(checkDonatorOutDirPath + fileName));
     }
 
     public static File getCheckDonatorOutFile(String fileName) throws IOException {

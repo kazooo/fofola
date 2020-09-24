@@ -107,12 +107,18 @@ function setOperationButtons(cell) {
     btn.title = 'Smazat';
     btn.setAttribute( "onClick", "javascript: operate(this, 'remove');" );
     cell.appendChild(btn);
+
+    btn = document.createElement('button');
+    btn.className = 'download_btn';
+    btn.title = 'Otevřit logy';
+    btn.setAttribute( "onClick", "javascript: operate(this, 'open_logs');" );
+    cell.appendChild(btn);
 }
 
 function operate(element, action) {
-    var table = document.getElementById('uuid_table');
-    var i = element.parentNode.parentNode.rowIndex;
-    var pid = table.rows[i].cells[0].textContent;
+    const table = document.getElementById('uuid_table');
+    const i = element.parentNode.parentNode.rowIndex;
+    const pid = table.rows[i].cells[0].textContent;
     switch (action) {
         case 'terminate':
             sendCommand("PUT", pid, 'terminate')
@@ -120,6 +126,11 @@ function operate(element, action) {
         case 'remove':
             sendCommand('DELETE', pid, 'remove')
             table.deleteRow(i);
+            break;
+        case 'open_logs':
+            const url = '/internal-processes/logs/' + pid + '.log'
+            const win = window.open(url, '_blank')
+            win.focus()
             break;
     }
 }
