@@ -1,6 +1,7 @@
 package cz.mzk.fofola.processes.core.models;
 
-import cz.mzk.fofola.processes.core.constants.FinishReason;
+import cz.mzk.fofola.processes.core.constants.TerminationReason;
+import cz.mzk.fofola.processes.core.events.FinishProcessEvent;
 import cz.mzk.fofola.processes.core.events.TerminateProcessEvent;
 import cz.mzk.fofola.processes.core.exceptions.FinishProcessException;
 import cz.mzk.fofola.processes.utils.FileUtils;
@@ -36,14 +37,14 @@ public abstract class Process {
             process();
             logger.info("Process job is successfully finished!");
             eventGateway.publish(
-                    new TerminateProcessEvent(processId, FinishReason.FINISH_SUCCESSFULLY, null)
+                    new FinishProcessEvent(processId)
             );
         } catch (FinishProcessException ignored) { } catch (Throwable e) {
             String stackTraceStr = stackTraceToStr(e);
             logger.severe("Process job is has been terminated by exception!");
             logger.severe(stackTraceStr);
             eventGateway.publish(
-                    new TerminateProcessEvent(processId, FinishReason.EXCEPTION, stackTraceStr)
+                    new TerminateProcessEvent(processId, TerminationReason.EXCEPTION, stackTraceStr)
             );
         } finally {
             fileHandler.close();

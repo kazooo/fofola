@@ -1,7 +1,7 @@
 package cz.mzk.fofola.processes.core;
 
 import cz.mzk.fofola.processes.core.commands.*;
-import cz.mzk.fofola.processes.core.constants.FinishReason;
+import cz.mzk.fofola.processes.core.constants.TerminationReason;
 import cz.mzk.fofola.processes.core.events.*;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -28,7 +28,7 @@ public class ProcessAggregate {
 
     @CommandHandler
     public void handle(TerminateProcessCommand command) {
-        apply(new TerminateProcessEvent(command.getProcessId(), FinishReason.USER_COMMAND, null));
+        apply(new TerminateProcessEvent(command.getProcessId(), TerminationReason.USER_COMMAND, null));
     }
 
     @CommandHandler

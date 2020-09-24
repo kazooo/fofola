@@ -39,14 +39,28 @@ public class ProcessProjection {
         ProcessDTO process = processRepository.getOne(event.getProcessId());
         if (process.getProcessState() == ProcessState.FINISHED ||
                 process.getProcessState() == ProcessState.TERMINATED) {
-            logger.info("Process " + process.getProcessId() + " is already terminated in database!");
+            logger.info("Process " + process.getProcessId() + " is already finished or terminated!");
             return;
         }
         process.setProcessState(ProcessState.TERMINATED);
         process.setFinishDate(new Date());
-        process.setFinishReason(event.getFinishReason());
+        process.setFinishReason(event.getReason());
         processRepository.save(process);
-        logger.info("Process " + process.getProcessId() + " has been terminated in database!");
+        logger.info("Process " + process.getProcessId() + " has been terminated!");
+    }
+
+    @EventHandler
+    public void on(FinishProcessEvent event) {
+        ProcessDTO process = processRepository.getOne(event.getProcessId());
+        if (process.getProcessState() == ProcessState.FINISHED ||
+                process.getProcessState() == ProcessState.TERMINATED) {
+            logger.info("Process " + process.getProcessId() + " is already finished or terminated!");
+            return;
+        }
+        process.setProcessState(ProcessState.FINISHED);
+        process.setFinishDate(new Date());
+        processRepository.save(process);
+        logger.info("Process " + process.getProcessId() + " has ended!");
     }
 
     @EventHandler

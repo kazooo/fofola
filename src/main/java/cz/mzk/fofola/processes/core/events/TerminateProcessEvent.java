@@ -1,6 +1,6 @@
 package cz.mzk.fofola.processes.core.events;
 
-import cz.mzk.fofola.processes.core.constants.FinishReason;
+import cz.mzk.fofola.processes.core.constants.TerminationReason;
 
 import java.util.Objects;
 
@@ -8,12 +8,12 @@ import java.util.Objects;
 public class TerminateProcessEvent {
 
     private final String processId;
-    private FinishReason finishReason;
-    private String note;
+    private final TerminationReason reason;
+    private final String note;
 
-    public TerminateProcessEvent(String processId, FinishReason finishReason, String note) {
+    public TerminateProcessEvent(String processId, TerminationReason terminationReason, String note) {
         this.processId = processId;
-        this.finishReason = finishReason;
+        this.reason = terminationReason;
         this.note = note;
     }
 
@@ -21,8 +21,8 @@ public class TerminateProcessEvent {
         return processId;
     }
 
-    public FinishReason getFinishReason() {
-        return finishReason;
+    public TerminationReason getReason() {
+        return reason;
     }
 
     public String getNote() {
@@ -33,7 +33,7 @@ public class TerminateProcessEvent {
     public String toString() {
         return "TerminateProcessEvent{" +
                 "processId='" + processId + '\'' +
-                ", finishReason=" + finishReason +
+                ", finishReason=" + reason +
                 ", note='" + note + '\'' +
                 '}';
     }
@@ -44,12 +44,12 @@ public class TerminateProcessEvent {
         if (o == null || getClass() != o.getClass()) return false;
         TerminateProcessEvent that = (TerminateProcessEvent) o;
         return Objects.equals(processId, that.processId) &&
-                finishReason == that.finishReason &&
+                reason == that.reason &&
                 Objects.equals(note, that.note);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(processId, finishReason, note);
+        return Objects.hash(processId, reason, note);
     }
 }

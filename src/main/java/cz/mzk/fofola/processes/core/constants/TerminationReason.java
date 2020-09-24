@@ -1,14 +1,13 @@
 package cz.mzk.fofola.processes.core.constants;
 
-public enum FinishReason {
+public enum TerminationReason {
 
     EXCEPTION("Exception occurred"),
-    FINISH_SUCCESSFULLY("Finish successfully"),
     USER_COMMAND("User terminates the process");
 
     private final String reason;
 
-    private FinishReason(String reason) {
+    private TerminationReason(String reason) {
         this.reason = reason;
     }
 

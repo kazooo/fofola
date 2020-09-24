@@ -1,6 +1,6 @@
 package cz.mzk.fofola.processes.core.models;
 
-import cz.mzk.fofola.processes.core.constants.FinishReason;
+import cz.mzk.fofola.processes.core.constants.TerminationReason;
 import cz.mzk.fofola.processes.core.constants.ProcessState;
 import cz.mzk.fofola.processes.core.constants.ProcessType;
 
@@ -18,7 +18,7 @@ public class ProcessDTO {
     private ProcessState processState;
     private Date startDate;
     private Date finishDate;
-    private FinishReason finishReason;
+    private TerminationReason terminationReason;
     private String notes;
 
     public String getProcessId() {
@@ -45,8 +45,8 @@ public class ProcessDTO {
         return finishDate;
     }
 
-    public FinishReason getFinishReason() {
-        return finishReason;
+    public TerminationReason getFinishReason() {
+        return terminationReason;
     }
 
     public String getNotes() {
@@ -73,8 +73,8 @@ public class ProcessDTO {
         this.finishDate = finishDate;
     }
 
-    public void setFinishReason(FinishReason finishReason) {
-        this.finishReason = finishReason;
+    public void setFinishReason(TerminationReason terminationReason) {
+        this.terminationReason = terminationReason;
     }
 
     public void setNotes(String notes) {
@@ -89,7 +89,7 @@ public class ProcessDTO {
                 ", processState=" + processState +
                 ", startDate=" + startDate +
                 ", finishDate=" + finishDate +
-                ", finishReason=" + finishReason +
+                ", terminationReason=" + terminationReason +
                 ", notes='" + notes + '\'' +
                 '}';
     }
@@ -104,13 +104,13 @@ public class ProcessDTO {
                 processState == that.processState &&
                 Objects.equals(startDate, that.startDate) &&
                 Objects.equals(finishDate, that.finishDate) &&
-                finishReason == that.finishReason &&
+                terminationReason == that.terminationReason &&
                 Objects.equals(notes, that.notes);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(processId, processType, processState,
-                startDate, finishDate, finishReason, notes);
+                startDate, finishDate, terminationReason, notes);
     }
 }
