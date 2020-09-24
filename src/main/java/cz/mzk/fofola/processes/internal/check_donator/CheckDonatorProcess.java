@@ -12,6 +12,7 @@ import org.apache.solr.common.SolrDocument;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -43,7 +44,10 @@ public class CheckDonatorProcess extends Process {
     public void process() throws Exception {
         SolrClient solrClient = SolrUtils.buildClient(solrHost);
         FedoraClient fedoraClient = new FedoraClient(fedoraHost, fedoraUser, fedoraPswd);
-        PrintWriter output = FileUtils.getCheckDonatorOutWriterFor(FileUtils.fileNameWithDateStampPrefix(donator + ".txt"));
+
+        String readyOutFileName = FileUtils.fileNameWithDateStampPrefix(donator + ".txt");
+        File notReadyOutFile = FileUtils.getCheckDonatorOutFile("not-ready-" + readyOutFileName);
+        PrintWriter output = new PrintWriter(notReadyOutFile);
 
         String query = SolrUtils.wrapQueryStr(SolrUtils.COLLECTION_FIELD_NAME, vcId) + " AND NOT " +
                 SolrUtils.wrapQueryStr(SolrUtils.MODEL_FIELD_NAME, "page");
@@ -67,9 +71,16 @@ public class CheckDonatorProcess extends Process {
                 logger.severe(Arrays.toString(e.getStackTrace()));
             }
         };
-
         SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(solrQuery, solrClient, checkDonatorLogic, 1000);
+
         output.flush();
         output.close();
+        renameOutFile(notReadyOutFile, readyOutFileName);
+    }
+
+    private void renameOutFile(File outFile, String newFileName) {
+        String pathToDir = outFile.getParent();
+        boolean success = outFile.renameTo(new File(pathToDir + "/" + newFileName));
+        if (!success) throw new IllegalStateException("Can't rename output file!");
     }
 }

@@ -34,6 +34,13 @@ public class FileUtils {
         return new PrintWriter(new FileWriter(checkDonatorOutDirPath + fileName));
     }
 
+    public static File getCheckDonatorOutFile(String fileName) throws IOException {
+        createDirIfDoesntExist(checkDonatorOutDirPath);
+        File file = new File(checkDonatorOutDirPath + fileName);
+        file.createNewFile();
+        return file;
+    }
+
     public static List<String> getCheckDonatorOutputFileNames() {
         File directory = createDirIfDoesntExist(checkDonatorOutDirPath);
         File[] files = directory.listFiles();
