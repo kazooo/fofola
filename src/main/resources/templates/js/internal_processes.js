@@ -52,7 +52,9 @@ function insertProcessInfo(table, process) {
                 var cells = table.rows[i].cells;
                 cells[2].innerHTML = process.processState
                 cells[4].innerHTML = process.finishDate;
-                cells[5].innerHTML = process.finishReason;
+                if ('terminationReason' in process) {
+                    cells[5].innerHTML = process.terminationReason;
+                }
                 return;
             }
         }
@@ -82,7 +84,9 @@ function fillCells(cells, process) {
     cells[2].innerHTML = process.processState;
     cells[3].innerHTML = process.startDate;
     cells[4].innerHTML = process.finishDate;
-    cells[5].innerHTML = process.finishReason;
+    if ('terminationReason' in process) {
+        cells[5].innerHTML = process.terminationReason;
+    }
 }
 
 function setOperationButtons(cell) {
