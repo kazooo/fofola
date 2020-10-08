@@ -63,6 +63,7 @@ public class SolrDocument {
     }
 
     public String getRootTitle() {
+        if (rootTitle == null) return null;
         if (rootTitle.length() > 255) {
             rootTitle = rootTitle.substring(0, 255);
         }
@@ -82,12 +83,14 @@ public class SolrDocument {
     }
 
     public String getModifiedDate() {
-        return toFmt.format(modifiedDate);
+        if (modifiedDate == null) return null;
+        else return toFmt.format(modifiedDate);
     }
 
     public String getDcTitle() { return dcTitle; }
 
     public Integer getRelsExtIndexForParent(String parentUuid) {
+        if (parentPids == null) return 0;
         int index = 0;  // looking for the right parent
         for(int i = 0; i < parentPids.size(); ++i){
             if (parentPids.get(i).contains(parentUuid)) {
