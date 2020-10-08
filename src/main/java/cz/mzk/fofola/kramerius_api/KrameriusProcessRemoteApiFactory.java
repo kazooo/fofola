@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class KrameriusProcessRemoteApiFactory {
 
-    private static final String PROTOCOL = "http://";
     private static final String KRAMERIUS_CLIENT_API = "/search/api/v4.6";
 
     public static ProcessRemoteApi getProcessRemoteApi(String krameriusHostUrl, String login, String password) {
@@ -26,7 +25,7 @@ public class KrameriusProcessRemoteApiFactory {
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setRequestInterceptor(authInterceptor)
                 .setClient(new OkClient(okHttpClient))
-                .setEndpoint(PROTOCOL + krameriusHostUrl + KRAMERIUS_CLIENT_API)
+                .setEndpoint(krameriusHostUrl + KRAMERIUS_CLIENT_API)
                 .setErrorHandler(new ClientRemoteErrorHandler());
 
         ProcessRemoteApiRetrofit api = builder.build().create(ProcessRemoteApiRetrofit.class);
