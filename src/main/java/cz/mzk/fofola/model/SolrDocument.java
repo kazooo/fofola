@@ -1,11 +1,14 @@
 package cz.mzk.fofola.model;
 
+import org.apache.solr.common.SolrDocumentList;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @org.springframework.data.solr.core.mapping.SolrDocument(collection = "kramerius")
@@ -92,5 +95,30 @@ public class SolrDocument {
             }
         }
         return relsExtIndex != null ? relsExtIndex.get(index) : 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    private SolrDocument(org.apache.solr.common.SolrDocument originDoc) {
+        uuid = (String) originDoc.getFieldValue(ID);
+        model = (String) originDoc.getFieldValue(MODEL);
+        dcTitle = (String) originDoc.getFieldValue(DC_TITLE);
+        rootPid = (String) originDoc.getFieldValue(ROOT_PID);
+        rootTitle = (String) originDoc.getFieldValue(ROOT_TITLE);
+        visibility = (String) originDoc.getFieldValue(VISIBILITY);
+        modifiedDate = (Date) originDoc.getFieldValue(MODIFIED_DATE);
+        parentPids = (List<String>) originDoc.getFieldValue(PARENT_PID);
+        relsExtIndex = (List<Integer>) originDoc.getFieldValue(RELS_EXT_INDEX);
+    }
+
+    public static SolrDocument convert(org.apache.solr.common.SolrDocument originDoc) {
+        if (originDoc == null) return null;
+        else return new SolrDocument(originDoc);
+    }
+
+    public static List<SolrDocument> convert(SolrDocumentList docs) {
+        if (docs == null) return Collections.emptyList();
+        else {
+            return docs.stream().map(SolrDocument::new).collect(Collectors.toList());
+        }
     }
 }
