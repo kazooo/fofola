@@ -8,7 +8,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     height: 100%;
-    font-family: 'ProximaNova Regular';
+    font-family: 'Avenir Book', serif;
 }
 
 .text-left {
@@ -24,9 +24,13 @@ body {
 }
 
 .title_text {
-    font-family: 'foral_proextrabold';
+    font-family: 'foral_proextrabold', serif;
     color: #6F3317;
     text-transform: uppercase;
+    animation: fadeIn 0.5s ease-in both;
+}
+
+.title_subtext {
     animation: fadeIn 0.5s ease-in both;
 }
 
@@ -39,15 +43,18 @@ body {
 }
 
 @font-face {
-    font-family: 'OpenSans Regular';
-    url('font/OpenSans-Regular.ttf') format('ttf');
-    font-weight: normal;
-    font-style: normal;
+    font-family: 'Avenir Book';
+    src: url("font/Avenir-Book.woff") format('woff');
 }
 
 @font-face {
-    font-family: 'ProximaNova Regular';
-    url('font/ProximaNova-Regular.otf') format('otf');
+    font-family: 'Avenir Medium';
+    src: url("font/Avenir-Medium.woff") format('woff');
+}
+
+@font-face {
+    font-family: 'OpenSans Regular';
+    url('font/OpenSans-Regular.ttf') format('ttf');
     font-weight: normal;
     font-style: normal;
 }
@@ -189,6 +196,8 @@ th.uuid-column {
     color: black;
     border-color: #6F3317;
     margin: 5px;
+    font-family: 'Avenir Medium', serif;
+    font-size: 16px;
 }
 
 .btn:hover {
