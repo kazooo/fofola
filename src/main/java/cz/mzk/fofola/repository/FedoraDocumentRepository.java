@@ -1,4 +1,4 @@
-package cz.mzk.fofola.service;
+package cz.mzk.fofola.repository;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -7,11 +7,10 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.fedora_api.RelationshipTuple;
 import cz.mzk.fofola.model.FedoraDocument;
+import cz.mzk.fofola.service.XMLService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -26,16 +25,16 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
-@Service
+@Repository
 @Slf4j
-public class FedoraCommunicator {
+public class FedoraDocumentRepository {
 
     private final XMLService xmlService;
     private Client client;
     private String fedoraUrl;
 
     @Autowired
-    public FedoraCommunicator(FofolaConfiguration fofolaConfig, XMLService xmlService) {
+    public FedoraDocumentRepository(FofolaConfiguration fofolaConfig, XMLService xmlService) {
         this.fedoraUrl = fofolaConfig.getFedoraHost();
         client = Client.create();
         client.addFilter(new HTTPBasicAuthFilter(fofolaConfig.getFedoraUser(), fofolaConfig.getFedoraPswd()));

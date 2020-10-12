@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import cz.mzk.fofola.model.DocTreeModel;
 import cz.mzk.fofola.model.FedoraDocument;
 import cz.mzk.fofola.model.SolrDocument;
-import cz.mzk.fofola.service.FedoraCommunicator;
+import cz.mzk.fofola.repository.FedoraDocumentRepository;
 import cz.mzk.fofola.service.IpLogger;
-import cz.mzk.fofola.service.SolrCommunicator;
+import cz.mzk.fofola.repository.SolrDocumentRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -30,8 +30,8 @@ public class DocTreeController {
     private static int docsToCallGC = 3000;
     private static final Gson gson = new Gson();
 
-    private final SolrCommunicator solrCommunicator;
-    private final FedoraCommunicator fedoraCommunicator;
+    private final SolrDocumentRepository solrDocumentRepository;
+    private final FedoraDocumentRepository fedoraDocumentRepository;
 
     @GetMapping("/tree")
     public String home(HttpServletRequest request) {
@@ -46,7 +46,7 @@ public class DocTreeController {
         String rootUuid = getRoot(uuid);
         Object ipAdress = ha.getSessionAttributes().get("IP");
         IpLogger.logIp(ipAdress.toString(), "Checking: " + rootUuid);
-        List<SolrDocument> docs = new ArrayList<>(solrCommunicator.getSolrDocsByRootPid(rootUuid));
+        List<SolrDocument> docs = new ArrayList<>(solrDocumentRepository.getByRootPid(rootUuid));
         DocTreeModel tree = generateTree(docs, rootUuid);
         IpLogger.logIp(ipAdress.toString(), "Finish checking: " + rootUuid);
         return gson.toJson(tree);
@@ -56,7 +56,7 @@ public class DocTreeController {
         SolrDocument parentDoc = docs.stream().filter(d -> d.getUuid().equals(parentUuid)).findFirst().orElse(null);
         assert parentDoc != null;
         docs.remove(parentDoc);
-        FedoraDocument fedoraDoc = fedoraCommunicator.getFedoraDocByUuid(parentUuid);
+        FedoraDocument fedoraDoc = fedoraDocumentRepository.getFedoraDocByUuid(parentUuid);
 
         String nodeName = parentDoc.getModel() + " : " + parentDoc.getDcTitle();
         DocTreeModel parentNode = new DocTreeModel(nodeName);
@@ -109,7 +109,7 @@ public class DocTreeController {
     }
 
     private String getRoot(String uuid) {
-        SolrDocument doc = solrCommunicator.getSolrDocByUuid(uuid);
+        SolrDocument doc = solrDocumentRepository.getByUuid(uuid);
         return doc.getRootPid();
     }
 
@@ -131,7 +131,7 @@ public class DocTreeController {
         }
 
         for (String childUuid : missInSolr) {
-            FedoraDocument childFedoraDoc = fedoraCommunicator.getFedoraDocByUuid(childUuid);
+            FedoraDocument childFedoraDoc = fedoraDocumentRepository.getFedoraDocByUuid(childUuid);
 
             DocTreeModel childNode = new DocTreeModel(childUuid);
             childNode.setUuid(childUuid);

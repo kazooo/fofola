@@ -5,21 +5,21 @@ import java.util.List;
 
 public class KrameriusDocListWrapper {
 
-    private List<KrameriusDocument> krameriusDocs;
+    private List<UuidStateResponse> krameriusDocs;
 
     public KrameriusDocListWrapper() {
         this.krameriusDocs = new ArrayList<>();
     }
 
-    public List<KrameriusDocument> getKrameriusDocs() {
+    public List<UuidStateResponse> getKrameriusDocs() {
         return krameriusDocs;
     }
 
-    public void setKrameriusDocs(List<KrameriusDocument> docs) {
+    public void setKrameriusDocs(List<UuidStateResponse> docs) {
         this.krameriusDocs = docs;
     }
 
-    public void add(KrameriusDocument doc) {
+    public void add(UuidStateResponse doc) {
         this.krameriusDocs.add(doc);
     }
 

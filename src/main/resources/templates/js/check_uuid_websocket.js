@@ -1,17 +1,7 @@
-var stompClient = null;
+var uuids = [];
 
 $(function () {
     showSpin(false);
-
-    var socket = new SockJS('/check-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.debug = null;
-    stompClient.connect({}, function (frame) {
-        stompClient.subscribe('/check/data', function (data) {
-            insertUuidIntoTable(JSON.parse(data.body));
-        });
-    });
-
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
@@ -23,27 +13,35 @@ $(function () {
 function insertUuidIntoTable(data) {
     var table = document.getElementById('uuid_table');
     insertRowUuid(table, data);
-    setWaiting(false);
 }
 
 function checkOneUuid() {
-    var uuid = document.getElementById('enter_uuid').value;
-    sendUuid(uuid);
+    uuids = []
+    const uuid = document.getElementById('enter_uuid').value;
+    if (uuid !== '') {
+        uuids.push(uuid)
+        sendUuids();
+    }
 }
 
 function checkUuidsFromTable() {
+    uuids = []
     clearTable();
     var file_el = $("#enter_file")[0];
     var file = file_el.files[0];
     var reader = new FileReader();
-    // var table = document.getElementById('uuid_table');
     reader.onload = function(progressEvent){
         var lines = this.result.split('\n');
         for(var line = 0; line < lines.length; line++){
-            sendUuid(lines[line]);
+            if (lines[line] !== '') {
+                uuids.push(lines[line])
+            }
         }
-        var submit = document.getElementById('load_file_submit');
-        showElement(submit, false);
+        if (uuids.length > 0) {
+            const submit = document.getElementById('load_file_submit');
+            showElement(submit, false);
+            sendUuids()
+        }
     };
     reader.readAsText(file);
 }
@@ -128,9 +126,34 @@ function operate(element, action) {
     }
 }
 
-function sendUuid(uuid) {
+function sendUuids() {
     setWaiting(true);
-    stompClient.send("/check-websocket", {}, uuid);
+
+    const formData = new FormData();
+    const params = new Blob([JSON.stringify(uuids)], {type : "application/json"})
+    formData.append('uuids', params)
+
+    $.ajax({
+        type: "POST",
+        url: "/check-uuid",
+        data: formData,
+        contentType: false,
+        processData: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            console.log("SUCCESS : ", data);
+            const states = JSON.parse(data)
+            states.forEach(state =>
+                insertUuidIntoTable(state)
+            )
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        }
+    });
+    uuids = []
+    setWaiting(false);
 }
 
 function showSpin(show) {

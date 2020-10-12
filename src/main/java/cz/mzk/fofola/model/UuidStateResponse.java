@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class KrameriusDocument {
+public class UuidStateResponse {
 
     private String uuid;
     private boolean isIndexed;
@@ -21,7 +21,7 @@ public class KrameriusDocument {
     private String solrModifiedDate;
     private String fedoraModifiedDate;
 
-    public KrameriusDocument(String uuid) {
+    public UuidStateResponse(String uuid) {
         this.uuid = uuid;
     }
 }

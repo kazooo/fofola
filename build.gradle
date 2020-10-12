@@ -72,6 +72,11 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+clean.doFirst {
+    delete(project.file('docker/build'))
+    delete(project.file('logs'))
+    delete(project.file('check_donator_out'))
+}
 
 /********************* DOCKER BUILD ***********************/
 
@@ -106,8 +111,3 @@ task buildLatest(type: DockerTagImage) {
     tag = 'latest'
 }
 
-clean.doFirst {
-    delete(project.file('docker/build'))
-    delete(project.file('logs'))
-    delete(project.file('check_donator_out'))
-}
