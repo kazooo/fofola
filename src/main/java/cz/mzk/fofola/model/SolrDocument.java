@@ -1,8 +1,6 @@
 package cz.mzk.fofola.model;
 
 import org.apache.solr.common.SolrDocumentList;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.solr.core.mapping.Indexed;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -11,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@org.springframework.data.solr.core.mapping.SolrDocument(collection = "kramerius")
 public class SolrDocument {
 
     public final static String ID = "PID";
@@ -24,32 +21,14 @@ public class SolrDocument {
     public static final String DC_TITLE = "dc.title";
     public static final String RELS_EXT_INDEX = "rels_ext_index";
 
-    @Id
-    @Indexed(name = ID, type = "string")
     private String uuid;
-
-    @Indexed(name = ROOT_TITLE, type = "string")
     private String rootTitle;
-
-    @Indexed(name = VISIBILITY, type = "string")
     private String visibility;
-
-    @Indexed(name = MODEL, type = "string")
     private String model;
-
-    @Indexed(name = ROOT_PID, type = "string")
     private String rootPid;
-
-    @Indexed(name = PARENT_PID, type = "multivalued")
     private List<String> parentPids;
-
-    @Indexed(name = MODIFIED_DATE, type = "date")
     private Date modifiedDate;
-
-    @Indexed(name = DC_TITLE, type = "string")
     private String dcTitle;
-
-    @Indexed(name = RELS_EXT_INDEX, type = "multivalued")
     private List<Integer> relsExtIndex;
 
     private final SimpleDateFormat toFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
