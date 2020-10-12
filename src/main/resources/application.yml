@@ -1,0 +1,55 @@
+debug: false
+trace: false
+
+logging:
+  level:
+    '*': ''
+    org:
+      springframework:
+        web:
+          socket:
+            config:
+              WebSocketMessageBrokerStats: ERROR
+
+server:
+  port: ${FOFOLA_PORT:8081}
+  error:
+    path: /error
+
+spring:
+
+  datasource:
+    platform: postgres
+    url: ${POSTGRES_DB_JDBC_URL:jdbc:postgresql://localhost:5432/fofola}
+    username: ${POSTGRES_DB_USER:postgres}
+    password: ${POSTGRES_DB_PSWD:postgres}
+
+  jpa:
+    database: POSTGRESQL
+    generate-ddl: true
+    open-in-view: true
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  resources:
+    static-locations: classpath:/templates/
+
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+
+  thymeleaf:
+    cache: false
+    check-template: true
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    prefix: classpath:/templates/pages/
+    suffix: .html
