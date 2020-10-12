@@ -4,6 +4,12 @@
         <th:block th:include="layout :: standard (page_title='Fofola')"></th:block>
     </head>
 
+    <style>
+        .wide-btn {
+            width: 220px;
+        }
+    </style>
+
     <body>
         <div class="index_container">
             <h1 class="title_text"> Fofola </h1>
@@ -18,21 +24,21 @@
                     <a href="/transferTree" class="btn btn-outline-secondary" role="button"> Přenest dílo do Solru </a>
                 </div>
 
-                <div class="service" style="width: 300px;">
+                <div class="service" style="width: 250px">
                     <p> Kramerius </p>
-                    <a style="width: 270px" href="/check_uuid" class="btn btn-outline-secondary" role="button"> Vypsat základní info o UUID </a>
-                    <a style="width: 270px" href="/change_rights" class="btn btn-outline-secondary" role="button"> Změnit viditelnost dokumentů </a>
-                    <a style="width: 270px" href="/tree" class="btn btn-outline-secondary" role="button"> Zobrazit strom dokumentu </a>
-                    <a style="width: 270px" href="/kramerius-processes" class="btn btn-outline-secondary" role="button"> Správa procesů </a>
-                    <a style="width: 270px" href="/perio-parts-publish" class="btn btn-outline-secondary" role="button"> Zveřejnit části periodik </a>
-                    <a style="width: 270px" href="/img-editing" class="btn btn-outline-secondary" role="button"> Editace obrázků </a>
+                    <a href="/check_uuid" class="btn btn-outline-secondary wide-btn" role="button"> Vypsat základní info o UUID </a>
+                    <a href="/change_rights" class="btn btn-outline-secondary wide-btn" role="button"> Změnit viditelnost dokumentů </a>
+                    <a href="/tree" class="btn btn-outline-secondary wide-btn" role="button"> Zobrazit strom dokumentu </a>
+                    <a href="/kramerius-processes" class="btn btn-outline-secondary wide-btn" role="button"> Správa procesů </a>
+                    <a href="/perio-parts-publish" class="btn btn-outline-secondary wide-btn" role="button"> Zveřejnit části periodik </a>
+                    <a href="/img-editing" class="btn btn-outline-secondary wide-btn" role="button"> Editace obrázků </a>
                 </div>
 
-                <div class="service">
+                <div class="service" style="width: 250px">
                     <p> Virtuální sbírky </p>
-                    <a href="/link_vc" class="btn btn-outline-secondary" role="button"> Přídat/odstranit do/z virtuální sbírky </a>
-                    <a href="/link-donator" class="btn btn-outline-secondary" role="button"> Přídat/odstranit příznak donátoru </a>
-                    <a href="/check-donator" class="btn btn-outline-secondary" role="button"> Kontrola příznaku donátoru </a>
+                    <a href="/link_vc" class="btn btn-outline-secondary wide-btn" role="button"> Přídat/odstranit do/z virtuální sbírky </a>
+                    <a href="/link-donator" class="btn btn-outline-secondary wide-btn" role="button"> Přídat/odstranit příznak donátoru </a>
+                    <a href="/check-donator" class="btn btn-outline-secondary wide-btn" role="button"> Kontrola příznaku donátoru </a>
                 </div>
 
                 <div class="service">

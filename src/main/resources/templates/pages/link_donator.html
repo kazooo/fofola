@@ -27,6 +27,7 @@
 <div class="container">
     <div class="white-rounded-back">
         <div class="panel-bar">
+
             <form class="form-inline" action="#">
                 <label for="donator">Název donátoru</label>
                 <select id="donator">
@@ -35,7 +36,7 @@
                 </select>
             </form>
 
-            <form class="form-inline" style="float: none; padding-top: 20px" action="#">
+            <form class="form-inline" style="float: none; padding-top: 20px; padding-left: 20%" action="#">
                 <label for="mode">Režim</label>
                 <select id="mode">
                     <option value="link">přidat</option>
@@ -43,13 +44,13 @@
                 </select>
             </form>
 
-            <form class="form-inline" action="#">
+            <form class="form-inline" style="float: none" action="#">
                 <label for="enter_uuid">UUID kořene</label>
                 <input class="text" id="enter_uuid" type="text" size="30"/>
                 <button class="btn btn-outline-secondary btn-light" id="load_uuid_submit">Načíst uuid</button>
             </form>
 
-            <form class="form-inline" style="float: none; padding-top: 20px"
+            <form class="form-inline" style="float: none; margin-left: 25%"
                   action="#" enctype="multipart/form-data">
                 <label for="load_button">Vyberte soubor s UUID kořenů</label>
                 <label id="load_button" class="btn btn-outline-secondary btn-light" for="enter_file">Vybrat</label>
@@ -66,7 +67,7 @@
         <div id="link_panel" class="panel-bar">
             <form class="form-inline" action="#">
                 <button class="btn btn-outline-secondary btn-light" type="submit" id="link_button">
-                    Přídat příznak donátoru
+                    Spustit process
                 </button>
             </form>
 
