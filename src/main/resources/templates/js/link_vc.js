@@ -52,6 +52,7 @@ function sendUuids() {
 
     var process_params = {
         'vc_uuid': $("#vc_uuid").val(),
+        'mode': $("#mode").val(),
         'root_uuids': uuids,
     }
 

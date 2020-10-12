@@ -6,9 +6,9 @@ import org.apache.solr.common.SolrInputDocument;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 
 /**
@@ -28,19 +28,26 @@ public class SolrVCLinker {
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     }
 
-    public void indexVCFor(String docPID, String vcId) throws IOException, SolrServerException {
-        SolrInputDocument inputDoc = new SolrInputDocument();
-        inputDoc.addField("PID",docPID);
+    public void indexVCFor(String uuid, String vcId)
+            throws IOException, SolrServerException {
+        modifyAndSend(uuid, vcId, "add");
+    }
 
-        // add virtual collection id
-        Map<String,Object> collectionFieldModifier = new HashMap<>(1);
-        collectionFieldModifier.put("add", vcId);
-        inputDoc.addField("collection", collectionFieldModifier);
+    public void setVCFor(String uuid, List<String> collections)
+            throws IOException, SolrServerException {
+        // unfortunately 'remove' operation doesn't work for partial update in SolrJ :(
+        modifyAndSend(uuid, collections, "set");
+    }
+
+    public void modifyAndSend(String uuid, Object collection, String modifier)
+            throws IOException, SolrServerException {
+        SolrInputDocument inputDoc = new SolrInputDocument();
+        inputDoc.addField("PID", uuid);
+        inputDoc.addField("collection", Collections.singletonMap(modifier, collection));
 
         // update last modified date field
-        Map<String, Object> modifiedDateFieldModifier = new HashMap<>(1);
-        modifiedDateFieldModifier.put("set", dateFormat.format(new Date()));
-        inputDoc.addField("modified_date", modifiedDateFieldModifier);
+        inputDoc.addField("modified_date",
+                Collections.singletonMap("set", dateFormat.format(new Date())));
 
         solrClient.add(inputDoc);
     }

@@ -25,37 +25,62 @@ public class FedoraVCLinker {
         fedoraClient = new FedoraClient(fedoraHost, fedoraUser, fedoraPswd);
     }
 
-    public boolean writeVCFor(String uuid, String vcId) throws TransformerException, IOException, SAXException {
-        boolean canBeAdded = false;
+    public boolean writeVCFor(String uuid, String vcId)
+            throws TransformerException, IOException, SAXException {
         Document relsExt = fedoraClient.getRelsExt(uuid);
-        if (relsExt == null) return canBeAdded;
-        Element descriptionElement = (Element) relsExt.getElementsByTagName("rdf:Description").item(0);
-        NodeList collectionNodes = descriptionElement.getElementsByTagName("rdf:isMemberOfCollection");
-        String vcIdElementAttrName = "info:fedora/" + vcId;
-        canBeAdded = collectionNodes == null || !containsVC(collectionNodes, vcIdElementAttrName);
-        if (canBeAdded) {
+        if (relsExt == null) return false;
+
+        Element description = getDescription(relsExt);
+        NodeList collections = getCollections(description);
+        String vcIdAttrName = "info:fedora/" + vcId;
+
+        if (getCollectionWithAttrName(collections, vcIdAttrName) == null) {
             Element childElement = relsExt.createElement("rdf:isMemberOfCollection");
-            childElement.setAttribute("rdf:resource", vcIdElementAttrName);
-            descriptionElement.appendChild(childElement);
+            childElement.setAttribute("rdf:resource", vcIdAttrName);
+            description.appendChild(childElement);
             fedoraClient.setRelsExt(uuid, relsExt);
         }
-        return canBeAdded;
+        return true; // vc id is already in RELS-EXT or was created now
     }
 
-    private boolean containsVC(NodeList collectionNodes, String vcIdElementAttrName) {
-        for (int i = 0; i < collectionNodes.getLength(); i++) {
-            Node collectionNode = collectionNodes.item(i);
-            NamedNodeMap attributes = collectionNode.getAttributes();
-            if (attributes.getLength() < 1) {
-                continue;
-            }
-            Node attribute = attributes.getNamedItem("resource");
-            if (attribute == null) attribute = attributes.getNamedItem("rdf:resource");
-            if (attribute.getTextContent().equals(vcIdElementAttrName)) {
-                return true;
-            }
+    public boolean removeVCFor(String uuid, String vcId)
+            throws IOException, SAXException, TransformerException {
+        Document relsExt = fedoraClient.getRelsExt(uuid);
+        if (relsExt == null) return false;
+
+        NodeList collections = getCollections(getDescription(relsExt));
+        String vcIdAttrName = "info:fedora/" + vcId;
+
+        Node collection = getCollectionWithAttrName(collections, vcIdAttrName);
+        boolean canBeRemoved = collection != null;
+        if (canBeRemoved) {
+            collection.getParentNode().removeChild(collection);
+            fedoraClient.setRelsExt(uuid, relsExt);
         }
-        return false;
+        return canBeRemoved;
+    }
+
+    private Node getCollectionWithAttrName(NodeList collections, String vcIdAttrName) {
+        if (collections == null) return null;
+        for (int i = 0; i < collections.getLength(); i++) {
+            Node collection = collections.item(i);
+            NamedNodeMap attributes = collection.getAttributes();
+            if (attributes.getLength() < 1) continue;
+
+            Node attr = attributes.getNamedItem("resource");
+            if (attr == null) attr = attributes.getNamedItem("rdf:resource");
+            String attributeName = attr.getTextContent();
+            if (attributeName.equals(vcIdAttrName)) return collection;
+        }
+        return null;
+    }
+
+    private Element getDescription(Document relsExt) {
+        return (Element) relsExt.getElementsByTagName("rdf:Description").item(0);
+    }
+
+    private NodeList getCollections(Element description) {
+        return description.getElementsByTagName("rdf:isMemberOfCollection");
     }
 }
 

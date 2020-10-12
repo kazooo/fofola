@@ -6,9 +6,5 @@ public class UuidUtils {
         return uuid.startsWith("uuid:") ? uuid : "uuid:" + uuid;
     }
 
-    public static String checkAndMakeVcId(String vc) {
-        return vc.startsWith("vc:") ? vc : "vc:" + vc;
-    }
-
     public static String wrapStr(String str) { return "\"" + str + "\""; }
 }

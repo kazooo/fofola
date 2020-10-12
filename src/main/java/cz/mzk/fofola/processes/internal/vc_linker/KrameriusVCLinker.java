@@ -11,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -48,34 +49,62 @@ public class KrameriusVCLinker {
 
     public void linkRootAndChildrenToVc(String vcId, String rootUuid)
             throws IOException, SolrServerException {
-        vcId = UuidUtils.checkAndMakeVcId(vcId);
-        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
-        String allPartsQueryStr = "pid_path:/.*" + rootUuid.trim() + ".*/";
-        SolrQuery query = new SolrQuery(allPartsQueryStr);
-        query.addField("PID");
+        Consumer<SolrDocument> linkingLogic = createLinkConsumer(vcId);
+        handleVCForBook(rootUuid, linkingLogic);
+    }
 
-        Consumer<SolrDocument> publisherLogic = generateConsumer(vcId);
+    public void unlinkRootAndChildrenFromVc(String vcId, String rootUuid)
+            throws IOException, SolrServerException {
+        Consumer<SolrDocument> unlinkingLogic = createUnlinkConsumer(vcId);
+        handleVCForBook(rootUuid, unlinkingLogic);
+    }
+
+    private void handleVCForBook(String rootUuid, Consumer<SolrDocument> logic)
+            throws IOException, SolrServerException {
+        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
+        SolrQuery query = createSolrQuery(rootUuid);
         SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
-                query, solrClient, publisherLogic, maxDocsPerQuery
+                query, solrClient, logic, maxDocsPerQuery
         );
     }
 
-    private Consumer<SolrDocument> generateConsumer(String vcId) {
+    private Consumer<SolrDocument> createLinkConsumer(String vcId) {
         return solrDoc -> {
-            String docPID = (String) solrDoc.getFieldValue("PID");
-            logger.info("Try " + docPID + "...");
-            boolean tripletCreated = createFedoraLink(docPID, vcId);
+            String uuid = (String) solrDoc.getFieldValue("PID");
+            logger.info("Try " + uuid + "...");
+            boolean tripletCreated = createFedoraLink(uuid, vcId);
             if (tripletCreated) {
-                createSolrLink(docPID, vcId);
+                createSolrLink(uuid, vcId);
             } else {
-                logger.info(docPID + " : collection link already exists or exception occurs");
+                logger.info(uuid + " : collection link already exists or exception occurs");
             }
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    private Consumer<SolrDocument> createUnlinkConsumer(String vcId) {
+        return solrDoc -> {
+            String uuid = (String) solrDoc.getFieldValue("PID");
+            logger.info("Try " + uuid + "...");
+            removeFedoraLink(uuid, vcId);
+            List<String> collections = (List<String>) solrDoc.getFieldValue("collection");
+            removeSolrLink(uuid, vcId, collections);
         };
     }
 
     private boolean createFedoraLink(String uuid, String vcId) {
         try {
             return fedoraVCLinker.writeVCFor(uuid, vcId);
+        } catch (Exception e) {
+            logger.warning("\n\n" + e.getMessage());
+            logger.warning(Arrays.toString(e.getStackTrace()) + "\n\n");
+            return false;
+        }
+    }
+
+    private boolean removeFedoraLink(String uuid, String vcId) {
+        try {
+            return fedoraVCLinker.removeVCFor(uuid, vcId);
         } catch (Exception e) {
             logger.warning("\n\n" + e.getMessage());
             logger.warning(Arrays.toString(e.getStackTrace()) + "\n\n");
@@ -90,6 +119,25 @@ public class KrameriusVCLinker {
             logger.warning("\n\n" + e.getMessage());
             logger.warning(Arrays.toString(e.getStackTrace()) + "\n\n");
         }
+    }
+
+    private void removeSolrLink(String uuid, String vcId, List<String> collections) {
+        try {
+            if (!collections.contains(vcId)) return;
+            collections.remove(vcId);
+            solrVCLinker.setVCFor(uuid, collections);
+        } catch (Exception e) {
+            logger.warning("\n\n" + e.getMessage());
+            logger.warning(Arrays.toString(e.getStackTrace()) + "\n\n");
+        }
+    }
+
+    private SolrQuery createSolrQuery(String rootUuid) {
+        String allPartsQueryStr = "pid_path:/" + rootUuid.trim() + ".*/";
+        SolrQuery query = new SolrQuery(allPartsQueryStr);
+        query.addField("PID");
+        query.addField("collection");
+        return query;
     }
 
     public void commitAndClose() throws IOException, SolrServerException {

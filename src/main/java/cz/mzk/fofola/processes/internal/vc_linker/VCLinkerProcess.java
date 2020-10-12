@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+
 public class VCLinkerProcess extends Process {
 
     private final String vcUuid;
@@ -16,9 +17,15 @@ public class VCLinkerProcess extends Process {
     private final String fedoraUser;
     private final String fedoraPswd;
 
+    private final String mode;
+    private static final String MODE_LINK = "link";
+    private static final String MODE_UNLINK = "unlink";
+
+    @SuppressWarnings("unchecked")
     public VCLinkerProcess(LinkedHashMap<String, Object> params,
                            FofolaConfiguration fofolaConfiguration) throws IOException {
         super(params);
+        mode = (String) params.get("mode");
         vcUuid = (String) params.get("vc_uuid");
         rootUuids = (List<String>) params.get("root_uuids");
         solrHost = fofolaConfiguration.getSolrHost();
@@ -33,10 +40,17 @@ public class VCLinkerProcess extends Process {
                 fedoraHost, fedoraUser, fedoraPswd,
                 solrHost, 1500, logger
         );
-        for (String rootUuid : rootUuids) {
-            vcLinker.linkRootAndChildrenToVc(vcUuid, rootUuid);
-            if (Thread.interrupted()) break;
-        }
+        if (mode.equals(MODE_LINK)) {
+            for (String rootUuid : rootUuids) {
+                vcLinker.linkRootAndChildrenToVc(vcUuid, rootUuid);
+                if (Thread.interrupted()) break;
+            }
+        } else if (mode.equals(MODE_UNLINK)) {
+            for (String rootUuid : rootUuids) {
+                vcLinker.unlinkRootAndChildrenFromVc(vcUuid, rootUuid);
+                if (Thread.interrupted()) break;
+            }
+        } else throw new IllegalAccessException("Unknown mode \"" + mode + "\"");
         vcLinker.commitAndClose();
     }
 }
