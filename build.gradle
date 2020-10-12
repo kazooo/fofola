@@ -48,6 +48,8 @@ dependencies {
     compile('org.glassfish.jersey.core:jersey-client:2.28')
     compile('com.google.code.gson:gson:2.8.5')
     compile('org.apache.solr:solr-solrj:8.6.3')
+    compile('com.h2database:h2:1.4.200')
+
 
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')

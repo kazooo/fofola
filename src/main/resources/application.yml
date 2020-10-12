@@ -4,7 +4,13 @@ trace: false
 logging:
   level:
     '*': ''
+    com:
+      zaxxer:
+        hikari: ${HIKARI_LOGGING_LVL:ERROR}
     org:
+      h2: ${H2_LOGGING_LVL:ERROR}
+      hibernate: ${HIBERNATE_LOGGING_LVL:ERROR}
+      axonframework: ${AXON_LOGGING_LVL:ERROR}
       springframework:
         web:
           socket:
@@ -17,13 +23,6 @@ server:
     path: /error
 
 spring:
-
-  datasource:
-    platform: postgres
-    url: ${POSTGRES_DB_JDBC_URL:jdbc:postgresql://localhost:5432/fofola}
-    username: ${POSTGRES_DB_USER:postgres}
-    password: ${POSTGRES_DB_PSWD:postgres}
-
   jpa:
     database: POSTGRESQL
     generate-ddl: true
