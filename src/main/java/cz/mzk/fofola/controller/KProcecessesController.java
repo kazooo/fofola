@@ -15,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 @RequestMapping("/k-processes")
 @Slf4j
-public class KrameriusProcessManagementController {
+public class KProcecessesController {
 
     private static final Gson gson = new Gson();
     private static final int processPerPage = 15;

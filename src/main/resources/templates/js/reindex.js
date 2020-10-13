@@ -1,13 +1,9 @@
-var stompClient = null;
 var uuids = [];
 
 $(function () {
     showSpin(false);
     showReindexPanel(false);
 
-    var socket = new SockJS('/reindex-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.debug = null;
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
@@ -52,9 +48,27 @@ function insertRowUuid(table, uuid) {
 
 function sendUuids() {
     setWaiting(true);
-    for(var i = 0; i < uuids.length; i++) {
-        stompClient.send("/reindex-websocket", {}, uuids[i]);
-    }
+
+    const formData = new FormData();
+    const params = new Blob([JSON.stringify(uuids)], {type : "application/json"})
+    formData.append('uuids', params)
+
+    $.ajax({
+        type: "POST",
+        url: "/reindex",
+        data: formData,
+        contentType: false,
+        processData: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            console.log("SUCCESS : ", data);
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        }
+    });
+
     clearTable();
     setWaiting(false);
 }

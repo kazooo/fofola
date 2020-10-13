@@ -7,8 +7,6 @@ import cz.mzk.fofola.service.UuidCheckingService;
 import cz.mzk.fofola.service.KrameriusApiCommunicator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +19,7 @@ import java.util.Map;
 @Controller
 @AllArgsConstructor
 @Slf4j
-public class KrameriusOperationsController {
+public class KOperationsController {
 
     private static final Gson gson = new Gson();
     private final UuidCheckingService uuidCheckService;
@@ -93,9 +91,11 @@ public class KrameriusOperationsController {
         return "reindex";
     }
 
-    @MessageMapping("/reindex-websocket")
-    public void loadDataToReindex(@Payload String uuid) throws Exception {
-        log.info("Reindex: " + uuid);
-        krameriusApi.reindex(uuid);
+    @PostMapping("/reindex")
+    public void reindex(@RequestPart(value = "uuids") List<String> uuids) throws Exception {
+        for (String uuid : uuids) {
+            log.info("Reindex: " + uuid);
+            krameriusApi.reindex(uuid);
+        }
     }
 }
