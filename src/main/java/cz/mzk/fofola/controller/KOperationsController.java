@@ -25,12 +25,6 @@ public class KOperationsController {
     private final UuidCheckingService uuidCheckService;
     private final KrameriusApiCommunicator krameriusApi;
 
-    @GetMapping("/check-uuid")
-    public String getCheckUuidPage() {
-        log.info("Entry uuid checking section.");
-        return "check-uuid";
-    }
-
     @PostMapping("/check-uuid")
     @ResponseBody
     public String checkUuidState(@RequestPart(value = "uuids") List<String> uuids) {
@@ -41,12 +35,6 @@ public class KOperationsController {
             states.add(response);
         }
         return gson.toJson(states);
-    }
-
-    @GetMapping("/change-access")
-    public String getChangeVisibilityPage() {
-        log.info("Entry uuid checking section.");
-        return "change-access";
     }
 
     @PostMapping("/change-access")
@@ -83,12 +71,6 @@ public class KOperationsController {
 
         }
         return processes;
-    }
-
-    @GetMapping("/reindex")
-    public String getReindexPage() {
-        log.info("Entry reindexation section.");
-        return "reindex";
     }
 
     @PostMapping("/reindex")

@@ -21,12 +21,6 @@ public class KProcecessesController {
     private static final int processPerPage = 15;
     private final KrameriusApiCommunicator krameriusApi;
 
-    @GetMapping("")
-    public String getProcessControlPage() {
-        log.info("Entry process control section.");
-        return "k-processes";
-    }
-
     @GetMapping("/page/{page}")
     @ResponseBody
     public String getProcessList(@PathVariable int page) throws Exception {

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.*;
 import java.util.Map;
@@ -15,12 +14,6 @@ import java.util.Map;
 @Slf4j
 public class SolrOperationsController {
 
-    @GetMapping("/removeTree")
-    public String getRemoveTreeFromSolrPage() {
-        log.info("Entry Solr tree removing section.");
-        return "remove_tree_from_solr";
-    }
-
     @MessageMapping("/remove-websocket")
     public void removeTreeFromSolr(Map<String, String> params) throws IOException, SolrServerException {
         String rootUuid = params.get("root_uuid");
@@ -29,12 +22,6 @@ public class SolrOperationsController {
         SolrRecordEraser recordEraser = new SolrRecordEraser(solrHost, 1500, false);
         recordEraser.archiveAndEraseWithChildren(rootUuid);
         recordEraser.close();
-    }
-
-    @GetMapping("/transferTree")
-    public String getTransferTreePage() {
-        log.info("Entry Solr tree transfer section.");
-        return "solr_record_transfer";
     }
 
     @MessageMapping("/transfer-websocket")

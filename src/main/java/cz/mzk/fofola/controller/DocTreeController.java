@@ -13,9 +13,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -32,12 +30,6 @@ public class DocTreeController {
 
     private final SolrDocumentRepository solrDocumentRepository;
     private final FedoraDocumentRepository fedoraDocumentRepository;
-
-    @GetMapping("/tree")
-    public String home(HttpServletRequest request) {
-        IpLogger.logIp(request.getRemoteAddr(), "Entry document tree section.");
-        return "tree_page";
-    }
 
     @MessageMapping("/tree-websocket")
     @SendTo("/tree/data")
