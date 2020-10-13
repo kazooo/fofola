@@ -2,20 +2,18 @@ package cz.mzk.fofola.controller;
 
 import com.google.gson.Gson;
 import cz.mzk.fofola.kramerius_api.Process;
-import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.service.KrameriusApiCommunicator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -28,8 +26,8 @@ public class KrameriusProcessManagementController {
     private final KrameriusApiCommunicator krameriusApi;
 
     @GetMapping("/kramerius-processes")
-    public String getProcessControlPage(HttpServletRequest request) {
-        IpLogger.logIp(request.getRemoteAddr(), "Entry process control section.");
+    public String getProcessControlPage() {
+        log.info("Entry process control section.");
         return "processes";
     }
 
@@ -40,24 +38,25 @@ public class KrameriusProcessManagementController {
         return gson.toJson(processList);
     }
 
-    @MessageMapping("/process-info")
-    @SendTo("/processes/one-p-info")
-    public String getProcessInfo(@Payload String processUuid) throws Exception {
-        return gson.toJson(krameriusApi.getProcessInfo(processUuid));
+    @GetMapping("/k-processes/{uuid}")
+    @ResponseBody
+    public String getProcessInfo(@PathVariable String uuid) throws Exception {
+        return gson.toJson(krameriusApi.getProcessInfo(uuid));
     }
 
-    @MessageMapping("/process-manipulation-websocket")
-    public void applyOperation(@Payload String processUuid, @Header("action") String action,
-                               SimpMessageHeaderAccessor ha) throws Exception {
-        Object ipAdress = ha.getSessionAttributes().get("IP");
+    @PostMapping("/k-processes/command")
+    @ResponseStatus(HttpStatus.OK)
+    public void receiveCommandForKrameriusProcess(@RequestPart(value = "params") Map<String, Object> params) throws Exception {
+        String action = (String) params.get("action");
+        String pid = (String) params.get("pid");
         switch (action) {
             case "kill":
-                IpLogger.logIp(ipAdress.toString(), "Kill process: " + processUuid);
-                krameriusApi.stopProcess(processUuid);
+                log.info("Kill process: " + pid);
+                krameriusApi.stopProcess(pid);
                 break;
             case "remove":
-                IpLogger.logIp(ipAdress.toString(), "Remove process: " + processUuid);
-                krameriusApi.removeProcess(processUuid);
+                log.info("Remove process: " + pid);
+                krameriusApi.removeProcess(pid);
                 break;
         }
     }

@@ -7,15 +7,15 @@ import cz.mzk.fofola.service.UuidCheckingService;
 import cz.mzk.fofola.service.KrameriusApiCommunicator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -30,7 +30,7 @@ public class KrameriusOperationsController {
     @GetMapping("/check-uuid")
     public String getCheckUuidPage() {
         log.info("Entry uuid checking section.");
-        return "check_uuid";
+        return "check-uuid";
     }
 
     @PostMapping("/check-uuid")
@@ -45,27 +45,46 @@ public class KrameriusOperationsController {
         return gson.toJson(states);
     }
 
-    @GetMapping("/change_rights")
+    @GetMapping("/change-access")
     public String getChangeVisibilityPage() {
         log.info("Entry uuid checking section.");
-        return "change_rights";
+        return "change-access";
     }
 
-    @MessageMapping("/rights-websocket")
-    @SendTo("/processes/rights")
-    public Process changeRight(@Payload String uuid, @Header("action") String action) throws Exception {
-        Process p = null;
-        switch (action) {
+    @PostMapping("/change-access")
+    @ResponseBody
+    @SuppressWarnings("unchecked")
+    public List<Process> changeAccessibility
+            (@RequestPart(value = "params") Map<String, Object> params) throws Exception {
+        String accessibility = (String) params.get("access");
+        List<String> uuids = (List<String>) params.get("uuids");
+        switch (accessibility) {
             case "public":
-                log.info("Make public: " + uuid);
-                p = krameriusApi.makePublic(uuid);
-                break;
+                return makePublic(uuids);
             case "private":
-                log.info("Make private: " + uuid);
-                p = krameriusApi.makePrivate(uuid);
-                break;
+                return makePrivate(uuids);
         }
-        return p;  // return process info to display progress on page
+        return Collections.emptyList();
+    }
+
+    private List<Process> makePublic(List<String> uuids) throws Exception {
+        List<Process> processes = new ArrayList<>();
+        for (String uuid : uuids) {
+            log.info("Make public: " + uuid);
+            processes.add(krameriusApi.makePublic(uuid));
+
+        }
+        return processes;
+    }
+
+    private List<Process> makePrivate(List<String> uuids) throws Exception {
+        List<Process> processes = new ArrayList<>();
+        for (String uuid : uuids) {
+            log.info("Make public: " + uuid);
+            processes.add(krameriusApi.makePrivate(uuid));
+
+        }
+        return processes;
     }
 
     @GetMapping("/reindex")

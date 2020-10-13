@@ -1,4 +1,3 @@
-var stompClient = null;
 var uuids = [];
 var interval = 3 * 1000;
 var refreshIntervalId = null;
@@ -8,33 +7,11 @@ $(function () {
     showControlPanel(false);
     showTableContainer(false);
 
-    var socket = new SockJS('/rights-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.debug = null;
-    stompClient.connect({}, function (frame) {
-        stompClient.subscribe('/processes/rights', function (data) {
-            fillProgressTable(JSON.parse(data.body));
-        });
-        stompClient.subscribe('/processes/one-p-info', function (data) {
-            fillProgressTable(JSON.parse(data.body));
-        });
-    });
-
-    var check = function(){
-        console.log('check...');
-        if(stompClient.ws.readyState === WebSocket.OPEN){
-            refreshIntervalId = setInterval(requestForProcessInfo, interval);
-        } else {
-            setTimeout(check, 1000); // check again in a second
-        }
-    };
-
-    check();
+    refreshIntervalId = setInterval(requestForProcessInfo, interval);
 
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
-
     $( "#load_uuid_submit" ).click(function() {
         loadOneUuid();
         showControlPanel(true);
@@ -110,9 +87,34 @@ function insertRowUuid(table, uuid) {
 
 function sendUuids(action) {
     setWaiting(true);
-    for(var i = 0; i < uuids.length; i++) {
-        stompClient.send("/rights-websocket", {'action': action}, uuids[i]);
+
+    const paramsStr = {
+        'uuids': uuids,
+        'access': action
     }
+    const formData = new FormData();
+    const params = new Blob([JSON.stringify(paramsStr)], {type : "application/json"})
+    formData.append('params', params)
+
+    $.ajax({
+        type: "POST",
+        url: "/change-access",
+        data: formData,
+        contentType: false,
+        processData: false,
+        cache: false,
+        timeout: 600000,
+        success: function (processes) {
+            console.log("SUCCESS : ", processes);
+            processes.forEach(process =>
+                fillProgressTable(process)
+            )
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        }
+    });
+
     clearTable();
     setWaiting(false);
 }
@@ -121,8 +123,21 @@ function requestForProcessInfo() {
     var progressTable = document.getElementById('progress-table');
     var rows = progressTable.rows;
     for(var i = 1; i < rows.length; i++) {
-        var c = rows[i].cells[0];
-        stompClient.send("/process-info", {}, rows[i].cells[0].textContent);
+        $.ajax({
+            type: "GET",
+            url: "/k-processes/" + rows[i].cells[0].textContent,
+            contentType: false,
+            processData: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                console.log("SUCCESS : ", data);
+                fillProgressTable(JSON.parse(data));
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
     }
 }
 
@@ -226,10 +241,10 @@ function insertProcessInfo(table, data, className) {
 
     var hasChildren = data.hasOwnProperty('children') && data.children !== null && data.children.length < 1;
 
-    if (table.rows.length > 1) {  // 1 because of header row
+    if (table.rows.length > 1) {  // table already has process info, 1 because of header row
         for (var i = 1; i < table.rows.length; i++) {
             var uuid = table.rows[i].cells[0].textContent;
-            if (uuid === data.uuid) {  // update only state and dates
+            if (uuid === data.uuid) {  // table contains given process, update only state and dates
                 var cells = table.rows[i].cells;
                 cells[2].innerHTML = data.name;
                 cells[2].title = data.name;
@@ -249,7 +264,6 @@ function insertProcessInfo(table, data, className) {
                 return;
             }
         }
-
     }
     var row = table.getElementsByTagName('tbody')[0].insertRow(-1);
     row.className = className;
@@ -325,15 +339,37 @@ function operate(element, action) {
     var table = document.getElementById('progress-table');
     var i = element.parentNode.parentNode.rowIndex;
     var pid = table.rows[i].cells[0].textContent;
-    switch (action) {
-        case 'kill':
-            stompClient.send("/process-manipulation-websocket", {'action': 'kill'}, pid);
-            break;
-        case 'remove':
-            stompClient.send("/process-manipulation-websocket", {'action': 'remove'}, pid);
-            table.deleteRow(i);
-            break;
+    sendCommand(pid, action)
+    if (action === 'remove') {
+        table.deleteRow(i);
     }
+}
+
+function sendCommand(pid, action) {
+    const paramsStr = {
+        'pid': pid,
+        'action': action
+    }
+    const formData = new FormData();
+    const params = new Blob([JSON.stringify(paramsStr)], {type : "application/json"})
+    formData.append('params', params)
+
+    $.ajax({
+        type: "POST",
+        url: "/k-processes/command",
+        data: formData,
+        contentType: false,
+        processData: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            console.log("SUCCESS : ", data);
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        }
+    });
+
 }
 
 function colorByState(state) {
