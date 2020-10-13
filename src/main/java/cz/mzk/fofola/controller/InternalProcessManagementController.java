@@ -30,7 +30,7 @@ public class InternalProcessManagementController {
 
     @GetMapping("")
     public String getInternalProcessManagementPage() {
-        return "internal_processes";
+        return "internal-processes";
     }
 
     @PostMapping("/new/{processTypeAlias}")

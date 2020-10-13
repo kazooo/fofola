@@ -37,7 +37,7 @@ public class CheckDonatorController {
         List<VC> vcList = VCUtils.getAllVC(fofolaConfiguration.getKrameriusHost());
         Map<String, String> vcNameUuid = VCUtils.mapAndSortVCs(vcList);
         model.addAttribute("vcList", vcNameUuid);
-        return "check_donator";
+        return "check-donator";
     }
 
     @GetMapping("/all")

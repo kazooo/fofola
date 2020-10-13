@@ -24,24 +24,24 @@ public class ProcessesPageController {
         List<VC> vcList = VCUtils.getAllVC(fofolaConfiguration.getKrameriusHost());
         Map<String, String> vcNameUuid = VCUtils.mapAndSortVCs(vcList);
         model.addAttribute("vcList", vcNameUuid);
-        return "link_vc";
+        return "link-vc";
     }
 
     @GetMapping("/perio-parts-publish")
     public String getPerioPartsPublishingPage(HttpServletRequest request) {
         IpLogger.logIp(request.getRemoteAddr(), "Entry private periodical parts publishing section.");
-        return "perio_parts_publishing";
+        return "perio-parts-publishing";
     }
 
     @GetMapping("/link-donator")
     public String getDonatorLinkingPage(HttpServletRequest request) {
         IpLogger.logIp(request.getRemoteAddr(), "Entry donator linking section.");
-        return "link_donator";
+        return "link-donator";
     }
 
     @GetMapping("/img-editing")
     public String getImgEditionPage(HttpServletRequest request) {
         IpLogger.logIp(request.getRemoteAddr(), "Entry image editing section.");
-        return "img_editing";
+        return "img-editing";
     }
 }
