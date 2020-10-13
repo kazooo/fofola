@@ -1,33 +1,12 @@
-var stompClient = null;
 var lastPage = 0;
 var interval = 5 * 1000;
 var refreshIntervalId = null;
 
 $(function () {
     setWaiting(true);
-
-    var socket = new SockJS('/process-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.debug = null;
-    stompClient.connect({}, function (frame) {
-        stompClient.subscribe('/processes/info', function (data) {
-            insertData(JSON.parse(data.body));
-        });
-    });
-
-    var check = function(){
-        console.log('check...');
-        if(stompClient.ws.readyState === WebSocket.OPEN){
-            requestForData();
-            refreshIntervalId = setInterval(requestForDataByCheckBox, interval);
-        } else {
-            setTimeout(check, 1000); // check again in a second
-        }
-    };
-
+    refreshIntervalId = setInterval(requestForDataByCheckBox, interval);
+    requestForData()
     updatePageNum();
-    check();
-
     setWaiting(false);
 });
 
@@ -44,7 +23,21 @@ function requestNewData() {
 }
 
 function requestForData() {
-    stompClient.send("/process-websocket", {}, lastPage);
+    $.ajax({
+        type: "GET",
+        url: "/k-processes/page/" + lastPage,
+        contentType: false,
+        processData: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            console.log("SUCCESS : ", data);
+            insertData(JSON.parse(data));
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        }
+    });
 }
 
 function insertData(json) {
@@ -157,15 +150,36 @@ function operate(element, action) {
     var table = document.getElementById('uuid_table');
     var i = element.parentNode.parentNode.rowIndex;
     var pid = table.rows[i].cells[0].textContent;
-    switch (action) {
-        case 'kill':
-            stompClient.send("/process-manipulation-websocket", {'action': 'kill'}, pid);
-            break;
-        case 'remove':
-            stompClient.send("/process-manipulation-websocket", {'action': 'remove'}, pid);
-            table.deleteRow(i);
-            break;
+    sendCommand(pid, action)
+    if (action === 'remove') {
+        table.deleteRow(i);
     }
+}
+
+function sendCommand(pid, action) {
+    const paramsStr = {
+        'pid': pid,
+        'action': action
+    }
+    const formData = new FormData();
+    const params = new Blob([JSON.stringify(paramsStr)], {type : "application/json"})
+    formData.append('params', params)
+
+    $.ajax({
+        type: "POST",
+        url: "/k-processes/command",
+        data: formData,
+        contentType: false,
+        processData: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            console.log("SUCCESS : ", data);
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        }
+    });
 }
 
 function clearTable() {

@@ -369,7 +369,6 @@ function sendCommand(pid, action) {
             console.log("ERROR : ", e);
         }
     });
-
 }
 
 function colorByState(state) {
