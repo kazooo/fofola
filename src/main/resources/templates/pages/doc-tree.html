@@ -2,14 +2,12 @@
 
     <head lang="en">
         <th:block th:include="layout :: standard (page_title='Fofola')"></th:block>
-        <th:block th:include="layout :: websocket"></th:block>
-        <script src="../js/tree-websocket.js"></script>
+        <script src="../js/doc-tree.js"></script>
     </head>
 
     <style>
-        .node {
-            cursor: pointer;
-        }
+
+        /* dont remove, used in D3 */
 
         .node circle {
             fill: #fff;

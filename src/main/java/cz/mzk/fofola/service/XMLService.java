@@ -24,6 +24,7 @@ public class XMLService {
 
     private final List<String> uuidElementNames = Collections.singletonList("dc:identifier");
     private final List<String> accessibilityElementNames = Collections.singletonList("dc:rights");
+    private final List<String> modsTitleElementNames = Arrays.asList("mods:title", "ns2:title");
     private final List<String> modelElementNames = Collections.singletonList("dc:type");
     private final List<String> imageUrlElementNames = Arrays.asList("tiles-url", "kramerius4:tiles-url");
     private final List<String> rdfDescElementNames = Collections.singletonList("rdf:Description");
@@ -67,6 +68,9 @@ public class XMLService {
 
         String uuid = extractUuidFromRelsExt(doc);
 
+        String title = getLastElementTextContent(
+                getElementsByNameFromList(doc, modsTitleElementNames), "no_title");
+
         // get the last element in list, because the last element is the latest accessibility
         String accessibility = getLastElementTextContent(
                 getElementsByNameFromList(doc, accessibilityElementNames), "no_access");
@@ -89,8 +93,9 @@ public class XMLService {
         );
 
         FedoraDocument fedoraDoc = new FedoraDocument(uuid);
-        fedoraDoc.setAccesibility(accessibility);
+        fedoraDoc.setTitle(title);
         fedoraDoc.setModel(model);
+        fedoraDoc.setAccesibility(accessibility);
         fedoraDoc.setImageUrl(imageUrl.equals("no_image") ? imageUrl : imageUrl + "/big.jpg");
         fedoraDoc.setModifiedDateStr(lastModDateStr);
         extractChildsFromDoc(doc, fedoraDoc);

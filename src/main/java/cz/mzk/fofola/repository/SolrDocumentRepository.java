@@ -29,9 +29,19 @@ public class SolrDocumentRepository {
         }
     }
 
-    public List<SolrDocument> getByRootPid(String rootUuid) {
+    public List<SolrDocument> getChildByRootUuid(String rootUuid) {
         try {
-            String queryStr = SolrDocument.ROOT_PID + ":\"" + rootUuid + "\"";
+            String queryStr = SolrDocument.ROOT_PID + ":\"" + rootUuid + "\" AND !PID:\"" + rootUuid + "\"";
+            SolrQuery params = new SolrQuery(queryStr);
+            return SolrDocument.convert(solrClient.query(params).getResults());
+        } catch (SolrServerException | IOException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public List<SolrDocument> getChildByParentUuid(String parentUuid) {
+        try {
+            String queryStr = SolrDocument.PARENT_PID + ":\"" + parentUuid + "\" AND !PID:\"" + parentUuid + "\"";
             SolrQuery params = new SolrQuery(queryStr);
             return SolrDocument.convert(solrClient.query(params).getResults());
         } catch (SolrServerException | IOException e) {

@@ -1,154 +1,125 @@
 package cz.mzk.fofola.controller;
 
 import com.google.gson.Gson;
-import cz.mzk.fofola.model.DocTreeModel;
+import cz.mzk.fofola.model.DocTreeNode;
 import cz.mzk.fofola.model.FedoraDocument;
 import cz.mzk.fofola.model.SolrDocument;
 import cz.mzk.fofola.repository.FedoraDocumentRepository;
-import cz.mzk.fofola.service.IpLogger;
 import cz.mzk.fofola.repository.SolrDocumentRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @Controller
 @AllArgsConstructor
 @Slf4j
 public class DocTreeController {
 
-    private static int docCounter = 0;
-    private static int docsToCallGC = 3000;
-    private static final Gson gson = new Gson();
+    private final Gson gson = new Gson();
+    private final SolrDocumentRepository solrRepository;
+    private final FedoraDocumentRepository fedoraRepository;
+    private final Map<String, List<String>> solrChildrenBuffer = new LinkedHashMap<String, List<String>>() {
+        @Override protected boolean removeEldestEntry(Map.Entry<String, List<String>> entry) {
+            return size() > 10;
+        }
+    };
 
-    private final SolrDocumentRepository solrDocumentRepository;
-    private final FedoraDocumentRepository fedoraDocumentRepository;
-
-    @MessageMapping("/tree-websocket")
-    @SendTo("/tree/data")
-    public String getTreeDataWebSocket(String uuid, SimpMessageHeaderAccessor ha) {
+    @GetMapping("/tree/{uuid}")
+    @ResponseBody
+    public String generateDocTree(@PathVariable String uuid) {
         // uuid must not be root
-        String rootUuid = getRoot(uuid);
-        Object ipAdress = ha.getSessionAttributes().get("IP");
-        IpLogger.logIp(ipAdress.toString(), "Checking: " + rootUuid);
-        List<SolrDocument> docs = new ArrayList<>(solrDocumentRepository.getByRootPid(rootUuid));
-        DocTreeModel tree = generateTree(docs, rootUuid);
-        IpLogger.logIp(ipAdress.toString(), "Finish checking: " + rootUuid);
-        return gson.toJson(tree);
+        SolrDocument solrRootDoc = solrRepository.getByUuid(uuid);
+        String rootUuid = solrRootDoc.getUuid();
+
+        log.info("Checking: " + rootUuid);
+        DocTreeNode root = generateNode(rootUuid);
+        log.info("Finish checking: " + rootUuid);
+
+        return gson.toJson(root);
     }
 
-    private DocTreeModel generateTree(List<SolrDocument> docs, String parentUuid) {
-        SolrDocument parentDoc = docs.stream().filter(d -> d.getUuid().equals(parentUuid)).findFirst().orElse(null);
-        assert parentDoc != null;
-        docs.remove(parentDoc);
-        FedoraDocument fedoraDoc = fedoraDocumentRepository.getFedoraDocByUuid(parentUuid);
+    private DocTreeNode generateNode(String uuid) {
+        DocTreeNode node = new DocTreeNode(uuid);
+        SolrDocument solrDoc = solrRepository.getByUuid(uuid);
+        FedoraDocument fedoraDoc = fedoraRepository.getFedoraDocByUuid(uuid);
 
-        String nodeName = parentDoc.getModel() + " : " + parentDoc.getDcTitle();
-        DocTreeModel parentNode = new DocTreeModel(nodeName);
-        parentNode.setUuid(parentUuid);
-        parentNode.setVisibilitySolr(parentDoc.getAccessibility());
-        parentNode.setModel(parentDoc.getModel());
+        fillFromSolrDoc(node, solrDoc);
+        fillFromFedoraDoc(node, fedoraDoc);
+        fillFromOptional(node, fedoraDoc, solrDoc);
+        processChildren(node, fedoraDoc);
 
-        // filter children for given parent
-        Supplier<Stream<SolrDocument>> childs = () -> docs.stream()
-                .filter(d -> d.getParentPids().contains(parentUuid))
-                .sorted(Comparator.comparing(o -> o.getRelsExtIndexForParent(parentUuid)));
+        node.checkProblems();
+        return node;
+    }
 
-        List<String> notInRelsExt = null;
-        if (fedoraDoc != null) {
-            parentNode.setStored("true");
-            parentNode.setVisibilityFedora(fedoraDoc.getAccesibility());
-            parentNode.setImageUrl(fedoraDoc.getImageUrl());
-            notInRelsExt = checkFedoraChilds(parentNode, fedoraDoc, childs);
-            fedoraDoc = null;
+    private void fillFromFedoraDoc(DocTreeNode node, FedoraDocument fedoraDoc) {
+        if (fedoraDoc == null) {
+            node.setStored("false");
+            node.setVisibilityFedora("unknown");
+            node.setImageUrl("no_image");
         } else {
-            parentNode.setStored("false");
-            parentNode.setVisibilityFedora("unknown");
-            parentNode.setImageUrl("no_image");
-            parentNode.hasProblem = true;
+            node.setStored("true");
+            node.setVisibilityFedora(fedoraDoc.getAccesibility());
+            node.setImageUrl(fedoraDoc.getImageUrl());
+        }
+    }
+
+    private void fillFromSolrDoc(DocTreeNode node, SolrDocument solrDoc) {
+        if (solrDoc == null) {
+            node.setIndexed("false");
+            node.setVisibilitySolr("unknown");
+        } else {
+            node.setIndexed("true");
+            node.setVisibilitySolr(solrDoc.getAccessibility());
+        }
+    }
+
+    private void fillFromOptional(DocTreeNode node, FedoraDocument fedoraDoc, SolrDocument solrDoc) {
+        if (solrDoc != null) {
+            node.setName(solrDoc.getModel() + " : " + solrDoc.getDcTitle());
+            node.setModel(solrDoc.getModel());
+        } else if (fedoraDoc != null) {
+            node.setName(fedoraDoc.getModel() + " : " + fedoraDoc.getTitle());
+            node.setModel(fedoraDoc.getModel());
+        }
+    }
+
+    private void processChildren(DocTreeNode node, FedoraDocument fedoraDoc) {
+        List<String> fedoraChildUuids = null;
+        if (fedoraDoc != null) {
+            fedoraChildUuids = fedoraDoc.getChildUuids();
+            fedoraChildUuids.forEach(childUuid -> {
+                DocTreeNode childNode = generateNode(childUuid);
+                childNode.setLinkInRelsExt("true");
+                node.addChild(childNode);
+            });
         }
 
-        docCounter++;
-        if (docCounter >= docsToCallGC) {
-            // requesting JVM for running Garbage Collector
-            log.info("Run system garbage collector...");
-            System.gc();
-            docCounter = 0;
-        }
-
-        // recursively get children of children and add it to parent generating tree
-        List<String> finalNotInRelsExt = notInRelsExt;
-        childs.get().forEach(c -> {
-            String uuid = c.getUuid();
-            if (!uuid.equals(parentUuid)) {
-                DocTreeModel childNode = generateTree(docs, uuid);
-                if (finalNotInRelsExt != null && finalNotInRelsExt.contains(uuid)) {
-                    childNode.setLinkInRelsExt("false");
-                }
-                parentNode.addChild(childNode);
+        List<String> solrChildUuids;
+        if (solrChildrenBuffer.containsKey(node.uuid)) {
+            solrChildUuids = solrChildrenBuffer.get(node.uuid);
+        } else {
+            solrChildUuids = solrRepository
+                    .getChildByParentUuid(node.uuid).stream()
+                    .map(SolrDocument::getUuid)
+                    .collect(Collectors.toList());
+            if (fedoraChildUuids != null) {
+                solrChildUuids.removeAll(fedoraChildUuids);
             }
-        });
-
-        parentNode.checkProblems();
-        return parentNode;
-    }
-
-    private String getRoot(String uuid) {
-        SolrDocument doc = solrDocumentRepository.getByUuid(uuid);
-        return doc.getRootPid();
-    }
-
-    private List<String> checkFedoraChilds(DocTreeModel parentNode, FedoraDocument fedoraDoc,
-                                   Supplier<Stream<SolrDocument>> childs) {
-        List<String> fedoraChilds = fedoraDoc.getChilds();
-
-        List<String> notInRelsExt = childs.get()
-                .filter(d -> !fedoraChilds.contains(d.getUuid()))
-                .map(SolrDocument::getUuid)
-                .collect(Collectors.toList());
-
-        List<String> missInSolr = fedoraChilds.stream()
-                .filter(f -> childs.get().noneMatch(s -> s.getUuid().equals(f)))
-                .collect(Collectors.toList());
-
-        if (!missInSolr.isEmpty()) {
-            parentNode.hasProblematicChild = true;
+            solrChildrenBuffer.put(node.uuid, solrChildUuids);
         }
 
-        for (String childUuid : missInSolr) {
-            FedoraDocument childFedoraDoc = fedoraDocumentRepository.getFedoraDocByUuid(childUuid);
-
-            DocTreeModel childNode = new DocTreeModel(childUuid);
-            childNode.setUuid(childUuid);
-            childNode.setIndexed("false");
-            childNode.setVisibilitySolr("unknown");
-            childNode.hasProblem = true;
+        solrChildUuids.forEach(childUuid -> {
+            DocTreeNode childNode = generateNode(childUuid);
             childNode.setLinkInRelsExt("false");
-
-            if (childFedoraDoc != null) {
-                childNode.setModel(childFedoraDoc.getModel());
-                childNode.setStored("true");
-                childNode.setVisibilityFedora(childFedoraDoc.getAccesibility());
-                childNode.setImageUrl(childFedoraDoc.getImageUrl());
-                childFedoraDoc = null;
-            } else {
-                childNode.setModel("unknown");
-                childNode.setStored("false");
-                childNode.setVisibilityFedora("unknown");
-                childNode.setImageUrl("no_image");
-            }
-
-            parentNode.addChild(childNode);
-            docCounter++;
-        }
-
-        return notInRelsExt;
+            node.addChild(childNode);
+        });
     }
 }

@@ -94,7 +94,7 @@ public class PageController {
     @GetMapping("/tree")
     public String home() {
         log.info("Entry document tree section.");
-        return "tree_page";
+        return "doc-tree";
     }
 
     @GetMapping("/check-donator")

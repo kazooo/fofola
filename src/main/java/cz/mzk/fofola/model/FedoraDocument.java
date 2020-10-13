@@ -14,10 +14,11 @@ import java.util.List;
 public class FedoraDocument {
 
     private String uuid;
-    private String accesibility;
     private String model;
+    private String title;
     private String imageUrl;
-    private List<String> childs;
+    private String accesibility;
+    private List<String> childUuids;
     private String modifiedDateStr;
 
     private final SimpleDateFormat fromFmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -25,7 +26,7 @@ public class FedoraDocument {
 
     public FedoraDocument(String uuid) {
         this.uuid = uuid;
-        this.childs = new ArrayList<>();
+        this.childUuids = new ArrayList<>();
     }
 
     public void setModifiedDateStr(String modifiedDateStr) {
@@ -37,6 +38,6 @@ public class FedoraDocument {
     }
 
     public void addChild(String child) {
-        this.childs.add(child);
+        this.childUuids.add(child);
     }
 }

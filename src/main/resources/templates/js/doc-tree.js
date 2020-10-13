@@ -1,4 +1,10 @@
-var stompClient = null;
+$(function () {
+    showSpin(false);
+    $("form").on('submit', function (e) {
+        e.preventDefault();
+    });
+    $( "#enter_uuid_submit" ).click(function() { sendUuid(); });
+});
 
 function sendUuid() {
     document.getElementById('info_container').style.visibility = 'hidden';
@@ -6,48 +12,26 @@ function sendUuid() {
     showSpin(true);
 
     var uuid = document.getElementById('enter_uuid').value;
-    stompClient.send("/tree-websocket", {}, uuid);
-}
-
-function showSpin(show) {
-    var spin = document.getElementById("wait-spin");
-
-    if (show) {
-        spin.style.display = "block";
-    } else {
-        spin.style.display = "none";
-    }
-}
-
-$(window).on('beforeunload', function(e) {
-    if (stompClient != null) {
-        stompClient.close();
-    }
-});
-
-$(function () {
-    showSpin(false);
-
-    var socket = new SockJS('/tree-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.debug = null;
-    stompClient.connect({}, function (frame) {
-        stompClient.subscribe('/tree/data', function (data) {
+    $.ajax({
+        type: "GET",
+        url: "/tree/" + uuid,
+        contentType: false,
+        processData: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            console.log("SUCCESS : ", data);
             showSpin(false);
-            generateTree(data.body);
-        });
+            generateTree(data);
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+            showSpin(false);
+        }
     });
-
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-    $( "#enter_uuid_submit" ).click(function() { sendUuid(); });
-});
-
+}
 
 function generateTree(data) {
-
-    var tree_data = data;
     var tree_container = document.getElementById('tree_container');
     var width = tree_container.offsetWidth;
     var height = tree_container.offsetHeight;
@@ -111,7 +95,7 @@ function generateTree(data) {
         centerNode(root);
     }
 
-    init(tree_data);
+    init(data);
 
     d3.select(self.frameElement).style("height", width/2);
 
@@ -291,5 +275,15 @@ function generateTree(data) {
 
     function checkChildsReturnColor(d) {
         return d.hasProblematicChild ? "red" : "green";
+    }
+}
+
+function showSpin(show) {
+    var spin = document.getElementById("wait-spin");
+
+    if (show) {
+        spin.style.display = "block";
+    } else {
+        spin.style.display = "none";
     }
 }
