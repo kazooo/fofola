@@ -4,177 +4,91 @@ import cz.mzk.fofola.model.FedoraDocument;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import javax.xml.xpath.*;
 
 
 @Service
 public class XMLService {
 
-    private static Transformer transformer;
-    private static DocumentBuilder docBuilder;
 
-    private final List<String> uuidElementNames = Collections.singletonList("dc:identifier");
-    private final List<String> accessibilityElementNames = Collections.singletonList("dc:rights");
-    private final List<String> modsTitleElementNames = Arrays.asList("mods:title", "ns2:title");
-    private final List<String> modelElementNames = Collections.singletonList("dc:type");
-    private final List<String> imageUrlElementNames = Arrays.asList("tiles-url", "kramerius4:tiles-url");
-    private final List<String> rdfDescElementNames = Collections.singletonList("rdf:Description");
-    private final List<String> lastModDateElementNames = Collections.singletonList("audit:date");
+    private static XPathExpression uuidXPath;
+    private static XPathExpression accessibilityXPath;
+    private static XPathExpression imageUrlXPath;
+    private static XPathExpression titleXPath;
+    private static XPathExpression modelXPath;
+    private static XPathExpression createdDateXPath;
+    private static XPathExpression modifiedDateXPath;
+    private static XPathExpression childrenXPath;
 
     static {
         try {
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            docBuilder = docFactory.newDocumentBuilder();
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-        } catch (ParserConfigurationException | TransformerConfigurationException e) {
+            uuidXPath = compile(xpathForRelsExtField("itemID"));
+            accessibilityXPath = compile(xpathForRelsExtField("policy"));
+            imageUrlXPath = compile(xpathForRelsExtField("tiles-url"));
+            titleXPath = compile(xpathForDcField("title"));
+            modelXPath = compile(xpathForDcField("type"));
+            createdDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/model#createdDate"));
+            modifiedDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/view#lastModifiedDate"));
+            childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[starts-with(name(), 'has')][namespace-uri()='http://www.nsdl.org/ontologies/relationships#']/@*");
+        } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
-    }
-
-    public Document newDoc() {
-        return docBuilder.newDocument();
-    }
-
-    public Element createElement(Document doc, Element parentElement, String elementName) {
-        Element newElement = doc.createElement(elementName);
-        parentElement.appendChild(newElement);
-        return newElement;
-    }
-
-    public void setTextNode(Document doc, Element element, String text) {
-        element.appendChild(doc.createTextNode(text));
-    }
-
-    public void saveDoc(Document doc, String outFileName) throws TransformerException {
-        DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File(outFileName));
-        transformer.transform(source, result);
     }
 
     public FedoraDocument parseFedoraDocument(Document doc) {
         doc.getDocumentElement().normalize();
 
-        String uuid = extractUuidFromRelsExt(doc);
+        try {
+            String uuid = uuidXPath.evaluate(doc);
+            String title = titleXPath.evaluate(doc);
+            String model = modelXPath.evaluate(doc);
+            String imageUrl = imageUrlXPath.evaluate(doc);
+            String accessibility = accessibilityXPath.evaluate(doc);
+            String lastModDateStr = modifiedDateXPath.evaluate(doc);
 
-        String title = getLastElementTextContent(
-                getElementsByNameFromList(doc, modsTitleElementNames), "no_title");
+            model = model.replace("model:", "");
+            accessibility = accessibility.replace("policy:", "");
+            imageUrl = imageUrl.isEmpty() ? "no image" : imageUrl + "/big.jpg";
 
-        // get the last element in list, because the last element is the latest accessibility
-        String accessibility = getLastElementTextContent(
-                getElementsByNameFromList(doc, accessibilityElementNames), "no_access");
-        accessibility = accessibility.substring(accessibility.indexOf(":")+1);  // policy:private
+            FedoraDocument fedoraDoc = new FedoraDocument(uuid);
+            fedoraDoc.setTitle(title);
+            fedoraDoc.setModel(model);
+            fedoraDoc.setAccesibility(accessibility);
+            fedoraDoc.setImageUrl(imageUrl);
+            fedoraDoc.setModifiedDateStr(lastModDateStr);
 
-        String model = getLastElementTextContent(
-                getElementsByNameFromList(doc, modelElementNames),
-                "no_model"
-        );
-        model = model.substring(model.indexOf(":")+1);  // model:periodical
-
-        String imageUrl = getLastElementTextContent(
-                getElementsByNameFromList(doc, imageUrlElementNames),
-                "no_image"
-        );
-
-        String lastModDateStr = getLastElementTextContent(
-                getElementsByNameFromList(doc, lastModDateElementNames),
-                "no_modif_date"
-        );
-
-        FedoraDocument fedoraDoc = new FedoraDocument(uuid);
-        fedoraDoc.setTitle(title);
-        fedoraDoc.setModel(model);
-        fedoraDoc.setAccesibility(accessibility);
-        fedoraDoc.setImageUrl(imageUrl.equals("no_image") ? imageUrl : imageUrl + "/big.jpg");
-        fedoraDoc.setModifiedDateStr(lastModDateStr);
-        extractChildsFromDoc(doc, fedoraDoc);
-
-        return fedoraDoc;
-    }
-
-    private String extractUuidFromRelsExt(Document doc) {
-        NodeList rdfDesc = getElementsByNameFromList(doc, rdfDescElementNames);
-        Node rdfDescNode = rdfDesc.item(rdfDesc.getLength()-1);
-        String uuid = getStringAttrValue((Element)rdfDescNode, "rdf:about");
-        uuid = uuid.replace("info:fedora/", "");
-        return uuid;
-    }
-
-    private void extractChildsFromDoc(Document doc, FedoraDocument fedoraDoc) {
-        NodeList rdfDesc = getElementsByNameFromList(doc, rdfDescElementNames);
-        if (rdfDesc == null || rdfDesc.getLength() < 1) {
-            fedoraDoc.addChild("no_child");
-            return;
-        }
-        Node rdfDescNode = rdfDesc.item(rdfDesc.getLength()-1);
-        NodeList nodeList = rdfDescNode.getChildNodes();
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node currentNode = nodeList.item(i);
-            if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
-                String tagName = currentNode.getNodeName();
-                if (tagName.contains("has") &&
-                        hasAttribute((Element) currentNode, "http://www.nsdl.org/ontologies/relationships#")
-                    || tagName.contains("kramerius:has")) {
-                    String childUuid = getStringAttrValue((Element)currentNode, "rdf:resource");
-                    childUuid = childUuid.replace("info:fedora/", "");
-                    fedoraDoc.addChild(childUuid);
-                }
+            NodeList childAttrs = (NodeList) childrenXPath.evaluate(doc, XPathConstants.NODESET);
+            for (int i = 0; i < childAttrs.getLength(); i++) {
+                Attr attr = (Attr) childAttrs.item(i);
+                String childUuid = attr.getValue().replace("info:fedora/", "");
+                fedoraDoc.addChild(childUuid);
             }
+
+            return fedoraDoc;
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    private static boolean hasAttribute(Element element, String value) {
-        NamedNodeMap attributes = element.getAttributes();
-        for (int i = 0; i < attributes.getLength(); i++) {
-            Node node = attributes.item(i);
-            if (value.equals(node.getNodeValue())) {
-                return true;
-            }
-        }
-        return false;
+    private static XPathExpression compile(String expression) throws XPathExpressionException {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        return xPath.compile(expression);
     }
 
-    private static String getStringAttrValue(Element element, String attrName) {
-        NamedNodeMap attributes = element.getAttributes();
-        for (int i = 0; i < attributes.getLength(); i++) {
-            Node node = attributes.item(i);
-            if (attrName.equals(node.getNodeName())) {
-                return node.getTextContent();
-            }
-        }
-        return "";
+    private static String xpathForDcField(String fieldName) {
+        return xpathForDs("DC") + "/*/*[local-name() = '" + fieldName + "']/text()";
     }
 
-    private NodeList getElementsByNameFromList(Document doc, List<String> elementNames) {
-        NodeList nodes = null;
-
-        for (String elementName : elementNames) {
-            nodes = doc.getElementsByTagName(elementName);
-            if (nodes != null && nodes.getLength() > 0) { break; }
-        }
-
-        return nodes;
+    private static String xpathForRelsExtField(String fieldName) {
+        return xpathForDs("RELS-EXT") + "/*/*/*[local-name() = '" + fieldName + "']/text()";
     }
 
-    private String getElementTextContent(NodeList nodeList, int i) {
-        return nodeList.item(i).getTextContent();
+    private static String xpathForDs(String ds) {
+        return "//*/*[local-name() = 'datastream'][@ID='" + ds + "']/*[local-name() = 'datastreamVersion'][last()]/*";
     }
 
-    private String getLastElementTextContent(NodeList nodeList, String problem) {
-        if (nodeList == null || nodeList.getLength() < 1) {
-            return problem;
-        }
-        return nodeList.item(nodeList.getLength()-1).getTextContent();
+    private static String xPathForProperty(String propertyName) {
+        return "//*/*[local-name() = 'objectProperties']/*[local-name() = 'property'][@NAME=\"" + propertyName + "\"]/@VALUE";
     }
 }

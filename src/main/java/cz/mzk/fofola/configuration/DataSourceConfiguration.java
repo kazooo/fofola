@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
+import javax.xml.parsers.ParserConfigurationException;
 
 
 @Configuration
@@ -16,7 +17,7 @@ import javax.sql.DataSource;
 public class DataSourceConfiguration {
 
     @Bean
-    public FedoraApi getFedoraApi(FofolaConfiguration config) {
+    public FedoraApi getFedoraApi(FofolaConfiguration config) throws ParserConfigurationException {
         return new FedoraApi(config.getFedoraHost(), config.getFedoraUser(), config.getFedoraPswd());
     }
 
