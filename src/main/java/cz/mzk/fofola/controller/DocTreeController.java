@@ -48,7 +48,7 @@ public class DocTreeController {
     private DocTreeNode generateNode(String uuid) {
         DocTreeNode node = new DocTreeNode(uuid);
         SolrDocument solrDoc = solrRepository.getByUuid(uuid);
-        FedoraDocument fedoraDoc = fedoraRepository.getFedoraDocByUuid(uuid);
+        FedoraDocument fedoraDoc = fedoraRepository.getByUuid(uuid);
 
         fillFromSolrDoc(node, solrDoc);
         fillFromFedoraDoc(node, fedoraDoc);

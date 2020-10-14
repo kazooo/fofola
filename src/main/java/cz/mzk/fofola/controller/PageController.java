@@ -2,7 +2,7 @@ package cz.mzk.fofola.controller;
 
 import cz.mzk.fofola.configuration.StartupApplicationListener;
 import cz.mzk.fofola.model.vc.VC;
-import cz.mzk.fofola.service.KrameriusApi;
+import cz.mzk.fofola.api.KrameriusApi;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

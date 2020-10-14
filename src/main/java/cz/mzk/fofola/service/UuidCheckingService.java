@@ -21,7 +21,7 @@ public class UuidCheckingService {
     public UuidStateResponse checkUuidState(String uuid) {
         UuidStateResponse response = new UuidStateResponse(uuid);
         SolrDocument solrDoc = solrRepository.getByUuid(uuid);
-        FedoraDocument fedoraDoc = fedoraRepository.getFedoraDocByUuid(uuid);
+        FedoraDocument fedoraDoc = fedoraRepository.getByUuid(uuid);
 
         response.setIndexed(solrDoc != null);
         response.setStored(fedoraDoc != null);

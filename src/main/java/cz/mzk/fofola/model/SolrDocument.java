@@ -57,27 +57,12 @@ public class SolrDocument {
         return rootPid;
     }
 
-    public List<String> getParentPids() {
-        return parentPids;
-    }
-
     public String getModifiedDate() {
         if (modifiedDate == null) return null;
         else return toFmt.format(modifiedDate);
     }
 
     public String getDcTitle() { return dcTitle; }
-
-    public Integer getRelsExtIndexForParent(String parentUuid) {
-        if (parentPids == null) return 0;
-        int index = 0;  // looking for the right parent
-        for(int i = 0; i < parentPids.size(); ++i){
-            if (parentPids.get(i).contains(parentUuid)) {
-                index = i;
-            }
-        }
-        return relsExtIndex != null ? relsExtIndex.get(index) : 0;
-    }
 
     @SuppressWarnings("unchecked")
     private SolrDocument(org.apache.solr.common.SolrDocument originDoc) {

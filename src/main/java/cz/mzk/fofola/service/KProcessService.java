@@ -1,5 +1,6 @@
 package cz.mzk.fofola.service;
 
+import cz.mzk.fofola.api.KrameriusApi;
 import cz.mzk.fofola.model.KrameriusProcess;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

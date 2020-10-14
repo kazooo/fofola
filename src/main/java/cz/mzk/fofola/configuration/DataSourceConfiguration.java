@@ -1,6 +1,7 @@
 package cz.mzk.fofola.configuration;
 
-import cz.mzk.fofola.service.KrameriusApi;
+import cz.mzk.fofola.api.FedoraApi;
+import cz.mzk.fofola.api.KrameriusApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -9,9 +10,15 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
+
 @Configuration
 @Slf4j
 public class DataSourceConfiguration {
+
+    @Bean
+    public FedoraApi getFedoraApi(FofolaConfiguration config) {
+        return new FedoraApi(config.getFedoraHost(), config.getFedoraUser(), config.getFedoraPswd());
+    }
 
     @Bean
     public KrameriusApi getKrameriusApi(FofolaConfiguration config) {

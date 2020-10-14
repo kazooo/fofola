@@ -1,13 +1,15 @@
 package cz.mzk.fofola.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@RequiredArgsConstructor
 public class UuidStateResponse {
 
-    private String uuid;
+    private final String uuid;
     private boolean isIndexed;
     private boolean isStored;
 
@@ -20,8 +22,4 @@ public class UuidStateResponse {
     private String imgUrl;
     private String solrModifiedDate;
     private String fedoraModifiedDate;
-
-    public UuidStateResponse(String uuid) {
-        this.uuid = uuid;
-    }
 }

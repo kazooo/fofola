@@ -1,10 +1,10 @@
-package cz.mzk.fofola.service;
+package cz.mzk.fofola.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.model.vc.VC;
-import org.apache.commons.codec.binary.Base64;
+import cz.mzk.fofola.service.RestTemplateService;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -26,17 +26,8 @@ public class KrameriusApi {
     public KrameriusApi(String kh, String ku, String kp) {
         krameriusHost = kh;
         restTemplate = new RestTemplate();
-        authHeaders = createAuthHeaders(ku, kp);
+        authHeaders = RestTemplateService.createAuthHeaders(ku, kp);
         authHttpEntity = new HttpEntity<>(authHeaders);
-    }
-
-    private static HttpHeaders createAuthHeaders(String user, String pswd) {
-        final String credentials = user + ":" + pswd;
-        String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Basic " + encodedCredentials);
-        httpHeaders.add("User-Agent", "Fofola");
-        return httpHeaders;
     }
 
     public KrameriusProcess planNewProcess(String def, String... ps) {
