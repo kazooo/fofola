@@ -23,7 +23,7 @@ import java.util.Map;
 @RequestMapping("/internal-processes")
 @AllArgsConstructor
 @Slf4j
-public class InternalProcessesController {
+public class FProcessesController {
 
     private final ProcessCommandService processCommandService;
     private final ProcessQueryService processQueryService;
