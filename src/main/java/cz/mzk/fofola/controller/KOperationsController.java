@@ -1,10 +1,10 @@
 package cz.mzk.fofola.controller;
 
 import com.google.gson.Gson;
-import cz.mzk.fofola.kramerius_api.Process;
+import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.model.UuidStateResponse;
 import cz.mzk.fofola.service.UuidCheckingService;
-import cz.mzk.fofola.service.KProcessesApi;
+import cz.mzk.fofola.service.KProcessService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class KOperationsController {
 
     private static final Gson gson = new Gson();
     private final UuidCheckingService uuidCheckService;
-    private final KProcessesApi krameriusApi;
+    private final KProcessService kProcessService;
 
     @PostMapping("/check-uuid")
     @ResponseBody
@@ -40,8 +40,8 @@ public class KOperationsController {
     @PostMapping("/change-access")
     @ResponseBody
     @SuppressWarnings("unchecked")
-    public List<Process> changeAccessibility
-            (@RequestPart(value = "params") Map<String, Object> params) throws Exception {
+    public List<KrameriusProcess> changeAccessibility
+            (@RequestPart(value = "params") Map<String, Object> params) {
         String accessibility = (String) params.get("access");
         List<String> uuids = (List<String>) params.get("uuids");
         switch (accessibility) {
@@ -53,31 +53,31 @@ public class KOperationsController {
         return Collections.emptyList();
     }
 
-    private List<Process> makePublic(List<String> uuids) throws Exception {
-        List<Process> processes = new ArrayList<>();
+    private List<KrameriusProcess> makePublic(List<String> uuids) {
+        List<KrameriusProcess> krameriusProcesses = new ArrayList<>();
         for (String uuid : uuids) {
             log.info("Make public: " + uuid);
-            processes.add(krameriusApi.makePublic(uuid));
+            krameriusProcesses.add(kProcessService.makePublic(uuid));
 
         }
-        return processes;
+        return krameriusProcesses;
     }
 
-    private List<Process> makePrivate(List<String> uuids) throws Exception {
-        List<Process> processes = new ArrayList<>();
+    private List<KrameriusProcess> makePrivate(List<String> uuids) {
+        List<KrameriusProcess> krameriusProcesses = new ArrayList<>();
         for (String uuid : uuids) {
             log.info("Make public: " + uuid);
-            processes.add(krameriusApi.makePrivate(uuid));
+            krameriusProcesses.add(kProcessService.makePrivate(uuid));
 
         }
-        return processes;
+        return krameriusProcesses;
     }
 
     @PostMapping("/reindex")
-    public void reindex(@RequestPart(value = "uuids") List<String> uuids) throws Exception {
+    public void reindex(@RequestPart(value = "uuids") List<String> uuids) {
         for (String uuid : uuids) {
             log.info("Reindex: " + uuid);
-            krameriusApi.reindex(uuid);
+            kProcessService.reindex(uuid);
         }
     }
 }

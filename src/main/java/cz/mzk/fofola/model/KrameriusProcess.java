@@ -1,4 +1,4 @@
-package cz.mzk.fofola.kramerius_api;
+package cz.mzk.fofola.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -7,18 +7,16 @@ import lombok.ToString;
 
 import java.util.List;
 
-/**
- * Created by holmanj on 16.11.15.
- */
+
 @Getter
 @Setter
 @ToString(exclude = {"children"})
 @EqualsAndHashCode
-public class Process {
+public class KrameriusProcess {
 
-    String uuid; // bez předpony "uuid:"
-    String pid; // interní pid krameria
-    String def; // typ procesu
+    String uuid; // without prefix "uuid:"
+    String pid;  // internal process id
+    String def;  // process type
     String state;
     String batchState;
     String name;
@@ -28,11 +26,11 @@ public class Process {
     String userid;
     String userFirstname;
     String userSurname;
-    List<Process> children;
+    List<KrameriusProcess> children;
     String logUrl;
 
     public void generateLogUrl(String krameriusUrl) {
-        this.logUrl = "http://" + krameriusUrl + "/search/inc/admin/_processes_outputs.jsp?uuid=" + this.uuid;
+        this.logUrl = krameriusUrl + "/search/inc/admin/_processes_outputs.jsp?uuid=" + this.uuid;
         if (this.children != null && !this.children.isEmpty()) {
             this.children.forEach(ch -> ch.generateLogUrl(krameriusUrl));
         }

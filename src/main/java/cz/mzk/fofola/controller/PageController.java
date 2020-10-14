@@ -1,14 +1,13 @@
 package cz.mzk.fofola.controller;
 
-import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.configuration.StartupApplicationListener;
 import cz.mzk.fofola.model.vc.VC;
+import cz.mzk.fofola.service.KrameriusApi;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -18,7 +17,7 @@ import java.util.*;
 @AllArgsConstructor
 public class PageController {
 
-    private final FofolaConfiguration fofolaConfiguration;
+    private final KrameriusApi krameriusApi;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -48,8 +47,7 @@ public class PageController {
     @GetMapping("/link_vc")
     public String getVcLinkingPage(Model model) {
         log.info("Entry VC linking section.");
-        List<VC> vcList = getAllVC(fofolaConfiguration.getKrameriusHost());
-        Map<String, String> vcNameUuid = mapAndSortVCs(vcList);
+        Map<String, String> vcNameUuid = getSortedVirtualCollection();
         model.addAttribute("vcList", vcNameUuid);
         return "link-vc";
     }
@@ -87,21 +85,15 @@ public class PageController {
     @GetMapping("/check-donator")
     public String getCheckDonatorPage(Model model) {
         log.info("Entry donator checking section.");
-        List<VC> vcList = getAllVC(fofolaConfiguration.getKrameriusHost());
-        Map<String, String> vcNameUuid = mapAndSortVCs(vcList);
+        Map<String, String> vcNameUuid = getSortedVirtualCollection();
         model.addAttribute("vcList", vcNameUuid);
         return "check-donator";
     }
 
-    public static List<VC> getAllVC(String krameriusHost) {
-        RestTemplate restTemplate = new RestTemplate();
-        String vcFetchUrl = krameriusHost + "/search/api/v5.0/vc";
-        return Arrays.asList(Objects.requireNonNull(restTemplate.getForObject(vcFetchUrl, VC[].class)));
-    }
-
-    public static Map<String, String> mapAndSortVCs(List<VC> vcs) {
+    private Map<String, String> getSortedVirtualCollection() {
+        List<VC> vcList = krameriusApi.getVirtualCollections();
         Map<String, String> vcNameUuid = new TreeMap<>();
-        vcs.forEach(vc -> vcNameUuid.put(vc.descs.cs, vc.pid));
+        vcList.forEach(vc -> vcNameUuid.put(vc.descs.cs, vc.pid));
         return vcNameUuid;
     }
 }
