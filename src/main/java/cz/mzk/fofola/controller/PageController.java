@@ -79,18 +79,6 @@ public class PageController {
         return "k-processes";
     }
 
-    @GetMapping("/removeTree")
-    public String getRemoveTreeFromSolrPage() {
-        log.info("Entry Solr tree removing section.");
-        return "remove_tree_from_solr";
-    }
-
-    @GetMapping("/transferTree")
-    public String getTransferTreePage() {
-        log.info("Entry Solr tree transfer section.");
-        return "solr_record_transfer";
-    }
-
     @GetMapping("/tree")
     public String home() {
         log.info("Entry document tree section.");
