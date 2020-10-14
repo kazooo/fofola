@@ -1,7 +1,6 @@
 package cz.mzk.fofola.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -10,9 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
+@Slf4j
 public class DataSourceConfiguration {
-
-    private final Logger logger = LoggerFactory.getLogger(DataSourceConfiguration.class.getName());
 
     @Bean
     public DataSource getDataSource(@Value("${POSTGRES_DB_JDBC_URL:}") String dbJdbcUrl,
@@ -20,13 +18,13 @@ public class DataSourceConfiguration {
                                     @Value("${POSTGRES_DB_PSWD:}") String dbPswd) {
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
         if (!dbJdbcUrl.isEmpty() && !dbUser.isEmpty() && !dbPswd.isEmpty()) {
-            logger.info("Existing PostgreSQL database found, configuring connection...");
+            log.info("Existing PostgreSQL database found, configuring connection...");
             dataSourceBuilder.driverClassName("org.postgresql.Driver");
             dataSourceBuilder.url(dbJdbcUrl);
             dataSourceBuilder.username(dbUser);
             dataSourceBuilder.password(dbPswd);
         } else {
-            logger.info("No external PostgreSQL database found, configuring in-memory database...");
+            log.info("No external PostgreSQL database found, configuring in-memory database...");
             dataSourceBuilder.driverClassName("org.h2.Driver");
             dataSourceBuilder.url("jdbc:h2:mem:fofola");
             dataSourceBuilder.username("SA");

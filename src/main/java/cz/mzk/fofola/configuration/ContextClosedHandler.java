@@ -2,8 +2,6 @@ package cz.mzk.fofola.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.Connector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -26,8 +24,6 @@ public class ContextClosedHandler implements TomcatConnectorCustomizer,
 
     private volatile Connector connector;
 
-    private static final Logger logger = LoggerFactory.getLogger(ContextClosedHandler.class);
-
     private static final int TIMEOUT = 30;
 
     @Override
@@ -40,13 +36,13 @@ public class ContextClosedHandler implements TomcatConnectorCustomizer,
                 ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executor;
                 threadPoolExecutor.shutdown();
                 if (!threadPoolExecutor.awaitTermination(TIMEOUT, TimeUnit.SECONDS)) {
-                    logger.warn("Tomcat thread pool did not shut down gracefully within "
+                    log.warn("Tomcat thread pool did not shut down gracefully within "
                             + TIMEOUT + " seconds. Proceeding with forceful shutdown");
 
                     threadPoolExecutor.shutdownNow();
 
                     if (!threadPoolExecutor.awaitTermination(TIMEOUT, TimeUnit.SECONDS)) {
-                        logger.error("Tomcat thread pool did not terminate");
+                        log.error("Tomcat thread pool did not terminate");
                     }
                 }
             } catch (InterruptedException ex) {

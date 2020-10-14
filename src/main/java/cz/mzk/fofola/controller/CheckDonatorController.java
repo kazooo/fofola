@@ -2,7 +2,6 @@ package cz.mzk.fofola.controller;
 
 import cz.mzk.fofola.processes.utils.FileUtils;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +19,6 @@ import java.util.*;
 @Controller
 @RequestMapping("/check-donator")
 @AllArgsConstructor
-@Slf4j
 public class CheckDonatorController {
 
     @GetMapping("/all")

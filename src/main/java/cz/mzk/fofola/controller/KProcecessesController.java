@@ -1,7 +1,7 @@
 package cz.mzk.fofola.controller;
 
 import com.google.gson.Gson;
-import cz.mzk.fofola.service.KrameriusApiCommunicator;
+import cz.mzk.fofola.service.KProcessesApi;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class KProcecessesController {
 
     private static final Gson gson = new Gson();
     private static final int processPerPage = 15;
-    private final KrameriusApiCommunicator krameriusApi;
+    private final KProcessesApi krameriusApi;
 
     @GetMapping("/page/{page}")
     @ResponseBody

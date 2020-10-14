@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import cz.mzk.fofola.kramerius_api.Process;
 import cz.mzk.fofola.model.UuidStateResponse;
 import cz.mzk.fofola.service.UuidCheckingService;
-import cz.mzk.fofola.service.KrameriusApiCommunicator;
+import cz.mzk.fofola.service.KProcessesApi;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class KOperationsController {
 
     private static final Gson gson = new Gson();
     private final UuidCheckingService uuidCheckService;
-    private final KrameriusApiCommunicator krameriusApi;
+    private final KProcessesApi krameriusApi;
 
     @PostMapping("/check-uuid")
     @ResponseBody

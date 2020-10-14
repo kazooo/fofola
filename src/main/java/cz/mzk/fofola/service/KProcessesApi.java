@@ -13,12 +13,12 @@ import java.util.Map;
 
 
 @Service
-public class KrameriusApiCommunicator {
+public class KProcessesApi {
 
     private ProcessRemoteApi remoteApi;
     private final String krameriusUrl;
 
-    public KrameriusApiCommunicator(FofolaConfiguration fofolaConfig) {
+    public KProcessesApi(FofolaConfiguration fofolaConfig) {
         this.remoteApi = KrameriusProcessRemoteApiFactory.getProcessRemoteApi(
                 fofolaConfig.getKrameriusHost(),
                 fofolaConfig.getKrameriusUser(),
