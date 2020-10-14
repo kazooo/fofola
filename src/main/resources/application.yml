@@ -6,16 +6,16 @@ logging:
     '*': ''
     com:
       zaxxer:
-        hikari: ${HIKARI_LOGGING_LVL:ERROR}
+        hikari: ${HIKARI_LOGGING_LVL:WARN}
     org:
-      h2: ${H2_LOGGING_LVL:ERROR}
-      hibernate: ${HIBERNATE_LOGGING_LVL:ERROR}
-      axonframework: ${AXON_LOGGING_LVL:ERROR}
+      h2: ${H2_LOGGING_LVL:WARN}
+      hibernate: ${HIBERNATE_LOGGING_LVL:WARN}
+      axonframework: ${AXON_LOGGING_LVL:WARN}
       springframework:
         web:
           socket:
             config:
-              WebSocketMessageBrokerStats: ERROR
+              WebSocketMessageBrokerStats: WARN
 
 server:
   port: ${FOFOLA_PORT:8081}
