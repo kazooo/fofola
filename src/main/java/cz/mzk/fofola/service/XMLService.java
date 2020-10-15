@@ -1,6 +1,7 @@
 package cz.mzk.fofola.service;
 
 import cz.mzk.fofola.model.FedoraDocument;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
 
@@ -8,31 +9,27 @@ import javax.xml.xpath.*;
 
 
 @Service
+@Slf4j
 public class XMLService {
 
+    private final XPathExpression uuidXPath;
+    private final XPathExpression accessibilityXPath;
+    private final XPathExpression imageUrlXPath;
+    private final XPathExpression titleXPath;
+    private final XPathExpression modelXPath;
+    private final XPathExpression createdDateXPath;
+    private final XPathExpression modifiedDateXPath;
+    private final XPathExpression childrenXPath;
 
-    private static XPathExpression uuidXPath;
-    private static XPathExpression accessibilityXPath;
-    private static XPathExpression imageUrlXPath;
-    private static XPathExpression titleXPath;
-    private static XPathExpression modelXPath;
-    private static XPathExpression createdDateXPath;
-    private static XPathExpression modifiedDateXPath;
-    private static XPathExpression childrenXPath;
-
-    static {
-        try {
-            uuidXPath = compile(xpathForRelsExtField("itemID"));
-            accessibilityXPath = compile(xpathForRelsExtField("policy"));
-            imageUrlXPath = compile(xpathForRelsExtField("tiles-url"));
-            titleXPath = compile(xpathForDcField("title"));
-            modelXPath = compile(xpathForDcField("type"));
-            createdDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/model#createdDate"));
-            modifiedDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/view#lastModifiedDate"));
-            childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[starts-with(name(), 'has')][namespace-uri()='http://www.nsdl.org/ontologies/relationships#']/@*");
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }
+    public XMLService() throws XPathExpressionException {
+        uuidXPath = compile(xpathForRelsExtField("itemID"));
+        accessibilityXPath = compile(xpathForRelsExtField("policy"));
+        imageUrlXPath = compile(xpathForRelsExtField("tiles-url"));
+        titleXPath = compile(xpathForDcField("title"));
+        modelXPath = compile(xpathForDcField("type"));
+        createdDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/model#createdDate"));
+        modifiedDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/view#lastModifiedDate"));
+        childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[starts-with(name(), 'has')][namespace-uri()='http://www.nsdl.org/ontologies/relationships#']/@*");
     }
 
     public FedoraDocument parseFedoraDocument(Document doc) {

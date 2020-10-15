@@ -1,28 +1,26 @@
 debug: false
 trace: false
 
-logging:
-  level:
-    '*': ''
-    com:
-      zaxxer:
-        hikari: ${HIKARI_LOGGING_LVL:WARN}
-    org:
-      h2: ${H2_LOGGING_LVL:WARN}
-      hibernate: ${HIBERNATE_LOGGING_LVL:WARN}
-      axonframework: ${AXON_LOGGING_LVL:WARN}
-      springframework:
-        web:
-          socket:
-            config:
-              WebSocketMessageBrokerStats: WARN
-
 server:
+  shutdown: graceful
   port: ${FOFOLA_PORT:8081}
   error:
     path: /error
 
 spring:
+
+  thymeleaf:
+    cache: false
+    check-template: true
+    check-template-location: true
+    enabled: true
+    encoding: UTF-8
+    prefix: classpath:/templates/pages/
+    suffix: .html
+
+  resources:
+    static-locations: classpath:/templates/
+
   jpa:
     database: POSTGRESQL
     generate-ddl: true
@@ -36,19 +34,21 @@ spring:
           lob:
             non_contextual_creation: true
 
-  resources:
-    static-locations: classpath:/templates/
-
   servlet:
     multipart:
       max-file-size: -1
       max-request-size: -1
 
-  thymeleaf:
-    cache: false
-    check-template: true
-    check-template-location: true
-    enabled: true
-    encoding: UTF-8
-    prefix: classpath:/templates/pages/
-    suffix: .html
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+
+logging:
+  level:
+    '*': ''
+    com:
+      zaxxer:
+        hikari: ${HIKARI_LOGGING_LVL:WARN}
+    org:
+      h2: ${H2_LOGGING_LVL:WARN}
+      hibernate: ${HIBERNATE_LOGGING_LVL:WARN}
+      axonframework: ${AXON_LOGGING_LVL:WARN}
