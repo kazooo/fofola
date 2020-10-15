@@ -49,7 +49,7 @@ public class KrameriusApi {
     }
 
     public List<KrameriusProcess> getProcesses(Map<String, String> params) {
-        String url = krameriusHost + CLIENT_API_V4 + "/krameriusProcesses";
+        String url = krameriusHost + CLIENT_API_V4 + "/processes";
         url = buildUri(url, params);
         ResponseEntity<KrameriusProcess[]> response = restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, KrameriusProcess[].class);
         List<KrameriusProcess> krameriusProcesses = Arrays.asList(Objects.requireNonNull(response.getBody()));
