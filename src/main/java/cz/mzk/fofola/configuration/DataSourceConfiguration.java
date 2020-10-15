@@ -1,7 +1,5 @@
 package cz.mzk.fofola.configuration;
 
-import cz.mzk.fofola.api.FedoraApi;
-import cz.mzk.fofola.api.KrameriusApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -9,22 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import javax.xml.parsers.ParserConfigurationException;
 
 
 @Configuration
 @Slf4j
 public class DataSourceConfiguration {
-
-    @Bean
-    public FedoraApi getFedoraApi(FofolaConfiguration config) throws ParserConfigurationException {
-        return new FedoraApi(config.getFedoraHost(), config.getFedoraUser(), config.getFedoraPswd());
-    }
-
-    @Bean
-    public KrameriusApi getKrameriusApi(FofolaConfiguration config) {
-        return new KrameriusApi(config.getKrameriusHost(), config.getKrameriusUser(), config.getKrameriusPswd());
-    }
 
     @Bean
     public DataSource getDataSource(@Value("${POSTGRES_DB_JDBC_URL:}") String dbJdbcUrl,

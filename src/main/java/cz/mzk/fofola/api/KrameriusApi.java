@@ -2,9 +2,9 @@ package cz.mzk.fofola.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.model.vc.VC;
-import cz.mzk.fofola.service.RestTemplateService;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -26,7 +26,7 @@ public class KrameriusApi {
     public KrameriusApi(String kh, String ku, String kp) {
         krameriusHost = kh;
         restTemplate = new RestTemplate();
-        authHeaders = RestTemplateService.createAuthHeaders(ku, kp);
+        authHeaders = ApiConfiguration.createAuthHeaders(ku, kp);
         authHttpEntity = new HttpEntity<>(authHeaders);
     }
 

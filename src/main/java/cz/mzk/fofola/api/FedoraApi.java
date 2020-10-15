@@ -1,8 +1,7 @@
 package cz.mzk.fofola.api;
 
-import cz.mzk.fofola.service.RestTemplateService;
+import cz.mzk.fofola.configuration.ApiConfiguration;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -22,15 +21,13 @@ public class FedoraApi {
 
     private final String fedoraHost;
     private final RestTemplate restTemplate;
-    private final HttpHeaders authHeaders;
     private final HttpEntity<String> authHttpEntity;
     private final DocumentBuilder xmlParser;
 
     public FedoraApi(String fh, String fu, String fp) throws ParserConfigurationException {
         fedoraHost = fh;
         restTemplate = new RestTemplate();
-        authHeaders = RestTemplateService.createAuthHeaders(fu, fp);
-        authHttpEntity = new HttpEntity<>(authHeaders);
+        authHttpEntity = new HttpEntity<>(ApiConfiguration.createAuthHeaders(fu, fp));
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         xmlParser = factory.newDocumentBuilder();
