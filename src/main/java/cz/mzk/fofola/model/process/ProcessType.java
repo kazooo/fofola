@@ -1,11 +1,11 @@
 package cz.mzk.fofola.model.process;
 
-import cz.mzk.fofola.process.internal.TestProcess;
-import cz.mzk.fofola.process.internal.check_donator.CheckDonatorProcess;
-import cz.mzk.fofola.process.internal.donator_linker.DonatorLinkerProcess;
-import cz.mzk.fofola.process.internal.img_editing.ImgEditingProcess;
-import cz.mzk.fofola.process.internal.perio_parts_publishing.PerioPartsPublishingProcess;
-import cz.mzk.fofola.process.internal.vc_linker.VCLinkerProcess;
+import cz.mzk.fofola.process.TestProcess;
+import cz.mzk.fofola.process.check_donator.CheckDonatorProcess;
+import cz.mzk.fofola.process.donator_linker.DonatorLinkerProcess;
+import cz.mzk.fofola.process.img_editing.ImgEditingProcess;
+import cz.mzk.fofola.process.perio_parts_publishing.PerioPartsPublishingProcess;
+import cz.mzk.fofola.process.vc_linker.VCLinkerProcess;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.internal.perio_parts_publishing;
+package cz.mzk.fofola.process.perio_parts_publishing;
 
 import cz.mzk.fofola.api.FedoraApi;
 import cz.mzk.fofola.service.SolrService;

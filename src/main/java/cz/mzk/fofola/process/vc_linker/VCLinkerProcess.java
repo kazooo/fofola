@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.internal.vc_linker;
+package cz.mzk.fofola.process.vc_linker;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.process.Process;

@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.internal;
+package cz.mzk.fofola.process;
 
 import java.io.IOException;
 import cz.mzk.fofola.model.process.Process;

@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.internal.donator_linker;
+package cz.mzk.fofola.process.donator_linker;
 
 import cz.mzk.fofola.api.FedoraApi;
 import cz.mzk.fofola.model.doc.SolrField;

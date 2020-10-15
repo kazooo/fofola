@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.internal.perio_parts_publishing;
+package cz.mzk.fofola.process.donator_linker;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.process.Process;
@@ -10,39 +10,47 @@ import java.util.List;
 import java.util.Map;
 
 
-public class PerioPartsPublishingProcess extends Process {
+public class DonatorLinkerProcess extends Process {
 
+    private final String donator;
+    private final String mode;
     private final List<String> rootUuids;
-    private final String solrHost;
     private final String fedoraHost;
     private final String fedoraUser;
     private final String fedoraPswd;
+    private final String solrHost;
 
     @SuppressWarnings("unchecked")
-    public PerioPartsPublishingProcess(ProcessParams params) throws IOException {
+    public DonatorLinkerProcess(ProcessParams params) throws IOException {
         super(params);
         FofolaConfiguration fofolaConfig = params.getConfig();
         Map<String, ?> data = params.getData();
 
+        donator = (String) data.get("donator");
+        mode = (String) data.get("mode");
         rootUuids = (List<String>) data.get("root_uuids");
-        solrHost = fofolaConfig.getSolrHost();
         fedoraHost = fofolaConfig.getFedoraHost();
         fedoraUser = fofolaConfig.getFedoraUser();
         fedoraPswd = fofolaConfig.getFedoraPswd();
+        solrHost = fofolaConfig.getSolrHost();
     }
 
     @Override
     public TerminationReason process() throws Exception {
-        PerioPartsPublisher publisher = new PerioPartsPublisher(
+        DonatorLinker donatorLinker = new DonatorLinker(
                 fedoraHost, fedoraUser, fedoraPswd, solrHost, 1500, logger
         );
         for (String rootUuid : rootUuids) {
-            publisher.checkPartsAndMakePublic(rootUuid);
+            switch (mode) {
+                case "link": donatorLinker.link(rootUuid, donator); break;
+                case "unlink": donatorLinker.unlink(rootUuid, donator); break;
+                default: throw new IllegalArgumentException("Bad mode \""+mode+"\" for process DonatorLinkerProcess!");
+            }
             if (Thread.interrupted()) {
                 return TerminationReason.USER_COMMAND;
             }
         }
-        publisher.close();
+        donatorLinker.commitAndClose();
         return null;
     }
 }

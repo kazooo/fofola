@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.internal.check_donator;
+package cz.mzk.fofola.process.check_donator;
 
 import cz.mzk.fofola.api.FedoraApi;
 import cz.mzk.fofola.configuration.FofolaConfiguration;

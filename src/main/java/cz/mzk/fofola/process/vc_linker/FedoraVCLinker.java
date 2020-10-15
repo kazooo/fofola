@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.internal.vc_linker;
+package cz.mzk.fofola.process.vc_linker;
 
 import cz.mzk.fofola.api.FedoraApi;
 import org.w3c.dom.*;
