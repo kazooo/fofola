@@ -22,4 +22,10 @@ public class FofolaConfiguration {
     private String krameriusUser;
     @Value("${KRAMERIUS_PSWD:krameriusPswd}")
     private String krameriusPswd;
+    @Value("${POSTGRES_DB_JDBC_URL:}")
+    private String dbJdbcUrl;
+    @Value("${POSTGRES_DB_USER:}")
+    private String dbUser;
+    @Value("${POSTGRES_DB_PSWD:}")
+    private String dbPswd;
 }

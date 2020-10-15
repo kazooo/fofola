@@ -50,7 +50,6 @@ dependencies {
 
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 
     def withoutAxonServer = { exclude group: 'org.axonframework', module: 'axon-server-connector' }
