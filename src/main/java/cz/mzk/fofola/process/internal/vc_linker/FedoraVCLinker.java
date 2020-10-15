@@ -1,6 +1,6 @@
 package cz.mzk.fofola.process.internal.vc_linker;
 
-import cz.mzk.fofola.process.utils.FedoraClient;
+import cz.mzk.fofola.api.FedoraApi;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -18,16 +18,16 @@ import java.io.IOException;
  */
 public class FedoraVCLinker {
 
-    private final FedoraClient fedoraClient;
+    private final FedoraApi fedoraApi;
 
     public FedoraVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd)
             throws ParserConfigurationException, TransformerConfigurationException {
-        fedoraClient = new FedoraClient(fedoraHost, fedoraUser, fedoraPswd);
+        fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
     }
 
     public boolean writeVCFor(String uuid, String vcId)
             throws TransformerException, IOException, SAXException {
-        Document relsExt = fedoraClient.getRelsExt(uuid);
+        Document relsExt = fedoraApi.getRelsExt(uuid);
         if (relsExt == null) return false;
 
         Element description = getDescription(relsExt);
@@ -38,14 +38,14 @@ public class FedoraVCLinker {
             Element childElement = relsExt.createElement("rdf:isMemberOfCollection");
             childElement.setAttribute("rdf:resource", vcIdAttrName);
             description.appendChild(childElement);
-            fedoraClient.setRelsExt(uuid, relsExt);
+            fedoraApi.setRelsExt(uuid, relsExt);
         }
         return true; // vc id is already in RELS-EXT or was created now
     }
 
     public boolean removeVCFor(String uuid, String vcId)
             throws IOException, SAXException, TransformerException {
-        Document relsExt = fedoraClient.getRelsExt(uuid);
+        Document relsExt = fedoraApi.getRelsExt(uuid);
         if (relsExt == null) return false;
 
         NodeList collections = getCollections(getDescription(relsExt));
@@ -55,7 +55,7 @@ public class FedoraVCLinker {
         boolean canBeRemoved = collection != null;
         if (canBeRemoved) {
             collection.getParentNode().removeChild(collection);
-            fedoraClient.setRelsExt(uuid, relsExt);
+            fedoraApi.setRelsExt(uuid, relsExt);
         }
         return canBeRemoved;
     }

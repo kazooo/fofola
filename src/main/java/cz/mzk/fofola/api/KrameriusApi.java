@@ -7,7 +7,6 @@ import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.model.vc.VC;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.*;
 
@@ -25,7 +24,7 @@ public class KrameriusApi {
 
     public KrameriusApi(String kh, String ku, String kp) {
         krameriusHost = kh;
-        restTemplate = new RestTemplate();
+        restTemplate = ApiConfiguration.getConfiguredTemplate();
         authHeaders = ApiConfiguration.createAuthHeaders(ku, kp);
         authHttpEntity = new HttpEntity<>(authHeaders);
     }
@@ -50,7 +49,7 @@ public class KrameriusApi {
 
     public List<KrameriusProcess> getProcesses(Map<String, String> params) {
         String url = krameriusHost + CLIENT_API_V4 + "/processes";
-        url = buildUri(url, params);
+        url = ApiConfiguration.buildUri(url, params);
         ResponseEntity<KrameriusProcess[]> response = restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, KrameriusProcess[].class);
         List<KrameriusProcess> krameriusProcesses = Arrays.asList(Objects.requireNonNull(response.getBody()));
         krameriusProcesses.forEach(p -> p.generateLogUrl(krameriusHost));
@@ -70,14 +69,6 @@ public class KrameriusApi {
     public List<VC> getVirtualCollections() {
         String vcFetchUrl = krameriusHost + CLIENT_API_V5 + "/vc";
         return Arrays.asList(Objects.requireNonNull(restTemplate.getForObject(vcFetchUrl, VC[].class)));
-    }
-
-    private static String buildUri(String url, Map<String, ?> params) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-        for (Map.Entry<String, ?> entry : params.entrySet()) {
-            builder.queryParam(entry.getKey(), entry.getValue());
-        }
-        return builder.toUriString();
     }
 
     class Parameters {

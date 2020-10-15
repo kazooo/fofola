@@ -1,9 +1,10 @@
 package cz.mzk.fofola.process.internal.perio_parts_publishing;
 
-import cz.mzk.fofola.process.utils.FedoraClient;
-import cz.mzk.fofola.process.utils.FedoraUtils;
+import cz.mzk.fofola.api.FedoraApi;
 import cz.mzk.fofola.process.utils.SolrUtils;
 import cz.mzk.fofola.process.utils.UuidUtils;
+import cz.mzk.fofola.repository.FedoraDocumentRepository;
+import cz.mzk.fofola.service.XMLService;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -13,25 +14,27 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+
 public class PerioPartsPublisher {
 
-    private final FedoraClient fedoraClient;
+    private final FedoraDocumentRepository fedoraRepository;
     private final SolrClient solrClient;
     private final Logger logger;
     private final int maxDocs;
 
     public PerioPartsPublisher(String fedoraHost, String fedoraUser, String fedoraPswd,
                                String solrHost, int maxDocsPerQuery, Logger logger)
-            throws ParserConfigurationException, TransformerConfigurationException {
+            throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
         this.logger = logger;
-        fedoraClient = new FedoraClient(fedoraHost, fedoraUser, fedoraPswd);
-        solrClient = SolrUtils.buildClient(solrHost);
         maxDocs = maxDocsPerQuery;
+        solrClient = SolrUtils.buildClient(solrHost);
+        fedoraRepository = new FedoraDocumentRepository(new XMLService(), new FedoraApi(fedoraHost, fedoraUser, fedoraPswd));
     }
 
     public void checkPartsAndMakePublic(String rootUuid) {
@@ -69,7 +72,7 @@ public class PerioPartsPublisher {
         if (makePublic.get()) {
             logger.info(indent + uuid + " make public!");
             SolrUtils.makePublic(uuid, solrClient);
-            FedoraUtils.makePublic(uuid, fedoraClient);
+            fedoraRepository.makePublic(uuid);
         }
         return makePublic.get();
     }

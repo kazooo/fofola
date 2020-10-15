@@ -1,10 +1,10 @@
 package cz.mzk.fofola.process.internal.img_editing;
 
+import cz.mzk.fofola.api.FedoraApi;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
+import cz.mzk.fofola.model.doc.Datastreams;
 import cz.mzk.fofola.model.process.ProcessParams;
 import cz.mzk.fofola.model.process.TerminationReason;
-import cz.mzk.fofola.process.utils.FedoraClient;
-import cz.mzk.fofola.process.utils.FedoraUtils;
 import org.springframework.web.multipart.MultipartFile;
 import cz.mzk.fofola.model.process.Process;
 
@@ -36,14 +36,14 @@ public class ImgEditingProcess extends Process {
 
     @Override
     public TerminationReason process() throws Exception {
-        FedoraClient fedoraClient = new FedoraClient(fedoraHost, fedoraUser, fedoraPswd);
-        FedoraUtils.DATASTREAMS datastream = FedoraUtils.DATASTREAMS.getDataStream(dsType);
+        FedoraApi fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
+        Datastreams datastream = Datastreams.getDataStream(dsType);
         if (datastream == null)
             throw new IllegalStateException("Can't determine data stream type for name: " + dsType);
-        if (datastream == FedoraUtils.DATASTREAMS.THUMB_IMG) {
-            fedoraClient.setThumbnailImg(pageUuid, image);
-        } else if (datastream == FedoraUtils.DATASTREAMS.FULL_IMG) {
-            fedoraClient.setFullImg(pageUuid, image);
+        if (datastream == Datastreams.THUMB_IMG) {
+            fedoraApi.setThumbnailImg(pageUuid, image);
+        } else if (datastream == Datastreams.FULL_IMG) {
+            fedoraApi.setFullImg(pageUuid, image);
         } else {
             throw new IllegalStateException("Data stream " + dsType + " is not an image data stream!");
         }

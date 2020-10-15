@@ -1,18 +1,17 @@
 package cz.mzk.fofola.process.internal.check_donator;
 
+import cz.mzk.fofola.api.FedoraApi;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.process.ProcessParams;
 import cz.mzk.fofola.model.process.TerminationReason;
-import cz.mzk.fofola.process.utils.FedoraClient;
 import cz.mzk.fofola.process.utils.FileUtils;
 import cz.mzk.fofola.process.utils.SolrUtils;
-import cz.mzk.fofola.process.utils.XMLUtils;
+import cz.mzk.fofola.service.XMLService;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrDocument;
 import org.w3c.dom.Document;
 import cz.mzk.fofola.model.process.Process;
-import org.w3c.dom.Node;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +45,9 @@ public class CheckDonatorProcess extends Process {
 
     @Override
     public TerminationReason process() throws Exception {
+        XMLService xmlService = new XMLService();
         SolrClient solrClient = SolrUtils.buildClient(solrHost);
-        FedoraClient fedoraClient = new FedoraClient(fedoraHost, fedoraUser, fedoraPswd);
+        FedoraApi fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
 
         String readyOutFileName = FileUtils.fileNameWithDateStampPrefix(donator + ".txt");
         File notReadyOutFile = FileUtils.getCheckDonatorOutFile("not-ready-" + readyOutFileName);
@@ -66,9 +66,8 @@ public class CheckDonatorProcess extends Process {
 
             logger.info(uuid);
             try {
-                Document relsExt = fedoraClient.getRelsExt(uuid);
-                Node descriptionRootNode = XMLUtils.getDescRootNode(relsExt);
-                if (XMLUtils.getHasDonatorNode(donator, descriptionRootNode) == null) {
+                Document relsExt = fedoraApi.getRelsExt(uuid);
+                if (xmlService.getHasDonatorNode(donator, relsExt) == null) {
                     output.println(uuid);
                 }
             } catch (Exception e) {

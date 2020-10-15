@@ -20,13 +20,15 @@ public class XMLService {
     private final XPathExpression createdDateXPath;
     private final XPathExpression modifiedDateXPath;
     private final XPathExpression childrenXPath;
+    private final XPathExpression donatorXPath;
 
     public XMLService() throws XPathExpressionException {
-        uuidXPath = compile(xpathForRelsExtField("itemID"));
-        accessibilityXPath = compile(xpathForRelsExtField("policy"));
-        imageUrlXPath = compile(xpathForRelsExtField("tiles-url"));
-        titleXPath = compile(xpathForDcField("title"));
-        modelXPath = compile(xpathForDcField("type"));
+        modelXPath = compile(xpathForDcElementText("type"));
+        titleXPath = compile(xpathForDcElementText("title"));
+        uuidXPath = compile(xpathForRelsExtElementText("itemID"));
+        imageUrlXPath = compile(xpathForRelsExtElementText("tiles-url"));
+        accessibilityXPath = compile(xpathForRelsExtElementText("policy"));
+        donatorXPath = compile(xpathForRelsExtElement("hasDonator"));
         createdDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/model#createdDate"));
         modifiedDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/view#lastModifiedDate"));
         childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[starts-with(name(), 'has')][namespace-uri()='http://www.nsdl.org/ontologies/relationships#']/@*");
@@ -68,24 +70,88 @@ public class XMLService {
         }
     }
 
-    private static XPathExpression compile(String expression) throws XPathExpressionException {
+    public void insertHasDonatorNode(String donator, Document relsExt) {
+        Element hasDonatorElement = relsExt.createElement("hasDonator");
+        hasDonatorElement.setAttribute("xmlns", "http://www.nsdl.org/ontologies/relationships#");
+        hasDonatorElement.setAttribute("rdf:resource", "info:fedora/donator:" + donator);
+        Node descriptionRootNode = getDescRootNode(relsExt);
+        descriptionRootNode.appendChild(hasDonatorElement);
+    }
+
+    public Node getHasDonatorNode(String donator, Document relsExt) throws XPathExpressionException {
+        NodeList hasDonatorNode = (NodeList) donatorXPath.evaluate(relsExt, XPathConstants.NODESET);
+        for (int i = 0; i < hasDonatorNode.getLength(); i++) {
+            Node node = hasDonatorNode.item(i);
+            if (node.getNodeName().equals("hasDonator")) {
+                Attr donatorAttr = getAttributeWithName(node, "rdf:resource");
+                if (donatorAttr != null && donatorAttr.getValue().contains(donator)) {
+                    return node;
+                }
+            }
+        }
+        return null;
+    }
+
+    public XPathExpression compile(String expression) throws XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
         return xPath.compile(expression);
     }
 
-    private static String xpathForDcField(String fieldName) {
-        return xpathForDs("DC") + "/*/*[local-name() = '" + fieldName + "']/text()";
+    public String xpathForRelsExtElement(String elementName) {
+        return xpathForRelsExt() + xpathForElement(elementName);
     }
 
-    private static String xpathForRelsExtField(String fieldName) {
-        return xpathForDs("RELS-EXT") + "/*/*/*[local-name() = '" + fieldName + "']/text()";
+    public String xpathForDcElementText(String elementName) {
+        return xpathForRelsExtElement(elementName) + xpathForElementText();
     }
 
-    private static String xpathForDs(String ds) {
+    public String xpathForRelsExtElementText(String elementName) {
+        return xpathForDc() + xpathForElement(elementName) + xpathForElementText();
+    }
+
+    public String xpathForDc() {
+        return xpathForDs("DC") + "/*";
+    }
+
+    public String xpathForRelsExt() {
+        return xpathForDs("RELS-EXT") + "/*/*";
+    }
+
+    public String xpathForElement(String elName) {
+        return "/*[local-name() = '" + elName + "']";
+    }
+
+    public String xpathForElementText() {
+        return "/text()";
+    }
+
+    public String xpathForDs(String ds) {
         return "//*/*[local-name() = 'datastream'][@ID='" + ds + "']/*[local-name() = 'datastreamVersion'][last()]/*";
     }
 
-    private static String xPathForProperty(String propertyName) {
+    public String xPathForProperty(String propertyName) {
         return "//*/*[local-name() = 'objectProperties']/*[local-name() = 'property'][@NAME=\"" + propertyName + "\"]/@VALUE";
+    }
+
+    public Node getDescRootNode(Document relsExt) {
+        return getFirstNode(relsExt.getDocumentElement(), "rdf:Description");
+    }
+
+    public Node getFirstNode(Element doc, String nodeName) {
+        NodeList nodeList = doc.getElementsByTagName(nodeName);
+        return nodeList.getLength() > 0 ? nodeList.item(0) : null;
+    }
+
+    private Attr getAttributeWithName(Node node, String attrName) {
+        if (node == null) return null;
+        NamedNodeMap attributes = node.getAttributes();
+        int numAttrs = attributes.getLength();
+        for (int i = 0; i < numAttrs; i++) {
+            Attr attr = (Attr) attributes.item(i);
+            if (attrName.equals(attr.getName())) {
+                return attr;
+            }
+        }
+        return null;
     }
 }

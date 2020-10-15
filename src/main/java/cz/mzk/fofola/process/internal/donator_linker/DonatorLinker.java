@@ -1,34 +1,39 @@
 package cz.mzk.fofola.process.internal.donator_linker;
 
+import cz.mzk.fofola.api.FedoraApi;
 import cz.mzk.fofola.process.utils.*;
+import cz.mzk.fofola.service.XMLService;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocument;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+
 public class DonatorLinker {
 
     private final SolrClient solrClient;
-    private final FedoraClient fedoraClient;
+    private final FedoraApi fedoraApi;
     private final int maxDocsPerQuery;
     private final Logger logger;
+    private final XMLService xmlService;
 
     public DonatorLinker(String fedoraHost, String fedoraUser, String fedoraPswd,
                          String solrHost, int maxDocsPerQuery, Logger logger)
-            throws ParserConfigurationException, TransformerConfigurationException {
+            throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
         solrClient = SolrUtils.buildClient(solrHost);
-        fedoraClient = new FedoraClient(fedoraHost, fedoraUser, fedoraPswd);
+        fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
+        xmlService = new XMLService();
         this.logger = logger;
         this.maxDocsPerQuery = maxDocsPerQuery;
     }
@@ -40,11 +45,10 @@ public class DonatorLinker {
             String docPID = (String) solrDoc.getFieldValue(SolrUtils.UUID_FIELD_NAME);
             logger.info(docPID);
             try {
-                Document relsExt = fedoraClient.getRelsExt(docPID);
-                Node descriptionRootNode = XMLUtils.getDescRootNode(relsExt);
-                if (XMLUtils.getHasDonatorNode(donator, descriptionRootNode) == null) {
-                    XMLUtils.insertHasDonatorNode(donator, relsExt, descriptionRootNode);
-                    fedoraClient.setRelsExt(docPID, relsExt);
+                Document relsExt = fedoraApi.getRelsExt(docPID);
+                if (xmlService.getHasDonatorNode(donator, relsExt) == null) {
+                    xmlService.insertHasDonatorNode(donator, relsExt);
+                    fedoraApi.setRelsExt(docPID, relsExt);
                 }
             } catch (Exception e) {
                 logger.severe(Arrays.toString(e.getStackTrace()));
@@ -62,14 +66,13 @@ public class DonatorLinker {
             String docPID = (String) solrDoc.getFieldValue(SolrUtils.UUID_FIELD_NAME);
             logger.info(docPID);
             try {
-                Document relsExt = fedoraClient.getRelsExt(docPID);
-                Node descriptionRootNode = XMLUtils.getDescRootNode(relsExt);
-                Node donatorNode = XMLUtils.getHasDonatorNode(donator, descriptionRootNode);
+                Document relsExt = fedoraApi.getRelsExt(docPID);
+                Node donatorNode = xmlService.getHasDonatorNode(donator, relsExt);
                 if (donatorNode != null) {
                     donatorNode.getParentNode().removeChild(donatorNode);
-                    fedoraClient.setRelsExt(docPID, relsExt);
+                    fedoraApi.setRelsExt(docPID, relsExt);
                 }
-            } catch (IOException | SAXException | TransformerException e) {
+            } catch (IOException | TransformerException | XPathExpressionException e) {
                 logger.severe(Arrays.toString(e.getStackTrace()));
             }
         };
