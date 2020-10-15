@@ -48,10 +48,10 @@ function insertProcessInfo(table, process) {
     if (table.rows.length > 1) {  // 1 because of header row
         for (var i = 1; i < table.rows.length; i++) {
             var uuid = table.rows[i].cells[0].textContent;
-            if (uuid === process.processId) {  // found process -> update only state info
+            if (uuid === process.id) {  // found process -> update only state info
                 var cells = table.rows[i].cells;
-                cells[2].innerHTML = process.processState
-                cells[4].innerHTML = process.finishDate;
+                cells[2].innerHTML = process.state
+                cells[4].innerHTML = process.finish;
                 if ('terminationReason' in process) {
                     cells[5].innerHTML = process.terminationReason;
                 }
@@ -70,7 +70,7 @@ function insertCells(row, process) {
     row.insertCell(0); // process id
     row.insertCell(1);  // process type
     var cell = row.insertCell(2);  // process state
-    cell.style.color = colorByState(process.processState);
+    cell.style.color = colorByState(process.state);
     row.insertCell(3); // start date
     row.insertCell(4);  // finish date
     row.insertCell(5);  // finish reason
@@ -79,11 +79,11 @@ function insertCells(row, process) {
 }
 
 function fillCells(cells, process) {
-    cells[0].innerHTML = process.processId;
-    cells[1].innerHTML = process.processType;
-    cells[2].innerHTML = process.processState;
-    cells[3].innerHTML = process.startDate;
-    cells[4].innerHTML = process.finishDate;
+    cells[0].innerHTML = process.id;
+    cells[1].innerHTML = process.type;
+    cells[2].innerHTML = process.state;
+    cells[3].innerHTML = process.start;
+    cells[4].innerHTML = process.finish;
     if ('terminationReason' in process) {
         cells[5].innerHTML = process.terminationReason;
     }

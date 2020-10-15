@@ -1,6 +1,6 @@
 package cz.mzk.fofola.controller;
 
-import cz.mzk.fofola.processes.utils.FileUtils;
+import cz.mzk.fofola.process.utils.FileUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;

@@ -1,10 +1,9 @@
 package cz.mzk.fofola.controller;
 
-import cz.mzk.fofola.processes.core.constants.ProcessType;
-import cz.mzk.fofola.processes.core.models.ProcessDTO;
-import cz.mzk.fofola.processes.core.services.ProcessCommandService;
-import cz.mzk.fofola.processes.core.services.ProcessQueryService;
-import cz.mzk.fofola.processes.utils.FileUtils;
+import cz.mzk.fofola.process.management.ProcessDTO;
+import cz.mzk.fofola.process.management.ProcessManagementService;
+import cz.mzk.fofola.process.constants.ProcessType;
+import cz.mzk.fofola.process.utils.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,8 +24,7 @@ import java.util.Map;
 @Slf4j
 public class FProcessesController {
 
-    private final ProcessCommandService processCommandService;
-    private final ProcessQueryService processQueryService;
+    private final ProcessManagementService processCommandService;
 
     @GetMapping("")
     public String getInternalProcessManagementPage() {
@@ -48,13 +46,13 @@ public class FProcessesController {
         if (image != null) {
             params.put("image", image);
         }
-        return processCommandService.startNewProcess(type, params);
+        return processCommandService.start(type, params);
     }
 
     @GetMapping("/all")
     @ResponseBody
     public List<ProcessDTO> getAllProcesses() {
-        return processQueryService.findAllProcess();
+        return processCommandService.findAllProcess();
     }
 
     @GetMapping("/logs/{logFileName}")
@@ -68,7 +66,7 @@ public class FProcessesController {
     @ResponseBody
     public String terminateRunningProcess(@PathVariable String processId) {
         log.info("Got terminate process command for pid: " + processId);
-        processCommandService.terminateProcess(processId);
+        processCommandService.terminate(processId);
         return processId;
     }
 
