@@ -1,9 +1,9 @@
 package cz.mzk.fofola.process.internal;
 
 import java.io.IOException;
-import cz.mzk.fofola.process.management.Process;
-import cz.mzk.fofola.process.management.ProcessParams;
-import cz.mzk.fofola.process.constants.TerminationReason;
+import cz.mzk.fofola.model.process.Process;
+import cz.mzk.fofola.model.process.ProcessParams;
+import cz.mzk.fofola.model.process.TerminationReason;
 
 
 public class TestProcess extends Process {

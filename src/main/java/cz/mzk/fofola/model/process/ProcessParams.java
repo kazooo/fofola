@@ -1,7 +1,7 @@
-package cz.mzk.fofola.process.management;
+package cz.mzk.fofola.model.process;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.process.constants.ProcessType;
+import cz.mzk.fofola.process.ProcessEventNotifier;
 import lombok.Getter;
 import lombok.Setter;
 

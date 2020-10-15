@@ -1,12 +1,12 @@
 package cz.mzk.fofola.process.internal.img_editing;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.process.management.ProcessParams;
-import cz.mzk.fofola.process.constants.TerminationReason;
+import cz.mzk.fofola.model.process.ProcessParams;
+import cz.mzk.fofola.model.process.TerminationReason;
 import cz.mzk.fofola.process.utils.FedoraClient;
 import cz.mzk.fofola.process.utils.FedoraUtils;
 import org.springframework.web.multipart.MultipartFile;
-import cz.mzk.fofola.process.management.Process;
+import cz.mzk.fofola.model.process.Process;
 
 import java.io.IOException;
 import java.util.Map;

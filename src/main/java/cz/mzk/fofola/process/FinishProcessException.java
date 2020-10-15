@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.management;
+package cz.mzk.fofola.process;
 
 public class FinishProcessException extends Exception {
 

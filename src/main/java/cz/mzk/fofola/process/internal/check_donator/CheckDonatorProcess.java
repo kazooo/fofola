@@ -1,8 +1,8 @@
 package cz.mzk.fofola.process.internal.check_donator;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.process.management.ProcessParams;
-import cz.mzk.fofola.process.constants.TerminationReason;
+import cz.mzk.fofola.model.process.ProcessParams;
+import cz.mzk.fofola.model.process.TerminationReason;
 import cz.mzk.fofola.process.utils.FedoraClient;
 import cz.mzk.fofola.process.utils.FileUtils;
 import cz.mzk.fofola.process.utils.SolrUtils;
@@ -11,7 +11,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrDocument;
 import org.w3c.dom.Document;
-import cz.mzk.fofola.process.management.Process;
+import cz.mzk.fofola.model.process.Process;
 import org.w3c.dom.Node;
 
 import java.io.File;

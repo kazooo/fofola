@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.constants;
+package cz.mzk.fofola.model.process;
 
 import cz.mzk.fofola.process.internal.TestProcess;
 import cz.mzk.fofola.process.internal.check_donator.CheckDonatorProcess;

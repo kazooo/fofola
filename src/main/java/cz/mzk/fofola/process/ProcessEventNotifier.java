@@ -1,8 +1,10 @@
-package cz.mzk.fofola.process.management;
+package cz.mzk.fofola.process;
 
-import cz.mzk.fofola.process.constants.ProcessState;
-import cz.mzk.fofola.process.constants.ProcessType;
-import cz.mzk.fofola.process.constants.TerminationReason;
+import cz.mzk.fofola.model.process.ProcessDTO;
+import cz.mzk.fofola.model.process.ProcessState;
+import cz.mzk.fofola.model.process.ProcessType;
+import cz.mzk.fofola.model.process.TerminationReason;
+import cz.mzk.fofola.repository.FProcessRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

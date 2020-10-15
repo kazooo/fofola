@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.constants;
+package cz.mzk.fofola.model.process;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

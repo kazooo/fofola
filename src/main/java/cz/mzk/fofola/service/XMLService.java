@@ -1,6 +1,6 @@
 package cz.mzk.fofola.service;
 
-import cz.mzk.fofola.model.FedoraDocument;
+import cz.mzk.fofola.model.doc.FedoraDocument;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.*;

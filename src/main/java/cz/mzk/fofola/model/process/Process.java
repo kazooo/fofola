@@ -1,6 +1,7 @@
-package cz.mzk.fofola.process.management;
+package cz.mzk.fofola.model.process;
 
-import cz.mzk.fofola.process.constants.TerminationReason;
+import cz.mzk.fofola.process.FinishProcessException;
+import cz.mzk.fofola.process.ProcessEventNotifier;
 import cz.mzk.fofola.process.utils.FileUtils;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package cz.mzk.fofola.model;
+package cz.mzk.fofola.model.doc;
 
 import org.apache.solr.common.SolrDocumentList;
 

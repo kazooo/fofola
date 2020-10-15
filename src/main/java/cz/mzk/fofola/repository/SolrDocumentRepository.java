@@ -1,7 +1,7 @@
 package cz.mzk.fofola.repository;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.model.SolrDocument;
+import cz.mzk.fofola.model.doc.SolrDocument;
 import cz.mzk.fofola.process.utils.SolrUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;

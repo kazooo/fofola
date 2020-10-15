@@ -1,7 +1,7 @@
 package cz.mzk.fofola.repository;
 
 import cz.mzk.fofola.api.FedoraApi;
-import cz.mzk.fofola.model.FedoraDocument;
+import cz.mzk.fofola.model.doc.FedoraDocument;
 import cz.mzk.fofola.service.XMLService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;

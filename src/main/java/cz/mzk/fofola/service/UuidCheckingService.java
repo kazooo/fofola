@@ -1,8 +1,8 @@
 package cz.mzk.fofola.service;
 
-import cz.mzk.fofola.model.FedoraDocument;
+import cz.mzk.fofola.model.doc.FedoraDocument;
 import cz.mzk.fofola.model.UuidStateResponse;
-import cz.mzk.fofola.model.SolrDocument;
+import cz.mzk.fofola.model.doc.SolrDocument;
 import cz.mzk.fofola.repository.FedoraDocumentRepository;
 import cz.mzk.fofola.repository.SolrDocumentRepository;
 import lombok.AllArgsConstructor;

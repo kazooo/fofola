@@ -1,9 +1,12 @@
-package cz.mzk.fofola.process.management;
+package cz.mzk.fofola.service;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.process.constants.ProcessType;
-import cz.mzk.fofola.process.management.*;
-import cz.mzk.fofola.process.management.Process;
+import cz.mzk.fofola.model.process.Process;
+import cz.mzk.fofola.model.process.ProcessDTO;
+import cz.mzk.fofola.model.process.ProcessParams;
+import cz.mzk.fofola.model.process.ProcessType;
+import cz.mzk.fofola.repository.FProcessRepository;
+import cz.mzk.fofola.process.ProcessEventNotifier;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

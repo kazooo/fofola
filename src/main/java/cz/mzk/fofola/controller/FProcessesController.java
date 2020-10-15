@@ -1,8 +1,8 @@
 package cz.mzk.fofola.controller;
 
-import cz.mzk.fofola.process.management.ProcessDTO;
-import cz.mzk.fofola.process.management.ProcessManagementService;
-import cz.mzk.fofola.process.constants.ProcessType;
+import cz.mzk.fofola.model.process.ProcessDTO;
+import cz.mzk.fofola.service.ProcessManagementService;
+import cz.mzk.fofola.model.process.ProcessType;
 import cz.mzk.fofola.process.utils.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

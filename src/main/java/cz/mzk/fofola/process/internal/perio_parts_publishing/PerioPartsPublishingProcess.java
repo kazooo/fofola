@@ -1,9 +1,9 @@
 package cz.mzk.fofola.process.internal.perio_parts_publishing;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.process.management.Process;
-import cz.mzk.fofola.process.management.ProcessParams;
-import cz.mzk.fofola.process.constants.TerminationReason;
+import cz.mzk.fofola.model.process.Process;
+import cz.mzk.fofola.model.process.ProcessParams;
+import cz.mzk.fofola.model.process.TerminationReason;
 
 import java.io.IOException;
 import java.util.List;

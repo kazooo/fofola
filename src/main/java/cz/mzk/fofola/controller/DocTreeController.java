@@ -2,8 +2,8 @@ package cz.mzk.fofola.controller;
 
 import com.google.gson.Gson;
 import cz.mzk.fofola.model.DocTreeNode;
-import cz.mzk.fofola.model.FedoraDocument;
-import cz.mzk.fofola.model.SolrDocument;
+import cz.mzk.fofola.model.doc.FedoraDocument;
+import cz.mzk.fofola.model.doc.SolrDocument;
 import cz.mzk.fofola.repository.FedoraDocumentRepository;
 import cz.mzk.fofola.repository.SolrDocumentRepository;
 import lombok.AllArgsConstructor;
