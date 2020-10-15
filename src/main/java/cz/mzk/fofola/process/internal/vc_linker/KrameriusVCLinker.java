@@ -1,7 +1,7 @@
 package cz.mzk.fofola.process.internal.vc_linker;
 
-import cz.mzk.fofola.process.utils.SolrUtils;
-import cz.mzk.fofola.process.utils.UuidUtils;
+import cz.mzk.fofola.service.SolrService;
+import cz.mzk.fofola.service.UuidService;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -40,7 +40,7 @@ public class KrameriusVCLinker {
     public KrameriusVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd,
                              String solrHost, int maxDocsPerQuery, Logger logger)
             throws ParserConfigurationException, TransformerConfigurationException {
-        this.solrClient = SolrUtils.buildClient(solrHost);
+        this.solrClient = SolrService.buildClient(solrHost);
         this.solrVCLinker = new SolrVCLinker(solrClient);
         this.fedoraVCLinker = new FedoraVCLinker(fedoraHost, fedoraUser, fedoraPswd);
         this.maxDocsPerQuery = maxDocsPerQuery;
@@ -61,9 +61,9 @@ public class KrameriusVCLinker {
 
     private void handleVCForBook(String rootUuid, Consumer<SolrDocument> logic)
             throws IOException, SolrServerException {
-        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
+        rootUuid = UuidService.checkAndMakeUuid(rootUuid);
         SolrQuery query = createSolrQuery(rootUuid);
-        SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
                 query, solrClient, logic, maxDocsPerQuery
         );
     }

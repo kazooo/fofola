@@ -1,8 +1,8 @@
 package cz.mzk.fofola.process.internal.perio_parts_publishing;
 
 import cz.mzk.fofola.api.FedoraApi;
-import cz.mzk.fofola.process.utils.SolrUtils;
-import cz.mzk.fofola.process.utils.UuidUtils;
+import cz.mzk.fofola.service.SolrService;
+import cz.mzk.fofola.service.UuidService;
 import cz.mzk.fofola.repository.FedoraDocumentRepository;
 import cz.mzk.fofola.service.XMLService;
 import org.apache.solr.client.solrj.SolrClient;
@@ -33,16 +33,16 @@ public class PerioPartsPublisher {
             throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
         this.logger = logger;
         maxDocs = maxDocsPerQuery;
-        solrClient = SolrUtils.buildClient(solrHost);
+        solrClient = SolrService.buildClient(solrHost);
         fedoraRepository = new FedoraDocumentRepository(new XMLService(), new FedoraApi(fedoraHost, fedoraUser, fedoraPswd));
     }
 
     public void checkPartsAndMakePublic(String rootUuid) {
-        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
+        rootUuid = UuidService.checkAndMakeUuid(rootUuid);
         SolrQuery query = new SolrQuery("PID:\"" + rootUuid + "\"");
         query.setFields("PID");
         try {
-            SolrDocument perioDoc = SolrUtils.queryFirstSolrDoc(query, solrClient);
+            SolrDocument perioDoc = SolrService.queryFirstSolrDoc(query, solrClient);
             checkAndPublishDocsRecursively(perioDoc, "");
         } catch (IOException | SolrServerException | TransformerException | SAXException e) {
             e.printStackTrace();
@@ -66,12 +66,12 @@ public class PerioPartsPublisher {
                 } catch (IOException | SolrServerException | TransformerException | SAXException ignored) { }
             }
         };
-        SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
                 childQuery, solrClient, publisherConsumer, maxDocs
         );
         if (makePublic.get()) {
             logger.info(indent + uuid + " make public!");
-            SolrUtils.makePublic(uuid, solrClient);
+            SolrService.makePublic(uuid, solrClient);
             fedoraRepository.makePublic(uuid);
         }
         return makePublic.get();

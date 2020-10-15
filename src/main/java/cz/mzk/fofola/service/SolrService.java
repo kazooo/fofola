@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.utils;
+package cz.mzk.fofola.service;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class SolrUtils {
+
+public class SolrService {
 
     public static final String ALL_FIELDS = "*";
     public static final String ALL_VALUES = "*";
@@ -164,8 +165,8 @@ public class SolrUtils {
     }
 
     public static void insertModifiedDateNow(SolrInputDocument inputDoc) {
-        inputDoc.removeField(SolrUtils.MODIFIED_DATE_FIELD_NAME);
-        insertSetUpdate(inputDoc, SolrUtils.MODIFIED_DATE_FIELD_NAME, dateFormat.format(new Date()));
+        inputDoc.removeField(SolrService.MODIFIED_DATE_FIELD_NAME);
+        insertSetUpdate(inputDoc, SolrService.MODIFIED_DATE_FIELD_NAME, dateFormat.format(new Date()));
     }
 
     public static void fetchFacetApplyConsumer(SolrClient solrClient, SolrQuery query, Consumer<FacetField> consumer)

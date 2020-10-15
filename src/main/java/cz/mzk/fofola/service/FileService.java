@@ -1,4 +1,4 @@
-package cz.mzk.fofola.process.utils;
+package cz.mzk.fofola.service;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -6,7 +6,8 @@ import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.stream.Collectors;
 
-public class FileUtils {
+
+public class FileService {
 
     public static final String logDirPath = "logs/";
     private static final String checkDonatorOutDirPath = "check_donator_out/";

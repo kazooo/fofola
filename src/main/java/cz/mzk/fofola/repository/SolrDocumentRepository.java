@@ -2,7 +2,7 @@ package cz.mzk.fofola.repository;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.doc.SolrDocument;
-import cz.mzk.fofola.process.utils.SolrUtils;
+import cz.mzk.fofola.service.SolrService;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -18,7 +18,7 @@ public class SolrDocumentRepository {
     private final SolrClient solrClient;
 
     public SolrDocumentRepository(FofolaConfiguration config) {
-        solrClient = SolrUtils.buildClient(config.getSolrHost());
+        solrClient = SolrService.buildClient(config.getSolrHost());
     }
 
     public SolrDocument getByUuid(String uuid) {

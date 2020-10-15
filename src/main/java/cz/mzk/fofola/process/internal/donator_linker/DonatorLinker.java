@@ -1,7 +1,8 @@
 package cz.mzk.fofola.process.internal.donator_linker;
 
 import cz.mzk.fofola.api.FedoraApi;
-import cz.mzk.fofola.process.utils.*;
+import cz.mzk.fofola.service.SolrService;
+import cz.mzk.fofola.service.UuidService;
 import cz.mzk.fofola.service.XMLService;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -31,7 +32,7 @@ public class DonatorLinker {
     public DonatorLinker(String fedoraHost, String fedoraUser, String fedoraPswd,
                          String solrHost, int maxDocsPerQuery, Logger logger)
             throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
-        solrClient = SolrUtils.buildClient(solrHost);
+        solrClient = SolrService.buildClient(solrHost);
         fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
         xmlService = new XMLService();
         this.logger = logger;
@@ -39,10 +40,10 @@ public class DonatorLinker {
     }
 
     public void link(String rootUuid, String donator) throws IOException, SolrServerException {
-        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
+        rootUuid = UuidService.checkAndMakeUuid(rootUuid);
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorLinkingLogic = solrDoc -> {
-            String docPID = (String) solrDoc.getFieldValue(SolrUtils.UUID_FIELD_NAME);
+            String docPID = (String) solrDoc.getFieldValue(SolrService.UUID_FIELD_NAME);
             logger.info(docPID);
             try {
                 Document relsExt = fedoraApi.getRelsExt(docPID);
@@ -54,16 +55,16 @@ public class DonatorLinker {
                 logger.severe(Arrays.toString(e.getStackTrace()));
             }
         };
-        SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
                 query, solrClient, donatorLinkingLogic, maxDocsPerQuery
         );
     }
 
     public void unlink(String rootUuid, String donator) throws IOException, SolrServerException {
-        rootUuid = UuidUtils.checkAndMakeUuid(rootUuid);
+        rootUuid = UuidService.checkAndMakeUuid(rootUuid);
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorUnlinkingLogic = solrDoc -> {
-            String docPID = (String) solrDoc.getFieldValue(SolrUtils.UUID_FIELD_NAME);
+            String docPID = (String) solrDoc.getFieldValue(SolrService.UUID_FIELD_NAME);
             logger.info(docPID);
             try {
                 Document relsExt = fedoraApi.getRelsExt(docPID);
@@ -76,15 +77,15 @@ public class DonatorLinker {
                 logger.severe(Arrays.toString(e.getStackTrace()));
             }
         };
-        SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
                 query, solrClient, donatorUnlinkingLogic, maxDocsPerQuery
         );
     }
 
     private static SolrQuery createQueryForRootUuid(String rootUuid) {
-        String allDocsQueryStr = SolrUtils.wrapQueryStr(SolrUtils.ROOT_PID_FIELD_NAME, rootUuid.trim());
+        String allDocsQueryStr = SolrService.wrapQueryStr(SolrService.ROOT_PID_FIELD_NAME, rootUuid.trim());
         SolrQuery query = new SolrQuery(allDocsQueryStr);
-        query.addField(SolrUtils.UUID_FIELD_NAME);
+        query.addField(SolrService.UUID_FIELD_NAME);
         return query;
     }
 

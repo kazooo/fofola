@@ -4,8 +4,8 @@ import cz.mzk.fofola.api.FedoraApi;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.process.ProcessParams;
 import cz.mzk.fofola.model.process.TerminationReason;
-import cz.mzk.fofola.process.utils.FileUtils;
-import cz.mzk.fofola.process.utils.SolrUtils;
+import cz.mzk.fofola.service.FileService;
+import cz.mzk.fofola.service.SolrService;
 import cz.mzk.fofola.service.XMLService;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -46,22 +46,22 @@ public class CheckDonatorProcess extends Process {
     @Override
     public TerminationReason process() throws Exception {
         XMLService xmlService = new XMLService();
-        SolrClient solrClient = SolrUtils.buildClient(solrHost);
+        SolrClient solrClient = SolrService.buildClient(solrHost);
         FedoraApi fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
 
-        String readyOutFileName = FileUtils.fileNameWithDateStampPrefix(donator + ".txt");
-        File notReadyOutFile = FileUtils.getCheckDonatorOutFile("not-ready-" + readyOutFileName);
+        String readyOutFileName = FileService.fileNameWithDateStampPrefix(donator + ".txt");
+        File notReadyOutFile = FileService.getCheckDonatorOutFile("not-ready-" + readyOutFileName);
         PrintWriter output = new PrintWriter(notReadyOutFile);
 
-        String query = SolrUtils.wrapQueryStr(SolrUtils.COLLECTION_FIELD_NAME, vcId) + " AND NOT " +
-                SolrUtils.wrapQueryStr(SolrUtils.MODEL_FIELD_NAME, "page");
+        String query = SolrService.wrapQueryStr(SolrService.COLLECTION_FIELD_NAME, vcId) + " AND NOT " +
+                SolrService.wrapQueryStr(SolrService.MODEL_FIELD_NAME, "page");
         SolrQuery solrQuery = new SolrQuery(query);
-        solrQuery.addField(SolrUtils.UUID_FIELD_NAME);
-        solrQuery.addField(SolrUtils.ROOT_PID_FIELD_NAME);
+        solrQuery.addField(SolrService.UUID_FIELD_NAME);
+        solrQuery.addField(SolrService.ROOT_PID_FIELD_NAME);
 
         Consumer<SolrDocument> checkDonatorLogic = solrDoc -> {
-            String uuid = (String) solrDoc.getFieldValue(SolrUtils.UUID_FIELD_NAME);
-            String rootUuid = (String) solrDoc.getFieldValue(SolrUtils.ROOT_PID_FIELD_NAME);
+            String uuid = (String) solrDoc.getFieldValue(SolrService.UUID_FIELD_NAME);
+            String rootUuid = (String) solrDoc.getFieldValue(SolrService.ROOT_PID_FIELD_NAME);
             if (!uuid.equals(rootUuid)) return; // check only roots
 
             logger.info(uuid);
@@ -74,7 +74,7 @@ public class CheckDonatorProcess extends Process {
                 logger.severe(Arrays.toString(e.getStackTrace()));
             }
         };
-        SolrUtils.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(solrQuery, solrClient, checkDonatorLogic, 1000);
+        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(solrQuery, solrClient, checkDonatorLogic, 1000);
 
         output.flush();
         output.close();

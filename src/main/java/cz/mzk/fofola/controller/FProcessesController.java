@@ -3,7 +3,7 @@ package cz.mzk.fofola.controller;
 import cz.mzk.fofola.model.process.ProcessDTO;
 import cz.mzk.fofola.service.ProcessManagementService;
 import cz.mzk.fofola.model.process.ProcessType;
-import cz.mzk.fofola.process.utils.FileUtils;
+import cz.mzk.fofola.service.FileService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -58,7 +58,7 @@ public class FProcessesController {
     @GetMapping("/logs/{logFileName}")
     @ResponseBody
     public String getLogFileContent(@PathVariable String logFileName) throws IOException {
-        String filePath = FileUtils.logDirPath + logFileName;
+        String filePath = FileService.logDirPath + logFileName;
         return String.join("<br/>", Files.readAllLines(Paths.get(filePath)));
     }
 

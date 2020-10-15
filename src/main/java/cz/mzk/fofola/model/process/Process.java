@@ -2,7 +2,7 @@ package cz.mzk.fofola.model.process;
 
 import cz.mzk.fofola.process.FinishProcessException;
 import cz.mzk.fofola.process.ProcessEventNotifier;
-import cz.mzk.fofola.process.utils.FileUtils;
+import cz.mzk.fofola.service.FileService;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -21,7 +21,7 @@ public abstract class Process {
         this.params = params;
         eventNotifier = params.getEventNotifier();
         SimpleFormatter formatter = new SimpleFormatter();
-        fileHandler = FileUtils.getLogFileHandler(params.getId() + ".log");
+        fileHandler = FileService.getLogFileHandler(params.getId() + ".log");
         fileHandler.setFormatter(formatter);
         logger.addHandler(fileHandler);
         logger.setUseParentHandlers(false);
