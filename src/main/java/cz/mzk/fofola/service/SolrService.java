@@ -1,5 +1,6 @@
 package cz.mzk.fofola.service;
 
+import cz.mzk.fofola.model.doc.SolrField;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -14,29 +15,11 @@ import org.apache.solr.common.params.CursorMarkParams;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 
 public class SolrService {
-
-    public static final String ALL_FIELDS = "*";
-    public static final String ALL_VALUES = "*";
-    public static final String UUID_FIELD_NAME = "PID";
-    public static final String DATE_STR_FIELD_NAME = "datum_str";
-    public static final String DATE_BEGIN_FIELD_NAME = "datum_begin";
-    public static final String DATE_END_FIELD_NAME = "datum_end";
-    public static final String DATE_FIELD_NAME = "datum";
-    public static final String YEAR_FIELD_NAME = "rok";
-    public static final String ROOT_PID_FIELD_NAME = "root_pid";
-    public static final String MODEL_FIELD_NAME = "fedora.model";
-    public static final String LOCATION_FIELD_NAME = "location";
-    public static final String MODIFIED_DATE_FIELD_NAME = "modified_date";
-    public static final String DETAILS_FIELD_NAME = "details";
-    public static final String COLLECTION_FIELD_NAME = "collection";
 
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
@@ -65,7 +48,7 @@ public class SolrService {
     public static void fetchByCursorAndApply(SolrQuery query, SolrClient solrClient,
                                              Consumer<SolrDocument> consumer)
             throws IOException, SolrServerException {
-        query.setSort(SolrQuery.SortClause.asc("PID"));
+        query.setSort(SolrQuery.SortClause.asc(SolrField.UUID_FIELD_NAME));
         String cursorMark = CursorMarkParams.CURSOR_MARK_START;
         boolean done = false;
         while (!done) {
@@ -132,15 +115,8 @@ public class SolrService {
             throws IOException, SolrServerException {
         SolrInputDocument inputDoc = new SolrInputDocument();
         inputDoc.addField("PID", uuid);
-
-        Map<String, String> accessibilityFieldModifier = new HashMap<>(1);
-        accessibilityFieldModifier.put("set", accessibility);
-        inputDoc.addField("dostupnost", accessibilityFieldModifier);
-
-        Map<String, String> modifiedDateFieldModifier = new HashMap<>(1);
-        modifiedDateFieldModifier.put("set", dateFormat.format(new Date()));
-        inputDoc.addField("modified_date", modifiedDateFieldModifier);
-
+        inputDoc.addField("dostupnost", Collections.singletonMap("set", accessibility));
+        insertModifiedDateNow(inputDoc);
         solrClient.add(inputDoc);
     }
 
@@ -149,24 +125,16 @@ public class SolrService {
     }
 
     public static void insertAddUpdate(SolrInputDocument inputDoc, String fieldName, Object fieldValue) {
-        Map<String,Object> fieldModifier = createFieldModifier("add", fieldValue);
-        inputDoc.addField(fieldName, fieldModifier);
+        inputDoc.addField(fieldName, Collections.singletonMap("add", fieldValue));
     }
 
     public static void insertSetUpdate(SolrInputDocument inputDoc, String fieldName, Object fieldValue) {
-        Map<String,Object> fieldModifier = createFieldModifier("set", fieldValue);
-        inputDoc.addField(fieldName, fieldModifier);
-    }
-
-    private static Map<String, Object> createFieldModifier(String modifier, Object fieldValue) {
-        Map<String, Object> fieldModifier = new HashMap<>(1);
-        fieldModifier.put(modifier, fieldValue);
-        return fieldModifier;
+        inputDoc.addField(fieldName, Collections.singletonMap("set", fieldValue));
     }
 
     public static void insertModifiedDateNow(SolrInputDocument inputDoc) {
-        inputDoc.removeField(SolrService.MODIFIED_DATE_FIELD_NAME);
-        insertSetUpdate(inputDoc, SolrService.MODIFIED_DATE_FIELD_NAME, dateFormat.format(new Date()));
+        inputDoc.removeField(SolrField.MODIFIED_DATE_FIELD_NAME);
+        insertSetUpdate(inputDoc, SolrField.MODIFIED_DATE_FIELD_NAME, dateFormat.format(new Date()));
     }
 
     public static void fetchFacetApplyConsumer(SolrClient solrClient, SolrQuery query, Consumer<FacetField> consumer)

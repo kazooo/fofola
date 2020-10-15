@@ -9,11 +9,9 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocument;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,13 +42,13 @@ public class PerioPartsPublisher {
         try {
             SolrDocument perioDoc = SolrService.queryFirstSolrDoc(query, solrClient);
             checkAndPublishDocsRecursively(perioDoc, "");
-        } catch (IOException | SolrServerException | TransformerException | SAXException e) {
+        } catch (IOException | SolrServerException e) {
             e.printStackTrace();
         }
     }
 
     private boolean checkAndPublishDocsRecursively(SolrDocument doc, String indent)
-            throws IOException, SolrServerException, TransformerException, SAXException {
+            throws IOException, SolrServerException{
         AtomicBoolean makePublic = new AtomicBoolean(false);
         String uuid = (String) doc.getFieldValue("PID");
         SolrQuery childQuery = createQueryForChildNodes(uuid);
@@ -63,7 +61,7 @@ public class PerioPartsPublisher {
                 try {
                     boolean childArePublic = checkAndPublishDocsRecursively(solrDoc, "    "+indent);
                     if (childArePublic) makePublic.set(true);
-                } catch (IOException | SolrServerException | TransformerException | SAXException ignored) { }
+                } catch (IOException | SolrServerException ignored) { }
             }
         };
         SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(

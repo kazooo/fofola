@@ -2,6 +2,7 @@ package cz.mzk.fofola.process.internal.check_donator;
 
 import cz.mzk.fofola.api.FedoraApi;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
+import cz.mzk.fofola.model.doc.SolrField;
 import cz.mzk.fofola.model.process.ProcessParams;
 import cz.mzk.fofola.model.process.TerminationReason;
 import cz.mzk.fofola.service.FileService;
@@ -53,15 +54,15 @@ public class CheckDonatorProcess extends Process {
         File notReadyOutFile = FileService.getCheckDonatorOutFile("not-ready-" + readyOutFileName);
         PrintWriter output = new PrintWriter(notReadyOutFile);
 
-        String query = SolrService.wrapQueryStr(SolrService.COLLECTION_FIELD_NAME, vcId) + " AND NOT " +
-                SolrService.wrapQueryStr(SolrService.MODEL_FIELD_NAME, "page");
+        String query = SolrService.wrapQueryStr(SolrField.COLLECTION_FIELD_NAME, vcId) + " AND NOT " +
+                SolrService.wrapQueryStr(SolrField.MODEL_FIELD_NAME, "page");
         SolrQuery solrQuery = new SolrQuery(query);
-        solrQuery.addField(SolrService.UUID_FIELD_NAME);
-        solrQuery.addField(SolrService.ROOT_PID_FIELD_NAME);
+        solrQuery.addField(SolrField.UUID_FIELD_NAME);
+        solrQuery.addField(SolrField.ROOT_PID_FIELD_NAME);
 
         Consumer<SolrDocument> checkDonatorLogic = solrDoc -> {
-            String uuid = (String) solrDoc.getFieldValue(SolrService.UUID_FIELD_NAME);
-            String rootUuid = (String) solrDoc.getFieldValue(SolrService.ROOT_PID_FIELD_NAME);
+            String uuid = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);
+            String rootUuid = (String) solrDoc.getFieldValue(SolrField.ROOT_PID_FIELD_NAME);
             if (!uuid.equals(rootUuid)) return; // check only roots
 
             logger.info(uuid);
