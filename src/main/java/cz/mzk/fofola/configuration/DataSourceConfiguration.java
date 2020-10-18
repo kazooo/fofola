@@ -27,8 +27,8 @@ public class DataSourceConfiguration {
             log.info("No external PostgreSQL database found, configuring in-memory database...");
             dataSourceBuilder.driverClassName("org.h2.Driver");
             dataSourceBuilder.url("jdbc:h2:mem:fofola");
-            dataSourceBuilder.username("SA");
-            dataSourceBuilder.password("");
+            dataSourceBuilder.username("user");
+            dataSourceBuilder.password("pswd");
         }
         return dataSourceBuilder.build();
     }

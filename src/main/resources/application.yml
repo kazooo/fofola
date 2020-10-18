@@ -51,4 +51,3 @@ logging:
     org:
       h2: ${H2_LOGGING_LVL:WARN}
       hibernate: ${HIBERNATE_LOGGING_LVL:WARN}
-      axonframework: ${AXON_LOGGING_LVL:WARN}

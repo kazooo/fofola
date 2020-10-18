@@ -20,8 +20,6 @@ services:
       - driver_fedora_mpt_jdbc_password=fedoraAdmin
       - solrHost=http://solr:8983/solr/kramerius
       - applicationUrl=http://localhost:8080/search
-    extra_hosts:
-      - "kramerius.infra.mzk.cz:10.2.0.14"
   krameriusPostgres:
     image: "postgres:9.6"
     container_name: kramerius_postgres
