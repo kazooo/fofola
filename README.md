@@ -1,5 +1,8 @@
 # Fofola
 
+[![Build Status](https://travis-ci.com/kazooo/fofola.svg?branch=master)](https://travis-ci.com/kazooo/fofola)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 Fofola je jednoduchá webová aplikace pro rozšířenou administraci knihovního systému [Kramerius](https://system-kramerius.cz/en/),
 která chybí administrátorům systému. Aplikace nabízí přívětivé grafické rozhraní pro spouštění různých 
 procesů jak v rámci Krameria (posíláním požadavků na API) tak i v rámci samotné aplikace.
@@ -13,7 +16,7 @@ Fofola slouží ke spouštění následujících procesů:
 - zveřejnění dokumentů a jejich následovníků podle přístupových práv
 
 Fofola je schopna zobrazovat stav jednotlivých dokumentů a celých stromů dokumentů.
-Umožňuje zobrazování stavů interních procesů a procesů v Krameriu, a také základní manipulace s těmito procesy.
+Umožňuje zobrazování stavů interních procesů a procesů v Krameriu, a také základní manipulaci s těmito procesy.
 
 ## Parametry aplikace
 
@@ -58,7 +61,7 @@ nebo pomocí příkazu Gradle 'bootRun'
 
 Fofola může byt spouštěna v [Docker](https://www.docker.com/) kontejneru. 
 Na [Dockerhubu](https://hub.docker.com/repository/docker/ermak/fofola) najděte oficiální image web aplikace.
-Pomocí [Gradle pluginu](https://bmuschko.github.io/gradle-docker-plugin/) pro dockerizace aplikací od Benjamina Muschko,
+Pomocí [Gradle pluginu](https://bmuschko.github.io/gradle-docker-plugin/) pro dockerizace aplikací od [Benjamina Muschko](https://bmuschko.com/),
  lokálně dokážete udělat image příkazy
 
 ```bash
@@ -66,7 +69,7 @@ Pomocí [Gradle pluginu](https://bmuschko.github.io/gradle-docker-plugin/) pro d
 ./gradlew buildLatest  # image s tagem verze a další s tagem 'latest'
 ```
 
-Pro rychlou konfigurace a start aplikace se používá i [Docker compose](https://docs.docker.com/compose) konfigurace:
+Pro rychlou konfiguraci a start aplikace se používá i [Docker compose](https://docs.docker.com/compose):
 
 ```yaml
 version: "3"
@@ -98,7 +101,15 @@ services:
       - "5432:5432"
 ```
 
-## Licene
+## Použité technologie
+
+Hlavním jádrem Fofoly je REST API pro přijetí požadavků, které je napsáno v Javě
+s použitím [Spring Boot](https://spring.io/projects/spring-boot) frameworku. 
+Grafické rozhraní je vytvořeno za pomoci čistého JavaScriptu s elementy šablonovacího jazyku [Thymeleaf](https://www.thymeleaf.org/).
+V budoucnu se plánuje GUI ve frameworku [React](https://reactjs.org/). 
+V rámci aplikace také našlo svoje uplatnění i [SolrJ](https://lucene.apache.org/solr/8_4_0//solr-solrj/) knihovna.
+
+## Licence
 
 [GPL v3](https://www.gnu.org/licenses/gpl-3.0)
 
