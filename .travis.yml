@@ -1,0 +1,21 @@
+dist: trusty
+language: java
+jdk: oraclejdk8
+
+env:
+  global:
+    - GRADLE_VERSION=6.0.1
+
+before_install:
+  - wget https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip
+  - unzip -qq gradle-$GRADLE_VERSION-bin.zip
+  - export GRADLE_HOME=$PWD/gradle-$GRADLE_VERSION
+  - export PATH=$GRADLE_HOME/bin:$PATH
+  - gradle -v
+
+script:
+  - gradle wrapper
+  - ./gradlew clean build
+
+notifications:
+  email: false
