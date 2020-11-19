@@ -17,7 +17,7 @@ plugins {
 }
 
 group = 'cz.mzk'
-version = '1.0.9'
+version = '1.1.0'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -57,6 +57,7 @@ dependencies {
 clean.doFirst {
     delete(project.file('docker/build'))
     delete(project.file('logs'))
+    delete(project.file('pdf_out'))
     delete(project.file('check_donator_out'))
 }
 

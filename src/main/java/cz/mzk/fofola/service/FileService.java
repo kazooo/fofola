@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class FileService {
 
     public static final String logDirPath = "logs/";
+    private static final String pdfOutDirPath = "pdf_out/";
     private static final String checkDonatorOutDirPath = "check_donator_out/";
     private static final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH:mm");
 
@@ -52,5 +53,19 @@ public class FileService {
 
     public static File getCheckDonatorOutputFile(String fileName) {
         return new File(checkDonatorOutDirPath + fileName);
+    }
+
+    public static String getPDFOutFilePath(String filename) {
+        createDirIfDoesntExist(pdfOutDirPath);
+        return pdfOutDirPath + filename;
+    }
+
+    public static File getPDFOutputFile(String fileName) {
+        return new File(pdfOutDirPath + fileName);
+    }
+
+    public static void removePDFOutputFile(String fileName) {
+        File file = new File(pdfOutDirPath + fileName);
+        file.delete();
     }
 }

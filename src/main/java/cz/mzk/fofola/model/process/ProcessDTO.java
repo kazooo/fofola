@@ -1,8 +1,5 @@
 package cz.mzk.fofola.model.process;
 
-import cz.mzk.fofola.model.process.ProcessState;
-import cz.mzk.fofola.model.process.ProcessType;
-import cz.mzk.fofola.model.process.TerminationReason;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
