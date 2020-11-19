@@ -1,4 +1,4 @@
-package cz.mzk.fofola.model;
+package cz.mzk.fofola.model.pdf;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,4 +19,5 @@ public class AsyncPDFGenLog {
     private String name;
     private String uuid;
     private String handle;
+    private PDFGenState state;
 }

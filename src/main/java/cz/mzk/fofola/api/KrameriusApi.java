@@ -8,6 +8,9 @@ import cz.mzk.fofola.model.vc.VC;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -69,6 +72,13 @@ public class KrameriusApi {
     public List<VC> getVirtualCollections() {
         String vcFetchUrl = krameriusHost + CLIENT_API_V5 + "/vc";
         return Arrays.asList(Objects.requireNonNull(restTemplate.getForObject(vcFetchUrl, VC[].class)));
+    }
+
+    public void generateAndDownloadPDF(Map<String, String> params, String outFilePath) throws IOException {
+        String url = krameriusHost + CLIENT_API_V5 + "/pdf/parent";
+        url = ApiConfiguration.buildUri(url, params);
+        ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, byte[].class);
+        Files.write(Paths.get(outFilePath), Objects.requireNonNull(response.getBody()));
     }
 
     class Parameters {
