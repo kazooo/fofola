@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
@@ -14,8 +15,8 @@ import javax.persistence.Id;
 @ToString
 @EqualsAndHashCode
 public class AsyncPDFGenLog {
-    @Id
-    private String id;
+    @Id @GeneratedValue
+    private Long id;
     private String name;
     private String uuid;
     private String handle;
