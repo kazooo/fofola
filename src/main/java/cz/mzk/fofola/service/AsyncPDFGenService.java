@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -76,5 +77,9 @@ public class AsyncPDFGenService {
     private void saveExceptionLog(AsyncPDFGenLog genLog) {
         genLog.setState(PDFGenState.EXCEPTION);
         logRepository.save(genLog);
+    }
+
+    public List<AsyncPDFGenLog> getAllLogs() {
+        return logRepository.findAll();
     }
 }
