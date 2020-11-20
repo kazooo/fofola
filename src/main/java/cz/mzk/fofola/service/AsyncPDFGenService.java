@@ -53,7 +53,8 @@ public class AsyncPDFGenService {
         try {
             krameriusApi.generateAndDownloadPDF(params, outFilePath);
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -83,9 +84,10 @@ public class AsyncPDFGenService {
         return logRepository.findAll();
     }
 
-    public void removeLogAndFile(String uuid) {
-        String fileName = uuid + ".pdf";
+    public void removeLogAndFile(Long id) {
+        AsyncPDFGenLog genLog = logRepository.getOne(id);
+        String fileName = genLog.getUuid() + ".pdf";
         FileService.removePDFOutputFile(fileName);
-        logRepository.deleteByUuid(uuid);
+        logRepository.deleteById(id);
     }
 }

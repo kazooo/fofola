@@ -82,6 +82,12 @@ public class PageController {
         return "doc-tree";
     }
 
+    @GetMapping("/pdf")
+    public String getPDFGeneratingPage() {
+        log.info("Entry PDF generating section.");
+        return "pdf";
+    }
+
     @GetMapping("/check-donator")
     public String getCheckDonatorPage(Model model) {
         log.info("Entry donator checking section.");

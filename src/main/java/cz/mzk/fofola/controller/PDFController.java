@@ -34,16 +34,16 @@ public class PDFController {
         return pdfGenService.getAllLogs();
     }
 
-    @PostMapping("/remove/{uuid}")
+    @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void removePDFFile(@PathVariable String uuid) {
-        log.info("Remove PDF file: " + uuid);
-        pdfGenService.removeLogAndFile(uuid);
+    public void removePDFFile(@PathVariable Long id) {
+        log.info("Remove PDF file with id: " + id);
+        pdfGenService.removeLogAndFile(id);
     }
 
-    @GetMapping("/get/{fileName}")
-    public ResponseEntity<Resource> getOutputPDFFile(@PathVariable String fileName) throws IOException {
-        File file = FileService.getPDFOutputFile(fileName);
+    @GetMapping("/get/{uuid}")
+    public ResponseEntity<Resource> getOutputPDFFile(@PathVariable String uuid) throws IOException {
+        File file = FileService.getPDFOutputFile(uuid + ".pdf");
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
         HttpHeaders headers = new HttpHeaders();
