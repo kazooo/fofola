@@ -14,6 +14,7 @@ Fofola slouží ke spouštění následujících procesů:
 - přidání nebo odebrání dokumentů do/z virtuálních sbírek
 - přidání nebo odebrání donátorů z dokumentů, a také kontrolu přítomnosti donátorů u dokumentů z virtuální sbírky
 - zveřejnění dokumentů a jejich následovníků podle přístupových práv
+- asynchronní generování PDF dokumentů podle kořenových uuid
 
 Fofola je schopna zobrazovat stav jednotlivých dokumentů a celých stromů dokumentů.
 Umožňuje zobrazování stavů interních procesů a procesů v Krameriu, a také základní manipulaci s těmito procesy.
@@ -107,7 +108,6 @@ Hlavním jádrem Fofoly je REST API pro přijetí požadavků, které je napsán
 s použitím [Spring Boot](https://spring.io/projects/spring-boot) frameworku. 
 Grafické rozhraní je vytvořeno za pomoci čistého JavaScriptu s elementy šablonovacího jazyku [Thymeleaf](https://www.thymeleaf.org/).
 V budoucnu se plánuje GUI ve frameworku [React](https://reactjs.org/). 
-V rámci aplikace také našlo svoje uplatnění i [SolrJ](https://lucene.apache.org/solr/8_4_0//solr-solrj/) knihovna.
 
 ## Licence
 
