@@ -3,10 +3,13 @@ package cz.mzk.fofola.controller;
 import com.google.gson.Gson;
 import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.model.UuidStateResponse;
+import cz.mzk.fofola.service.AsyncPDFGenService;
 import cz.mzk.fofola.service.UuidCheckingService;
 import cz.mzk.fofola.service.KProcessService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +26,7 @@ public class KOperationsController {
 
     private static final Gson gson = new Gson();
     private final UuidCheckingService uuidCheckService;
+    private final AsyncPDFGenService pdfGenService;
     private final KProcessService kProcessService;
 
     @PostMapping("/check-uuid")
@@ -79,5 +83,12 @@ public class KOperationsController {
             log.info("Reindex: " + uuid);
             kProcessService.reindex(uuid);
         }
+    }
+
+    @PostMapping("/pdf/generate/{uuid}")
+    public ResponseEntity<String> startPDFGenerating(@PathVariable String uuid) {
+        log.info("Start asynchronous PDF generating for " + uuid);
+        pdfGenService.start(uuid, null);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
