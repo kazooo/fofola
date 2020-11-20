@@ -82,4 +82,10 @@ public class AsyncPDFGenService {
     public List<AsyncPDFGenLog> getAllLogs() {
         return logRepository.findAll();
     }
+
+    public void removeLogAndFile(String uuid) {
+        String fileName = uuid + ".pdf";
+        FileService.removePDFOutputFile(fileName);
+        logRepository.deleteByUuid(uuid);
+    }
 }

@@ -34,6 +34,13 @@ public class PDFController {
         return pdfGenService.getAllLogs();
     }
 
+    @PostMapping("/remove/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public void removePDFFile(@PathVariable String uuid) {
+        log.info("Remove PDF file: " + uuid);
+        pdfGenService.removeLogAndFile(uuid);
+    }
+
     @GetMapping("/get/{fileName}")
     public ResponseEntity<Resource> getOutputPDFFile(@PathVariable String fileName) throws IOException {
         File file = FileService.getPDFOutputFile(fileName);

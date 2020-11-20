@@ -63,4 +63,9 @@ public class FileService {
     public static File getPDFOutputFile(String fileName) {
         return new File(pdfOutDirPath + fileName);
     }
+
+    public static void removePDFOutputFile(String fileName) {
+        File file = new File(pdfOutDirPath + fileName);
+        file.delete();
+    }
 }
