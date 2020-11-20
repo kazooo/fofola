@@ -59,4 +59,8 @@ public class FileService {
         createDirIfDoesntExist(pdfOutDirPath);
         return pdfOutDirPath + filename;
     }
+
+    public static File getPDFOutputFile(String fileName) {
+        return new File(pdfOutDirPath + fileName);
+    }
 }
