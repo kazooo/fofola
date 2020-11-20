@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 public class AsyncPDFGenLog {
     @Id @GeneratedValue
     private Long id;
+    private Date date;
     private String name;
     private String uuid;
     private String handle;
