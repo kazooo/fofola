@@ -2,6 +2,7 @@ package cz.mzk.fofola.api;
 
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.model.doc.Datastreams;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
+@Slf4j
 public class FedoraApi {
 
     private final String fedoraHost;
@@ -62,13 +64,16 @@ public class FedoraApi {
     }
 
     private Document getFedoraResource(String url) {
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, String.class);
-        String docStr = Objects.requireNonNull(response.getBody());
         try {
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, String.class);
+            String docStr = Objects.requireNonNull(response.getBody());
             return xmlParser.parse(new InputSource(new StringReader(docStr)));
         } catch (SAXException | IOException e) {
-            return null;
+            log.warn("XML parsing exception for " + url);
+        } catch (RestTemplateException e) {
+            log.warn("Error trying to get Fedora resource: " + e.getError());
         }
+        return null;
     }
 
     public void setRelsExt(String uuid, Document relsExt) throws IOException, TransformerException {
