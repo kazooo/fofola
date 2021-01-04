@@ -28,6 +28,7 @@ public class FedoraApi {
     private final String fedoraHost;
     private final RestTemplate restTemplate;
     private final HttpEntity<String> authHttpEntity;
+    private final HttpHeaders authHeaders;
     private final DocumentBuilder xmlParser;
     private final Transformer xmlTransformer;
 
@@ -35,7 +36,8 @@ public class FedoraApi {
             throws ParserConfigurationException, TransformerConfigurationException {
         fedoraHost = fh;
         restTemplate = ApiConfiguration.getConfiguredTemplate();
-        authHttpEntity = new HttpEntity<>(ApiConfiguration.createAuthHeaders(fu, fp));
+        authHeaders = ApiConfiguration.createAuthHeaders(fu, fp);
+        authHttpEntity = new HttpEntity<>(authHeaders);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         xmlParser = factory.newDocumentBuilder();
@@ -44,7 +46,7 @@ public class FedoraApi {
     }
 
     public Document getFullFoxmlByUuid(String uuid) {
-        return getWebResource(fedoraHost + "/objects/" + uuid + "/objectXML");
+        return getFedoraResource(fedoraHost + "/objects/" + uuid + "/objectXML");
     }
 
     public Document getRelsExt(String uuid) {
@@ -56,11 +58,11 @@ public class FedoraApi {
     }
 
     private Document getDatastream(String uuid, String dsName) {
-        return getWebResource(fedoraHost + "/get/" + uuid + "/" + dsName);
+        return getFedoraResource(fedoraHost + "/get/" + uuid + "/" + dsName);
     }
 
-    private Document getWebResource(String url) {
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+    private Document getFedoraResource(String url) {
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, String.class);
         String docStr = Objects.requireNonNull(response.getBody());
         try {
             return xmlParser.parse(new InputSource(new StringReader(docStr)));
@@ -90,15 +92,15 @@ public class FedoraApi {
     }
 
     private HttpEntity<Object> docStrEntity(Document doc, String mimeType) throws TransformerException {
-        return new HttpEntity<>(docToStr(doc), mimeTypeHeader(mimeType));
+        return new HttpEntity<>(docToStr(doc), authMimeTypeHeader(mimeType));
     }
 
     private HttpEntity<Object> imageEntity(MultipartFile image, String mimeType) {
-        return new HttpEntity<>(image.getResource(), mimeTypeHeader(mimeType));
+        return new HttpEntity<>(image.getResource(), authMimeTypeHeader(mimeType));
     }
 
-    private HttpHeaders mimeTypeHeader(String mimeType) {
-        HttpHeaders headers = new HttpHeaders();
+    private HttpHeaders authMimeTypeHeader(String mimeType) {
+        HttpHeaders headers = new HttpHeaders(authHeaders);
         headers.setContentType(MediaType.parseMediaType(mimeType));
         return headers;
     }
