@@ -31,13 +31,13 @@ public class XMLService {
         donatorXPath = compile(xpathForRelsExtElement("hasDonator"));
         createdDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/model#createdDate"));
         modifiedDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/view#lastModifiedDate"));
-        childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[starts-with(name(), 'has')][namespace-uri()='http://www.nsdl.org/ontologies/relationships#']/@*");
+        childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[starts-with(local-name(), 'has')][not(local-name() = 'hasModel')]/@*");
     }
 
     public FedoraDocument parseFedoraDocument(Document doc) {
-        doc.getDocumentElement().normalize();
-
+        if (doc == null) return null;
         try {
+            doc.getDocumentElement().normalize();
             String uuid = uuidXPath.evaluate(doc);
             String title = titleXPath.evaluate(doc);
             String model = modelXPath.evaluate(doc);
@@ -97,16 +97,16 @@ public class XMLService {
         return xPath.compile(expression);
     }
 
-    public String xpathForRelsExtElement(String elementName) {
-        return xpathForRelsExt() + xpathForElement(elementName);
-    }
-
     public String xpathForDcElementText(String elementName) {
-        return xpathForRelsExtElement(elementName) + xpathForElementText();
+        return xpathForDc() + xpathForElement(elementName) + xpathForElementText();
     }
 
     public String xpathForRelsExtElementText(String elementName) {
-        return xpathForDc() + xpathForElement(elementName) + xpathForElementText();
+        return xpathForRelsExtElement(elementName) + xpathForElementText();
+    }
+
+    public String xpathForRelsExtElement(String elementName) {
+        return xpathForRelsExt() + xpathForElement(elementName);
     }
 
     public String xpathForDc() {
