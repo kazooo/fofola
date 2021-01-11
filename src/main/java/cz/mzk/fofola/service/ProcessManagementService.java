@@ -79,8 +79,8 @@ public class ProcessManagementService {
         Class processClass = type.getProcessClass();
         if (processClass == null)
             throw new IllegalStateException("No defined process class for type \"" + type.toString() + "\"!");
-        Constructor<?> ctor = processClass.getConstructor(params.getClass(), FofolaConfiguration.class);
-        Object object = ctor.newInstance(params, fofolaConfiguration);
+        Constructor<?> ctor = processClass.getConstructor(params.getClass());
+        Object object = ctor.newInstance(params);
         return (Process) object;
     }
 }

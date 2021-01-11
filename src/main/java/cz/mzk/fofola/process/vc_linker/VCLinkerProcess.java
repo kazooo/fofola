@@ -42,18 +42,18 @@ public class VCLinkerProcess extends Process {
     public TerminationReason process() throws Exception {
         KrameriusVCLinker vcLinker  = new KrameriusVCLinker(
                 fedoraHost, fedoraUser, fedoraPswd,
-                solrHost, 1500, logger
+                solrHost, logger
         );
         if (mode.equals(MODE_LINK)) {
             for (String rootUuid : rootUuids) {
-                vcLinker.linkRootAndChildrenToVc(vcUuid, rootUuid);
+                vcLinker.linkToVcByRootUuid(vcUuid, rootUuid);
                 if (Thread.interrupted()) {
                     return TerminationReason.USER_COMMAND;
                 }
             }
         } else if (mode.equals(MODE_UNLINK)) {
             for (String rootUuid : rootUuids) {
-                vcLinker.unlinkRootAndChildrenFromVc(vcUuid, rootUuid);
+                vcLinker.unlinkFromVcByRootUuid(vcUuid, rootUuid);
                 if (Thread.interrupted()) {
                     return TerminationReason.USER_COMMAND;
                 }

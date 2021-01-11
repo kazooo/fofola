@@ -1,12 +1,17 @@
 package cz.mzk.fofola.process.vc_linker;
 
 import cz.mzk.fofola.api.FedoraApi;
+import cz.mzk.fofola.service.XMLService;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
+import java.util.logging.Logger;
+
 
 /**
  * This linker load RELS-EXT data stream for each uuid and creates link to virtual collection
@@ -19,68 +24,93 @@ import java.io.IOException;
 public class FedoraVCLinker {
 
     private final FedoraApi fedoraApi;
+    private final Logger logger;
+    private final XPathExpression collectionsXPath;
+    private final XPathExpression childrenXPath;
 
-    public FedoraVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd)
-            throws ParserConfigurationException, TransformerConfigurationException {
+    public FedoraVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd, Logger log)
+            throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
+        logger = log;
         fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
+        collectionsXPath = XMLService.compile("/*/*/*[local-name() = 'isMemberOfCollection']/@*[local-name() = 'resource']");
+        childrenXPath = XMLService.compile("/*/*/*[starts-with(local-name(), 'has')][not(local-name() = 'hasModel')]/@*");
     }
 
-    public boolean writeVCFor(String uuid, String vcId)
-            throws TransformerException, IOException, SAXException {
+    public void addVcRecursively(String vcId, String uuid)
+            throws XPathExpressionException, IOException, TransformerException {
         Document relsExt = fedoraApi.getRelsExt(uuid);
+        boolean hasBeenUpdated = addVc(relsExt, uuid, vcId);
+        if (hasBeenUpdated) {  // parent hadn't collection -> update children
+            NodeList childAttrs = (NodeList) childrenXPath.evaluate(relsExt, XPathConstants.NODESET);
+            for (int i = 0; i < childAttrs.getLength(); i++) {
+                Attr attr = (Attr) childAttrs.item(i);
+                String childUuid = attr.getValue().replace("info:fedora/", "");
+                addVcRecursively(vcId, childUuid);
+            }
+        }
+    }
+
+    public boolean addVc(Document relsExt, String uuid, String vcId)
+            throws XPathExpressionException, IOException, TransformerException {
         if (relsExt == null) return false;
 
-        Element description = getDescription(relsExt);
-        NodeList collections = getCollections(description);
+        boolean hasCollection = false;
         String vcIdAttrName = "info:fedora/" + vcId;
-
-        if (getCollectionWithAttrName(collections, vcIdAttrName) == null) {
+        NodeList collectionNodes = (NodeList) collectionsXPath.evaluate(relsExt, XPathConstants.NODESET);
+        for (int i = 0; i < collectionNodes.getLength(); i++) {
+            Attr collectionNode = (Attr) collectionNodes.item(i);
+            if (collectionNode.getValue().equals(vcIdAttrName)) {
+                hasCollection = true;
+            }
+        }
+        if (!hasCollection) {
+            logger.info("Update: " + uuid);
+            Element description = getDescription(relsExt);
             Element childElement = relsExt.createElement("rdf:isMemberOfCollection");
             childElement.setAttribute("rdf:resource", vcIdAttrName);
             description.appendChild(childElement);
             fedoraApi.setRelsExt(uuid, relsExt);
         }
-        return true; // vc id is already in RELS-EXT or was created now
+        return !hasCollection;
     }
 
-    public boolean removeVCFor(String uuid, String vcId)
-            throws IOException, SAXException, TransformerException {
+    public void removeVcRecursively(String vcId, String uuid)
+            throws TransformerException, XPathExpressionException, IOException {
         Document relsExt = fedoraApi.getRelsExt(uuid);
+        boolean hasBeenUpdated = removeVc(relsExt, uuid, vcId);
+        if (hasBeenUpdated) {  // parent contained vc id -> check and remove from children
+            NodeList childAttrs = (NodeList) childrenXPath.evaluate(relsExt, XPathConstants.NODESET);
+            for (int i = 0; i < childAttrs.getLength(); i++) {
+                Attr attr = (Attr) childAttrs.item(i);
+                String childUuid = attr.getValue().replace("info:fedora/", "");
+                removeVcRecursively(vcId, childUuid);
+            }
+        }
+    }
+
+    public boolean removeVc(Document relsExt, String uuid, String vcId)
+            throws XPathExpressionException, IOException, TransformerException {
         if (relsExt == null) return false;
 
-        NodeList collections = getCollections(getDescription(relsExt));
-        String vcIdAttrName = "info:fedora/" + vcId;
-
-        Node collection = getCollectionWithAttrName(collections, vcIdAttrName);
-        boolean canBeRemoved = collection != null;
-        if (canBeRemoved) {
-            collection.getParentNode().removeChild(collection);
+        boolean hasBeenUpdated = false;
+        NodeList collectionAttrs = (NodeList) collectionsXPath.evaluate(relsExt, XPathConstants.NODESET);
+        for (int i = 0; i < collectionAttrs.getLength(); i++) {
+            Attr collectionAttr = (Attr) collectionAttrs.item(i);
+            if (collectionAttr.getValue().contains(vcId)) {
+                Node collectionNode = collectionAttr.getOwnerElement();
+                collectionNode.getParentNode().removeChild(collectionNode);
+                hasBeenUpdated = true;
+            }
+        }
+        if (hasBeenUpdated) {
+            logger.info("Update: " + uuid);
             fedoraApi.setRelsExt(uuid, relsExt);
         }
-        return canBeRemoved;
-    }
-
-    private Node getCollectionWithAttrName(NodeList collections, String vcIdAttrName) {
-        if (collections == null) return null;
-        for (int i = 0; i < collections.getLength(); i++) {
-            Node collection = collections.item(i);
-            NamedNodeMap attributes = collection.getAttributes();
-            if (attributes.getLength() < 1) continue;
-
-            Node attr = attributes.getNamedItem("resource");
-            if (attr == null) attr = attributes.getNamedItem("rdf:resource");
-            String attributeName = attr.getTextContent();
-            if (attributeName.equals(vcIdAttrName)) return collection;
-        }
-        return null;
+        return hasBeenUpdated;
     }
 
     private Element getDescription(Document relsExt) {
         return (Element) relsExt.getElementsByTagName("rdf:Description").item(0);
-    }
-
-    private NodeList getCollections(Element description) {
-        return description.getElementsByTagName("rdf:isMemberOfCollection");
     }
 }
 

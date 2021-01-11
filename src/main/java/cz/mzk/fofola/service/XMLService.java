@@ -21,6 +21,7 @@ public class XMLService {
     private final XPathExpression modifiedDateXPath;
     private final XPathExpression childrenXPath;
     private final XPathExpression donatorXPath;
+    private final XPathExpression collectionsXPath;
 
     public XMLService() throws XPathExpressionException {
         modelXPath = compile(xpathForDcElementText("type"));
@@ -32,6 +33,7 @@ public class XMLService {
         createdDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/model#createdDate"));
         modifiedDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/view#lastModifiedDate"));
         childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[starts-with(local-name(), 'has')][not(local-name() = 'hasModel')]/@*");
+        collectionsXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[local-name() = 'isMemberOfCollection']/@rdf:resource");
     }
 
     public FedoraDocument parseFedoraDocument(Document doc) {
@@ -92,7 +94,7 @@ public class XMLService {
         return null;
     }
 
-    public XPathExpression compile(String expression) throws XPathExpressionException {
+    public static XPathExpression compile(String expression) throws XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
         return xPath.compile(expression);
     }
