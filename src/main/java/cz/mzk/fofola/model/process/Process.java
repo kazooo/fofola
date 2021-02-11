@@ -32,12 +32,12 @@ public abstract class Process {
         try {
             TerminationReason reason = process();
             logger.info("Process job is successfully finished!");
-            eventNotifier.notifyFinish(params.getId(), reason, null);
+            eventNotifier.notifyFinish(params.getId(), reason);
         } catch (FinishProcessException ignored) { } catch (Throwable e) {
             String stackTraceStr = stackTraceToStr(e);
-            logger.severe("Process job is has been terminated by exception!");
+            logger.severe("Process job is has been terminated by an exception!");
             logger.severe(stackTraceStr);
-            eventNotifier.notifyFinish(params.getId(), TerminationReason.EXCEPTION, stackTraceStr);
+            eventNotifier.notifyFinish(params.getId(), TerminationReason.EXCEPTION);
         } finally {
             fileHandler.close();
         }

@@ -29,13 +29,12 @@ public class ProcessEventNotifier {
         processRepository.save(processDTO);
     }
 
-    public void notifyFinish(String id, TerminationReason reason, String note) {
+    public void notifyFinish(String id, TerminationReason reason) {
         log.info("Got finish notification for process with id " + id);
         ProcessDTO processDTO = processRepository.findById(id).get();
         ProcessState state = getStateByFinishReason(reason);
         processDTO.setState(state);
         processDTO.setFinish(new Date());
-        processDTO.setNotes(note);
         processDTO.setTerminationReason(reason);
         processRepository.save(processDTO);
     }
