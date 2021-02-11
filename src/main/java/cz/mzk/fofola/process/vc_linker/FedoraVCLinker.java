@@ -33,7 +33,10 @@ public class FedoraVCLinker {
         logger = log;
         fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
         collectionsXPath = XMLService.compile("/*/*/*[local-name() = 'isMemberOfCollection']/@*[local-name() = 'resource']");
-        childrenXPath = XMLService.compile("/*/*/*[starts-with(local-name(), 'has')][not(local-name() = 'hasModel')]/@*");
+        childrenXPath = XMLService.compile("/*/*" +
+                "/*[starts-with(local-name(), 'has')]" +
+                "[not(local-name() = 'hasModel')]" +
+                "[not(local-name() = 'hasDonator')]/@*");
     }
 
     public void addVcRecursively(String vcId, String uuid)

@@ -34,7 +34,10 @@ public class XMLService {
         accessibilityXPath = compile(xpathForRelsExtElementText("policy"));
         createdDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/model#createdDate"));
         modifiedDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/view#lastModifiedDate"));
-        childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[starts-with(local-name(), 'has')][not(local-name() = 'hasModel')]/@*");
+        childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*" +
+                "/*[starts-with(local-name(), 'has')]" +
+                "[not(local-name() = 'hasModel')]" +
+                "[not(local-name() = 'hasDonator')]/@*");
         collectionsXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[local-name() = 'isMemberOfCollection']/@rdf:resource");
     }
 
