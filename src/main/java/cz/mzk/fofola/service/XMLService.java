@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
 
 import javax.xml.xpath.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -27,9 +29,9 @@ public class XMLService {
         modelXPath = compile(xpathForDcElementText("type"));
         titleXPath = compile(xpathForDcElementText("title"));
         uuidXPath = compile(xpathForRelsExtElementText("itemID"));
+        donatorXPath = compile("/*/*/*[local-name() = 'hasDonator']"); // relative to RELS-EXT datastream
         imageUrlXPath = compile(xpathForRelsExtElementText("tiles-url"));
         accessibilityXPath = compile(xpathForRelsExtElementText("policy"));
-        donatorXPath = compile(xpathForRelsExtElement("hasDonator"));
         createdDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/model#createdDate"));
         modifiedDateXPath = compile(xPathForProperty("info:fedora/fedora-system:def/view#lastModifiedDate"));
         childrenXPath = compile(xpathForDs("RELS-EXT") + "/*/*/*[starts-with(local-name(), 'has')][not(local-name() = 'hasModel')]/@*");
@@ -80,18 +82,17 @@ public class XMLService {
         descriptionRootNode.appendChild(hasDonatorElement);
     }
 
-    public Node getHasDonatorNode(String donator, Document relsExt) throws XPathExpressionException {
-        NodeList hasDonatorNode = (NodeList) donatorXPath.evaluate(relsExt, XPathConstants.NODESET);
-        for (int i = 0; i < hasDonatorNode.getLength(); i++) {
-            Node node = hasDonatorNode.item(i);
-            if (node.getNodeName().equals("hasDonator")) {
-                Attr donatorAttr = getAttributeWithName(node, "rdf:resource");
-                if (donatorAttr != null && donatorAttr.getValue().contains(donator)) {
-                    return node;
-                }
+    public List<Node> getHasDonatorNodes(String donator, Document relsExt) throws XPathExpressionException {
+        NodeList hasDonatorNodes = (NodeList) donatorXPath.evaluate(relsExt, XPathConstants.NODESET);
+        List<Node> resultNodes = new ArrayList<>();
+        for (int i = 0; i < hasDonatorNodes.getLength(); i++) {
+            Node node = hasDonatorNodes.item(i);
+            Attr donatorAttr = getAttributeWithName(node, "rdf:resource");
+            if (donatorAttr != null && donatorAttr.getValue().contains(donator)) {
+                resultNodes.add(node);
             }
         }
-        return null;
+        return resultNodes;
     }
 
     public static XPathExpression compile(String expression) throws XPathExpressionException {

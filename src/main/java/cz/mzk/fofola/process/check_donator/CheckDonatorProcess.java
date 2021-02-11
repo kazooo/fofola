@@ -68,14 +68,18 @@ public class CheckDonatorProcess extends Process {
             logger.info(uuid);
             try {
                 Document relsExt = fedoraApi.getRelsExt(uuid);
-                if (xmlService.getHasDonatorNode(donator, relsExt) == null) {
+                if (xmlService.getHasDonatorNodes(donator, relsExt).size() == 0) {
                     output.println(uuid);
                 }
             } catch (Exception e) {
                 logger.severe(Arrays.toString(e.getStackTrace()));
             }
         };
-        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(solrQuery, solrClient, checkDonatorLogic, 1000);
+        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+                solrQuery,
+                solrClient,
+                checkDonatorLogic,
+                1000);
 
         output.flush();
         output.close();

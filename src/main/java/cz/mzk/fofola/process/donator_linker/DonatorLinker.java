@@ -18,6 +18,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -48,7 +49,7 @@ public class DonatorLinker {
             logger.info(docPID);
             try {
                 Document relsExt = fedoraApi.getRelsExt(docPID);
-                if (xmlService.getHasDonatorNode(donator, relsExt) == null) {
+                if (xmlService.getHasDonatorNodes(donator, relsExt).size() == 0) {
                     xmlService.insertHasDonatorNode(donator, relsExt);
                     fedoraApi.setRelsExt(docPID, relsExt);
                 }
@@ -69,9 +70,9 @@ public class DonatorLinker {
             logger.info(docPID);
             try {
                 Document relsExt = fedoraApi.getRelsExt(docPID);
-                Node donatorNode = xmlService.getHasDonatorNode(donator, relsExt);
-                if (donatorNode != null) {
-                    donatorNode.getParentNode().removeChild(donatorNode);
+                List<Node> donatorNodes = xmlService.getHasDonatorNodes(donator, relsExt);
+                if (donatorNodes.size() != 0) {
+                    donatorNodes.forEach(node -> node.getParentNode().removeChild(node));
                     fedoraApi.setRelsExt(docPID, relsExt);
                 }
             } catch (IOException | TransformerException | XPathExpressionException e) {
