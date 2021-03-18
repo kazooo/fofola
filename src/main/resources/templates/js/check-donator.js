@@ -110,6 +110,7 @@ function startChecking() {
     setWaiting(true);
 
     var process_params = {
+        'checkOption': $("#check_option").val(),
         'donator': $("#donator").val(),
         'vcId': $("#vc_id").val(),
     }

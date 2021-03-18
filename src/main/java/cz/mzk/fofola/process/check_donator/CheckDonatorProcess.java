@@ -13,70 +13,50 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrDocument;
 import org.w3c.dom.Document;
 import cz.mzk.fofola.model.process.Process;
+import org.w3c.dom.Node;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 
 public class CheckDonatorProcess extends Process {
 
     private final String vcId;
     private final String donator;
-    private final String fedoraHost;
-    private final String fedoraUser;
-    private final String fedoraPswd;
-    private final String solrHost;
+    private final CheckOption option;
+    private final SolrClient solrClient;
+    private final FedoraApi fedoraApi;
+    private final XMLService xmlService;
 
-    public CheckDonatorProcess(ProcessParams params) throws IOException {
+    public CheckDonatorProcess(ProcessParams params) throws Exception {
         super(params);
         FofolaConfiguration fofolaConfig = params.getConfig();
         Map<String, ?> data = params.getData();
 
-        donator = (String) data.get("donator");
         vcId = (String) data.get("vcId");
-        fedoraHost = fofolaConfig.getFedoraHost();
-        fedoraUser = fofolaConfig.getFedoraUser();
-        fedoraPswd = fofolaConfig.getFedoraPswd();
-        solrHost = fofolaConfig.getSolrHost();
+        donator = (String) data.get("donator");
+        option = CheckOption.valueOf((String) data.get("checkOption"));
+
+        xmlService = new XMLService();
+        solrClient = SolrService.buildClient(fofolaConfig.getSolrHost());
+        fedoraApi = new FedoraApi(fofolaConfig.getFedoraHost(), fofolaConfig.getFedoraUser(), fofolaConfig.getFedoraPswd());
     }
 
     @Override
     public TerminationReason process() throws Exception {
-        XMLService xmlService = new XMLService();
-        SolrClient solrClient = SolrService.buildClient(solrHost);
-        FedoraApi fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
-
         String readyOutFileName = FileService.fileNameWithDateStampPrefix(donator + ".txt");
         File notReadyOutFile = FileService.getCheckDonatorOutFile("not-ready-" + readyOutFileName);
         PrintWriter output = new PrintWriter(notReadyOutFile);
 
-        String query = SolrService.wrapQueryStr(SolrField.COLLECTION_FIELD_NAME, vcId) + " AND NOT " +
-                SolrService.wrapQueryStr(SolrField.MODEL_FIELD_NAME, "page");
-        SolrQuery solrQuery = new SolrQuery(query);
-        solrQuery.addField(SolrField.UUID_FIELD_NAME);
-        solrQuery.addField(SolrField.ROOT_PID_FIELD_NAME);
-
-        Consumer<SolrDocument> checkDonatorLogic = solrDoc -> {
-            String uuid = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);
-            String rootUuid = (String) solrDoc.getFieldValue(SolrField.ROOT_PID_FIELD_NAME);
-            if (!uuid.equals(rootUuid)) return; // check only roots
-
-            logger.info(uuid);
-            try {
-                Document relsExt = fedoraApi.getRelsExt(uuid);
-                if (xmlService.getHasDonatorNodes(donator, relsExt).size() == 0) {
-                    output.println(uuid);
-                }
-            } catch (Exception e) {
-                logger.severe(Arrays.toString(e.getStackTrace()));
-            }
-        };
+        SolrQuery query = prepareQuery();
+        Consumer<SolrDocument> checkDonatorLogic = getCheckDonatorLogic(output);
         SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
-                solrQuery,
+                query,
                 solrClient,
                 checkDonatorLogic,
                 1000);
@@ -87,9 +67,49 @@ public class CheckDonatorProcess extends Process {
         return null;
     }
 
+    private SolrQuery prepareQuery() {
+        String query = SolrService.wrapQueryStr(SolrField.COLLECTION_FIELD_NAME, vcId) +
+                " AND NOT " + SolrService.wrapQueryStr(SolrField.MODEL_FIELD_NAME, "page");
+        SolrQuery solrQuery = new SolrQuery(query);
+        solrQuery.addFilterQuery("{!frange l=1 u=1 v=eq(PID,root_pid)}"); // filter roots
+        solrQuery.addField(SolrField.UUID_FIELD_NAME);
+        return solrQuery;
+    }
+
+    private Consumer<SolrDocument> getCheckDonatorLogic(PrintWriter output) {
+        Predicate<List<Node>> logic =
+                option == CheckOption.HAS_OPTION ? getHasDonatorCheckLogic() : getHasntDonatorCheckLogic();
+
+        return solrDoc -> {
+            String uuid = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);
+            logger.info(uuid);
+            Document relsExt = fedoraApi.getRelsExt(uuid);
+            try {
+                List<Node> nodes = xmlService.getHasDonatorNodes(donator, relsExt);
+                if (logic.test(nodes))
+                    output.println(uuid);
+            } catch (XPathExpressionException e) {
+                throw new IllegalStateException("Can't parse XML donator nodes!");
+            }
+        };
+    }
+
+    private Predicate<List<Node>> getHasDonatorCheckLogic() {
+        return nodes -> nodes.size() > 0;
+    }
+
+    private Predicate<List<Node>> getHasntDonatorCheckLogic() {
+        return nodes -> nodes.size() == 0;
+    }
+
     private void renameOutFile(File outFile, String newFileName) {
         String pathToDir = outFile.getParent();
         boolean success = outFile.renameTo(new File(pathToDir + "/" + newFileName));
         if (!success) throw new IllegalStateException("Can't rename output file!");
+    }
+
+    public enum CheckOption {
+        HAS_OPTION,
+        HASNT_OPTION;
     }
 }
