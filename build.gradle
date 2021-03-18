@@ -38,6 +38,10 @@ bootJar {
     destinationDir = project.file('docker/build')
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     compile('com.h2database:h2:1.4.200')
     compile('com.google.code.gson:gson:2.8.5')
@@ -52,6 +56,12 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 
     annotationProcessor('org.projectlombok:lombok:1.18.12')
+
+    testCompileOnly('org.projectlombok:lombok:1.18.12')
+    testAnnotationProcessor('org.projectlombok:lombok:1.18.12')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.3.1')
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.1')
+    testImplementation('org.mockito:mockito-core:3.2.4')
 }
 
 clean.doFirst {
