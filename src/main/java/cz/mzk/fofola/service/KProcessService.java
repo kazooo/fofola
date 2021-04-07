@@ -23,4 +23,8 @@ public class KProcessService {
     public KrameriusProcess reindex(String uuid) {
         return krameriusApi.planNewProcess("reindex", "fromKrameriusModelNoCheck", uuid, uuid);
     }
+
+    public KrameriusProcess delete(String uuid) {
+        return krameriusApi.planNewProcess("delete", uuid, uuid);
+    }
 }

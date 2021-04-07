@@ -21,32 +21,32 @@ public class PageController {
 
     @GetMapping("/")
     public String home(Model model) {
-        log.info("Entry Fofola home page.");
         model.addAttribute("up_time", StartupApplicationListener.appStartupTime);
         return "index";
     }
 
     @GetMapping("/check-uuid")
     public String getCheckUuidPage() {
-        log.info("Entry uuid checking section.");
         return "check-uuid";
     }
 
     @GetMapping("/change-access")
     public String getChangeVisibilityPage() {
-        log.info("Entry uuid checking section.");
         return "change-access";
     }
 
     @GetMapping("/reindex")
     public String getReindexPage() {
-        log.info("Entry reindexation section.");
         return "reindex";
+    }
+
+    @GetMapping("/delete")
+    public String getDeletePage() {
+        return "delete";
     }
 
     @GetMapping("/link_vc")
     public String getVcLinkingPage(Model model) {
-        log.info("Entry VC linking section.");
         Map<String, String> vcNameUuid = getSortedVirtualCollection();
         model.addAttribute("vcList", vcNameUuid);
         return "link-vc";
@@ -54,43 +54,36 @@ public class PageController {
 
     @GetMapping("/perio-parts-publish")
     public String getPerioPartsPublishingPage() {
-        log.info("Entry private periodical parts publishing section.");
         return "perio-parts-publishing";
     }
 
     @GetMapping("/link-donator")
     public String getDonatorLinkingPage() {
-        log.info("Entry donator linking section.");
         return "link-donator";
     }
 
     @GetMapping("/img-editing")
     public String getImgEditionPage() {
-        log.info("Entry image editing section.");
         return "img-editing";
     }
 
     @GetMapping("/k-processes")
     public String getProcessControlPage() {
-        log.info("Entry process control section.");
         return "k-processes";
     }
 
     @GetMapping("/tree")
     public String home() {
-        log.info("Entry document tree section.");
         return "doc-tree";
     }
 
     @GetMapping("/pdf")
     public String getPDFGeneratingPage() {
-        log.info("Entry PDF generating section.");
         return "pdf";
     }
 
     @GetMapping("/check-donator")
     public String getCheckDonatorPage(Model model) {
-        log.info("Entry donator checking section.");
         Map<String, String> vcNameUuid = getSortedVirtualCollection();
         model.addAttribute("vcList", vcNameUuid);
         return "check-donator";

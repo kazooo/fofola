@@ -58,7 +58,6 @@ public class KOperationsController {
         for (String uuid : uuids) {
             log.info("Make public: " + uuid);
             krameriusProcesses.add(kProcessService.makePublic(uuid));
-
         }
         return krameriusProcesses;
     }
@@ -78,6 +77,14 @@ public class KOperationsController {
         for (String uuid : uuids) {
             log.info("Reindex: " + uuid);
             kProcessService.reindex(uuid);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public void delete(@RequestPart(value = "uuids") List<String> uuids) {
+        for (String uuid : uuids) {
+            log.info("Delete: " + uuid);
+            kProcessService.delete(uuid);
         }
     }
 }
