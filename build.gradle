@@ -68,6 +68,7 @@ clean.doFirst {
     delete(project.file('docker/build'))
     delete(project.file('logs'))
     delete(project.file('pdf_out'))
+    delete(project.file('solr_out'))
     delete(project.file('check_donator_out'))
 }
 

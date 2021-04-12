@@ -15,4 +15,6 @@ public class SolrField {
     public static final String MODIFIED_DATE_FIELD_NAME = "modified_date";
     public static final String DETAILS_FIELD_NAME = "details";
     public static final String COLLECTION_FIELD_NAME = "collection";
+    public static final String ACCESSIBILITY = "dostupnost";
+
 }

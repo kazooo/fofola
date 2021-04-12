@@ -14,28 +14,28 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 @Controller
-@RequestMapping("/check-donator")
+@RequestMapping("/solr-response")
 @AllArgsConstructor
-public class CheckDonatorController {
+public class SolrResponseWritingController {
 
     @GetMapping("/all")
     @ResponseBody
     public List<String> getAllOutputFileNames() {
-        return FileService.getCheckDonatorOutputFileNames();
+        return FileService.getSolrRespOutputFileNames();
     }
 
     @DeleteMapping("/remove/{fileName}")
     @ResponseStatus(HttpStatus.OK)
     public void removeOutputFile(@PathVariable String fileName) {
-        FileService.removeCheckDonatorOutputFile(fileName);
+        FileService.removeSolrRespOutputFile(fileName);
     }
 
     @GetMapping("/download/{fileName}")
     public ResponseEntity<Resource> getOutputFile(@PathVariable String fileName) throws IOException {
-        File file = FileService.getCheckDonatorOutputFile(fileName);
+        File file = FileService.getSolrRespOutputFile(fileName);
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok()
                 .contentLength(file.length())

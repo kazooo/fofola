@@ -1,0 +1,113 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head lang="en">
+    <th:block th:include="layout :: standard (page_title='Fofola')"></th:block>
+    <script src="../js/solr-response.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/processes.css">
+</head>
+
+<style>
+    #wait-spin {
+        position: absolute;
+        height: 4rem;
+        width: 4rem;
+        left: 45%;
+        top: 45%;
+    }
+    td {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
+
+<body>
+<div>
+    <a id="home-image" href="/" style="float: left"><img src="../img/home.png" width="100" height="100"></a>
+
+    <div class="container" style="padding-top: 1%; width: 90%; max-width: unset">
+        <div class="white-rounded-back" style="width: unset; height: unset">
+            <div>
+                <form class="form-inline" action="#" style="padding-top: 0.7%">
+                    <label for="year_from">Z roku</label>
+                    <input class="text" id="year_from" type="text" size="7" />
+                </form>
+
+                <form class="form-inline" action="#" style="padding-top: 0.7%">
+                    <label for="year_to">Do roku</label>
+                    <input class="text" id="year_to" type="text" size="7" />
+                </form>
+
+                <form class="form-inline" action="#" style="padding-top: 0.7%">
+                    <label for="model">Model</label>
+                    <select id="model">
+                        <option value="monograph">monografie</option>
+                        <option value="periodical">periodikum</option>
+                        <option value="periodicalvolume">ročník</option>
+                        <option value="periodicalitem">číslo</option>
+                        <option value="article">článek</option>
+                        <option value="graphic">grafika</option>
+                        <option value="map">mapa</option>
+                        <option value="page">stránka</option>
+                    </select>
+                </form>
+
+                <form class="form-inline" action="#" style="padding-top: 0.7%">
+                    <label for="accessibility">Dostupnost</label>
+                    <select id="accessibility">
+                        <option value="public">public</option>
+                        <option value="private">private</option>
+                    </select>
+                </form>
+
+                <form class="form-inline" action="#" style="padding-top: 0.3%">
+                    <button class="btn btn-outline-secondary btn-light" type="button" onclick="startProcess()">
+                        Zapsat uuid z odpovědi
+                    </button>
+                </form>
+
+                <form class="form-inline" action="#" style="padding-top: 0.3%">
+
+                </form>
+
+                <div class="form-inline form-check" style="display: inline; float: right; margin-top: 35px">
+                    <input class="form-check-input" type="checkbox" name="radio" title="Vybrat všechno"
+                           onclick="updateSelect(this)" id="operation_checkbox">
+                    <button class="remove_btn" onclick="operateChecked('remove')" title="Smazat"></button>
+                </div>
+
+                <div style="clear: both"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="uuid_table_container" class="uuid-table-container" style="padding-top: 1%">
+    <div id="wait-spin" class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+
+    <div class="card table-responsive scrollable-list" style="height: 80%">
+        <table id="file_table" class="table table-light table-hover table-borderless">
+            <thead class="thead-light">
+            <tr>
+                <th> Soubor </th>
+                <th> Operace </th>
+            </tr>
+            </thead>
+            <tbody style="max-height: 60%"></tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $('table').on('click', 'tr.parent', function(){
+        var uuid = this.cells[0].textContent;
+        var els = document.getElementsByClassName(uuid);
+        for (var i = 0; i < els.length; i++) {
+            els[i].classList.toggle('open');
+        }
+    });
+</script>
+</body>
+</html>

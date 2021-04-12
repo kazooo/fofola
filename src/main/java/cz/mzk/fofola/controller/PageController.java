@@ -45,6 +45,11 @@ public class PageController {
         return "delete";
     }
 
+    @GetMapping("/solr-query")
+    public String getSolrQueryPage() {
+        return "solr-response";
+    }
+
     @GetMapping("/link_vc")
     public String getVcLinkingPage(Model model) {
         Map<String, String> vcNameUuid = getSortedVirtualCollection();

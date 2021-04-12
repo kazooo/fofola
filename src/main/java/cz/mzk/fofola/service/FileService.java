@@ -9,16 +9,16 @@ import java.util.stream.Collectors;
 
 public class FileService {
 
-    public static final String logDirPath = "logs/";
-    private static final String pdfOutDirPath = "pdf_out/";
-    private static final String checkDonatorOutDirPath = "check_donator_out/";
+    public static final String logDirPath = "logs";
+    private static final String pdfOutDirPath = "pdf_out";
+    private static final String solrRespOutDirPath = "solr_out";
+    private static final String checkDonatorOutDirPath = "check_donator_out";
     private static final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH:mm");
 
     private static File createDirIfDoesntExist(String dirPath) {
         File directory = new File(dirPath);
-        if (!directory.exists()){
+        if (!directory.exists())
             directory.mkdirs();
-        }
         return directory;
     }
 
@@ -39,33 +39,56 @@ public class FileService {
     }
 
     public static List<String> getCheckDonatorOutputFileNames() {
-        File directory = createDirIfDoesntExist(checkDonatorOutDirPath);
-        File[] files = directory.listFiles();
-        if (files == null) return new ArrayList<>();
-        Arrays.sort(files, Comparator.comparingLong(File::lastModified));
-        return Arrays.stream(files).map(File::getName).collect(Collectors.toList());
+        return getOutputFileNames(checkDonatorOutDirPath);
+    }
+
+    public static List<String> getSolrRespOutputFileNames() {
+        return getOutputFileNames(solrRespOutDirPath);
     }
 
     public static void removeCheckDonatorOutputFile(String fileName) {
-        File file = new File(checkDonatorOutDirPath + fileName);
-        file.delete();
+        getFile(checkDonatorOutDirPath, fileName).delete();
     }
 
     public static File getCheckDonatorOutputFile(String fileName) {
-        return new File(checkDonatorOutDirPath + fileName);
+        return getFile(checkDonatorOutDirPath, fileName);
     }
 
     public static String getPDFOutFilePath(String filename) {
         createDirIfDoesntExist(pdfOutDirPath);
-        return pdfOutDirPath + filename;
+        return getFilePath(pdfOutDirPath, filename);
     }
 
     public static File getPDFOutputFile(String fileName) {
-        return new File(pdfOutDirPath + fileName);
+        return getFile(pdfOutDirPath, fileName);
     }
 
     public static void removePDFOutputFile(String fileName) {
-        File file = new File(pdfOutDirPath + fileName);
-        file.delete();
+        getFile(pdfOutDirPath, fileName).delete();
+    }
+
+    public static File getSolrRespOutputFile(String fileName) {
+        return getFile(solrRespOutDirPath, fileName);
+    }
+
+    public static void removeSolrRespOutputFile(String fileName) {
+        getFile(solrRespOutDirPath, fileName).delete();
+    }
+
+    private static File getFile(String path, String fileName) {
+        return new File(path + "/" + fileName);
+    }
+
+    private static String getFilePath(String path, String fileName) {
+        return path + "/" + fileName;
+    }
+
+    public static List<String> getOutputFileNames(String path) {
+        File directory = createDirIfDoesntExist(path);
+        File[] files = directory.listFiles();
+        if (files == null)
+            return new ArrayList<>();
+        Arrays.sort(files, Comparator.comparingLong(File::lastModified));
+        return Arrays.stream(files).map(File::getName).collect(Collectors.toList());
     }
 }
