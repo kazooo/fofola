@@ -32,14 +32,14 @@ public class KrameriusVCLinker {
 
     public void unlinkFromVcByRootUuid(String vcId, String rootUuid)
             throws XPathExpressionException, TransformerException, IOException, SolrServerException {
-        rootUuid = UuidService.checkAndMakeUuid(rootUuid);
+        rootUuid = UuidService.makeUuid(rootUuid);
         fedoraVCLinker.removeVcRecursively(vcId, rootUuid);
         solrVCLinker.removeVc(vcId, rootUuid);
     }
 
     public void linkToVcByRootUuid(String vcId, String rootUuid)
             throws TransformerException, XPathExpressionException, IOException, SolrServerException {
-        rootUuid = UuidService.checkAndMakeUuid(rootUuid);
+        rootUuid = UuidService.makeUuid(rootUuid);
         fedoraVCLinker.addVcRecursively(vcId, rootUuid);
         solrVCLinker.addVc(vcId, rootUuid);
     }
