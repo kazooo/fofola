@@ -42,7 +42,7 @@ public class DonatorLinker {
     }
 
     public void link(String rootUuid, String donator) throws IOException, SolrServerException {
-        rootUuid = UuidService.checkAndMakeUuid(rootUuid);
+        rootUuid = UuidService.makeUuid(rootUuid);
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorLinkingLogic = solrDoc -> {
             String docPID = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);
@@ -63,7 +63,7 @@ public class DonatorLinker {
     }
 
     public void unlink(String rootUuid, String donator) throws IOException, SolrServerException {
-        rootUuid = UuidService.checkAndMakeUuid(rootUuid);
+        rootUuid = UuidService.makeUuid(rootUuid);
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorUnlinkingLogic = solrDoc -> {
             String docPID = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);

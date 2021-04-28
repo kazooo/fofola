@@ -5,6 +5,7 @@ import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.model.UuidStateResponse;
 import cz.mzk.fofola.service.UuidCheckingService;
 import cz.mzk.fofola.service.KProcessService;
+import cz.mzk.fofola.service.UuidService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ public class KOperationsController {
     public String checkUuidState(@RequestPart(value = "uuids") List<String> uuids) {
         List<UuidStateResponse> states = new ArrayList<>();
         for (String uuid : uuids) {
+            uuid = UuidService.makeUuid(uuid);
             log.info("Checking: " + uuid);
             UuidStateResponse response = uuidCheckService.checkUuidState(uuid);
             states.add(response);
@@ -56,6 +58,7 @@ public class KOperationsController {
     private List<KrameriusProcess> makePublic(List<String> uuids) {
         List<KrameriusProcess> krameriusProcesses = new ArrayList<>();
         for (String uuid : uuids) {
+            uuid = UuidService.makeUuid(uuid);
             log.info("Make public: " + uuid);
             krameriusProcesses.add(kProcessService.makePublic(uuid));
         }
@@ -65,9 +68,9 @@ public class KOperationsController {
     private List<KrameriusProcess> makePrivate(List<String> uuids) {
         List<KrameriusProcess> krameriusProcesses = new ArrayList<>();
         for (String uuid : uuids) {
+            uuid = UuidService.makeUuid(uuid);
             log.info("Make public: " + uuid);
             krameriusProcesses.add(kProcessService.makePrivate(uuid));
-
         }
         return krameriusProcesses;
     }
@@ -75,6 +78,7 @@ public class KOperationsController {
     @PostMapping("/reindex")
     public void reindex(@RequestPart(value = "uuids") List<String> uuids) {
         for (String uuid : uuids) {
+            uuid = UuidService.makeUuid(uuid);
             log.info("Reindex: " + uuid);
             kProcessService.reindex(uuid);
         }
@@ -83,6 +87,7 @@ public class KOperationsController {
     @DeleteMapping("/delete")
     public void delete(@RequestPart(value = "uuids") List<String> uuids) {
         for (String uuid : uuids) {
+            uuid = UuidService.makeUuid(uuid);
             log.info("Delete: " + uuid);
             kProcessService.delete(uuid);
         }

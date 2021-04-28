@@ -36,7 +36,7 @@ public class PerioPartsPublisher {
     }
 
     public void checkPartsAndMakePublic(String rootUuid) {
-        rootUuid = UuidService.checkAndMakeUuid(rootUuid);
+        rootUuid = UuidService.makeUuid(rootUuid);
         SolrQuery query = new SolrQuery("PID:\"" + rootUuid + "\"");
         query.setFields("PID");
         try {
