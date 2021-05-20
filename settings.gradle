@@ -1,0 +1,21 @@
+pluginManagement {
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.3.4.RELEASE'
+            classpath 'com.bmuschko:gradle-docker-plugin:6.6.1'
+        }
+    }
+    plugins {
+        id 'com.bmuschko.docker-remote-api' version '6.6.1'
+        id 'org.springframework.boot' version '2.3.4.RELEASE'
+        id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    }
+}
+
+rootProject.name = 'fofola'
+
+include 'frontend'
+include 'backend'

@@ -9,18 +9,6 @@ server:
 
 spring:
 
-  thymeleaf:
-    cache: false
-    check-template: true
-    check-template-location: true
-    enabled: true
-    encoding: UTF-8
-    prefix: classpath:/templates/pages/
-    suffix: .html
-
-  resources:
-    static-locations: classpath:/templates/
-
   jpa:
     database: POSTGRESQL
     generate-ddl: true

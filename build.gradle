@@ -1,68 +1,11 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.3.4.RELEASE'
-        classpath 'com.bmuschko:gradle-docker-plugin:6.6.1'
-    }
-}
-
 plugins {
     id 'java'
-    id 'idea'
-    id 'com.bmuschko.docker-remote-api' version '6.6.1'
-    id 'org.springframework.boot' version '2.3.4.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'com.bmuschko.docker-remote-api'
+    id 'io.spring.dependency-management'
 }
 
 group = 'cz.mzk'
 version = '1.2.0'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
-}
-
-bootJar {
-    mainClassName = 'cz.mzk.fofola.Application'
-    destinationDir = project.file('docker/build')
-}
-
-test {
-    useJUnitPlatform()
-}
-
-dependencies {
-    compile('com.h2database:h2:1.4.200')
-    compile('com.google.code.gson:gson:2.8.5')
-    compile('org.apache.solr:solr-solrj:8.6.3')
-    compile('org.projectlombok:lombok:1.18.12')
-    compile('org.postgresql:postgresql:42.2.6')
-    compile('commons-codec:commons-codec:1.10')
-    compile('org.apache.commons:commons-lang3:3.11')
-
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-
-    annotationProcessor('org.projectlombok:lombok:1.18.12')
-
-    testCompileOnly('org.projectlombok:lombok:1.18.12')
-    testAnnotationProcessor('org.projectlombok:lombok:1.18.12')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.3.1')
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.1')
-    testImplementation('org.mockito:mockito-core:3.2.4')
-}
 
 clean.doFirst {
     delete(project.file('docker/build'))
@@ -79,21 +22,20 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 task createDockerfile(type: Dockerfile) {
-    dependsOn bootJar
-
-    destFile.set(project.file('docker/build/Dockerfile'))
+    dependsOn ':backend:bootJar'
+    destFile.set(project.file('build/Dockerfile'))
     from('openjdk:jre-alpine')
     label(['maintainer': 'Aleksei Ermak "aleksei.ermak@gmail.com"'])
-    copyFile(jar.archiveName, '/app/' + jar.archiveName)
+    copyFile('fofola.jar', '/app/fofola.jar')
     runCommand('apk --update --no-cache add curl nmap')
     entryPoint('java')
     exposePort(8081)
-    defaultCommand('-Xmx2g', '-jar', '/app/' + jar.archiveName)
+    defaultCommand('-Xmx2g', '-jar', '/app/fofola.jar')
 }
 
 task buildImage(type: DockerBuildImage) {
     dependsOn createDockerfile
-    inputDir = project.file('docker/build')
+    inputDir = project.file('build')
     images.add('ermak/fofola:' + version)
 }
 
@@ -103,4 +45,3 @@ task buildLatest(type: DockerTagImage) {
     repository = 'ermak/fofola'
     tag = 'latest'
 }
-
