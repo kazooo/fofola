@@ -4,6 +4,7 @@ import {Home} from "./Home";
 import {Reindex} from "../features/reindex/Reindex";
 import {Delete} from "../features/delete/Delete";
 import {ChangeAccess} from "../features/access/ChangeAccess";
+import {LinkDonator} from "../features/link-donator/LinkDonator";
 
 export const App = () => (
     <BrowserRouter>
@@ -11,5 +12,6 @@ export const App = () => (
         <Route path='/access' component={ChangeAccess} />
         <Route path='/reindex' component={Reindex} />
         <Route path='/delete' component={Delete} />
+        <Route path='/link-donator' component={LinkDonator} />
     </BrowserRouter>
 );

@@ -34,7 +34,7 @@ public class FProcessesController {
     @PostMapping("/new/{processTypeAlias}")
     @ResponseBody
     public String startNewProcess(@PathVariable String processTypeAlias,
-                                  @RequestPart(value = "params") Map<String, Object> params,
+                                  @RequestBody Map<String, Object> params,
                                   @RequestPart(value = "image", required = false) MultipartFile image)
             throws NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {

@@ -19,12 +19,12 @@ export const FileReadWithButton = ({label, submitFunc}) => {
         fileReader.readAsText(file);
     };
 
-    return <div className="form-inline">
+    return <form className="form-inline">
         <label>{label}</label>
         <input
             type='file'
             accept='.txt'
             onChange={e => handleFileChosen(e.target.files[0])}
         />
-    </div>;
+    </form>;
 }
