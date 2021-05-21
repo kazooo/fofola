@@ -73,7 +73,7 @@ public class KOperationsController {
     }
 
     @PostMapping("/reindex")
-    public void reindex(@RequestPart(value = "uuids") List<String> uuids) {
+    public void reindex(@RequestBody List<String> uuids) {
         for (String uuid : uuids) {
             log.info("Reindex: " + uuid);
             kProcessService.reindex(uuid);

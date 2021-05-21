@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Route} from 'react-router-dom'
 import {Home} from "./Home";
-import {Reindex} from "./Reindex";
+import {Reindex} from "../features/reindex/Reindex";
 
 export const App = () => (
     <BrowserRouter>

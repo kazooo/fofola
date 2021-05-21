@@ -1,0 +1,14 @@
+.form-inline {
+    display: flex;
+    margin: 20px;
+}
+
+.visible {
+    visibility: visible;
+    display: block
+}
+
+.invisible {
+    visibility: hidden;
+    display: none
+}

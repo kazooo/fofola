@@ -10,12 +10,6 @@
     text-align: center;
 }
 
-.container {
-    position: relative;
-    width: max-content;
-    margin: auto;
-}
-
 #tree_page_container {
     position: relative;
     border: 2px solid #6F3317;
@@ -125,41 +119,6 @@
 
 th.uuid-column {
     width: 23em;
-}
-
-.panel-bar {
-    width: fit-content;
-    font-weight: bold;
-    margin: auto;
-}
-
-.form-inline {
-    display: flex;
-    margin: 20px;
-    float: left;
-}
-
-.white-rounded-back {
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 5px;
-    border: 1px solid black;
-
-    width: fit-content;
-    height: fit-content;
-}
-
-/* Add some margins for each label */
-.form-inline label {
-    margin: 5px 10px 5px 0;
-}
-
-/* Style the input fields */
-.form-inline input .text {
-    vertical-align: middle;
-    margin: 5px 10px 5px 0;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
 }
 
 /* Add responsiveness - display the form controls vertically instead of horizontally on screens that are less than 800px wide */
