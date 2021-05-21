@@ -13,7 +13,7 @@ export const Home = () => (
             <Service link="/pdf"> Generování PDF </Service>
         </ServiceCard>
         <ServiceCard title="Editace metadat">
-            <Service link="/change-access"> Změnit viditelnost dokumentů </Service>
+            <Service link="/access"> Změnit viditelnost dokumentů </Service>
             <Service link="/reindex"> Reindexace dokumentů </Service>
             <Service link="/delete"> Mazání dokumentů </Service>
             <Service link="/perio-parts-publish"> Zveřejnit části periodik </Service>
