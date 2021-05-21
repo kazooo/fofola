@@ -81,7 +81,7 @@ public class KOperationsController {
     }
 
     @DeleteMapping("/delete")
-    public void delete(@RequestPart(value = "uuids") List<String> uuids) {
+    public void delete(@RequestBody List<String> uuids) {
         for (String uuid : uuids) {
             log.info("Delete: " + uuid);
             kProcessService.delete(uuid);
