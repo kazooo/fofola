@@ -50,6 +50,11 @@ public class PageController {
         return "solr-response";
     }
 
+    @GetMapping("/edit_vc")
+    public String getVcEditingPage(Model model) {
+        return "edit_vc";
+    }
+
     @GetMapping("/link_vc")
     public String getVcLinkingPage(Model model) {
         Map<String, String> vcNameUuid = getSortedVirtualCollection();
