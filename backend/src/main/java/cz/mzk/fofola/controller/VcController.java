@@ -2,13 +2,17 @@ package cz.mzk.fofola.controller;
 
 import cz.mzk.fofola.api.KrameriusApi;
 import cz.mzk.fofola.model.vc.VC;
+import cz.mzk.fofola.model.vc.VirtualCollection;
+import cz.mzk.fofola.request.CreateVcRequest;
+import cz.mzk.fofola.request.UpdateVcRequest;
+import cz.mzk.fofola.service.VcService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -17,26 +21,31 @@ import java.util.*;
 public class VcController {
 
     private final KrameriusApi krameriusApi;
+    private final VcService vcService;
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, String>> getAllVcs() {
-        return getSortedVirtualCollection();
+    public List<VirtualCollection> getAllVcs() {
+        final List<VC> vcList = krameriusApi.getVirtualCollections();
+        final List<VirtualCollection> virtualCollections = new ArrayList<>();
+        vcList.forEach(vc -> virtualCollections.add(VirtualCollection.from(vc)));
+        virtualCollections.sort(Comparator.comparing(VirtualCollection::getNameCz));
+        return virtualCollections;
     }
 
-    private List<Map<String, String>> getSortedVirtualCollection() {
-        final List<VC> vcList = krameriusApi.getVirtualCollections();
-        final List<Map<String, String>> vcNameUuid = new ArrayList<>();
+    @PostMapping
+    public ResponseEntity<String> createVc(@RequestBody final CreateVcRequest createVcRequest) {
+        final VirtualCollection virtualCollection = new VirtualCollection();
+        BeanUtils.copyProperties(createVcRequest, virtualCollection);
+        final String uuid = vcService.createVc(virtualCollection);
+        return ResponseEntity.ok(uuid);
+    }
 
-        vcList.forEach(vc -> vcNameUuid.add(
-                new HashMap<>() {{
-                    put("name_cs", vc.descs.cs);
-                    put("uuid", vc.pid);
-                }}
-        ));
-
-        vcNameUuid.sort(Comparator.comparing(vc -> vc.get("name_cs")));
-
-        return vcNameUuid;
+    @PutMapping
+    public ResponseEntity<String> updateVc(@RequestBody final UpdateVcRequest updateVcRequest) throws IOException {
+        final VirtualCollection virtualCollection = new VirtualCollection();
+        BeanUtils.copyProperties(updateVcRequest, virtualCollection);
+        final String uuid = vcService.updateVc(virtualCollection);
+        return ResponseEntity.ok(uuid);
     }
 }

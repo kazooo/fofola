@@ -24,7 +24,6 @@ export const CheckDonatorForm = () => {
     const dispatch = useDispatch();
     const vcs = useSelector(state => getVcs(state));
     const mode = useSelector(state => getMode(state));
-    const vcUuid = useSelector(state => getVcUuid(state));
     const donator = useSelector(state => getDonator(state));
 
     const RELOAD_INTERVAL_MS = 5000;
@@ -69,7 +68,7 @@ export const CheckDonatorForm = () => {
         <HorizontalDirectedGrid>
             <Autocomplete
                 options={vcs}
-                getOptionLabel={(option) => option.name_cs}
+                getOptionLabel={(option) => option.nameCz}
                 style={{ width: 300 }}
                 onChange={loadVcUuid}
                 renderInput={(params) =>
@@ -106,7 +105,7 @@ export const CheckDonatorForm = () => {
 
     return <Box>
         {
-            vcs
+            vcs.length > 0
                 ? form
                 : <LoadingComponent label={'Načítám virtuální sbirky...'} />
         }

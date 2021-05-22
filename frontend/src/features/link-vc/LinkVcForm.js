@@ -16,11 +16,7 @@ export const LinkVcForm = () => {
     const vcs = useSelector(state => getVcs(state));
 
     const loadVcUuid = (event, values) => {
-        if (values) {
-            dispatch(setVcUuid(values.uuid));
-        } else {
-            dispatch(setVcUuid(''));
-        }
+        dispatch(setVcUuid(values ? values.uuid : ''));
     }
 
     const changeMode = mode => {
@@ -43,7 +39,7 @@ export const LinkVcForm = () => {
                 <Grid item>
                     <Autocomplete
                         options={vcs}
-                        getOptionLabel={(option) => option.name_cs}
+                        getOptionLabel={(option) => option.nameCz}
                         style={{ width: 300 }}
                         onChange={loadVcUuid}
                         renderInput={(params) =>
@@ -70,7 +66,7 @@ export const LinkVcForm = () => {
 
     return <Box>
         {
-            vcs
+            vcs.length > 0
                 ? form
                 : <LoadingComponent label={'Načítám virtuální sbirky...'} />
         }

@@ -1,13 +1,12 @@
 package cz.mzk.fofola.model.vc;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode
 public class VC {
     public String pid;
     public Descs descs;
+    public LongDescs longDescs;
 }

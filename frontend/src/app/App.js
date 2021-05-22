@@ -14,6 +14,7 @@ import {Pdf} from "../features/pdf/Pdf";
 import {SolrQuery} from "../features/solr-query/SolrQuery";
 import {PerioPartsPublish} from "../features/perio-parts/PerioPartsPublish";
 import {SetImage} from "../features/set-image/SetImage";
+import {VcManagement} from "../features/vc-management/VcManagement";
 
 export const App = () => (
     <BrowserRouter>
@@ -31,5 +32,6 @@ export const App = () => (
         <Route path="/solr-query" component={SolrQuery} />
         <Route path="/perio-parts-publish" component={PerioPartsPublish} />
         {/*<Route path="/set-image" component={SetImage} />*/}
+        <Route path="/vc" component={VcManagement} />
     </BrowserRouter>
 );

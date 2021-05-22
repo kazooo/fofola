@@ -7,7 +7,7 @@ export const linkVcSlice = createSlice({
         vcUuid: '',
         uuids: [],
         mode: LINK_MODE,
-        vcs: null,
+        vcs: [],
     },
     reducers: {
         addUuids: (state, action) => {

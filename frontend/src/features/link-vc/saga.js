@@ -36,6 +36,5 @@ function* loadVirtualCollectionsSaga() {
         yield put(setVcs(response.body))
     } catch (e) {
         console.error(e);
-        yield put(setVcs([]));
     }
 }

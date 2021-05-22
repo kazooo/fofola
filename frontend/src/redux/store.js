@@ -10,6 +10,7 @@ import {linkDonatorSlice} from "../features/link-donator/slice";
 import {solrQuerySlice} from "../features/solr-query/slice";
 import {uuidInfoSlice} from "../features/uuid-info/slice";
 import {setImgSlice} from "../features/set-image/slice";
+import {vcSlice} from "../features/vc-management/slice";
 import {reindexSlice} from "../features/reindex/slice";
 import {linkVcSlice} from "../features/link-vc/slice";
 import {deleteSlice} from "../features/delete/slice";
@@ -24,6 +25,7 @@ import linkDonatorSaga from "../features/link-donator/saga";
 import solrQuerySaga from "../features/solr-query/saga";
 import uuidInfoSaga from "../features/uuid-info/saga";
 import setImgSaga from "../features/set-image/saga";
+import vcSaga from "../features/vc-management/saga";
 import reindexSaga from "../features/reindex/saga";
 import linkVcSaga from "../features/link-vc/saga";
 import deleteSaga from "../features/delete/saga";
@@ -45,6 +47,7 @@ const reducers = {
     delete: deleteSlice.reducer,
     setImg: setImgSlice.reducer,
     pdf: pdfSlice.reducer,
+    vc: vcSlice.reducer,
 };
 
 const middlewares = [
@@ -77,3 +80,4 @@ initialSagaMiddleware.run(linkVcSaga);
 initialSagaMiddleware.run(deleteSaga);
 initialSagaMiddleware.run(setImgSaga);
 initialSagaMiddleware.run(pdfSaga);
+initialSagaMiddleware.run(vcSaga);

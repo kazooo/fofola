@@ -1,4 +1,3 @@
-import downloadImg from "../../img/download.png";
 import privateImg from "../../img/private.png";
 import reindexImg from "../../img/reindex.png";
 import publicImg from "../../img/public.png";
@@ -13,6 +12,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from '@material-ui/icons/Publish';
+import AddIcon from '@material-ui/icons/Add';
 
 export const StartButton = ({children, onClick}) => (
     <IconButton
@@ -66,7 +66,7 @@ export const DownloadButton = ({children, onClick}) => (
     >
         {children}
     </IconButton>
-)
+);
 
 export const UploadButton = ({children, onClick, onChange = null, type = null}) => (
     <IconButton
@@ -74,6 +74,15 @@ export const UploadButton = ({children, onClick, onChange = null, type = null}) 
         onClick={onClick}
         onChange={onChange}
         type={type}
+    >
+        {children}
+    </IconButton>
+);
+
+export const AddButton = ({children, onClick}) => (
+    <IconButton
+        icon={<AddIcon />}
+        onClick={onClick}
     >
         {children}
     </IconButton>
