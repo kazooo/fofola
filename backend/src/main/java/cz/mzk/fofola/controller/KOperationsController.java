@@ -1,6 +1,5 @@
 package cz.mzk.fofola.controller;
 
-import com.google.gson.Gson;
 import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.model.UuidStateResponse;
 import cz.mzk.fofola.service.UuidCheckingService;
@@ -13,26 +12,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Controller
 @AllArgsConstructor
 @Slf4j
 public class KOperationsController {
 
-    private static final Gson gson = new Gson();
     private final UuidCheckingService uuidCheckService;
     private final KProcessService kProcessService;
 
-    @PostMapping("/check-uuid")
+    @GetMapping("/uuid-info")
     @ResponseBody
-    public String checkUuidState(@RequestPart(value = "uuids") List<String> uuids) {
+    public List<UuidStateResponse> checkUuidState(@RequestBody List<String> uuids) {
         List<UuidStateResponse> states = new ArrayList<>();
         for (String uuid : uuids) {
             log.info("Checking: " + uuid);
             UuidStateResponse response = uuidCheckService.checkUuidState(uuid);
             states.add(response);
         }
-        return gson.toJson(states);
+        return states;
     }
 
     @PostMapping("/access/public")

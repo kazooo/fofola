@@ -43,7 +43,7 @@
 
 #info_container td button
 {
-    background: url("img/copyclip.png");
+    background: url("../frontend/src/img/copyclip.png");
     width:20px;
     height:20px;
     border: 0;
@@ -51,7 +51,7 @@
 }
 
 .ok {
-    background: url("img/tick.png");
+    background: url("../frontend/src/img/tick.png");
     width:20px;
     height:20px;
     border: 0;
@@ -61,7 +61,7 @@
 }
 
 .error {
-    background: url("img/cross.png");
+    background: url("../frontend/src/img/cross.png");
     width:20px;
     height:20px;
     border: 0;

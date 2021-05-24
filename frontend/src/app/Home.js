@@ -6,7 +6,7 @@ import {Service} from "../components/service/Service";
 export const Home = () => (
     <ServiceContainer title="Fofola">
         <ServiceCard title="Zobrazování metadat">
-            <Service link="/check-uuid"> Vypsat základní info o UUID </Service>
+            <Service link="/uuid-info"> Vypsat základní info o UUID </Service>
             <Service link="/tree"> Zobrazit strom dokumentu </Service>
             <Service link="/solr-query"> Dotaz na Solr </Service>
             <Service link="/k-processes"> Správa procesů </Service>
