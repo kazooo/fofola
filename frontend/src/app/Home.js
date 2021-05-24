@@ -20,7 +20,7 @@ export const Home = () => (
             <Service link="/img-editing"> Editace obrázků </Service>
         </ServiceCard>
         <ServiceCard title="Virtuální sbírky">
-            <Service link="/link_vc"> Přídat/odstranit do/z virtuální sbírky </Service>
+            <Service link="/link-vc"> Přídat/odstranit do/z virtuální sbírky </Service>
             <Service link="/link-donator"> Přídat/odstranit příznak donátoru </Service>
             <Service link="/check-donator"> Kontrola příznaku donátoru </Service>
         </ServiceCard>

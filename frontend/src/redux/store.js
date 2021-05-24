@@ -1,11 +1,13 @@
 import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
 import {linkDonatorSlice} from "../features/link-donator/slice";
-import {changeAccessSlice} from "../features/access/slice";
+import {changeAccessSlice} from "../features/change-access/slice";
 import {reindexSlice} from "../features/reindex/slice";
+import {linkVcSlice} from "../features/link-vc/slice";
 import {deleteSlice} from "../features/delete/slice";
 import linkDonatorSaga from "../features/link-donator/saga";
-import changeAccessSaga from "../features/access/saga";
+import changeAccessSaga from "../features/change-access/saga";
 import reindexSaga from "../features/reindex/saga";
+import linkVcSaga from "../features/link-vc/saga";
 import deleteSaga from "../features/delete/saga";
 import createSagaMiddleware from "redux-saga";
 
@@ -15,6 +17,7 @@ const reducers = {
     changeAccess: changeAccessSlice.reducer,
     linkDonator: linkDonatorSlice.reducer,
     reindex: reindexSlice.reducer,
+    linkVc: linkVcSlice.reducer,
     delete: deleteSlice.reducer
 };
 
@@ -31,4 +34,5 @@ export const store = configureStore({
 initialSagaMiddleware.run(changeAccessSaga);
 initialSagaMiddleware.run(linkDonatorSaga);
 initialSagaMiddleware.run(reindexSaga);
+initialSagaMiddleware.run(linkVcSaga);
 initialSagaMiddleware.run(deleteSaga);

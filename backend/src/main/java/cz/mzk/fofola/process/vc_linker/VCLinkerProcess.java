@@ -20,8 +20,8 @@ public class VCLinkerProcess extends Process {
     private final String fedoraPswd;
 
     private final String mode;
-    private static final String MODE_LINK = "link";
-    private static final String MODE_UNLINK = "unlink";
+    private static final String MODE_LINK = "LINK_MODE";
+    private static final String MODE_UNLINK = "UNLINK_MODE";
 
     @SuppressWarnings("unchecked")
     public VCLinkerProcess(ProcessParams params) throws IOException {
@@ -30,8 +30,8 @@ public class VCLinkerProcess extends Process {
         Map<String, ?> data = params.getData();
 
         mode = (String) data.get("mode");
-        vcUuid = (String) data.get("vc_uuid");
-        rootUuids = (List<String>) data.get("root_uuids");
+        vcUuid = (String) data.get("vcUuid");
+        rootUuids = (List<String>) data.get("uuids");
         solrHost = fofolaConfig.getSolrHost();
         fedoraHost = fofolaConfig.getFedoraHost();
         fedoraUser = fofolaConfig.getFedoraUser();
