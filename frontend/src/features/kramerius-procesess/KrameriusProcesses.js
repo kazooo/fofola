@@ -1,17 +1,17 @@
-import {Navbar} from "../../components/navbar/Navbar";
 import {Container} from "../../components/container/Container";
 import {ContainerHeader} from "../../components/container/ContainerHeader";
-import {UuidInfoForm} from "./UuidInfoForm";
-import {UuidInfoPanel} from "./UuidInfoPanel";
+import {Header} from "./Header";
+import {ProcessTable} from "./ProcessTable";
+import {Navbar} from "../../components/navbar/Navbar";
 
-export const UuidInfo = () => (
+export const KrameriusProcesses = () => (
     <div>
         <Navbar />
         <Container>
             <ContainerHeader>
-                <UuidInfoForm />
+                <Header />
             </ContainerHeader>
-            <UuidInfoPanel />
+            <ProcessTable />
         </Container>
     </div>
 );

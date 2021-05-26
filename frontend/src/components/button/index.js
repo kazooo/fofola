@@ -1,6 +1,8 @@
 import privateImg from "../../img/private.png";
 import reindexImg from "../../img/reindex.png";
 import publicImg from "../../img/public.png";
+import removeImg from "../../img/remove.png";
+import stopImg from "../../img/stop.png";
 
 const ImgButton = ({title, img, onClick}) => {
 
@@ -30,4 +32,12 @@ export const MakePublicButton = ({onClick}) => (
 
 export const ReindexButton = ({onClick}) => (
     <ImgButton title={""} img={reindexImg} onClick={onClick} />
+);
+
+export const RemoveButton = ({onClick}) => (
+    <ImgButton title={""} img={removeImg} onClick={onClick} />
+);
+
+export const StopButton = ({onClick}) => (
+    <ImgButton title={""} img={stopImg} onClick={onClick} />
 );
