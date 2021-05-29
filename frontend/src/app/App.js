@@ -10,6 +10,7 @@ import {UuidInfo} from "../features/uuid-info/UuidInfo";
 import {KrameriusProcesses} from "../features/kramerius-procesess/KrameriusProcesses";
 import {CheckDonator} from "../features/check-donator/CheckDonator";
 import {InternalProcesses} from "../features/internal-processes/InternalProcesses";
+import {Pdf} from "../features/pdf/Pdf";
 
 export const App = () => (
     <BrowserRouter>
@@ -23,5 +24,6 @@ export const App = () => (
         <Route path='/kramerius-processes' component={KrameriusProcesses} />
         <Route path='/check-donator' component={CheckDonator} />
         <Route path='/internal-processes' cpmponent={InternalProcesses} />
+        <Route path="/pdf" component={Pdf} />
     </BrowserRouter>
 );
