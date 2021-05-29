@@ -5,6 +5,7 @@ import {FileReadWithButton} from "../../components/form/FileReadWithButton";
 import {Selector} from "../../components/form/Selector";
 import {setMode, setUuids, setVcUuid} from "./slice";
 import {LINK_MODE, UNLINK_MODE} from "./constants";
+import {TextForm} from "../../components/form/TextForm";
 
 export const LinkVcForm = () => {
 
@@ -37,12 +38,11 @@ export const LinkVcForm = () => {
     }
 
     return <Panel>
-        <label style={{margin: "5px 10px 5px 0"}}>UUID vurtuální sbírky</label>
-        <input
-            type="text"
+        <TextForm
+            label="UUID vurtuální sbírky"
             size="33"
             placeholder="uuid:..."
-            onChange={e => loadVcUuid(e.target.value)}
+            onChange={loadVcUuid}
         />
         <Selector
             label="Režim"

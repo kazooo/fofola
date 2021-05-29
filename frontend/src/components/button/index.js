@@ -1,8 +1,28 @@
+import downloadImg from "../../img/download.png";
 import privateImg from "../../img/private.png";
 import reindexImg from "../../img/reindex.png";
 import publicImg from "../../img/public.png";
 import removeImg from "../../img/remove.png";
 import stopImg from "../../img/stop.png";
+
+export const Button = ({label, onClick}) => {
+
+    const handleOnClick = (e) => {
+        e.preventDefault();
+        onClick();
+    }
+
+    return <button onClick={handleOnClick} style={{
+        width: "20px",
+        height: "20px",
+        border: "0",
+        backgroundSize: "100%",
+        marginLeft: "5px",
+        marginRight: "5px",
+    }}>
+        {label}
+    </button>;
+};
 
 const ImgButton = ({title, img, onClick}) => {
 
@@ -40,4 +60,8 @@ export const RemoveButton = ({onClick}) => (
 
 export const StopButton = ({onClick}) => (
     <ImgButton title={""} img={stopImg} onClick={onClick} />
+);
+
+export const DownloadButton = ({onClick}) => (
+    <ImgButton title={""} img={downloadImg} onClick={onClick} />
 );

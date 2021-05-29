@@ -8,6 +8,7 @@ import {LinkDonator} from "../features/link-donator/LinkDonator";
 import {LinkVc} from "../features/link-vc/LinkVc";
 import {UuidInfo} from "../features/uuid-info/UuidInfo";
 import {KrameriusProcesses} from "../features/kramerius-procesess/KrameriusProcesses";
+import {CheckDonator} from "../features/check-donator/CheckDonator";
 
 export const App = () => (
     <BrowserRouter>
@@ -19,5 +20,6 @@ export const App = () => (
         <Route path='/link-vc' component={LinkVc} />
         <Route path='/link-donator' component={LinkDonator} />
         <Route path='/kramerius-processes' component={KrameriusProcesses} />
+        <Route path='/check-donator' component={CheckDonator} />
     </BrowserRouter>
 );

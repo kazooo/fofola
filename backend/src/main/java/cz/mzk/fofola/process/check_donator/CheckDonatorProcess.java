@@ -38,9 +38,9 @@ public class CheckDonatorProcess extends Process {
         FofolaConfiguration fofolaConfig = params.getConfig();
         Map<String, ?> data = params.getData();
 
-        vcId = (String) data.get("vcId");
+        vcId = (String) data.get("vcUuid");
         donator = (String) data.get("donator");
-        option = CheckOption.valueOf((String) data.get("checkOption"));
+        option = CheckOption.valueOf((String) data.get("mode"));
 
         xmlService = new XMLService();
         solrClient = SolrService.buildClient(fofolaConfig.getSolrHost());

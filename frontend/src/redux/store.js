@@ -1,6 +1,7 @@
 import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
 import {krameriusProcessSlice} from "../features/kramerius-procesess/slice";
 import {changeAccessSlice} from "../features/change-access/slice";
+import {checkDonatorSlice} from "../features/check-donator/slice";
 import {linkDonatorSlice} from "../features/link-donator/slice";
 import {uuidInfoSlice} from "../features/uuid-info/slice";
 import {reindexSlice} from "../features/reindex/slice";
@@ -8,8 +9,9 @@ import {linkVcSlice} from "../features/link-vc/slice";
 import {deleteSlice} from "../features/delete/slice";
 
 import krameriusProcessSaga from "../features/kramerius-procesess/saga";
-import linkDonatorSaga from "../features/link-donator/saga";
+import checkDonatorSaga from "../features/check-donator/saga";
 import changeAccessSaga from "../features/change-access/saga";
+import linkDonatorSaga from "../features/link-donator/saga";
 import uuidInfoSaga from "../features/uuid-info/saga";
 import reindexSaga from "../features/reindex/saga";
 import linkVcSaga from "../features/link-vc/saga";
@@ -20,6 +22,7 @@ const initialSagaMiddleware = createSagaMiddleware();
 
 const reducers = {
     krameriusProcess: krameriusProcessSlice.reducer,
+    checkDonator: checkDonatorSlice.reducer,
     changeAccess: changeAccessSlice.reducer,
     linkDonator: linkDonatorSlice.reducer,
     uuidInfo: uuidInfoSlice.reducer,
@@ -39,6 +42,7 @@ export const store = configureStore({
 });
 
 initialSagaMiddleware.run(krameriusProcessSaga);
+initialSagaMiddleware.run(checkDonatorSaga);
 initialSagaMiddleware.run(changeAccessSaga);
 initialSagaMiddleware.run(linkDonatorSaga);
 initialSagaMiddleware.run(uuidInfoSaga);
