@@ -4,6 +4,7 @@ import reindexImg from "../../img/reindex.png";
 import publicImg from "../../img/public.png";
 import removeImg from "../../img/remove.png";
 import stopImg from "../../img/stop.png";
+import logsImg from "../../img/logs.jpg";
 
 export const Button = ({label, onClick}) => {
 
@@ -64,4 +65,8 @@ export const StopButton = ({onClick}) => (
 
 export const DownloadButton = ({onClick}) => (
     <ImgButton title={""} img={downloadImg} onClick={onClick} />
+);
+
+export const LogsButton = ({onClick}) => (
+    <ImgButton title={""} img={logsImg} onClick={onClick} />
 );

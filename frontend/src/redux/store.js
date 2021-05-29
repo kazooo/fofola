@@ -8,6 +8,7 @@ import {reindexSlice} from "../features/reindex/slice";
 import {linkVcSlice} from "../features/link-vc/slice";
 import {deleteSlice} from "../features/delete/slice";
 
+import internalProcessesSaga from "../features/internal-processes/saga";
 import krameriusProcessSaga from "../features/kramerius-procesess/saga";
 import checkDonatorSaga from "../features/check-donator/saga";
 import changeAccessSaga from "../features/change-access/saga";
@@ -17,10 +18,12 @@ import reindexSaga from "../features/reindex/saga";
 import linkVcSaga from "../features/link-vc/saga";
 import deleteSaga from "../features/delete/saga";
 import createSagaMiddleware from "redux-saga";
+import {internalProcessesSlice} from "../features/internal-processes/slice";
 
 const initialSagaMiddleware = createSagaMiddleware();
 
 const reducers = {
+    internalProcesses: internalProcessesSlice.reducer,
     krameriusProcess: krameriusProcessSlice.reducer,
     checkDonator: checkDonatorSlice.reducer,
     changeAccess: changeAccessSlice.reducer,
@@ -41,6 +44,7 @@ export const store = configureStore({
     middleware: middlewares
 });
 
+initialSagaMiddleware.run(internalProcessesSaga);
 initialSagaMiddleware.run(krameriusProcessSaga);
 initialSagaMiddleware.run(checkDonatorSaga);
 initialSagaMiddleware.run(changeAccessSaga);

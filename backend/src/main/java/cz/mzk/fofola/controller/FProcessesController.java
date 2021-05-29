@@ -62,19 +62,19 @@ public class FProcessesController {
         return String.join("<br/>", Files.readAllLines(Paths.get(filePath)));
     }
 
-    @PutMapping("/terminate/{processId}")
+    @PutMapping("/stop/{pid}")
     @ResponseBody
-    public String terminateRunningProcess(@PathVariable String processId) {
-        log.info("Got terminate process command for pid: " + processId);
-        processCommandService.terminate(processId);
-        return processId;
+    public String stopRunningProcess(@PathVariable String pid) {
+        log.info("Got terminate process command for pid: " + pid);
+        processCommandService.terminate(pid);
+        return pid;
     }
 
-    @DeleteMapping("/remove/{processId}")
+    @DeleteMapping("/remove/{pid}")
     @ResponseBody
-    public String removeProcessFromDB(@PathVariable String processId) {
-        log.info("Got remove process command for pid: " + processId);
-        processCommandService.removeInfoFromDB(processId);
-        return processId;
+    public String removeProcessFromDB(@PathVariable String pid) {
+        log.info("Got remove process command for pid: " + pid);
+        processCommandService.removeInfoFromDB(pid);
+        return pid;
     }
 }
