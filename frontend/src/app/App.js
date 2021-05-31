@@ -11,6 +11,7 @@ import {KrameriusProcesses} from "../features/kramerius-procesess/KrameriusProce
 import {CheckDonator} from "../features/check-donator/CheckDonator";
 import {InternalProcesses} from "../features/internal-processes/InternalProcesses";
 import {Pdf} from "../features/pdf/Pdf";
+import {SolrQuery} from "../features/solr-query/SolrQuery";
 
 export const App = () => (
     <BrowserRouter>
@@ -25,5 +26,6 @@ export const App = () => (
         <Route path='/check-donator' component={CheckDonator} />
         <Route path='/internal-processes' cpmponent={InternalProcesses} />
         <Route path="/pdf" component={Pdf} />
+        <Route path="/solr-query" component={SolrQuery} />
     </BrowserRouter>
 );

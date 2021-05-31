@@ -6,6 +6,7 @@ import {krameriusProcessSlice} from "../features/kramerius-procesess/slice";
 import {changeAccessSlice} from "../features/change-access/slice";
 import {checkDonatorSlice} from "../features/check-donator/slice";
 import {linkDonatorSlice} from "../features/link-donator/slice";
+import {solrQuerySlice} from "../features/solr-query/slice";
 import {uuidInfoSlice} from "../features/uuid-info/slice";
 import {reindexSlice} from "../features/reindex/slice";
 import {linkVcSlice} from "../features/link-vc/slice";
@@ -17,6 +18,7 @@ import krameriusProcessSaga from "../features/kramerius-procesess/saga";
 import checkDonatorSaga from "../features/check-donator/saga";
 import changeAccessSaga from "../features/change-access/saga";
 import linkDonatorSaga from "../features/link-donator/saga";
+import solrQuerySaga from "../features/solr-query/saga";
 import uuidInfoSaga from "../features/uuid-info/saga";
 import reindexSaga from "../features/reindex/saga";
 import linkVcSaga from "../features/link-vc/saga";
@@ -31,6 +33,7 @@ const reducers = {
     checkDonator: checkDonatorSlice.reducer,
     changeAccess: changeAccessSlice.reducer,
     linkDonator: linkDonatorSlice.reducer,
+    solrQuery: solrQuerySlice.reducer,
     uuidInfo: uuidInfoSlice.reducer,
     reindex: reindexSlice.reducer,
     linkVc: linkVcSlice.reducer,
@@ -53,6 +56,7 @@ initialSagaMiddleware.run(krameriusProcessSaga);
 initialSagaMiddleware.run(checkDonatorSaga);
 initialSagaMiddleware.run(changeAccessSaga);
 initialSagaMiddleware.run(linkDonatorSaga);
+initialSagaMiddleware.run(solrQuerySaga);
 initialSagaMiddleware.run(uuidInfoSaga);
 initialSagaMiddleware.run(reindexSaga);
 initialSagaMiddleware.run(linkVcSaga);
