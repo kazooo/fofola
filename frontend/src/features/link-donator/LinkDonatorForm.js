@@ -1,7 +1,7 @@
 import {Panel} from "../../components/container/Panel";
 import {Selector} from "../../components/form/Selector";
 import {FormWithButton} from "../../components/form/FormWithButton";
-import {FileReadWithButton} from "../../components/form/FileReadWithButton";
+import {TextFileReadWithButton} from "../../components/form/TextFileReadWithButton";
 import {useDispatch} from "react-redux";
 import {setDonator, setMode, setUuids} from "./slice";
 
@@ -64,7 +64,7 @@ export const LinkDonatorForm = () => {
             placeholder="uuid:..."
             submitFunc={loadOneUuid}
         />
-        <FileReadWithButton
+        <TextFileReadWithButton
             label="Vyberte soubor s UUID kořenů"
             submitFunc={loadUuids}
         />

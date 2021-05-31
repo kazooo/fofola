@@ -1,7 +1,7 @@
 import {useDispatch} from "react-redux";
 import {Panel} from "../../components/container/Panel";
 import {FormWithButton} from "../../components/form/FormWithButton";
-import {FileReadWithButton} from "../../components/form/FileReadWithButton";
+import {TextFileReadWithButton} from "../../components/form/TextFileReadWithButton";
 import {Selector} from "../../components/form/Selector";
 import {setMode, setUuids, setVcUuid} from "./slice";
 import {LINK_MODE, UNLINK_MODE} from "./constants";
@@ -57,7 +57,7 @@ export const LinkVcForm = () => {
             placeholder="uuid:..."
             submitFunc={loadOneUuid}
         />
-        <FileReadWithButton
+        <TextFileReadWithButton
             label="Vyberte soubor s UUID kořenů"
             submitFunc={loadUuids}
         />

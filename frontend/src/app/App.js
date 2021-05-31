@@ -12,6 +12,7 @@ import {CheckDonator} from "../features/check-donator/CheckDonator";
 import {InternalProcesses} from "../features/internal-processes/InternalProcesses";
 import {Pdf} from "../features/pdf/Pdf";
 import {SolrQuery} from "../features/solr-query/SolrQuery";
+import {PerioPartsPublish} from "../features/perio-parts/PerioPartsPublish";
 
 export const App = () => (
     <BrowserRouter>
@@ -27,5 +28,6 @@ export const App = () => (
         <Route path='/internal-processes' cpmponent={InternalProcesses} />
         <Route path="/pdf" component={Pdf} />
         <Route path="/solr-query" component={SolrQuery} />
+        <Route path="/perio-parts-publish" component={PerioPartsPublish} />
     </BrowserRouter>
 );

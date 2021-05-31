@@ -1,7 +1,7 @@
 import {useDispatch} from "react-redux";
 import {Panel} from "../../components/container/Panel";
 import {FormWithButton} from "../../components/form/FormWithButton";
-import {FileReadWithButton} from "../../components/form/FileReadWithButton";
+import {TextFileReadWithButton} from "../../components/form/TextFileReadWithButton";
 import {getUuidInfo} from "./saga";
 
 export const UuidInfoForm = () => {
@@ -25,7 +25,7 @@ export const UuidInfoForm = () => {
             placeholder="uuid:..."
             submitFunc={loadOneUuid}
         />
-        <FileReadWithButton
+        <TextFileReadWithButton
             label="Vyberte soubor s UUID"
             submitFunc={loadUuids}
         />

@@ -3,6 +3,7 @@ import createSagaMiddleware from "redux-saga";
 
 import {internalProcessesSlice} from "../features/internal-processes/slice";
 import {krameriusProcessSlice} from "../features/kramerius-procesess/slice";
+import {perioPartsPublishSlice} from "../features/perio-parts/slice";
 import {changeAccessSlice} from "../features/change-access/slice";
 import {checkDonatorSlice} from "../features/check-donator/slice";
 import {linkDonatorSlice} from "../features/link-donator/slice";
@@ -15,6 +16,7 @@ import {pdfSlice} from "../features/pdf/slice";
 
 import internalProcessesSaga from "../features/internal-processes/saga";
 import krameriusProcessSaga from "../features/kramerius-procesess/saga";
+import publishPerioPartsSaga from "../features/perio-parts/saga";
 import checkDonatorSaga from "../features/check-donator/saga";
 import changeAccessSaga from "../features/change-access/saga";
 import linkDonatorSaga from "../features/link-donator/saga";
@@ -28,6 +30,7 @@ import pdfSaga from "../features/pdf/saga";
 const initialSagaMiddleware = createSagaMiddleware();
 
 const reducers = {
+    perioPartsPublish: perioPartsPublishSlice.reducer,
     internalProcesses: internalProcessesSlice.reducer,
     krameriusProcess: krameriusProcessSlice.reducer,
     checkDonator: checkDonatorSlice.reducer,
@@ -52,6 +55,7 @@ export const store = configureStore({
 });
 
 initialSagaMiddleware.run(internalProcessesSaga);
+initialSagaMiddleware.run(publishPerioPartsSaga);
 initialSagaMiddleware.run(krameriusProcessSaga);
 initialSagaMiddleware.run(checkDonatorSaga);
 initialSagaMiddleware.run(changeAccessSaga);

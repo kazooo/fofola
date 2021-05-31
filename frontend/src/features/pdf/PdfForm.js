@@ -1,6 +1,6 @@
 import {Panel} from "../../components/container/Panel";
 import {FormWithButton} from "../../components/form/FormWithButton";
-import {FileReadWithButton} from "../../components/form/FileReadWithButton";
+import {TextFileReadWithButton} from "../../components/form/TextFileReadWithButton";
 import {useDispatch} from "react-redux";
 import {setUuids} from "./slice";
 
@@ -25,7 +25,7 @@ export const PdfForm = () => {
             placeholder="uuid:..."
             submitFunc={loadOneUuid}
         />
-        <FileReadWithButton
+        <TextFileReadWithButton
             label="Vyberte soubor s UUID"
             submitFunc={loadUuids}
         />

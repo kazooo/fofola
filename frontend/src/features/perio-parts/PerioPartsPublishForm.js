@@ -1,10 +1,10 @@
-import {useDispatch} from "react-redux";
 import {Panel} from "../../components/container/Panel";
 import {FormWithButton} from "../../components/form/FormWithButton";
 import {TextFileReadWithButton} from "../../components/form/TextFileReadWithButton";
+import {useDispatch} from "react-redux";
 import {setUuids} from "./slice";
 
-export const ChangeAccessForm = () => {
+export const PerioPartsPublishForm = () => {
 
     const dispatch = useDispatch();
 

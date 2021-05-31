@@ -1,6 +1,6 @@
 import './style.css';
 
-export const FileReadWithButton = ({label, submitFunc}) => {
+export const TextFileReadWithButton = ({label, submitFunc}) => {
 
     let fileReader;
 
