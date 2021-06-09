@@ -27,16 +27,15 @@ function loadUuidsFromFile() {
     var file = file_el.files[0];
     var reader = new FileReader();
     var table = document.getElementById('uuid_table');
-    reader.onload = function(progressEvent){
-        var lines = this.result.split('\n');
-        for(var line = 0; line < lines.length; line++){
-            insertRowUuid(table, lines[line])
+    reader.onload = function(progressEvent) {
+        for (const line of this.result.split(/[\r\n]+/)) {
+            insertRowUuid(table, line);
         }
         updateTotal();
         var submit = document.getElementById('load_file_submit');
         showElement(submit, false);
     };
-    reader.readAsText(file);
+    reader.readAsText(file, "utf-8");
 }
 
 function insertRowUuid(table, uuid) {

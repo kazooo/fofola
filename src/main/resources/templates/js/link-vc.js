@@ -26,16 +26,15 @@ function loadOneUuid() {
 }
 
 function loadUuidsFromFile() {
-    uuids = []
+    uuids = [];
     updateTotal();
     const file_el = $("#enter_file")[0];
     const file = file_el.files[0];
     const reader = new FileReader();
-    reader.onload = function(progressEvent){
-        const lines = this.result.split('\n');
-        for(let i = 0; i < lines.length; i++){
-            if (lines[i] !== '') {
-                uuids.push(lines[i])
+    reader.onload = function(progressEvent) {
+        for (const line of this.result.split(/[\r\n]+/)) {
+            if (line !== '') {
+                uuids.push(line);
             }
         }
         if (uuids.length > 0) {
@@ -44,7 +43,7 @@ function loadUuidsFromFile() {
             showElement(submit, false);
         }
     };
-    reader.readAsText(file);
+    reader.readAsText(file, "utf-8");
 }
 
 function sendUuids() {

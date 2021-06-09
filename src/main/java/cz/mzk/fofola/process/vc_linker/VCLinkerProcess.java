@@ -4,12 +4,14 @@ import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.process.Process;
 import cz.mzk.fofola.model.process.ProcessParams;
 import cz.mzk.fofola.model.process.TerminationReason;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 
+@Slf4j
 public class VCLinkerProcess extends Process {
 
     private final String vcUuid;
@@ -45,6 +47,7 @@ public class VCLinkerProcess extends Process {
                 solrHost, logger
         );
         if (mode.equals(MODE_LINK)) {
+            logger.info("Link root uuids (" + rootUuids.size() + ") to " + vcUuid);
             for (String rootUuid : rootUuids) {
                 vcLinker.linkToVcByRootUuid(vcUuid, rootUuid);
                 if (Thread.interrupted()) {
@@ -52,13 +55,16 @@ public class VCLinkerProcess extends Process {
                 }
             }
         } else if (mode.equals(MODE_UNLINK)) {
+            logger.info("Unlink root uuids (" + rootUuids.size() + ") from " + vcUuid);
             for (String rootUuid : rootUuids) {
                 vcLinker.unlinkFromVcByRootUuid(vcUuid, rootUuid);
                 if (Thread.interrupted()) {
                     return TerminationReason.USER_COMMAND;
                 }
             }
-        } else throw new IllegalAccessException("Unknown mode \"" + mode + "\"");
+        } else {
+            throw new IllegalAccessException("Unknown mode \"" + mode + "\"");
+        }
         vcLinker.commitAndClose();
         return null;
     }

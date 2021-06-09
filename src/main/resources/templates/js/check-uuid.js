@@ -25,25 +25,24 @@ function checkOneUuid() {
 }
 
 function checkUuidsFromTable() {
-    uuids = []
+    uuids = [];
     clearTable();
     var file_el = $("#enter_file")[0];
     var file = file_el.files[0];
     var reader = new FileReader();
-    reader.onload = function(progressEvent){
-        var lines = this.result.split('\n');
-        for(var line = 0; line < lines.length; line++){
-            if (lines[line] !== '') {
-                uuids.push(lines[line])
+    reader.onload = function(progressEvent) {
+        for (const line of this.result.split(/[\r\n]+/)) {
+            if (line !== '') {
+                uuids.push(line);
             }
         }
         if (uuids.length > 0) {
             const submit = document.getElementById('load_file_submit');
             showElement(submit, false);
-            sendUuids()
+            sendUuids();
         }
     };
-    reader.readAsText(file);
+    reader.readAsText(file, "utf-8");
 }
 
 function insertRowUuid(table, data) {
