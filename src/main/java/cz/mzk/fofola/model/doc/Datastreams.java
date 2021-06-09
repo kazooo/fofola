@@ -4,7 +4,10 @@ public enum Datastreams {
 
     RELS_EXT("RELS-EXT", "application/rdf+xml", "false", "X", "A"),
     DC("DC", "text/xml", "false", "X", "A"),
-
+    TEXT_EN("TEXT_en", "text/plain", "false", "M", "A"),
+    TEXT_CS("TEXT_cs", "text/plain", "false", "M", "A"),
+    LONG_TEXT_EN("LONG_TEXT_en", "text/plain", "false", "M", "A"),
+    LONG_TEXT_CS("LONG_TEXT_cs", "text/plain", "false", "M", "A"),
     THUMB_IMG("IMG_THUMB", "image/jpeg", "true", "M", "A"),
     FULL_IMG("IMG_FULL", "image/jpeg", "true", "M", "A");
 

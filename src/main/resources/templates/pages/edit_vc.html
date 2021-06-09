@@ -1,0 +1,55 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head lang="en">
+    <th:block th:include="layout :: standard (page_title='Fofola')"></th:block>
+    <script src="../js/edit_vc.js"></script>
+</head>
+
+<body>
+<a id="home-image" href="/"><img src="../img/home.png" width="100" height="100"></a>
+
+<div class="container">
+    <div class="white-rounded-back">
+        <div class="panel-bar">
+            <form class="form-inline" action="#">
+                <label>Zadejte UUID sbirky</label>
+                <input class="text" id="enter_uuid" type="text" size="33"/>
+                <button class="btn btn-outline-secondary btn-light" id="load_uuid_submit">Načíst uuid</button>
+            </form>
+
+            <div style="clear: both"></div>
+        </div>
+
+        <div id="edit_panel" class="panel-bar">
+
+            <form class="form-inline" action="#">
+                <label>Název sbírky v češtině</label>
+                <input class="text" id="title_cz" type="text" size="33"/>
+            </form>
+
+            <form class="form-inline" action="#">
+                <label>Název sbírky v angličtině</label>
+                <input class="text" id="title_en" type="text" size="33"/>
+            </form>
+
+            <form class="form-inline" action="#">
+                <label>Popis sbírky v češtině</label>
+                <input class="text" id="desc_cz" type="text" size="33"/>
+            </form>
+
+            <form class="form-inline" action="#">
+                <label>Popis sbírky v angličtině</label>
+                <input class="text" id="desc_en" type="text" size="33"/>
+            </form>
+
+            <form class="form-inline" action="#">
+                <button class="btn btn-outline-secondary btn-light" type="submit" id="edit_button">Změnit</button>
+            </form>
+
+            <div style="clear: both"></div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

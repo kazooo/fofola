@@ -96,6 +96,30 @@ public class FedoraApi {
         setDatastream(uuid, Datastreams.FULL_IMG, entity);
     }
 
+    public void setTextEn(String uuid, String textEn) throws IOException {
+        HttpEntity<Object> entity = strEntity(textEn, Datastreams.TEXT_EN.mimeType);
+        setDatastream(uuid, Datastreams.TEXT_EN, entity);
+    }
+
+    public void setTextCz(String uuid, String textCz) throws IOException {
+        HttpEntity<Object> entity = strEntity(textCz, Datastreams.TEXT_CS.mimeType);
+        setDatastream(uuid, Datastreams.TEXT_CS, entity);
+    }
+
+    public void setLongTextCz(String uuid, String textCz) throws IOException {
+        HttpEntity<Object> entity = strEntity(textCz, Datastreams.LONG_TEXT_CS.mimeType);
+        setDatastream(uuid, Datastreams.LONG_TEXT_CS, entity);
+    }
+
+    public void setLongTextEn(String uuid, String textCz) throws IOException {
+        HttpEntity<Object> entity = strEntity(textCz, Datastreams.LONG_TEXT_EN.mimeType);
+        setDatastream(uuid, Datastreams.LONG_TEXT_EN, entity);
+    }
+
+    private HttpEntity<Object> strEntity(String str, String mimeType) {
+        return new HttpEntity<>(str, authMimeTypeHeader(mimeType));
+    }
+
     private HttpEntity<Object> docStrEntity(Document doc, String mimeType) throws TransformerException {
         return new HttpEntity<>(docToStr(doc), authMimeTypeHeader(mimeType));
     }
