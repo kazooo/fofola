@@ -72,7 +72,7 @@ public class SolrVCLinker {
     private Consumer<SolrDocument> createUnlinkConsumer(String vcId) {
         return solrDoc -> {
             List<String> collections = (List<String>) solrDoc.getFieldValue("collection");
-            if (collections.contains(vcId)) {
+            if (collections != null && collections.contains(vcId)) {
                 collections.remove(vcId);
                 try {
                     String uuid = (String) solrDoc.getFieldValue("PID");
