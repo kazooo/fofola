@@ -40,10 +40,10 @@ function insertFileName(table, genLog) {
     row.cells[1].innerHTML = genLog.uuid;
     row.cells[2].innerHTML = genLog.state;
     const cell = row.insertCell(3); // cell with operation button
-    setOperationButton(cell);
+    setOperationButton(cell, genLog.state);
 }
 
-function setOperationButton(cell) {
+function setOperationButton(cell, status) {
     var checkbox = document.createElement('div');
     checkbox.className = 'form-check';
     checkbox.style = 'display: inline';
@@ -60,11 +60,13 @@ function setOperationButton(cell) {
     btn.setAttribute( "onClick", "javascript: operate(this, 'remove');" );
     cell.appendChild(btn);
 
-    btn = document.createElement('button');
-    btn.className = 'download_btn';
-    btn.title = 'Stahnout';
-    btn.setAttribute( "onClick", "javascript: operate(this, 'download');" );
-    cell.appendChild(btn);
+    if (status !== "ACTIVE") {
+        btn = document.createElement('button');
+        btn.className = 'download_btn';
+        btn.title = 'Stahnout';
+        btn.setAttribute( "onClick", "javascript: operate(this, 'download');" );
+        cell.appendChild(btn);
+    }
 }
 
 function operate(element, action) {
