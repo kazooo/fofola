@@ -1,18 +1,14 @@
 import {useDispatch} from "react-redux";
-import {useState} from "react";
 import {Panel} from "../../components/container/Panel";
 import {TextForm} from "../../components/form/TextForm";
 import {Selector} from "../../components/form/Selector";
 import {IMG_FULL, IMG_THUMB} from "./constants";
-import {Button} from "../../components/button";
 import {FileUploadWithButton} from "../../components/form/FileUploadWithButton";
+import {setDatastream, setImg, setUuid} from "./slice";
 
 export const SetImageForm = () => {
 
     const dispatch = useDispatch();
-    const [uuid, setUuid] = useState("");
-    const [datastream, setDatastream] = useState();
-    const [imgPath, setImgPath] = useState();
 
     const datastreams = [
         {
@@ -25,21 +21,34 @@ export const SetImageForm = () => {
         }
     ]
 
+    const loadUuid = uuid => {
+        dispatch(setUuid(uuid));
+    }
+
+    const loadDatastream = datastream => {
+        dispatch(setDatastream(datastream));
+    }
+
+    const loadImg = img => {
+        dispatch(setImg(img));
+    }
+
     return <Panel>
         <TextForm
             label="UUID stránky"
             size="33"
             placeholder="uuid:..."
-            onChange={setUuid}
+            onChange={loadUuid}
         />
         <Selector
-            label="Model"
+            label="Datastream"
             options={datastreams}
-            onChange={setDatastream}
+            onChange={loadDatastream}
         />
         <FileUploadWithButton
             label="Vyberte obrázek"
-            submitFunc={}
+            acceptTypes={'.jpg'}
+            submitFunc={loadImg}
         />
     </Panel>
 };

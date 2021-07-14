@@ -9,6 +9,7 @@ import {checkDonatorSlice} from "../features/check-donator/slice";
 import {linkDonatorSlice} from "../features/link-donator/slice";
 import {solrQuerySlice} from "../features/solr-query/slice";
 import {uuidInfoSlice} from "../features/uuid-info/slice";
+import {setImgSlice} from "../features/set-image/slice";
 import {reindexSlice} from "../features/reindex/slice";
 import {linkVcSlice} from "../features/link-vc/slice";
 import {deleteSlice} from "../features/delete/slice";
@@ -22,6 +23,7 @@ import changeAccessSaga from "../features/change-access/saga";
 import linkDonatorSaga from "../features/link-donator/saga";
 import solrQuerySaga from "../features/solr-query/saga";
 import uuidInfoSaga from "../features/uuid-info/saga";
+import setImgSaga from "../features/set-image/saga";
 import reindexSaga from "../features/reindex/saga";
 import linkVcSaga from "../features/link-vc/saga";
 import deleteSaga from "../features/delete/saga";
@@ -41,11 +43,19 @@ const reducers = {
     reindex: reindexSlice.reducer,
     linkVc: linkVcSlice.reducer,
     delete: deleteSlice.reducer,
-    pdf: pdfSlice.reducer
+    setImg: setImgSlice.reducer,
+    pdf: pdfSlice.reducer,
 };
 
 const middlewares = [
-    ...getDefaultMiddleware({thunk: false}),
+    ...getDefaultMiddleware({
+        thunk: false,
+        serializableCheck: {
+            ignoredActions: ['setImg/setImg'],
+            ignoredActionPaths: ['payload.img'],
+            ignoredPaths: ['setImg.img'],
+        },
+    }),
     initialSagaMiddleware
 ];
 
@@ -65,4 +75,5 @@ initialSagaMiddleware.run(uuidInfoSaga);
 initialSagaMiddleware.run(reindexSaga);
 initialSagaMiddleware.run(linkVcSaga);
 initialSagaMiddleware.run(deleteSaga);
+initialSagaMiddleware.run(setImgSaga);
 initialSagaMiddleware.run(pdfSaga);
