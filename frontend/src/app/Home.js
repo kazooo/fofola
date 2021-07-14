@@ -7,7 +7,6 @@ export const Home = () => (
     <ServiceContainer title="Fofola">
         <ServiceCard title="Zobrazování metadat">
             <Service link="/uuid-info"> Vypsat základní info o UUID </Service>
-            <Service link="/tree"> Zobrazit strom dokumentu </Service>
             <Service link="/solr-query"> Dotaz na Solr </Service>
             <Service link="/kramerius-processes"> Správa procesů </Service>
             <Service link="/pdf"> Generování PDF </Service>
