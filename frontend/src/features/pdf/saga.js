@@ -1,12 +1,12 @@
 import {createAction} from "@reduxjs/toolkit";
 import {call, put, select, takeEvery, all} from "redux-saga/effects";
-import {request} from "../../redux/superagent";
-import {setOutputFiles, removeOutputFile, getUuids} from "./slice";
+import {baseUrl, request} from "../../redux/superagent";
+import {setOutputFiles, removeOutputFile, getUuids, createActionType} from "./slice";
 
-const GENERATE_PDF = "GENERATE_PDF";
-const REQUEST_PDF_FILES = "REQUEST_PDF_FILES";
-const REMOVE_PDF_FILE = "REMOVE_PDF_FILE";
-const DOWNLOAD_PDF_FILE = "DOWNLOAD_PDF_FILE";
+const GENERATE_PDF = createActionType("GENERATE_PDF");
+const REQUEST_PDF_FILES = createActionType("REQUEST_PDF_FILES");
+const REMOVE_PDF_FILE = createActionType("REMOVE_PDF_FILE");
+const DOWNLOAD_PDF_FILE = createActionType("DOWNLOAD_PDF_FILE");
 
 export const generatePdf = createAction(GENERATE_PDF);
 export const removePdfFile = createAction(REMOVE_PDF_FILE);
@@ -26,6 +26,7 @@ function* generatePdfSaga(action) {
         yield all(uuids.map(uuid =>
             request.post("/pdf/generate/" + uuid)
         ));
+        yield call(requestFilesSaga);
     } catch (e) {
         console.error(e);
     }
@@ -54,6 +55,7 @@ function* removeFileSaga(action) {
 }
 
 function* downloadFileSaga(action) {
-    const win = window.open("/pdf/get/" + action.payload, '_blank');
+    const url = baseUrl + '/pdf/get/' + action.payload;
+    const win = window.open(url, '_blank');
     win.focus();
 }

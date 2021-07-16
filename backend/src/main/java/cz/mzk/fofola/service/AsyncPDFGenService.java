@@ -87,7 +87,11 @@ public class AsyncPDFGenService {
     public void removeLogAndFile(Long id) {
         AsyncPDFGenLog genLog = logRepository.getOne(id);
         String fileName = genLog.getUuid() + ".pdf";
-        FileService.removePDFOutputFile(fileName);
-        logRepository.deleteById(id);
+        try {
+            FileService.removePDFOutputFile(fileName);
+        } catch (Exception ignored) {}
+        finally {
+            logRepository.deleteById(id);
+        }
     }
 }

@@ -1,10 +1,10 @@
 import {call, put, takeEvery} from "redux-saga/effects";
 import {createAction} from "@reduxjs/toolkit";
 import {request} from "../../redux/superagent";
-import {clearUuids} from "./slice";
+import {clearUuids, createActionType} from "./slice";
 
-const PUBLIC_UUIDS = "PUBLIC_UUIDS";
-const PRIVATE_UUIDS = "PRIVATE_UUIDS";
+const PUBLIC_UUIDS = createActionType("PUBLIC_UUIDS");
+const PRIVATE_UUIDS = createActionType("PRIVATE_UUIDS");
 
 export const publicUuids = createAction(PUBLIC_UUIDS);
 export const privateUuids = createAction(PRIVATE_UUIDS);

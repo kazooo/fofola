@@ -1,78 +1,72 @@
-import {Panel} from "../../components/container/Panel";
-import {TextForm} from "../../components/form/TextForm";
-import {Selector} from "../../components/form/Selector";
-import {Button} from "../../components/button";
 import {
-    ARTICLE,
-    GRAPHIC,
-    MAP,
-    MONOGRAPH,
-    PAGE,
-    PERIODICAL,
-    PERIODICALITEM,
-    PERIODICALVOLUME,
-    PRIVATE_ACCESS,
-    PUBLIC_ACCESS
+    accesses,
+    fields,
+    models,
 } from "./constants";
-import {useDispatch} from "react-redux";
-import {useState} from "react";
-import {sendSolrQuery} from "./saga";
+import {useDispatch, useSelector} from "react-redux";
+import {requestOutputFiles, sendSolrQuery} from "./saga";
+import {Box, Grid, TextField} from "@material-ui/core";
+import {
+    allRequiredParamsExist,
+    clearParams,
+    getAccess,
+    getField,
+    getFrom,
+    getModel,
+    getTo,
+    setAccess,
+    setField,
+    setFrom,
+    setModel,
+    setTo
+} from "./slice";
+import {Selector} from "../../components/temporary/Selector";
+import {ClearButton, StartButton} from "../../components/button";
+import {useInterval} from "../../effects/useInterval";
+import {useEffect} from "react";
 
 export const SolrQueryForm = () => {
 
-    const models = [
-        {
-            value: MONOGRAPH,
-            text: "monograph"
-        },
-        {
-            value: PERIODICAL,
-            text: "periodical"
-        },
-        {
-            value: PERIODICALVOLUME,
-            text: "periodicalvolume"
-        },
-        {
-            value: PERIODICALITEM,
-            text: "periodicalitem"
-        },
-        {
-            value: ARTICLE,
-            text: "article"
-        },
-        {
-            value: MAP,
-            text: "map"
-        },
-        {
-            value: PAGE,
-            text: "page"
-        },
-        {
-            value: GRAPHIC,
-            text: "graphic"
-        }
-    ];
-    const accesses = [
-        {
-            value: PUBLIC_ACCESS,
-            text: "public"
-        },
-        {
-            value: PRIVATE_ACCESS,
-            text: "private"
-        }
-    ];
-
     const dispatch = useDispatch();
-    const [from, setFrom] = useState("");
-    const [to, setTo] = useState("");
-    const [model, setModel] = useState(MONOGRAPH);
-    const [access, setAccess] = useState(PUBLIC_ACCESS);
+    const to = useSelector(state => getTo(state));
+    const from = useSelector(state => getFrom(state));
+    const model = useSelector(state => getModel(state));
+    const access = useSelector(state => getAccess(state));
+    const field = useSelector(state => getField(state));
+    const ready = useSelector(state => allRequiredParamsExist(state));
 
-    const handleSend = () => {
-        if (from && to) {
+    const RELOAD_INTERVAL_MS = 5000;
+
+    useEffect(() => {
+        dispatch(requestOutputFiles());
+    }, [])
+
+    useInterval(() => {
+        dispatch(requestOutputFiles());
+    }, RELOAD_INTERVAL_MS);
+
+    const changeModel = (model) => {
+        dispatch(setModel(model));
+    };
+
+    const changeAccess = (access) => {
+        dispatch(setAccess(access));
+    };
+
+    const changeFrom = (from) => {
+        dispatch(setFrom(from));
+    };
+
+    const changeTo = (to) => {
+        dispatch(setTo(to));
+    };
+
+    const changeField = (field) => {
+        dispatch(setField(field));
+    };
+
+    const submit = () => {
+        if (ready) {
             dispatch(sendSolrQuery({
                 "year_from": from,
                 "year_to": to,
@@ -80,34 +74,77 @@ export const SolrQueryForm = () => {
                 "accessibility": access,
             }));
         }
+    };
+
+    const clear = () => {
+        if (ready) {
+            dispatch(clearParams());
+        }
     }
 
-    return <Panel>
-        <TextForm
-            label="Z roku"
-            size="7"
-            placeholder="1700"
-            onChange={setFrom}
-        />
-        <TextForm
-            label="Do roku"
-            size="7"
-            placeholder="2021"
-            onChange={setTo}
-        />
-        <Selector
-            label="Model"
-            options={models}
-            onChange={setModel}
-        />
-        <Selector
-            label="Dostupnost"
-            options={accesses}
-            onChange={setAccess}
-        />
-        <Button
-            label="Zapsat uuid z odpovědi"
-            onClick={handleSend}
-        />
-    </Panel>
+    return <Box>
+        <Grid container
+              direction="column"
+              alignItems={"center"}
+              justifyContent={"center"}
+              spacing={3}
+        >
+            <Grid item>
+                <TextField
+                    label="Z"
+                    value={from}
+                    variant="outlined"
+                    placeholder="dd-mm-yyyy"
+                    onChange={e => changeFrom(e.target.value)}
+                    size="small"
+                    inputProps={{ maxLength: 40 }}
+                />
+            </Grid>
+            <Grid item>
+                <TextField
+                    label="Do"
+                    value={to}
+                    variant="outlined"
+                    placeholder="dd-mm-yyyy"
+                    onChange={e => changeTo(e.target.value)}
+                    size="small"
+                    inputProps={{ maxLength: 40 }}
+                />
+            </Grid>
+            <Grid item>
+                <Selector
+                    selectLabel={'Model'}
+                    selectOptions={models}
+                    selectedOption={model}
+                    onSelectOptionChange={changeModel}
+                />
+            </Grid>
+            <Grid item>
+                <Selector
+                    selectLabel={'Dostupnost'}
+                    selectOptions={accesses}
+                    selectedOption={access}
+                    onSelectOptionChange={changeAccess}
+                />
+            </Grid>
+            <Grid item>
+                <Selector
+                    selectLabel={'Vytvořit seznam'}
+                    selectOptions={fields}
+                    selectedOption={field}
+                    onSelectOptionChange={changeField}
+                />
+            </Grid>
+            {ready &&
+                <Grid item>
+                    <StartButton onClick={submit}>Vytvořit seznam</StartButton>
+                </Grid>
+            }
+            {ready &&
+                <Grid item>
+                    <ClearButton onClick={clear}>Clear</ClearButton>
+                </Grid>
+            }
+        </Grid>
+    </Box>
 };

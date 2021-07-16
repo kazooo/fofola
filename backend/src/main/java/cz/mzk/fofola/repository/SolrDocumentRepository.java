@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.util.*;
 
-
 @Repository
 public class SolrDocumentRepository {
 

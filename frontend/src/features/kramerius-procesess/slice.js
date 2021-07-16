@@ -4,6 +4,7 @@ export const krameriusProcessSlice = createSlice({
     name: "krameriusProcess",
     initialState: {
         processesInfo: [],
+        isLoading: false,
         page: 0
     },
     reducers: {
@@ -15,10 +16,15 @@ export const krameriusProcessSlice = createSlice({
         },
         setPage: (state, action) => {
             state.page = action.payload;
+        },
+        toggleIsLoading: (state) => {
+            state.isLoading = !state.isLoading;
         }
     }
 });
 
 export const getCurrentPage = state => state.krameriusProcess.page;
+export const getIsLoading = state => state.krameriusProcess.isLoading;
 export const getProcessesInfo = state => state.krameriusProcess.processesInfo;
-export const {setProcessesInfo, removeProcessInfo, setPage, setAutoReload} = krameriusProcessSlice.actions;
+export const createActionType = actionName => krameriusProcessSlice.name + "/" + actionName;
+export const {setProcessesInfo, removeProcessInfo, setPage, toggleIsLoading} = krameriusProcessSlice.actions;

@@ -16,7 +16,7 @@ export const Home = () => (
             <Service link="/reindex"> Reindexace dokumentů </Service>
             <Service link="/delete"> Mazání dokumentů </Service>
             <Service link="/perio-parts-publish"> Zveřejnit části periodik </Service>
-            <Service link="/set-image"> Editace obrázků </Service>
+            {/*<Service link="/set-image"> Editace obrázků </Service>*/}
         </ServiceCard>
         <ServiceCard title="Virtuální sbírky">
             <Service link="/link-vc"> Přídat/odstranit do/z virtuální sbírky </Service>

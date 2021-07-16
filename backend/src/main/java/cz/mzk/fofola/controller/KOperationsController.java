@@ -20,7 +20,7 @@ public class KOperationsController {
     private final UuidCheckingService uuidCheckService;
     private final KProcessService kProcessService;
 
-    @GetMapping("/uuid-info")
+    @PostMapping("/uuid-info")
     @ResponseBody
     public List<UuidStateResponse> checkUuidState(@RequestBody List<String> uuids) {
         List<UuidStateResponse> states = new ArrayList<>();
@@ -53,14 +53,6 @@ public class KOperationsController {
 
         }
         return krameriusProcesses;
-    }
-
-    @PostMapping("/reindex")
-    public void reindex(@RequestBody List<String> uuids) {
-        for (String uuid : uuids) {
-            log.info("Reindex: " + uuid);
-            kProcessService.reindex(uuid);
-        }
     }
 
     @DeleteMapping("/delete")

@@ -1,65 +1,78 @@
-import {useDispatch} from "react-redux";
-import {Panel} from "../../components/container/Panel";
-import {FormWithButton} from "../../components/form/FormWithButton";
-import {TextFileReadWithButton} from "../../components/form/TextFileReadWithButton";
-import {Selector} from "../../components/form/Selector";
-import {setMode, setUuids, setVcUuid} from "./slice";
-import {LINK_MODE, UNLINK_MODE} from "./constants";
-import {TextForm} from "../../components/form/TextForm";
+import {useDispatch, useSelector} from "react-redux";
+import {Box, Grid, TextField} from "@material-ui/core";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
+import {setMode, addUuids, setVcUuid, getMode, getVcs} from "./slice";
+import {modes} from "./constants";
+
+import {LoadingComponent} from "../../components/temporary/LoadingComponent";
+import {LoadUuidsForm} from "../../components/temporary/LoadUuidsForm";
+import {Selector} from "../../components/temporary/Selector";
 
 export const LinkVcForm = () => {
 
     const dispatch = useDispatch();
-    const modes = [
-        {
-            value: LINK_MODE,
-            text: "přidat"
-        },
-        {
-            value: UNLINK_MODE,
-            text: "odebrat"
+    const mode = useSelector(state => getMode(state));
+    const vcs = useSelector(state => getVcs(state));
+
+    const loadVcUuid = (event, values) => {
+        if (values) {
+            dispatch(setVcUuid(values.uuid));
+        } else {
+            dispatch(setVcUuid(''));
         }
-    ];
-
-    const loadVcUuid = uuid => {
-        dispatch(setVcUuid(uuid));
-    }
-
-    const loadOneUuid = uuid => {
-        dispatch(setUuids([uuid]));
-    }
-
-    const loadUuids = uuids => {
-        dispatch(setUuids(uuids));
     }
 
     const changeMode = mode => {
         dispatch(setMode(mode));
     }
 
-    return <Panel>
-        <TextForm
-            label="UUID vurtuální sbírky"
-            size="33"
-            placeholder="uuid:..."
-            onChange={loadVcUuid}
-        />
-        <Selector
-            label="Režim"
-            options={modes}
-            onChange={changeMode}
-        />
-        <FormWithButton
-            type="text"
-            size="33"
-            label="UUID kořene"
-            button="Načíst uuid"
-            placeholder="uuid:..."
-            submitFunc={loadOneUuid}
-        />
-        <TextFileReadWithButton
-            label="Vyberte soubor s UUID kořenů"
-            submitFunc={loadUuids}
-        />
-    </Panel>
+    const loadUuids = (uuids) => {
+        dispatch(addUuids(uuids));
+    }
+
+    const form = <Box>
+        <LoadUuidsForm addUuids={loadUuids} />
+        <Box>
+            <Grid container
+                  direction="row"
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  spacing={3}
+            >
+                <Grid item>
+                    <Autocomplete
+                        options={vcs}
+                        getOptionLabel={(option) => option.name_cs}
+                        style={{ width: 300 }}
+                        onChange={loadVcUuid}
+                        renderInput={(params) =>
+                            <TextField
+                                {...params}
+                                label="Název virtuální sbirky"
+                                variant="outlined"
+                                size="small"
+                            />
+                        }
+                    />
+                </Grid>
+                <Grid item>
+                    <Selector
+                        selectLabel={"Režim"}
+                        selectOptions={modes}
+                        selectedOption={mode}
+                        onSelectOptionChange={changeMode}
+                    />
+                </Grid>
+            </Grid>
+        </Box>
+    </Box>
+
+    return <Box>
+        {
+            vcs
+                ? form
+                : <LoadingComponent label={'Načítám virtuální sbirky...'} />
+        }
+    </Box>
 };

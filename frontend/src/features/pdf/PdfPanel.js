@@ -1,22 +1,31 @@
 import {useDispatch, useSelector} from "react-redux";
-import {Panel} from "../../components/container/Panel";
 import {InlineP} from "../../components/container/InlineP";
-import {getUuids} from "./slice";
+import {clearUuids, getUuids} from "./slice";
 import {generatePdf} from "./saga";
+import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {ClearButton, StartButton} from "../../components/button";
 
 export const PdfPanel = () => {
 
     const dispatch = useDispatch();
     const uuids = useSelector(state => getUuids(state));
 
-    const handleOnClick = (e) => {
+    const generate = (e) => {
         e.preventDefault();
         dispatch(generatePdf());
     }
 
+    const clear = (e) => {
+        e.preventDefault();
+        dispatch(clearUuids());
+    }
+
     return uuids.length > 0 &&
-        <Panel>
-            <button type="submit" onClick={handleOnClick}>Vygenerovat PDF</button>
+        <HorizontalDirectedGrid
+            spacing={10}
+        >
+            <StartButton onClick={generate}>Vygenerovat PDF</StartButton>
             <InlineP>Celkem: {uuids.length}</InlineP>
-        </Panel>;
+            <ClearButton onClick={clear}>Clear</ClearButton>
+        </HorizontalDirectedGrid>;
 };

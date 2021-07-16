@@ -1,12 +1,13 @@
 import {createAction} from "@reduxjs/toolkit";
 import {call, put, takeEvery} from "redux-saga/effects";
-import {request} from "../../redux/superagent";
-import {clearUuidInfo, setUuidInfo} from "./slice";
 
-const REINDEX_UUID = "REINDEX_UUID";
-const PUBLIC_UUIDS = "PUBLIC_UUIDS";
-const PRIVATE_UUIDS = "PRIVATE_UUIDS";
-const GET_UUID_INFO = "GET_UUID_INFO";
+import {request} from "../../redux/superagent";
+import {clearUuidInfo, addUuidInfo, createActionType} from "./slice";
+
+const REINDEX_UUID = createActionType("REINDEX_UUID");
+const PUBLIC_UUIDS = createActionType("PUBLIC_UUIDS");
+const PRIVATE_UUIDS = createActionType("PRIVATE_UUIDS");
+const GET_UUID_INFO = createActionType("GET_UUID_INFO");
 
 export const getUuidInfo = createAction(GET_UUID_INFO);
 export const reindexUuids = createAction(REINDEX_UUID);
@@ -23,10 +24,10 @@ export default function* watcherSaga() {
 function* getUuidInfoSaga(action) {
     try {
         const payload = yield call(() => request
-            .get("/uuid-info")
+            .post("/uuid-info")
             .send(action.payload)
         );
-        yield put(setUuidInfo(payload));
+        yield put(addUuidInfo(payload.body));
     } catch (e) {
         console.error(e);
     }

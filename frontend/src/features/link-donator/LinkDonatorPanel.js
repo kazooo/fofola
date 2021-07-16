@@ -1,8 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
-import {Panel} from "../../components/container/Panel";
 import {InlineP} from "../../components/container/InlineP";
-import {getDonator, getMode, getUuids} from "./slice";
+import {clearUuids, getDonator, getMode, getUuids} from "./slice";
 import {changeDonator} from "./saga";
+import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {ClearButton, StartButton} from "../../components/button";
 
 export const LinkDonatorPanel = () => {
 
@@ -16,9 +17,17 @@ export const LinkDonatorPanel = () => {
         dispatch(changeDonator({donator, mode, uuids}));
     }
 
-    return uuids.length > 0 &&
-        <Panel>
-            <button type="submit" onClick={handleOnClick}>Spustit process</button>
+    const clear = (e) => {
+        e.preventDefault();
+        dispatch(clearUuids(uuids));
+    }
+
+    return uuids.length > 0 && mode && donator &&
+        <HorizontalDirectedGrid
+            spacing={10}
+        >
+            <StartButton onClick={handleOnClick}>Spustit process</StartButton>
             <InlineP>Celkem: {uuids.length}</InlineP>
-        </Panel>;
+            <ClearButton onClick={clear}>Clear</ClearButton>
+        </HorizontalDirectedGrid>;
 };

@@ -1,8 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
-import {getPayload, isPayloadCompleted} from "./slice";
-import {Panel} from "../../components/container/Panel";
-import {Button} from "../../components/button";
+import {clearAll, getPayload, isPayloadCompleted} from "./slice";
 import {setImg} from "./saga";
+import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {ClearButton, StartButton} from "../../components/button";
 
 export const SetImgPanel = () => {
 
@@ -14,8 +14,16 @@ export const SetImgPanel = () => {
         dispatch(setImg(payload));
     }
 
+    const clear = (e) => {
+        e.preventDefault();
+        dispatch(clearAll());
+    }
+
     return completed &&
-        <Panel>
-            <Button label={'Změnit obrázek'} onClick={sendPayload} />
-        </Panel>;
+        <HorizontalDirectedGrid
+            spacing={10}
+        >
+            <StartButton onClick={sendPayload}>Změnit obrázek</StartButton>
+            <ClearButton onClick={clear}>Clear</ClearButton>
+        </HorizontalDirectedGrid>;
 }

@@ -1,34 +1,37 @@
 import {useDispatch, useSelector} from "react-redux";
-import {Panel} from "../../components/container/Panel";
 import {InlineP} from "../../components/container/InlineP";
 import {clearUuids, getUuids} from "./slice";
 import {privateUuids, publicUuids} from "./saga";
+import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {ClearButton, LockButton, UnlockButton} from "../../components/button";
 
 export const ChangeAccessPanel = () => {
 
     const dispatch = useDispatch();
     const uuids = useSelector(state => getUuids(state));
 
-    const handlePublic = (e) => {
+    const makePublic = (e) => {
         e.preventDefault();
         dispatch(publicUuids(uuids));
     }
 
-    const handlePrivate = (e) => {
+    const makePrivate = (e) => {
         e.preventDefault();
         dispatch(privateUuids(uuids));
     }
 
-    const handleClear = (e) => {
+    const clear = (e) => {
         e.preventDefault();
         dispatch(clearUuids());
     }
 
     return uuids.length > 0 &&
-        <Panel>
-            <button type="submit" onClick={handlePublic}>Zveřejnit</button>
-            <button type="submit" onClick={handlePrivate}>Zneveřejnit</button>
-            <button type="submit" onClick={handleClear}>Vyčistit</button>
+        <HorizontalDirectedGrid
+            spacing={3}
+        >
+            <UnlockButton onClick={makePublic}>Zveřejnit</UnlockButton>
+            <LockButton onClick={makePrivate}>Zneveřejnit</LockButton>
+            <ClearButton onClick={clear}>Clear</ClearButton>
             <InlineP>Celkem: {uuids.length}</InlineP>
-        </Panel>;
+        </HorizontalDirectedGrid>;
 };

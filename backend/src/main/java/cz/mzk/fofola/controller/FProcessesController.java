@@ -57,14 +57,14 @@ public class FProcessesController {
 
     @GetMapping("/logs/{logFileName}")
     @ResponseBody
-    public String getLogFileContent(@PathVariable String logFileName) throws IOException {
-        String filePath = FileService.logDirPath + logFileName;
+    public String getLogFileContent(@PathVariable final String logFileName) throws IOException {
+        String filePath = FileService.getLogFilePath(logFileName);
         return String.join("<br/>", Files.readAllLines(Paths.get(filePath)));
     }
 
     @PutMapping("/stop/{pid}")
     @ResponseBody
-    public String stopRunningProcess(@PathVariable String pid) {
+    public String stopRunningProcess(@PathVariable final String pid) {
         log.info("Got terminate process command for pid: " + pid);
         processCommandService.terminate(pid);
         return pid;
@@ -72,7 +72,7 @@ public class FProcessesController {
 
     @DeleteMapping("/remove/{pid}")
     @ResponseBody
-    public String removeProcessFromDB(@PathVariable String pid) {
+    public String removeProcessFromDB(@PathVariable final String pid) {
         log.info("Got remove process command for pid: " + pid);
         processCommandService.removeInfoFromDB(pid);
         return pid;

@@ -6,8 +6,8 @@ export const uuidInfoSlice = createSlice({
         uuidInfo: []
     },
     reducers: {
-        setUuidInfo: (state, action) => {
-            state.uuidInfo = action.payload;
+        addUuidInfo: (state, action) => {
+            state.uuidInfo = state.uuidInfo.concat(action.payload);
         },
         clearUuidInfo: (state, action) => {
             state.uuidInfo = [];
@@ -16,4 +16,5 @@ export const uuidInfoSlice = createSlice({
 });
 
 export const getUuidInfo = state => state.uuidInfo.uuidInfo;
-export const {setUuidInfo, clearUuidInfo} = uuidInfoSlice.actions;
+export const {addUuidInfo, clearUuidInfo} = uuidInfoSlice.actions;
+export const createActionType = actionName => uuidInfoSlice.name + "/" + actionName;

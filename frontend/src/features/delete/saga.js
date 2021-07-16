@@ -1,9 +1,9 @@
 import {createAction} from "@reduxjs/toolkit";
 import {call, put, takeEvery} from "redux-saga/effects";
-import {clearUuids} from "./slice";
+import {clearUuids, createActionType} from "./slice";
 import {request} from "../../redux/superagent";
 
-const DELETE_UUIDS = "DELETE_UUIDS";
+const DELETE_UUIDS = createActionType("DELETE_UUIDS");
 
 export const deleteUuids = createAction(DELETE_UUIDS);
 
@@ -17,8 +17,9 @@ function* deleteSaga(action) {
             .delete("/delete")
             .send(action.payload)
         );
-        yield put(clearUuids());
     } catch (e) {
         console.error(e);
+    } finally {
+        yield put(clearUuids());
     }
 }

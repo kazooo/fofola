@@ -1,9 +1,10 @@
 import {takeEvery, call, put} from "redux-saga/effects";
 import {createAction} from "@reduxjs/toolkit";
-import {request} from "../../redux/superagent";
-import {clearUuids} from "./slice";
 
-const PUBLISH_PERIO_PARTS = "PUBLISH_PERIO_PARTS";
+import {request} from "../../redux/superagent";
+import {clearUuids, createActionType} from "./slice";
+
+const PUBLISH_PERIO_PARTS = createActionType("PUBLISH_PERIO_PARTS");
 
 export const publishPerioParts = createAction(PUBLISH_PERIO_PARTS);
 
@@ -17,8 +18,9 @@ function* publishPerioPartsSaga(action) {
             .post("/internal-processes/new/perio_parts_pub")
             .send(action.payload)
         );
-        yield put(clearUuids())
     } catch (e) {
         console.error(e);
+    } finally {
+        yield put(clearUuids())
     }
 }

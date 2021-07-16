@@ -6,8 +6,8 @@ export const perioPartsPublishSlice = createSlice({
         uuids: []
     },
     reducers: {
-        setUuids: (state, action) => {
-            state.uuids = action.payload;
+        addUuids: (state, action) => {
+            state.uuids = state.uuids.concat(action.payload);
         },
         clearUuids: (state, action) => {
             state.uuids = [];
@@ -16,4 +16,5 @@ export const perioPartsPublishSlice = createSlice({
 });
 
 export const getUuids = state => state.perioPartsPublish.uuids;
-export const {setUuids, clearUuids} = perioPartsPublishSlice.actions;
+export const {addUuids, clearUuids} = perioPartsPublishSlice.actions;
+export const createActionType = actionName => perioPartsPublishSlice.name + "/" + actionName;

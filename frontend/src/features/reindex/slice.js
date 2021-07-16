@@ -6,8 +6,8 @@ export const reindexSlice = createSlice({
         uuids: []
     },
     reducers: {
-        setUuids: (state, action) => {
-            state.uuids = action.payload;
+        addUuids: (state, action) => {
+            state.uuids = state.uuids.concat(...action.payload);
         },
         clearUuids: (state, action) => {
             state.uuids = [];
@@ -16,4 +16,5 @@ export const reindexSlice = createSlice({
 });
 
 export const getUuids = state => state.reindex.uuids;
-export const {setUuids, clearUuids} = reindexSlice.actions;
+export const {addUuids, clearUuids} = reindexSlice.actions;
+export const createActionType = actionName => reindexSlice.name + "/" + actionName;

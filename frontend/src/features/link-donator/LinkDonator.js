@@ -1,17 +1,31 @@
-import {Navbar} from "../../components/navbar/Navbar";
-import {Container} from "../../components/container/Container";
-import {ContainerHeader} from "../../components/container/ContainerHeader";
 import {LinkDonatorForm} from "./LinkDonatorForm";
 import {LinkDonatorPanel} from "./LinkDonatorPanel";
+import {FeatureMenu} from "../../components/temporary/FeatureMenu";
+import {FeatureContent} from "../../components/temporary/FeatureContent";
+import {SplitPageContainer} from "../../components/temporary/SplitPageContainer";
+import {FofolaPage} from "../../components/temporary/FofolaPage";
+import {LinkDonatorUuidsTable} from "./LinkDonatorUuidsTable";
 
 export const LinkDonator = () => (
-    <div>
-        <Navbar />
-        <Container>
-            <ContainerHeader>
-                <LinkDonatorForm />
-                <LinkDonatorPanel />
-            </ContainerHeader>
-        </Container>
-    </div>
+    <FofolaPage>
+        <SplitPageContainer
+            leftSide={<LinkDonatorMenu />}
+            rightSide={<LinkDonatorTable />}
+            leftSideColumns={5}
+            rightSideColumns={7}
+        />
+    </FofolaPage>
+);
+
+const LinkDonatorMenu = () => (
+    <FeatureMenu>
+        <LinkDonatorForm />
+        <LinkDonatorPanel />
+    </FeatureMenu>
+);
+
+const LinkDonatorTable = () => (
+    <FeatureContent>
+        <LinkDonatorUuidsTable />
+    </FeatureContent>
 );

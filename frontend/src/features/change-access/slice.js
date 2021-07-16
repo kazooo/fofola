@@ -6,8 +6,8 @@ export const changeAccessSlice = createSlice({
         uuids: []
     },
     reducers: {
-        setUuids: (state, action) => {
-            state.uuids = action.payload;
+        addUuids: (state, action) => {
+            state.uuids = state.uuids.concat(action.payload);
         },
         clearUuids: (state, action) => {
             state.uuids = [];
@@ -16,4 +16,5 @@ export const changeAccessSlice = createSlice({
 });
 
 export const getUuids = state => state.changeAccess.uuids;
-export const {setUuids, clearUuids} = changeAccessSlice.actions;
+export const {addUuids, clearUuids} = changeAccessSlice.actions;
+export const createActionType = actionName => changeAccessSlice.name + "/" + actionName;

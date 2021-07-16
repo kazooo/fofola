@@ -1,17 +1,31 @@
-import {Navbar} from "../../components/navbar/Navbar";
-import {Container} from "../../components/container/Container";
-import {ContainerHeader} from "../../components/container/ContainerHeader";
+import {FeatureMenu} from "../../components/temporary/FeatureMenu";
+import {FeatureContent} from "../../components/temporary/FeatureContent";
+import {SplitPageContainer} from "../../components/temporary/SplitPageContainer";
+import {FofolaPage} from "../../components/temporary/FofolaPage";
 import {PerioPartsPublishForm} from "./PerioPartsPublishForm";
 import {PerioPartsPublishPanel} from "./PerioPartsPublishPanel";
+import {PerioPartsPublishUuidTable} from "./PerioPartsPublishUuidTable";
 
 export const PerioPartsPublish = () => (
-    <div>
-        <Navbar />
-        <Container>
-            <ContainerHeader>
-                <PerioPartsPublishForm />
-            </ContainerHeader>
-            <PerioPartsPublishPanel />
-        </Container>
-    </div>
+    <FofolaPage>
+        <SplitPageContainer
+            leftSide={<PerioPartsPublishMenu />}
+            rightSide={<PerioPartsPublishTable />}
+            leftSideColumns={5}
+            rightSideColumns={7}
+        />
+    </FofolaPage>
+);
+
+export const PerioPartsPublishMenu = () => (
+    <FeatureMenu>
+        <PerioPartsPublishForm />
+        <PerioPartsPublishPanel />
+    </FeatureMenu>
+);
+
+export const PerioPartsPublishTable = () => (
+    <FeatureContent>
+        <PerioPartsPublishUuidTable />
+    </FeatureContent>
 );

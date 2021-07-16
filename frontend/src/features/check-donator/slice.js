@@ -1,19 +1,46 @@
 import {createSlice} from "@reduxjs/toolkit";
+import {CHECK_HAS_DONATOR, EODOPEN} from "./constants";
 
 export const checkDonatorSlice = createSlice({
     name: "checkDonator",
     initialState: {
-        outputFiles: []
+        vcUuid: "",
+        donator: EODOPEN,
+        mode: CHECK_HAS_DONATOR,
+        outputFiles: [],
+        vcs: null,
     },
     reducers: {
+        setVcUuid: (state, action) => {
+            state.vcUuid = action.payload;
+        },
+        setDonator: (state, action) => {
+            state.donator = action.payload;
+        },
+        setMode: (state, action) => {
+            state.mode = action.payload;
+        },
         setOutputFiles: (state, action) => {
             state.outputFiles = action.payload;
         },
         removeOutputFile: (state, action) => {
             state.outputFiles = state.outputFiles.filter(file => file !== action.payload);
+        },
+        clearSettings: (state, action) => {
+            state.vcUuid = "";
+            state.donator = EODOPEN;
+            state.mode = CHECK_HAS_DONATOR;
+        },
+        setVcs: (state, action) => {
+            state.vcs = action.payload;
         }
     }
 });
 
+export const getVcs = state => state.checkDonator.vcs;
+export const getMode = state => state.checkDonator.mode;
+export const getVcUuid = state => state.checkDonator.vcUuid;
+export const getDonator = state => state.checkDonator.donator;
 export const getOutputFiles = state => state.checkDonator.outputFiles;
-export const {setOutputFiles, removeOutputFile} = checkDonatorSlice.actions;
+export const createActionType = actionName => checkDonatorSlice.name + "/" + actionName;
+export const {setVcUuid, setMode, setDonator, setOutputFiles, removeOutputFile, clearSettings, setVcs} = checkDonatorSlice.actions;

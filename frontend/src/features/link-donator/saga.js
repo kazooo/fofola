@@ -1,9 +1,9 @@
 import {takeEvery, call, put} from "redux-saga/effects";
 import {createAction} from "@reduxjs/toolkit";
 import {request} from "../../redux/superagent";
-import {clearUuids} from "./slice";
+import {clearUuids, createActionType} from "./slice";
 
-const CHANGE_DONATOR = "CHANGE_DONATOR";
+const CHANGE_DONATOR = createActionType("CHANGE_DONATOR");
 
 export const changeDonator = createAction(CHANGE_DONATOR);
 
@@ -17,8 +17,9 @@ function* changeDonatorSaga(action) {
             .post("/internal-processes/new/donator_link")
             .send(action.payload)
         );
-        yield put(clearUuids())
     } catch (e) {
         console.error(e);
+    } finally {
+        yield put(clearUuids())
     }
 }

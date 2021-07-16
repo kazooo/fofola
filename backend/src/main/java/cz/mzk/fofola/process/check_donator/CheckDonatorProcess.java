@@ -50,16 +50,23 @@ public class CheckDonatorProcess extends Process {
     @Override
     public TerminationReason process() throws Exception {
         String readyOutFileName = FileService.fileNameWithDateStampPrefix(donator + ".txt");
-        File notReadyOutFile = FileService.getCheckDonatorOutFile("not-ready-" + readyOutFileName);
+        File notReadyOutFile = FileService.getCheckDonatorOutputFile("not-ready-" + readyOutFileName);
         PrintWriter output = new PrintWriter(notReadyOutFile);
 
         SolrQuery query = prepareQuery();
         Consumer<SolrDocument> checkDonatorLogic = getCheckDonatorLogic(output);
-        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
-                query,
-                solrClient,
-                checkDonatorLogic,
-                1000);
+
+        try {
+            SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+                    query,
+                    solrClient,
+                    checkDonatorLogic,
+                    1000);
+        } catch (Exception e) {
+            output.close();
+            renameOutFile(notReadyOutFile, "terminated-" + readyOutFileName);
+            throw e;
+        }
 
         output.flush();
         output.close();
@@ -78,7 +85,7 @@ public class CheckDonatorProcess extends Process {
 
     private Consumer<SolrDocument> getCheckDonatorLogic(PrintWriter output) {
         Predicate<List<Node>> logic =
-                option == CheckOption.HAS_OPTION ? getHasDonatorCheckLogic() : getHasntDonatorCheckLogic();
+                option == CheckOption.CHECK_HAS_DONATOR ? getHasDonatorCheckLogic() : getHasntDonatorCheckLogic();
 
         return solrDoc -> {
             String uuid = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);
@@ -109,7 +116,7 @@ public class CheckDonatorProcess extends Process {
     }
 
     public enum CheckOption {
-        HAS_OPTION,
-        HASNT_OPTION;
+        CHECK_HAS_DONATOR,
+        CHECK_HASNT_DONATOR;
     }
 }

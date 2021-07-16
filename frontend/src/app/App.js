@@ -26,10 +26,10 @@ export const App = () => (
         <Route path='/link-donator' component={LinkDonator} />
         <Route path='/kramerius-processes' component={KrameriusProcesses} />
         <Route path='/check-donator' component={CheckDonator} />
-        <Route path='/internal-processes' cpmponent={InternalProcesses} />
+        <Route path='/internal-processes' component={InternalProcesses} />
         <Route path="/pdf" component={Pdf} />
         <Route path="/solr-query" component={SolrQuery} />
         <Route path="/perio-parts-publish" component={PerioPartsPublish} />
-        <Route path="/set-image" component={SetImage} />
+        {/*<Route path="/set-image" component={SetImage} />*/}
     </BrowserRouter>
 );

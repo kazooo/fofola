@@ -1,17 +1,22 @@
+import {useDispatch} from "react-redux";
+import {useEffect, useState} from "react";
 import {useInterval} from "../../effects/useInterval";
 import {Checkbox} from "../../components/form/Checkbox";
-import {useDispatch} from "react-redux";
-import {useState} from "react";
-import {requestInternalProcesses} from "./saga";
+import {requestInternalProcesses, requestNewPageInternalProcesses} from "./saga";
 
-export const AutoReload = () => {
+export const InternalProcessMenu = () => {
 
     const dispatch = useDispatch();
     const [autoReload, setAutoReload] = useState(true);
+    const RELOAD_INTERVAL_MS = 5000;
+
+    useEffect(() => {
+        dispatch(requestNewPageInternalProcesses());
+    });
 
     useInterval(() => {
         dispatch(requestInternalProcesses());
-    }, autoReload ? 5000 : null);
+    }, autoReload ? RELOAD_INTERVAL_MS : null);
 
     return <Checkbox
         label={"Načítat automaticky (interval: 5 sec.)"}

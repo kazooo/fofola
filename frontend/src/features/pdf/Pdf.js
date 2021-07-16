@@ -1,19 +1,35 @@
-import {Navbar} from "../../components/navbar/Navbar";
-import {Container} from "../../components/container/Container";
-import {ContainerHeader} from "../../components/container/ContainerHeader";
 import {PdfForm} from "./PdfForm";
-import {FileTable} from "./FileTable";
+import {PdfFileList} from "./PdfFileList";
 import {PdfPanel} from "./PdfPanel";
+import {FeatureMenu} from "../../components/temporary/FeatureMenu";
+import {FeatureContent} from "../../components/temporary/FeatureContent";
+import {SplitPageContainer} from "../../components/temporary/SplitPageContainer";
+import {FofolaPage} from "../../components/temporary/FofolaPage";
+import {PdfUuidList} from "./PdfUuidList";
+import {VerticalEmptyGap} from "../../components/temporary/VerticalEmptyGap";
 
 export const Pdf = () => (
-    <div>
-        <Navbar />
-        <Container>
-            <ContainerHeader>
-                <PdfForm />
-                <PdfPanel />
-            </ContainerHeader>
-            <FileTable />
-        </Container>
-    </div>
+    <FofolaPage>
+        <SplitPageContainer
+            leftSide={<PdfMenu />}
+            rightSide={<PdfUuidAndFilePanel />}
+            leftSideColumns={5}
+            rightSideColumns={7}
+        />
+    </FofolaPage>
+);
+
+const PdfMenu = () => (
+    <FeatureMenu>
+        <PdfForm />
+        <PdfPanel />
+    </FeatureMenu>
+);
+
+const PdfUuidAndFilePanel = () => (
+    <FeatureContent>
+        <PdfFileList />
+        <VerticalEmptyGap height={10} />
+        <PdfUuidList />
+    </FeatureContent>
 );

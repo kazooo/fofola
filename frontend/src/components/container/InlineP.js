@@ -1,9 +1,7 @@
+import {Box} from "@material-ui/core";
+
 export const InlineP = (props) => (
-    <div style={{
-        paddingTop: "15%",
-        display: "flex",
-        margin: "20px"
-    }}>
+    <Box display="flex">
         <p>{props.children}</p>
-    </div>
+    </Box>
 )

@@ -1,8 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
-import {Panel} from "../../components/container/Panel";
 import {InlineP} from "../../components/container/InlineP";
-import {getUuids} from "./slice";
+import {clearUuids, getUuids} from "./slice";
 import {deleteUuids} from "./saga";
+import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {ClearButton, DeleteButton} from "../../components/button";
 
 export const DeletePanel = () => {
 
@@ -14,9 +15,17 @@ export const DeletePanel = () => {
         dispatch(deleteUuids(uuids));
     }
 
+    const clear = (e) => {
+        e.preventDefault();
+        dispatch(clearUuids(uuids));
+    }
+
     return uuids.length > 0 &&
-        <Panel>
-            <button type="submit" onClick={handleOnClick}>Vymazat</button>
+        <HorizontalDirectedGrid
+            spacing={10}
+        >
+            <DeleteButton onClick={handleOnClick}>Vymazat</DeleteButton>
             <InlineP>Celkem: {uuids.length}</InlineP>
-        </Panel>;
+            <ClearButton onClick={clear}>Clear</ClearButton>
+        </HorizontalDirectedGrid>;
 }

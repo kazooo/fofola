@@ -1,10 +1,11 @@
 import {createSelector, createSlice} from "@reduxjs/toolkit";
+import {IMG_FULL} from "./constants";
 
 export const setImgSlice = createSlice({
     name: "setImg",
     initialState: {
         uuid: "",
-        datastream: "",
+        datastream: IMG_FULL,
         img: null,
     },
     reducers: {
@@ -19,7 +20,7 @@ export const setImgSlice = createSlice({
         },
         clearAll: (state, action) => {
             state.uuid = "";
-            state.datastream = "";
+            state.datastream = IMG_FULL;
             state.img = null;
         }
     }
@@ -32,4 +33,5 @@ export const isPayloadCompleted = createSelector(
         return payload.uuid !== "" && payload.datastream !== "" && payload.img !== null;
     }
 );
+export const getDatastream = state => getPayload(state).datastream;
 export const {setUuid, setDatastream, setImg, clearAll} = setImgSlice.actions;

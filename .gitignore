@@ -1,9 +1,7 @@
 .idea
 .gradle
 build
-logs
-check_donator_out
-pdf_out
+outputs
 backend/build
 frontend/build
 frontend/node_modules

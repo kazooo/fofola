@@ -1,54 +1,42 @@
-import {useDispatch} from "react-redux";
-import {Panel} from "../../components/container/Panel";
-import {TextForm} from "../../components/form/TextForm";
-import {Selector} from "../../components/form/Selector";
-import {IMG_FULL, IMG_THUMB} from "./constants";
-import {FileUploadWithButton} from "../../components/form/FileUploadWithButton";
-import {setDatastream, setImg, setUuid} from "./slice";
+import {useDispatch, useSelector} from "react-redux";
+import {datastreams} from "./constants";
+import {getDatastream, isPayloadCompleted, setDatastream, setImg, setUuid} from "./slice";
+import {LoadUuidWithSelectorForm} from "../../components/temporary/LoadUuidWithSelectorForm";
+import {UploadButton} from "../../components/button";
+import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
 
 export const SetImageForm = () => {
 
     const dispatch = useDispatch();
-
-    const datastreams = [
-        {
-            value: IMG_THUMB,
-            text: "THUMBNAIL"
-        },
-        {
-            value: IMG_FULL,
-            text: "FULL"
-        }
-    ]
+    const completed = useSelector(isPayloadCompleted);
+    const datastream = useSelector(state => getDatastream(state));
 
     const loadUuid = uuid => {
         dispatch(setUuid(uuid));
     }
 
-    const loadDatastream = datastream => {
-        dispatch(setDatastream(datastream));
+    const changeDatastream = ds => {
+        dispatch(setDatastream(ds));
     }
 
-    const loadImg = img => {
-        dispatch(setImg(img));
+    const loadImg = e => {
+        const fileUploaded = e.target.files[0];
+        dispatch(setImg(fileUploaded));
     }
 
-    return <Panel>
-        <TextForm
-            label="UUID stránky"
-            size="33"
-            placeholder="uuid:..."
-            onChange={loadUuid}
+    return <HorizontalDirectedGrid>
+        <LoadUuidWithSelectorForm
+            onLoad={loadUuid}
+            selectOptions={datastreams}
+            selectLabel={"Režim"}
+            onSelectOptionChange={changeDatastream}
+            selectedOption={datastream}
         />
-        <Selector
-            label="Datastream"
-            options={datastreams}
-            onChange={loadDatastream}
-        />
-        <FileUploadWithButton
-            label="Vyberte obrázek"
-            acceptTypes={'.jpg'}
-            submitFunc={loadImg}
-        />
-    </Panel>
+        {!completed &&
+            <UploadButton onChange={loadImg}>
+                Nahrat obrázek
+                <input type="file" hidden />
+            </UploadButton>
+        }
+    </HorizontalDirectedGrid>
 };

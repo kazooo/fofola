@@ -1,17 +1,31 @@
-import {Navbar} from "../../components/navbar/Navbar";
-import {Container} from "../../components/container/Container";
-import {ContainerHeader} from "../../components/container/ContainerHeader";
 import {DeleteForm} from "./DeleteForm";
 import {DeletePanel} from "./DeletePanel";
+import {FeatureMenu} from "../../components/temporary/FeatureMenu";
+import {FeatureContent} from "../../components/temporary/FeatureContent";
+import {SplitPageContainer} from "../../components/temporary/SplitPageContainer";
+import {FofolaPage} from "../../components/temporary/FofolaPage";
+import {DeleteUuidsTable} from "./DeleteUuidsTable";
 
 export const Delete = () => (
-    <div>
-        <Navbar />
-        <Container>
-            <ContainerHeader>
-                <DeleteForm />
-                <DeletePanel />
-            </ContainerHeader>
-        </Container>
-    </div>
+    <FofolaPage>
+        <SplitPageContainer
+            leftSide={<DeleteMenu />}
+            rightSide={<DeleteTable />}
+            leftSideColumns={5}
+            rightSideColumns={7}
+        />
+    </FofolaPage>
+);
+
+const DeleteMenu = () => (
+    <FeatureMenu>
+        <DeleteForm />
+        <DeletePanel />
+    </FeatureMenu>
+);
+
+const DeleteTable = () => (
+    <FeatureContent>
+        <DeleteUuidsTable />
+    </FeatureContent>
 );

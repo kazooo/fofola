@@ -1,22 +1,31 @@
 import {useDispatch, useSelector} from "react-redux";
-import {Panel} from "../../components/container/Panel";
 import {InlineP} from "../../components/container/InlineP";
-import {getUuids} from "./slice";
+import {clearUuids, getUuids} from "./slice";
 import {publishPerioParts} from "./saga";
+import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {ClearButton, StartButton} from "../../components/button";
 
 export const PerioPartsPublishPanel = () => {
 
     const dispatch = useDispatch();
     const uuids = useSelector(state => getUuids(state));
 
-    const handleOnClick = (e) => {
+    const publish = (e) => {
         e.preventDefault();
         dispatch(publishPerioParts({"root_uuids": uuids}));
-    }
+    };
+
+    const clear = (e) => {
+        e.preventDefault();
+        dispatch(clearUuids());
+    };
 
     return uuids.length > 0 &&
-        <Panel>
-            <button type="submit" onClick={handleOnClick}>Zveřejnit části periodik</button>
+        <HorizontalDirectedGrid
+            spacing={10}
+        >
+            <StartButton onClick={publish}>Spustit process</StartButton>
             <InlineP>Celkem: {uuids.length}</InlineP>
-        </Panel>;
+            <ClearButton onClick={clear}>Clear</ClearButton>
+        </HorizontalDirectedGrid>;
 };

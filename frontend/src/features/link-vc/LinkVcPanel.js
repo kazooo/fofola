@@ -1,6 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
-import {getMode, getUuids, getVcUuid} from "./slice";
-import {Panel} from "../../components/container/Panel";
+
+import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {clearUuids, getMode, getUuids, getVcUuid} from "./slice";
+import {ClearButton, StartButton} from "../../components/button";
 import {InlineP} from "../../components/container/InlineP";
 import {changeVc} from "./saga";
 
@@ -15,8 +17,17 @@ export const LinkVcPanel = () => {
         dispatch(changeVc({vcUuid, mode, uuids}));
     }
 
-    return uuids.length > 0 && vcUuid && <Panel>
-        <button type="submit" onClick={handleOnClick}>Spustit process</button>
-        <InlineP>Celkem: {uuids.length}</InlineP>
-    </Panel>
+    const clear = (e) => {
+        e.preventDefault();
+        dispatch(clearUuids(uuids));
+    }
+
+    return uuids.length > 0 && vcUuid && mode &&
+        <HorizontalDirectedGrid
+            spacing={10}
+        >
+            <StartButton onClick={handleOnClick}>Spustit process</StartButton>
+            <InlineP>Celkem: {uuids.length}</InlineP>
+            <ClearButton onClick={clear}>Clear</ClearButton>
+        </HorizontalDirectedGrid>;
 };
