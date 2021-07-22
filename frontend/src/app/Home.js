@@ -24,6 +24,9 @@ export const Home = () => (
             <Service link="/link-donator"> Přídat/odstranit příznak donátoru </Service>
             <Service link="/check-donator"> Kontrola příznaku donátoru </Service>
         </ServiceCard>
+        <ServiceCard title='DNNT'>
+            <Service link='/link-dnnt'>Přídat/odstranit DNNT label</Service>
+        </ServiceCard>
         <ServiceCard title="Interní věci">
             <Service link="/internal-processes"> Processy Fofoly </Service>
         </ServiceCard>

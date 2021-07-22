@@ -9,6 +9,7 @@ import {checkDonatorSlice} from "../features/check-donator/slice";
 import {linkDonatorSlice} from "../features/link-donator/slice";
 import {solrQuerySlice} from "../features/solr-query/slice";
 import {uuidInfoSlice} from "../features/uuid-info/slice";
+import {linkDnntSlice} from "../features/link-dnnt/slice";
 import {setImgSlice} from "../features/set-image/slice";
 import {vcSlice} from "../features/vc-management/slice";
 import {reindexSlice} from "../features/reindex/slice";
@@ -24,6 +25,7 @@ import changeAccessSaga from "../features/change-access/saga";
 import linkDonatorSaga from "../features/link-donator/saga";
 import solrQuerySaga from "../features/solr-query/saga";
 import uuidInfoSaga from "../features/uuid-info/saga";
+import linkDnntSaga from '../features/link-dnnt/saga';
 import setImgSaga from "../features/set-image/saga";
 import vcSaga from "../features/vc-management/saga";
 import reindexSaga from "../features/reindex/saga";
@@ -42,6 +44,7 @@ const reducers = {
     linkDonator: linkDonatorSlice.reducer,
     solrQuery: solrQuerySlice.reducer,
     uuidInfo: uuidInfoSlice.reducer,
+    linkDnnt: linkDnntSlice.reducer,
     reindex: reindexSlice.reducer,
     linkVc: linkVcSlice.reducer,
     delete: deleteSlice.reducer,
@@ -75,6 +78,7 @@ initialSagaMiddleware.run(changeAccessSaga);
 initialSagaMiddleware.run(linkDonatorSaga);
 initialSagaMiddleware.run(solrQuerySaga);
 initialSagaMiddleware.run(uuidInfoSaga);
+initialSagaMiddleware.run(linkDnntSaga);
 initialSagaMiddleware.run(reindexSaga);
 initialSagaMiddleware.run(linkVcSaga);
 initialSagaMiddleware.run(deleteSaga);

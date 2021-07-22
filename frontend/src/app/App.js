@@ -15,6 +15,7 @@ import {SolrQuery} from "../features/solr-query/SolrQuery";
 import {PerioPartsPublish} from "../features/perio-parts/PerioPartsPublish";
 import {SetImage} from "../features/set-image/SetImage";
 import {VcManagement} from "../features/vc-management/VcManagement";
+import {LinkDnnt} from "../features/link-dnnt/LinkDnnt";
 
 export const App = () => (
     <BrowserRouter>
@@ -33,5 +34,6 @@ export const App = () => (
         <Route path="/perio-parts-publish" component={PerioPartsPublish} />
         {/*<Route path="/set-image" component={SetImage} />*/}
         <Route path="/vc" component={VcManagement} />
+        <Route path='/link-dnnt' component={LinkDnnt} />
     </BrowserRouter>
 );

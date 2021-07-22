@@ -1,5 +1,7 @@
 package cz.mzk.fofola.model.doc;
 
+import cz.mzk.fofola.constants.SolrFieldName;
+import lombok.Getter;
 import org.apache.solr.common.SolrDocumentList;
 
 import java.text.SimpleDateFormat;
@@ -8,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Getter
 public class SolrDocument {
 
     public final static String ID = "PID";
@@ -30,15 +32,13 @@ public class SolrDocument {
     private Date modifiedDate;
     private String dcTitle;
     private List<Integer> relsExtIndex;
+    private Boolean dnnt;
+    private List<String> dnntLabels;
 
     private final SimpleDateFormat toFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public String getAccessibility() {
         return visibility;
-    }
-
-    public String getUuid() {
-        return uuid;
     }
 
     public String getRootTitle() {
@@ -49,20 +49,10 @@ public class SolrDocument {
         return rootTitle;
     }
 
-    public String getModel() {
-        return model;
-    }
-
-    public String getRootPid() {
-        return rootPid;
-    }
-
     public String getModifiedDate() {
         if (modifiedDate == null) return null;
         else return toFmt.format(modifiedDate);
     }
-
-    public String getDcTitle() { return dcTitle; }
 
     @SuppressWarnings("unchecked")
     private SolrDocument(org.apache.solr.common.SolrDocument originDoc) {
@@ -75,6 +65,8 @@ public class SolrDocument {
         modifiedDate = (Date) originDoc.getFieldValue(MODIFIED_DATE);
         parentPids = (List<String>) originDoc.getFieldValue(PARENT_PID);
         relsExtIndex = (List<Integer>) originDoc.getFieldValue(RELS_EXT_INDEX);
+        dnnt = (Boolean) originDoc.getFieldValue(SolrFieldName.DNNT);
+        dnntLabels = (List<String>) originDoc.getFieldValue(SolrFieldName.DNNT_LABELS);
     }
 
     public static SolrDocument convert(org.apache.solr.common.SolrDocument originDoc) {
