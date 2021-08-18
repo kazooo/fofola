@@ -5,7 +5,7 @@ export const LoadStringsFromFileForm = ({label, submitFunc}) => {
 
     const handleFileRead = () => {
         const uuids = [];
-        const lines = fileReader.result.split('\n');
+        const lines = fileReader.result.split(/[\r\n]+/);
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
             line && line !== '' && uuids.push(line)
