@@ -8,7 +8,9 @@ export const checkDonatorSlice = createSlice({
         donator: EODOPEN,
         mode: CHECK_HAS_DONATOR,
         outputFiles: [],
-        vcs: null,
+        vcs: [],
+        isLoading: false,
+        isLoadingError: false,
     },
     reducers: {
         setVcUuid: (state, action) => {
@@ -33,7 +35,13 @@ export const checkDonatorSlice = createSlice({
         },
         setVcs: (state, action) => {
             state.vcs = action.payload;
-        }
+        },
+        setIsLoading: (state, action) => {
+            state.isLoading = action.payload;
+        },
+        setIsLoadingError: (state, action) => {
+            state.isLoadingError = action.payload;
+        },
     }
 });
 
@@ -41,6 +49,8 @@ export const getVcs = state => state.checkDonator.vcs;
 export const getMode = state => state.checkDonator.mode;
 export const getVcUuid = state => state.checkDonator.vcUuid;
 export const getDonator = state => state.checkDonator.donator;
+export const getIsLoading = state => state.checkDonator.isLoading;
 export const getOutputFiles = state => state.checkDonator.outputFiles;
+export const getIsLoadingError = state => state.checkDonator.isLoadingError;
 export const createActionType = actionName => checkDonatorSlice.name + "/" + actionName;
-export const {setVcUuid, setMode, setDonator, setOutputFiles, removeOutputFile, clearSettings, setVcs} = checkDonatorSlice.actions;
+export const {setVcUuid, setMode, setDonator, setOutputFiles, removeOutputFile, clearSettings, setVcs, setIsLoading, setIsLoadingError} = checkDonatorSlice.actions;

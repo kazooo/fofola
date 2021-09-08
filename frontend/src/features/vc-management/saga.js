@@ -8,6 +8,14 @@ import {
     setIsLoadingError,
     setVcs,
 } from "./slice";
+import {snackbar} from "../../utils/snack/saga";
+import {
+    cantCreateVcMsg,
+    cantLoadVcMsg,
+    cantUpdateVcMsg,
+    successCreateVcMsg,
+    successUpdateVcMsg
+} from "../../utils/constants/messages";
 
 const LOAD_VCS = createActionType('LOAD_VCS');
 const CREATE_VC = createActionType('CREATE_VC');
@@ -32,10 +40,11 @@ function* loadVirtualCollectionsSaga() {
         yield put(setVcs(response.body));
         yield put(setIsLoadingError(false));
     } catch (e) {
+        yield put(snackbar.error(cantLoadVcMsg));
         console.error(e);
-        yield put(setIsLoadingError(true))
+        yield put(setIsLoadingError(true));
     } finally {
-        yield put(setIsLoading(false))
+        yield put(setIsLoading(false));
     }
 }
 
@@ -45,7 +54,9 @@ function* createVirtualCollectionSaga(action) {
             .post('/vc')
             .send(action.payload)
         );
+        yield put(snackbar.success(successCreateVcMsg));
     } catch (e) {
+        yield put(snackbar.error(cantCreateVcMsg));
         console.error(e);
     }
 }
@@ -56,7 +67,9 @@ function* updateVirtualCollectionSaga(action) {
             .put('/vc')
             .send(action.payload)
         );
+        yield put(snackbar.success(successUpdateVcMsg));
     } catch (e) {
+        yield put(snackbar.error(cantUpdateVcMsg));
         console.error(e);
     }
 }

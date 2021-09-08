@@ -3,6 +3,15 @@ import {call, put, takeEvery} from "redux-saga/effects";
 
 import {request} from "../../redux/superagent";
 import {clearUuidInfo, addUuidInfo, createActionType} from "./slice";
+import {snackbar} from "../../utils/snack/saga";
+import {
+    criticalErrorMessage,
+    getCantMakePrivateMsg,
+    getCantMakePublicMsg,
+    getCantReindexMsg, getMakePrivateMsg,
+    getMakePublicMsg,
+    getReindexMsg
+} from "../../utils/constants/messages";
 
 const REINDEX_UUID = createActionType("REINDEX_UUID");
 const PUBLIC_UUIDS = createActionType("PUBLIC_UUIDS");
@@ -29,42 +38,52 @@ function* getUuidInfoSaga(action) {
         );
         yield put(addUuidInfo(payload.body));
     } catch (e) {
+        yield put(snackbar.error(criticalErrorMessage));
         console.error(e);
     }
 }
 
 function* reindexSaga(action) {
+    const uuids = action.payload;
     try {
         yield call(() => request
             .post("/reindex")
-            .send(action.payload)
+            .send(uuids)
         );
         yield put(clearUuidInfo())
+        yield put(snackbar.success(getReindexMsg(uuids.length)));
     } catch (e) {
+        yield put(snackbar.error(getCantReindexMsg(uuids.length)));
         console.error(e);
     }
 }
 
 function* publicSaga(action) {
+    const uuids = action.payload;
     try {
         yield call(() => request
             .post('/access/public')
-            .send(action.payload)
+            .send(uuids)
         );
         yield put(clearUuidInfo());
+        yield put(snackbar.success(getMakePublicMsg(uuids.length)));
     } catch (e) {
+        yield put(snackbar.error(getCantMakePublicMsg(uuids.length)));
         console.log(e);
     }
 }
 
 function* privateSaga(action) {
+    const uuids = action.payload;
     try {
         yield call(() => request
             .post('/access/private')
-            .send(action.payload)
+            .send(uuids)
         );
         yield put(clearUuidInfo());
+        yield put(snackbar.success(getMakePrivateMsg(uuids.length)));
     } catch (e) {
+        yield put(snackbar.error(getCantMakePrivateMsg(uuids.length)));
         console.log(e);
     }
 }

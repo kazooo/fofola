@@ -3,6 +3,14 @@ import {takeEvery, select, call, put} from "redux-saga/effects";
 
 import {createActionType, getCurrentPage, removeProcessInfo, setProcessesInfo, toggleIsLoading} from "./slice";
 import {request} from "../../redux/superagent";
+import {snackbar} from "../../utils/snack/saga";
+import {
+    cantLoadNextPage,
+    cantRemoveProcessMsg,
+    cantStopProcessMsg,
+    successRemoveProcessMsg,
+    successStopProcessMsg
+} from "../../utils/constants/messages";
 
 const REQUEST_NEW_PAGE_PROCESSES_INFO = createActionType("REQUEST_NEW_PAGE_PROCESSES_INFO");
 const REQUEST_CURRENT_PAGE_PROCESSES_INFO = createActionType("REQUEST_CURRENT_PAGE_PROCESSES_INFO");
@@ -29,6 +37,7 @@ function* requestCurrentPageProcessesInfoSaga(action) {
         );
         yield put(setProcessesInfo(payload.body));
     } catch (e) {
+        yield put(snackbar.error(cantLoadNextPage));
         console.error(e);
     }
 }
@@ -45,7 +54,9 @@ function* removeProcessSaga(action) {
             .delete("/k-processes/" + action.payload)
         );
         yield put(removeProcessInfo(action.payload));
+        yield put(snackbar.success(successRemoveProcessMsg));
     } catch (e) {
+        yield put(snackbar.success(cantRemoveProcessMsg));
         console.error(e);
     }
 }
@@ -55,8 +66,10 @@ function* stopProcessSaga(action) {
         yield call(() => request
             .put("/k-processes/" + action.payload + "/stop")
         );
+        yield put(snackbar.success(successStopProcessMsg));
         yield call(requestCurrentPageProcessesInfoSaga, action);
     } catch (e) {
+        yield put(snackbar.error(cantStopProcessMsg));
         console.error(e);
     }
 }

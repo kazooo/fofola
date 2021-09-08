@@ -3,6 +3,14 @@ import {createAction} from "@reduxjs/toolkit";
 
 import {baseUrl, request} from "../../redux/superagent";
 import {createActionType, getCurrentPage, removeProcessInfo, setProcessesInfo, toggleIsLoading} from "./slice";
+import {snackbar} from "../../utils/snack/saga";
+import {
+    cantLoadNextPage,
+    cantRemoveProcessMsg,
+    cantStopProcessMsg,
+    successRemoveProcessMsg,
+    successStopProcessMsg
+} from "../../utils/constants/messages";
 
 const REQUEST_NEW_PAGE_INTERNAL_PROCESS = createActionType("REQUEST_NEW_PAGE_INTERNAL_PROCESS");
 const REQUEST_CURRENT_PAGE_INTERNAL_PROCESS = createActionType("REQUEST_CURRENT_PAGE_INTERNAL_PROCESS");
@@ -33,6 +41,7 @@ function* requestCurrentPageProcessSaga(action) {
         );
         yield put(setProcessesInfo(payload.body));
     } catch (e) {
+        yield put(snackbar.error(cantLoadNextPage));
         console.error(e);
     }
 }
@@ -49,7 +58,9 @@ function* stopProcessSaga(action) {
         yield call(() => request
             .put("/internal-processes/stop/" + pid)
         );
+        yield put(snackbar.success(successStopProcessMsg));
     } catch (e) {
+        yield put(snackbar.error(cantStopProcessMsg));
         console.error(e);
     }
 }
@@ -61,7 +72,9 @@ function* removeProcessSaga(action) {
             .delete("/internal-processes/remove/" + pid)
         );
         yield put(removeProcessInfo(pid));
+        yield put(snackbar.success(successRemoveProcessMsg));
     } catch (e) {
+        yield put(snackbar.success(cantRemoveProcessMsg));
         console.error(e);
     }
 }

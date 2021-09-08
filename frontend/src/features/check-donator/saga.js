@@ -2,7 +2,16 @@ import {createAction} from "@reduxjs/toolkit";
 import {call, put, takeEvery} from "redux-saga/effects";
 
 import {baseUrl, request} from "../../redux/superagent";
-import {setOutputFiles, removeOutputFile, createActionType, setVcs} from "./slice";
+import {setOutputFiles, removeOutputFile, createActionType, setVcs, setIsLoading, setIsLoadingError} from "./slice";
+import {snackbar} from "../../utils/snack/saga";
+import {
+    cantLoadFilesMsg,
+    cantLoadVcMsg,
+    cantRemoveFileMsg,
+    getCantCheckDonatorMsg,
+    getCheckDonatorMsg,
+    successRemoveFileMsg,
+} from "../../utils/constants/messages";
 
 const LOAD_VCS = createActionType('LOAD_VCS');
 const CHECK_DONATOR = createActionType("CHECK_DONATOR");
@@ -25,13 +34,16 @@ export default function* watcherSaga() {
 }
 
 function* checkDonatorSaga(action) {
+    const uuids = action.payload;
     try {
         yield call(() => request
             .post("/internal-processes/new/donator_check")
             .send(action.payload)
         );
         yield call(requestFilesSaga);
+        yield put(snackbar.success(getCheckDonatorMsg(uuids.length)));
     } catch (e) {
+        yield put(snackbar.error(getCantCheckDonatorMsg(uuids.length)));
         console.error(e);
     }
 }
@@ -43,6 +55,7 @@ function* requestFilesSaga(action) {
         );
         yield put(setOutputFiles(payload.body));
     } catch (e) {
+        yield put(snackbar.error(cantLoadFilesMsg));
         console.error(e);
     }
 }
@@ -53,7 +66,9 @@ function* removeFileSaga(action) {
             .delete("/check-donator/remove/" + action.payload)
         );
         yield put(removeOutputFile(action.payload));
+        yield put(snackbar.success(successRemoveFileMsg));
     } catch (e) {
+        yield put(snackbar.error(cantRemoveFileMsg));
         console.error(e);
     }
 }
@@ -66,12 +81,18 @@ function* downloadFileSaga(action) {
 
 function* loadVirtualCollectionsSaga() {
     try {
+        yield put(setIsLoading(true));
         const response = yield call(() => request
             .get('/vc/all')
         );
-        yield put(setVcs(response.body))
+        yield put(setVcs(response.body));
+        yield put(setIsLoadingError(false));
     } catch (e) {
+        yield put(snackbar.error(cantLoadVcMsg));
         console.error(e);
         yield put(setVcs([]));
+        yield put(setIsLoadingError(true));
+    } finally {
+        yield put(setIsLoading(false));
     }
 }

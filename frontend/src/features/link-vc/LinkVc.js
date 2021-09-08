@@ -1,44 +1,29 @@
-import {useDispatch} from "react-redux";
-
-import {LinkVcForm} from "./LinkVcForm";
-import {LinkVcPanel} from "./LinkVcPanel";
-import {FeatureMenu} from "../../components/temporary/FeatureMenu";
-import {FeatureContent} from "../../components/temporary/FeatureContent";
-import {SplitPageContainer} from "../../components/temporary/SplitPageContainer";
-import {FofolaPage} from "../../components/temporary/FofolaPage";
-import {LinkVcUuidsTable} from "./LinkVcUuidsTable";
 import {useEffect} from "react";
+import {useDispatch} from "react-redux";
+import {makeStyles} from "@material-ui/core";
+
 import {loadVirtualCollections} from "./saga";
+import {Content} from "./Content";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        backgroundColor: theme.palette.background.paper,
+        flexGrow: 1,
+        display: 'flex',
+        minHeight: '520px',
+        borderRadius: '5px',
+        border: '1px solid rgb(212, 101, 3)'
+
+    },
+}));
 
 export const LinkVc = () => {
-
+    const classes = useStyles();
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(loadVirtualCollections());
     }, []);
 
-    return (
-        <FofolaPage>
-            <SplitPageContainer
-                leftSide={<LinkVcMenu/>}
-                rightSide={<LinkVcTable/>}
-                leftSideColumns={5}
-                rightSideColumns={7}
-            />
-        </FofolaPage>
-    );
+    return <Content classes={classes} />;
 };
-
-const LinkVcMenu = () => (
-    <FeatureMenu>
-        <LinkVcForm />
-        <LinkVcPanel />
-    </FeatureMenu>
-);
-
-const LinkVcTable = () => (
-    <FeatureContent>
-        <LinkVcUuidsTable />
-    </FeatureContent>
-);

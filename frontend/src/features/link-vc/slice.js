@@ -8,6 +8,8 @@ export const linkVcSlice = createSlice({
         uuids: [],
         mode: LINK_MODE,
         vcs: [],
+        isLoading: false,
+        isLoadingError: false,
     },
     reducers: {
         addUuids: (state, action) => {
@@ -24,7 +26,13 @@ export const linkVcSlice = createSlice({
         },
         setVcs: (state, action) => {
             state.vcs = action.payload;
-        }
+        },
+        setIsLoading: (state, action) => {
+            state.isLoading = action.payload;
+        },
+        setIsLoadingError: (state, action) => {
+            state.isLoadingError = action.payload;
+        },
     }
 });
 
@@ -32,5 +40,7 @@ export const getVcs = state => state.linkVc.vcs;
 export const getMode = state => state.linkVc.mode;
 export const getUuids = state => state.linkVc.uuids;
 export const getVcUuid = state => state.linkVc.vcUuid;
+export const getIsLoading = state => state.linkVc.isLoading;
+export const getIsLoadingError = state => state.linkVc.isLoadingError;
 export const createActionType = actionName => linkVcSlice.name + "/" + actionName;
-export const {addUuids, clearUuids, setVcUuid, setMode, setVcs} = linkVcSlice.actions;
+export const {addUuids, clearUuids, setVcUuid, setMode, setVcs, setIsLoading, setIsLoadingError} = linkVcSlice.actions;

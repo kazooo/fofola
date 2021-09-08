@@ -3,6 +3,13 @@ import {call, put, takeEvery} from "redux-saga/effects";
 
 import {baseUrl, request} from "../../redux/superagent";
 import {createActionType, setOutputFiles, removeOutputFile as removeOutputFileFromSlice} from "./slice";
+import {snackbar} from "../../utils/snack/saga";
+import {
+    cantLoadFilesMsg,
+    cantRemoveFileMsg, cantSolrQueryMsg,
+    successRemoveFileMsg,
+    successSolrQueryMsg
+} from "../../utils/constants/messages";
 
 const SEND_SOLR_QUERY = createActionType("SEND_SOLR_QUERY");
 const REMOVE_OUTPUT_FILE = createActionType("REMOVE_OUTPUT_FILE");
@@ -28,6 +35,7 @@ function* requestOutputFilesSaga(action) {
         );
         yield put(setOutputFiles(payload.body));
     } catch (e) {
+        yield put(snackbar.error(cantLoadFilesMsg));
         console.error(e);
     }
 }
@@ -38,8 +46,10 @@ function* sendSolrQuerySaga(action) {
             .post("/internal-processes/new/solr-response")
             .send(action.payload)
         );
+        yield put(snackbar.success(successSolrQueryMsg));
         yield call(requestOutputFilesSaga);
     } catch (e) {
+        yield put(snackbar.error(cantSolrQueryMsg));
         console.error(e);
     }
 }
@@ -51,7 +61,9 @@ function* removeOutputFileSaga(action) {
             .delete("/solr-response/remove/" + fileName)
         );
         yield put(removeOutputFileFromSlice(fileName));
+        yield put(snackbar.success(successRemoveFileMsg));
     } catch (e) {
+        yield put(snackbar.error(cantRemoveFileMsg));
         console.error(e);
     }
 }

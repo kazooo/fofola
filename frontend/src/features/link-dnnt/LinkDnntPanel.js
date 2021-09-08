@@ -14,7 +14,7 @@ export const LinkDnntPanel = () => {
 
     const handleOnClick = (e) => {
         e.preventDefault();
-        dispatch(changeLabel({label: label, mode, uuids}));
+        dispatch(changeLabel({label, mode, uuids}));
     }
 
     const clear = (e) => {

@@ -2,6 +2,14 @@ import {createAction} from "@reduxjs/toolkit";
 import {call, put, select, takeEvery, all} from "redux-saga/effects";
 import {baseUrl, request} from "../../redux/superagent";
 import {setOutputFiles, removeOutputFile, getUuids, createActionType} from "./slice";
+import {snackbar} from "../../utils/snack/saga";
+import {
+    cantLoadFilesMsg,
+    cantRemoveFileMsg,
+    getCantGenPDFMsg,
+    getGenPDFMsg,
+    successRemoveFileMsg
+} from "../../utils/constants/messages";
 
 const GENERATE_PDF = createActionType("GENERATE_PDF");
 const REQUEST_PDF_FILES = createActionType("REQUEST_PDF_FILES");
@@ -21,13 +29,15 @@ export default function* watcherSaga() {
 }
 
 function* generatePdfSaga(action) {
+    const uuids = yield select(getUuids);
     try {
-        const uuids = yield select(getUuids);
         yield all(uuids.map(uuid =>
             request.post("/pdf/generate/" + uuid)
         ));
+        yield put(snackbar.success(getGenPDFMsg(uuids.length)));
         yield call(requestFilesSaga);
     } catch (e) {
+        yield put(snackbar.error(getCantGenPDFMsg(uuids.length)));
         console.error(e);
     }
 }
@@ -39,6 +49,7 @@ function* requestFilesSaga(action) {
         );
         yield put(setOutputFiles(payload.body));
     } catch (e) {
+        yield put(snackbar.error(cantLoadFilesMsg));
         console.error(e);
     }
 }
@@ -49,7 +60,9 @@ function* removeFileSaga(action) {
             .delete("/pdf/remove/" + action.payload)
         );
         yield put(removeOutputFile(action.payload));
+        yield put(snackbar.success(successRemoveFileMsg));
     } catch (e) {
+        yield put(snackbar.error(cantRemoveFileMsg));
         console.error(e);
     }
 }
