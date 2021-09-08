@@ -25,8 +25,8 @@ public class SolrService {
 
     public static SolrClient buildClient(String solrHost) {
         return new HttpSolrClient.Builder(solrHost)
-                .withConnectionTimeout(10000)
-                .withSocketTimeout(60000)
+                .withConnectionTimeout(300000)
+                .withSocketTimeout(300000)
                 .build();
     }
 
