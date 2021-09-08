@@ -17,6 +17,8 @@ import {linkVcSlice} from "../features/link-vc/slice";
 import {deleteSlice} from "../features/delete/slice";
 import {pdfSlice} from "../features/pdf/slice";
 
+import {snackbarSlice} from "../utils/snack/slice";
+
 import internalProcessesSaga from "../features/internal-processes/saga";
 import krameriusProcessSaga from "../features/kramerius-procesess/saga";
 import publishPerioPartsSaga from "../features/perio-parts/saga";
@@ -32,6 +34,8 @@ import reindexSaga from "../features/reindex/saga";
 import linkVcSaga from "../features/link-vc/saga";
 import deleteSaga from "../features/delete/saga";
 import pdfSaga from "../features/pdf/saga";
+
+import snackbarSaga from '../utils/snack/saga';
 
 const initialSagaMiddleware = createSagaMiddleware();
 
@@ -51,6 +55,8 @@ const reducers = {
     setImg: setImgSlice.reducer,
     pdf: pdfSlice.reducer,
     vc: vcSlice.reducer,
+
+    snackbar: snackbarSlice.reducer,
 };
 
 const middlewares = [
@@ -70,18 +76,24 @@ export const store = configureStore({
     middleware: middlewares
 });
 
-initialSagaMiddleware.run(internalProcessesSaga);
-initialSagaMiddleware.run(publishPerioPartsSaga);
-initialSagaMiddleware.run(krameriusProcessSaga);
-initialSagaMiddleware.run(checkDonatorSaga);
-initialSagaMiddleware.run(changeAccessSaga);
-initialSagaMiddleware.run(linkDonatorSaga);
-initialSagaMiddleware.run(solrQuerySaga);
-initialSagaMiddleware.run(uuidInfoSaga);
-initialSagaMiddleware.run(linkDnntSaga);
-initialSagaMiddleware.run(reindexSaga);
-initialSagaMiddleware.run(linkVcSaga);
-initialSagaMiddleware.run(deleteSaga);
-initialSagaMiddleware.run(setImgSaga);
-initialSagaMiddleware.run(pdfSaga);
-initialSagaMiddleware.run(vcSaga);
+const sagas = [
+    internalProcessesSaga,
+    publishPerioPartsSaga,
+    krameriusProcessSaga,
+    checkDonatorSaga,
+    changeAccessSaga,
+    linkDonatorSaga,
+    solrQuerySaga,
+    uuidInfoSaga,
+    linkDnntSaga,
+    reindexSaga,
+    linkVcSaga,
+    deleteSaga,
+    setImgSaga,
+    pdfSaga,
+    vcSaga,
+
+    snackbarSaga,
+];
+
+sagas.forEach(saga => initialSagaMiddleware.run(saga));
