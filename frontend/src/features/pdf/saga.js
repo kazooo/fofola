@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {call, put, select, takeEvery, all} from "redux-saga/effects";
-import {baseUrl, request} from "../../redux/superagent";
+import {request} from "../../utils/superagent";
 import {setOutputFiles, removeOutputFile, getUuids, createActionType} from "./slice";
 import {snackbar} from "../../utils/snack/saga";
 import {
@@ -10,6 +10,7 @@ import {
     getGenPDFMsg,
     successRemoveFileMsg
 } from "../../utils/constants/messages";
+import {BASE_URL} from "../../utils/environment";
 
 const GENERATE_PDF = createActionType("GENERATE_PDF");
 const REQUEST_PDF_FILES = createActionType("REQUEST_PDF_FILES");
@@ -68,7 +69,7 @@ function* removeFileSaga(action) {
 }
 
 function* downloadFileSaga(action) {
-    const url = baseUrl + '/pdf/get/' + action.payload;
+    const url = BASE_URL + '/pdf/get/' + action.payload;
     const win = window.open(url, '_blank');
     win.focus();
 }

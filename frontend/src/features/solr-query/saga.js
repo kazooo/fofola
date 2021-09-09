@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {call, put, takeEvery} from "redux-saga/effects";
 
-import {baseUrl, request} from "../../redux/superagent";
+import {request} from "../../utils/superagent";
 import {createActionType, setOutputFiles, removeOutputFile as removeOutputFileFromSlice} from "./slice";
 import {snackbar} from "../../utils/snack/saga";
 import {
@@ -10,6 +10,7 @@ import {
     successRemoveFileMsg,
     successSolrQueryMsg
 } from "../../utils/constants/messages";
+import {BASE_URL} from "../../utils/environment";
 
 const SEND_SOLR_QUERY = createActionType("SEND_SOLR_QUERY");
 const REMOVE_OUTPUT_FILE = createActionType("REMOVE_OUTPUT_FILE");
@@ -70,7 +71,7 @@ function* removeOutputFileSaga(action) {
 
 function* downloadOutputFileSaga(action) {
     const fileName = action.payload;
-    const url = baseUrl + '/solr-response/download/' + fileName;
+    const url = BASE_URL + '/solr-response/download/' + fileName;
     const win = window.open(url, '_self');
     win.focus();
 }

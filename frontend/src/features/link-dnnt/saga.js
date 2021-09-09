@@ -1,7 +1,7 @@
 import {clearUuids, createActionType} from "./slice";
 import {createAction} from "@reduxjs/toolkit";
 import {call, put, takeEvery} from "redux-saga/effects";
-import {request} from "../../redux/superagent";
+import {request} from "../../utils/superagent";
 import {snackbar} from "../../utils/snack/saga";
 import {getCantLinkDnntLabelMsg, getLinkDnntLabelMsg} from "../../utils/constants/messages";
 

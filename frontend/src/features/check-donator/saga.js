@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {call, put, takeEvery} from "redux-saga/effects";
 
-import {baseUrl, request} from "../../redux/superagent";
+import {request} from "../../utils/superagent";
 import {setOutputFiles, removeOutputFile, createActionType, setVcs, setIsLoading, setIsLoadingError} from "./slice";
 import {snackbar} from "../../utils/snack/saga";
 import {
@@ -12,6 +12,7 @@ import {
     getCheckDonatorMsg,
     successRemoveFileMsg,
 } from "../../utils/constants/messages";
+import {BASE_URL} from "../../utils/environment";
 
 const LOAD_VCS = createActionType('LOAD_VCS');
 const CHECK_DONATOR = createActionType("CHECK_DONATOR");
@@ -74,7 +75,7 @@ function* removeFileSaga(action) {
 }
 
 function* downloadFileSaga(action) {
-    const url = baseUrl + '/check-donator/download/' + action.payload;
+    const url = BASE_URL + '/check-donator/download/' + action.payload;
     const win = window.open(url, '_self');
     win.focus();
 }

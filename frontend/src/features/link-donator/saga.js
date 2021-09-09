@@ -1,6 +1,6 @@
 import {takeEvery, call, put} from "redux-saga/effects";
 import {createAction} from "@reduxjs/toolkit";
-import {request} from "../../redux/superagent";
+import {request} from "../../utils/superagent";
 import {clearUuids, createActionType} from "./slice";
 import {snackbar} from "../../utils/snack/saga";
 import {getCantLinkDonatorLabelMsg, getLinkDonatorLabelMsg} from "../../utils/constants/messages";

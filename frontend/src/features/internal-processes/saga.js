@@ -1,7 +1,7 @@
 import {call, put, select, takeEvery} from "redux-saga/effects";
 import {createAction} from "@reduxjs/toolkit";
 
-import {baseUrl, request} from "../../redux/superagent";
+import {request} from "../../utils/superagent";
 import {createActionType, getCurrentPage, removeProcessInfo, setProcessesInfo, toggleIsLoading} from "./slice";
 import {snackbar} from "../../utils/snack/saga";
 import {
@@ -11,6 +11,7 @@ import {
     successRemoveProcessMsg,
     successStopProcessMsg
 } from "../../utils/constants/messages";
+import {BASE_URL} from "../../utils/environment";
 
 const REQUEST_NEW_PAGE_INTERNAL_PROCESS = createActionType("REQUEST_NEW_PAGE_INTERNAL_PROCESS");
 const REQUEST_CURRENT_PAGE_INTERNAL_PROCESS = createActionType("REQUEST_CURRENT_PAGE_INTERNAL_PROCESS");
@@ -80,7 +81,7 @@ function* removeProcessSaga(action) {
 }
 
 function* openLogsSaga(action) {
-    const url = baseUrl + '/internal-processes/logs/' + action.payload + '.log';
+    const url = BASE_URL + '/internal-processes/logs/' + action.payload + '.log';
     const win = window.open(url, '_blank');
     win.focus();
 }

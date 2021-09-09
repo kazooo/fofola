@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {call, put, takeEvery} from "redux-saga/effects";
-import {request} from "../../redux/superagent";
+import {request} from "../../utils/superagent";
 import {clearAll} from "./slice";
 
 const SET_IMAGE = 'SET_IMAGE';

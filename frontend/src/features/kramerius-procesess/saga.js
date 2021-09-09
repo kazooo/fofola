@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {takeEvery, select, call, put} from "redux-saga/effects";
 
 import {createActionType, getCurrentPage, removeProcessInfo, setProcessesInfo, toggleIsLoading} from "./slice";
-import {request} from "../../redux/superagent";
+import {request} from "../../utils/superagent";
 import {snackbar} from "../../utils/snack/saga";
 import {
     cantLoadNextPage,

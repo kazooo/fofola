@@ -2,7 +2,7 @@ import {call, put, takeEvery} from "redux-saga/effects";
 import {createAction} from "@reduxjs/toolkit";
 
 import {clearUuids, createActionType, setIsLoading, setIsLoadingError, setVcs} from "./slice";
-import {request} from "../../redux/superagent";
+import {request} from "../../utils/superagent";
 import {snackbar} from "../../utils/snack/saga";
 import {cantLoadVcMsg, getCantVcMsg, getLinkVcMsg} from "../../utils/constants/messages";
 
