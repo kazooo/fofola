@@ -5,11 +5,11 @@ plugins {
     id 'io.spring.dependency-management'
 }
 
-group = 'cz.mzk'
-version = '1.2.0'
+group = appGroup
+version = appVersion
 
-sourceCompatibility = 14
-targetCompatibility = 14
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ configurations {
 }
 
 bootJar {
-    archiveName = 'fofola.jar'
+    archiveName = jarName
     mainClassName = 'cz.mzk.fofola.Application'
     destinationDir = project.file('../build')
 }
