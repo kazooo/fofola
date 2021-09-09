@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/api")
 @AllArgsConstructor
 @Slf4j
 public class KOperationsController {

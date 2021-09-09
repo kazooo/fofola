@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/solr-response")
+@RequestMapping("/api/solr-response")
 @AllArgsConstructor
 public class SolrResponseWritingController {
 

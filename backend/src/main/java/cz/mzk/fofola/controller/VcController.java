@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-@RequestMapping("/vc")
+@RequestMapping("/api/vc")
 @AllArgsConstructor
 public class VcController {
 

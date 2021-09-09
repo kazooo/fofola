@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/k-processes")
+@RequestMapping("/api/k-processes")
 @Slf4j
 public class KProcecessesController {
 

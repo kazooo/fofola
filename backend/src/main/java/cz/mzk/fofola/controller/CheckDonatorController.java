@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Controller
-@RequestMapping("/check-donator")
+@RequestMapping("/api/check-donator")
 @AllArgsConstructor
 public class CheckDonatorController {
 

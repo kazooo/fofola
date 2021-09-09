@@ -21,7 +21,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("/pdf")
+@RequestMapping("/api/pdf")
 @Slf4j
 @AllArgsConstructor
 public class PDFController {

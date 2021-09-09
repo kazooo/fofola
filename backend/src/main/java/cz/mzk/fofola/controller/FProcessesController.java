@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 @Controller
-@RequestMapping("/internal-processes")
+@RequestMapping("/api/internal-processes")
 @AllArgsConstructor
 @Slf4j
 public class FProcessesController {
