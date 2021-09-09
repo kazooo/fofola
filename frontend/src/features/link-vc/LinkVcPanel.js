@@ -28,6 +28,6 @@ export const LinkVcPanel = () => {
         >
             <StartButton onClick={handleOnClick}>Spustit process</StartButton>
             <InlineP>Celkem: {uuids.length}</InlineP>
-            <ClearButton onClick={clear}>Clear</ClearButton>
+            <ClearButton onClick={clear}>Vyčistit</ClearButton>
         </HorizontalDirectedGrid>;
 };

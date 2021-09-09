@@ -142,7 +142,7 @@ export const SolrQueryForm = () => {
             }
             {ready &&
                 <Grid item>
-                    <ClearButton onClick={clear}>Clear</ClearButton>
+                    <ClearButton onClick={clear}>Vyčistit</ClearButton>
                 </Grid>
             }
         </Grid>

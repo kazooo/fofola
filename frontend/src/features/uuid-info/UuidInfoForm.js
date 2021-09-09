@@ -24,7 +24,7 @@ export const UuidInfoForm = () => {
             <LoadUuidsForm addUuids={sendUuids}/>
             {infos.length > 0 &&
                 <Box style={{ paddingTop: '30px'}}>
-                    <ClearButton onClick={clear}>Clear</ClearButton>
+                    <ClearButton onClick={clear}>Vyčistit</ClearButton>
                 </Box>
             }
         </VerticalDirectedGrid>

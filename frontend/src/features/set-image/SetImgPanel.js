@@ -24,6 +24,6 @@ export const SetImgPanel = () => {
             spacing={10}
         >
             <StartButton onClick={sendPayload}>Změnit obrázek</StartButton>
-            <ClearButton onClick={clear}>Clear</ClearButton>
+            <ClearButton onClick={clear}>Vyčistit</ClearButton>
         </HorizontalDirectedGrid>;
 }

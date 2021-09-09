@@ -112,7 +112,7 @@ export const CreateForm = () => {
                 {
                     anyContent && (
                         <Grid item xs={6} align="center">
-                            <ClearButton onClick={handleClear}>Clear</ClearButton>
+                            <ClearButton onClick={handleClear}>Vyčistit</ClearButton>
                         </Grid>
                     )
                 }

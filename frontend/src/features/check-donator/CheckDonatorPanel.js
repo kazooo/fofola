@@ -26,6 +26,6 @@ export const CheckDonatorPanel = () => {
             spacing={10}
         >
             <StartButton onClick={check}>Zkontrolovat</StartButton>
-            <ClearButton onClick={clear}>Clear settings</ClearButton>
+            <ClearButton onClick={clear}>Vyčistit nastavení</ClearButton>
         </HorizontalDirectedGrid>;
 };

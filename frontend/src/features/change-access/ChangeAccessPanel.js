@@ -31,7 +31,7 @@ export const ChangeAccessPanel = () => {
         >
             <UnlockButton onClick={makePublic}>Zveřejnit</UnlockButton>
             <LockButton onClick={makePrivate}>Zneveřejnit</LockButton>
-            <ClearButton onClick={clear}>Clear</ClearButton>
+            <ClearButton onClick={clear}>Vyčistit</ClearButton>
             <InlineP>Celkem: {uuids.length}</InlineP>
         </HorizontalDirectedGrid>;
 };

@@ -26,6 +26,6 @@ export const PdfPanel = () => {
         >
             <StartButton onClick={generate}>Vygenerovat PDF</StartButton>
             <InlineP>Celkem: {uuids.length}</InlineP>
-            <ClearButton onClick={clear}>Clear</ClearButton>
+            <ClearButton onClick={clear}>Vyčistit</ClearButton>
         </HorizontalDirectedGrid>;
 };
