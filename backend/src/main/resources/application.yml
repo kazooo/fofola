@@ -30,6 +30,21 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 10s
 
+management:
+  endpoint:
+    info:
+      enabled: true
+  info:
+    build:
+      enabled: true
+    env:
+      enabled: false
+    git:
+      enabled: true
+  health:
+    solr:
+      enabled: false
+
 logging:
   level:
     '*': ''
