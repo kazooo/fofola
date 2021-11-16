@@ -1,21 +1,21 @@
 import React from 'react';
 import {BrowserRouter, Route} from 'react-router-dom'
 import {Home} from "./Home";
-import {Reindex} from "../features/reindex/Reindex";
-import {Delete} from "../features/delete/Delete";
-import {ChangeAccess} from "../features/change-access/ChangeAccess";
-import {LinkDonator} from "../features/link-donator/LinkDonator";
-import {LinkVc} from "../features/link-vc/LinkVc";
-import {UuidInfo} from "../features/uuid-info/UuidInfo";
-import {KrameriusProcesses} from "../features/kramerius-procesess/KrameriusProcesses";
-import {CheckDonator} from "../features/check-donator/CheckDonator";
-import {InternalProcesses} from "../features/internal-processes/InternalProcesses";
-import {Pdf} from "../features/pdf/Pdf";
-import {SolrQuery} from "../features/solr-query/SolrQuery";
-import {PerioPartsPublish} from "../features/perio-parts/PerioPartsPublish";
-import {SetImage} from "../features/set-image/SetImage";
-import {VcManagement} from "../features/vc-management/VcManagement";
-import {LinkDnnt} from "../features/link-dnnt/LinkDnnt";
+import {Reindex} from "../modules/reindex/Reindex";
+import {Delete} from "../modules/delete/Delete";
+import {ChangeAccess} from "../modules/change-access/ChangeAccess";
+import {LinkDonator} from "../modules/link-donator/LinkDonator";
+import {LinkVc} from "../modules/link-vc/LinkVc";
+import {UuidInfo} from "../modules/uuid-info/UuidInfo";
+import {KrameriusProcesses} from "../modules/kramerius-procesess/KrameriusProcesses";
+import {CheckDonator} from "../modules/check-donator/CheckDonator";
+import {InternalProcesses} from "../modules/internal-processes/InternalProcesses";
+import {Pdf} from "../modules/pdf/Pdf";
+import {SolrQuery} from "../modules/solr-query/SolrQuery";
+import {PerioPartsPublish} from "../modules/perio-parts/PerioPartsPublish";
+import {SetImage} from "../modules/set-image/SetImage";
+import {VcManagement} from "../modules/vc-management/VcManagement";
+import {LinkDnnt} from "../modules/link-dnnt/LinkDnnt";
 
 export const App = () => (
     <BrowserRouter>

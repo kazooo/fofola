@@ -16,6 +16,6 @@ export const snackbarSlice = createSlice({
     }
 });
 
-export const getNotifications = state => state.snackbar.notifications;
+export const getNotifications = state => state.snackBarModule.notifications;
 export const {addNotification, removeNotification} = snackbarSlice.actions;
 export const createActionType = actionName => snackbarSlice.name + "/" + actionName;
