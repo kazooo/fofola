@@ -8,6 +8,10 @@ server:
     path: /error
 
 spring:
+  thymeleaf:
+    enabled: false
+    check-template: false
+    check-template-location: false
 
   jpa:
     database: POSTGRESQL
