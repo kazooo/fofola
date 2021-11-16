@@ -32,6 +32,7 @@ public abstract class DnntLabelLinker {
     protected final FedoraApi fedoraApi;
     protected final int maxDocsPerQuery;
     protected final Logger logger;
+    protected final boolean processRecursive;
 
     protected final XPathExpression dnntXPathExpr;
     protected final XPathExpression dnntLabelXPathExpr;
@@ -40,20 +41,13 @@ public abstract class DnntLabelLinker {
     protected static final String FOXML_DNNT_LABEL = "dnnt-label";
     protected static final String FOXML_DNNT_FLAG = "dnnt";
 
-    public DnntLabelLinker(DnntLabelEnum label,
-                           String fedoraHost,
-                           String fedoraUser,
-                           String fedoraPswd,
-                           String solrHost,
-                           Logger logger,
-                           int maxDocsPerQuery)
-            throws TransformerConfigurationException, ParserConfigurationException, XPathExpressionException {
-
-        this.logger = logger;
-        this.label = label.value();
-        this.maxDocsPerQuery = maxDocsPerQuery;
-        this.solrClient = SolrService.buildClient(solrHost);
-        this.fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
+    public DnntLabelLinker(final DnntLinkerParams linkerParams) throws XPathExpressionException {
+        this.logger = linkerParams.getLogger();
+        this.label = linkerParams.getLabel();
+        this.maxDocsPerQuery = linkerParams.getMaxDocsPerQuery();
+        this.processRecursive = linkerParams.isProcessRecursive();
+        this.solrClient = linkerParams.getSolrClient();
+        this.fedoraApi = linkerParams.getFedoraApi();
 
         final XPath xmlPath = XPathFactory.newInstance().newXPath();
         dnntXPathExpr = xmlPath.compile("//*[local-name() = 'dnnt']");
@@ -88,7 +82,7 @@ public abstract class DnntLabelLinker {
 
     private void updateInSolr(final String uuid) throws SolrServerException, IOException {
         logger.info("Try to process DNNT flags in Solr documents of " + uuid + "...");
-        final SolrQuery solrQuery = new SolrQuery("pid_path:/.*" + uuid + ".*/");
+        final SolrQuery solrQuery = getSolrQuery(uuid);
         final AtomicInteger updatedDocs = new AtomicInteger(0);
         SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
                 solrQuery, solrClient, solrDoc -> {
@@ -100,6 +94,14 @@ public abstract class DnntLabelLinker {
                 }, 1_000
         );
         logger.info("Updated: " + updatedDocs.get() + " docs.");
+    }
+
+    private SolrQuery getSolrQuery(final String uuid) {
+        if (!processRecursive) {
+            return new SolrQuery("PID:\"" + uuid + "\"");
+        } else {
+            return new SolrQuery("pid_path:/.*" + uuid + ".*/");
+        }
     }
 
     protected Node getRelsExtDocRoot(Document doc) throws XPathExpressionException {

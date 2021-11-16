@@ -23,22 +23,19 @@ public class DnntLabelLinkingProcess extends Process {
             throws IOException, TransformerConfigurationException, XPathExpressionException, ParserConfigurationException {
         super(params);
 
-        final FofolaConfiguration fofolaConfig = params.getConfig();
-        final String fedoraHost = fofolaConfig.getFedoraHost();
-        final String fedoraUser = fofolaConfig.getFedoraUser();
-        final String fedoraPswd = fofolaConfig.getFedoraPswd();
-        final String solrHost = fofolaConfig.getSolrHost();
-
         final Map<String, ?> data = params.getData();
+        final FofolaConfiguration fofolaConfig = params.getConfig();
+
         final List<String> uuids = (List) data.get("uuids");
-        final DnntLabelEnum label = DnntLabelEnum.of((String) data.get("label"));
         final DnntLabelLinkModeEnum linkMode = DnntLabelLinkModeEnum.of((String) data.get("mode"));
+
+        final DnntLinkerParams linkerParams = new DnntLinkerParams(data, fofolaConfig, logger, 1500);
 
         this.uuids = uuids;
         if (linkMode == DnntLabelLinkModeEnum.LINK) {
-            runner = new DnntLabelLinkRunnerImpl(label, fedoraHost, fedoraUser, fedoraPswd, solrHost, logger, 1500);
+            runner = new DnntLabelLinkRunnerImpl(linkerParams);
         } else {
-            runner = new DnntLabelUnlinkRunnerImpl(label, fedoraHost, fedoraUser, fedoraPswd, solrHost, logger, 1500);
+            runner = new DnntLabelUnlinkRunnerImpl(linkerParams);
         }
     }
 

@@ -1,15 +1,11 @@
 package cz.mzk.fofola.process.dnnt;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
-import cz.mzk.fofola.enums.dnnt.DnntLabelEnum;
 import cz.mzk.fofola.model.doc.SolrDocument;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
@@ -20,15 +16,9 @@ import org.w3c.dom.NodeList;
 
 public class DnntLabelLinkRunnerImpl extends DnntLabelLinker implements DnntLabelLinkingRunner {
 
-    public DnntLabelLinkRunnerImpl(DnntLabelEnum label,
-                                   String fedoraHost,
-                                   String fedoraUser,
-                                   String fedoraPswd,
-                                   String solrHost,
-                                   Logger logger,
-                                   int maxDocsPerQuery)
-            throws TransformerConfigurationException, ParserConfigurationException, XPathExpressionException {
-        super(label, fedoraHost, fedoraUser, fedoraPswd, solrHost, logger, maxDocsPerQuery);
+    public DnntLabelLinkRunnerImpl(final DnntLinkerParams linkerParams)
+            throws XPathExpressionException {
+        super(linkerParams);
     }
 
     @Override

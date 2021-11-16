@@ -1,9 +1,18 @@
 import {useDispatch, useSelector} from "react-redux";
-import {Box, FormControl, InputLabel, makeStyles, MenuItem, Select} from "@material-ui/core";
+import {
+    Box,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    InputLabel,
+    makeStyles,
+    MenuItem,
+    Select
+} from "@material-ui/core";
 
 import {LoadUuidsForm} from "../../components/temporary/LoadUuidsForm";
 import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
-import {addUuids, getLabel, getMode, setLabel, setMode} from "./slice";
+import {addUuids, getLabel, getMode, getProcessRecursive, setLabel, setMode, setProcessRecursive} from "./slice";
 import {labels, modes} from './constants';
 
 const useStyles = makeStyles((theme) => ({
@@ -18,6 +27,7 @@ export const LinkDnntForm = () => {
     const dispatch = useDispatch();
     const mode = useSelector(state => getMode(state));
     const label = useSelector(state => getLabel(state));
+    const processRecursive = useSelector(state => getProcessRecursive(state));
 
     const createOptions = options => options.map((option, index) => (
         <MenuItem key={index} value={option.value}>
@@ -38,6 +48,10 @@ export const LinkDnntForm = () => {
 
     const changeMode = (mode) => {
         dispatch(setMode(mode));
+    }
+
+    const changeProcessRecursive = (_, checked) => {
+        dispatch(setProcessRecursive(checked));
     }
 
     return <Box>
@@ -63,6 +77,14 @@ export const LinkDnntForm = () => {
                     {modeOptions}
                 </Select>
             </FormControl>
+            <FormControlLabel
+                control={<Checkbox
+                    checked={processRecursive}
+                    onChange={changeProcessRecursive}
+                    color="primary"
+                />}
+                label="Zpracovat všechny podřízené časti"
+            />
         </HorizontalDirectedGrid>
     </Box>
 };
