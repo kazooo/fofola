@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route} from 'react-router-dom'
+import {HashRouter, Route} from 'react-router-dom'
 import {Home} from "./Home";
 import {Reindex} from "../modules/reindex/Reindex";
 import {Delete} from "../modules/delete/Delete";
@@ -18,7 +18,7 @@ import {VcManagement} from "../modules/vc-management/VcManagement";
 import {LinkDnnt} from "../modules/link-dnnt/LinkDnnt";
 
 export const App = () => (
-    <BrowserRouter>
+    <HashRouter>
         <Route exact path='/' component={Home} />
         <Route path='/uuid-info' component={UuidInfo} />
         <Route path='/access' component={ChangeAccess} />
@@ -35,5 +35,5 @@ export const App = () => (
         {/*<Route path="/set-image" component={SetImage} />*/}
         <Route path="/vc" component={VcManagement} />
         <Route path='/link-dnnt' component={LinkDnnt} />
-    </BrowserRouter>
+    </HashRouter>
 );
