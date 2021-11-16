@@ -23,7 +23,7 @@ export const checkDonatorSlice = createSlice({
             state.mode = action.payload;
         },
         setOutputFiles: (state, action) => {
-            state.outputFiles = action.payload;
+            state.outputFiles = action.payload ? action.payload : [];
         },
         removeOutputFile: (state, action) => {
             state.outputFiles = state.outputFiles.filter(file => file !== action.payload);
@@ -34,7 +34,7 @@ export const checkDonatorSlice = createSlice({
             state.mode = CHECK_HAS_DONATOR;
         },
         setVcs: (state, action) => {
-            state.vcs = action.payload;
+            state.vcs = action.payload ? action.payload : [];
         },
         setIsLoading: (state, action) => {
             state.isLoading = action.payload;

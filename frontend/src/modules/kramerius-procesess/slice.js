@@ -9,7 +9,7 @@ export const krameriusProcessSlice = createSlice({
     },
     reducers: {
         setProcessesInfo: (state, action) => {
-            state.processesInfo = action.payload;
+            state.processesInfo = action.payload ? action.payload : [];
         },
         removeProcessInfo: (state, action) => {
             state.processesInfo = state.processesInfo.filter(info => info.uuid !== action.payload);

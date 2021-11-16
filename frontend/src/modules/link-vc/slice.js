@@ -25,7 +25,7 @@ export const linkVcSlice = createSlice({
             state.mode = action.payload;
         },
         setVcs: (state, action) => {
-            state.vcs = action.payload;
+            state.vcs = action.payload ? action.payload : [];
         },
         setIsLoading: (state, action) => {
             state.isLoading = action.payload;

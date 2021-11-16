@@ -9,7 +9,7 @@ export const internalProcessesSlice = createSlice({
     },
     reducers: {
         setProcessesInfo: (state, action) => {
-            state.processesInfo = action.payload;
+            state.processesInfo = action.payload ? action.payload : [];
         },
         removeProcessInfo: (state, action) => {
             state.processesInfo = state.processesInfo.filter(info => info.id !== action.payload);

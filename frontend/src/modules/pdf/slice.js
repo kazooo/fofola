@@ -14,7 +14,7 @@ export const pdfSlice = createSlice({
             state.uuids = [];
         },
         setOutputFiles: (state, action) => {
-            state.outputFiles = action.payload;
+            state.outputFiles = action.payload ? action.payload : [];
         },
         removeOutputFile: (state, action) => {
             state.outputFiles = state.outputFiles.filter(file => file !== action.payload);
