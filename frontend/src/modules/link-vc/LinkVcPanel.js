@@ -1,9 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
 
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 import {clearUuids, getMode, getUuids, getVcUuid} from "./slice";
 import {ClearButton, StartButton} from "../../components/button";
-import {InlineP} from "../../components/container/InlineP";
+import {InlineP} from "../../components/page/InlineP";
 import {changeVc} from "./saga";
 
 export const LinkVcPanel = () => {

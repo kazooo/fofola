@@ -1,4 +1,4 @@
-import {SimpleListTable} from "../../components/temporary/SimpleListTable";
+import {SimpleListTable} from "../../components/table/SimpleListTable";
 import {useSelector} from "react-redux";
 import {getUuids} from "./slice";
 

@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {getUuidInfo} from "./slice";
 import {Box} from "@material-ui/core";
-import {FofolaTable} from "../../components/temporary/FofolaTable";
+import {FofolaTable} from "../../components/table/FofolaTable";
 import {columns} from "./constants";
 import {privateUuids, publicUuids, reindexUuids} from "./saga";
 import {LockIconButton, RefreshIconButton, UnlockIconButton} from "../../components/button/iconbuttons";

@@ -1,5 +1,5 @@
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
-import {VerticalDirectedGrid} from "./VerticalDirectedGrid";
+import {VerticalDirectedGrid} from "../layout/VerticalDirectedGrid";
 
 export const Error = ({label}) => {
     return <VerticalDirectedGrid>

@@ -2,9 +2,9 @@ import React, {useState} from "react";
 import {Box} from "@material-ui/core";
 import {useSelector} from "react-redux";
 
-import {HorizontallyCenteredBox} from "../../components/temporary/HorizontallyCenteredBox";
-import {LoadingComponent} from "../../components/temporary/LoadingComponent";
-import {Error} from "../../components/temporary/Error";
+import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
+import {LoadingComponent} from "../../components/page/LoadingComponent";
+import {Error} from "../../components/page/Error";
 
 import {getIsLoading, getIsLoadingError} from "./slice";
 import {CreateForm} from "./CreateForm";

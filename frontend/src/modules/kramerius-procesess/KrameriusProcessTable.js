@@ -1,11 +1,11 @@
 import {useDispatch, useSelector} from "react-redux";
 import {Box} from "@material-ui/core";
-import {FofolaTable} from "../../components/temporary/FofolaTable";
+import {FofolaTable} from "../../components/table/FofolaTable";
 import {getCurrentPage, getIsLoading, getProcessesInfo, setPage} from "./slice";
 import {columns} from "./constants";
 import {DeleteIconButton, StopIconButton} from "../../components/button/iconbuttons";
 import {removeProcess, requestNewPageProcessesInfo, stopProcess} from "./saga";
-import {Paginator} from "../../components/temporary/Paginator";
+import {Paginator} from "../../components/table/Paginator";
 
 export const KrameriusProcessTable = () => {
 

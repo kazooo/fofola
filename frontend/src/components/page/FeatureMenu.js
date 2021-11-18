@@ -1,4 +1,4 @@
-import {VerticalDirectedGrid} from "./VerticalDirectedGrid";
+import {VerticalDirectedGrid} from "../layout/VerticalDirectedGrid";
 import {Box, makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({

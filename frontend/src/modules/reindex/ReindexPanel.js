@@ -1,9 +1,9 @@
-import {InlineP} from "../../components/container/InlineP";
+import {InlineP} from "../../components/page/InlineP";
 import {useDispatch, useSelector} from "react-redux";
 import {clearUuids, getUuids} from "./slice";
 import {reindexUuids} from "./saga";
 import {ClearButton, StartButton} from "../../components/button";
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 
 export const ReindexPanel = () => {
 

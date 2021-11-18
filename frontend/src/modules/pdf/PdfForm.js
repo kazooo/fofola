@@ -1,6 +1,6 @@
 import {useDispatch} from "react-redux";
 import {addUuids} from "./slice";
-import {LoadUuidsForm} from "../../components/temporary/LoadUuidsForm";
+import {LoadUuidsForm} from "../../components/form/LoadUuidsForm";
 import {useEffect} from "react";
 import {useInterval} from "../../effects/useInterval";
 import {requestPdfFiles} from "./saga";

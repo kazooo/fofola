@@ -8,7 +8,7 @@ import {
     TableHead,
     TableRow
 } from "@material-ui/core";
-import {LoadingComponent} from "./LoadingComponent";
+import {LoadingComponent} from "../page/LoadingComponent";
 
 const createStyles = ({width, height}) => {
     const styles = {

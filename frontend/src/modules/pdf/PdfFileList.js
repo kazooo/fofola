@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getOutputFiles} from "./slice";
 import {Box, makeStyles} from "@material-ui/core";
 import {DeleteIconButton, DownloadIconButton} from "../../components/button/iconbuttons";
-import {FofolaTable} from "../../components/temporary/FofolaTable";
+import {FofolaTable} from "../../components/table/FofolaTable";
 import {downloadPdfFile, removePdfFile} from "./saga";
 import {columns} from "./constants";
 

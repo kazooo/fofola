@@ -1,8 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
-import {InlineP} from "../../components/container/InlineP";
+import {InlineP} from "../../components/page/InlineP";
 import {clearUuids, getUuids} from "./slice";
 import {deleteUuids} from "./saga";
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 import {ClearButton, DeleteButton} from "../../components/button";
 
 export const DeletePanel = () => {

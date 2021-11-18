@@ -1,10 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
-import {LoadUuidsForm} from "../../components/temporary/LoadUuidsForm";
+import {LoadUuidsForm} from "../../components/form/LoadUuidsForm";
 import {clearUuidInfo, getUuidInfo} from "./slice";
 import {getUuidInfo as getUuidInfoRequest} from "./saga";
 import {Box} from "@material-ui/core";
 import {ClearButton} from "../../components/button";
-import {VerticalDirectedGrid} from "../../components/temporary/VerticalDirectedGrid";
+import {VerticalDirectedGrid} from "../../components/layout/VerticalDirectedGrid";
 
 export const UuidInfoForm = () => {
 

@@ -1,10 +1,10 @@
 import {ChangeAccessForm} from "./ChangeAccessForm";
 import {ChangeAccessPanel} from "./ChangeAccessPanel";
-import {FeatureMenu} from "../../components/temporary/FeatureMenu";
-import {FeatureContent} from "../../components/temporary/FeatureContent";
+import {FeatureMenu} from "../../components/page/FeatureMenu";
+import {FeatureContent} from "../../components/page/FeatureContent";
 import {ChangeAccessUuidsTable} from "./ChangeAccessUuidsTable";
-import {SplitPageContainer} from "../../components/temporary/SplitPageContainer";
-import {FofolaPage} from "../../components/temporary/FofolaPage";
+import {SplitPageContainer} from "../../components/page/SplitPageContainer";
+import {FofolaPage} from "../../components/page/FofolaPage";
 
 export const ChangeAccess = () => (
     <FofolaPage>

@@ -20,7 +20,7 @@ import {
     setModel,
     setTo
 } from "./slice";
-import {Selector} from "../../components/temporary/Selector";
+import {Selector} from "../../components/form/Selector";
 import {ClearButton, StartButton} from "../../components/button";
 import {useInterval} from "../../effects/useInterval";
 import {useEffect} from "react";

@@ -7,8 +7,8 @@ import {getDonator, getMode, getVcs, getVcUuid, setDonator, setMode, setVcUuid} 
 import {requestCheckDonatorOutputs} from "./saga";
 import {donators, modes} from "./constants";
 
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
-import {LoadingComponent} from "../../components/temporary/LoadingComponent";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
+import {LoadingComponent} from "../../components/page/LoadingComponent";
 import {useInterval} from "../../effects/useInterval";
 
 const useStyles = makeStyles((theme) => ({

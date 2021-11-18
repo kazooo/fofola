@@ -1,8 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
 
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 import {ClearButton, StartButton} from "../../components/button";
-import {InlineP} from "../../components/container/InlineP";
+import {InlineP} from "../../components/page/InlineP";
 import {clearUuids, getLabel, getMode, getProcessRecursive, getUuids} from "./slice";
 import {changeLabel} from "./saga";
 

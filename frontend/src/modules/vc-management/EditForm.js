@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Box, Grid, TextField} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-import {HorizontallyCenteredBox} from "../../components/temporary/HorizontallyCenteredBox";
+import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
 import {AddButton, ClearButton} from "../../components/button";
 import {updateVirtualCollection} from "./saga";
 import {getVcs} from "./slice";

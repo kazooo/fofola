@@ -1,16 +1,10 @@
 import privateImg from "../../img/private.png";
-import reindexImg from "../../img/reindex.png";
-import publicImg from "../../img/public.png";
-import removeImg from "../../img/remove.png";
-import stopImg from "../../img/stop.png";
-import logsImg from "../../img/logs.jpg";
 import {Button} from "@material-ui/core";
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import ClearIcon from '@material-ui/icons/Clear';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import LockIcon from '@material-ui/icons/Lock';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from '@material-ui/icons/Publish';
 import AddIcon from '@material-ui/icons/Add';
 
@@ -53,15 +47,6 @@ export const UnlockButton = ({children, onClick}) => (
 export const DeleteButton = ({children, onClick}) => (
     <IconButton
         icon={<DeleteOutlineIcon />}
-        onClick={onClick}
-    >
-        {children}
-    </IconButton>
-);
-
-export const DownloadButton = ({children, onClick}) => (
-    <IconButton
-        icon={<GetAppIcon />}
         onClick={onClick}
     >
         {children}
@@ -122,24 +107,4 @@ const ImgButton = ({title, img, onClick}) => {
 
 export const MakePrivateButton = ({onClick}) => (
     <ImgButton title={""} img={privateImg} onClick={onClick} />
-);
-
-export const MakePublicButton = ({onClick}) => (
-    <ImgButton title={""} img={publicImg} onClick={onClick} />
-);
-
-export const ReindexButton = ({onClick}) => (
-    <ImgButton title={""} img={reindexImg} onClick={onClick} />
-);
-
-export const RemoveButton = ({onClick}) => (
-    <ImgButton title={""} img={removeImg} onClick={onClick} />
-);
-
-export const StopButton = ({onClick}) => (
-    <ImgButton title={""} img={stopImg} onClick={onClick} />
-);
-
-export const LogsButton = ({onClick}) => (
-    <ImgButton title={""} img={logsImg} onClick={onClick} />
 );

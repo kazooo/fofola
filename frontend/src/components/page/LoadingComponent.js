@@ -1,5 +1,5 @@
 import {CircularProgress} from "@material-ui/core";
-import {VerticalDirectedGrid} from "./VerticalDirectedGrid";
+import {VerticalDirectedGrid} from "../layout/VerticalDirectedGrid";
 
 export const LoadingComponent = ({label}) => {
     return <VerticalDirectedGrid>

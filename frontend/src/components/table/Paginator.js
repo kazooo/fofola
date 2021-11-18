@@ -1,5 +1,5 @@
 import {usePagination} from "../../effects/usePagination";
-import {HorizontalDirectedGrid} from "./HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../layout/HorizontalDirectedGrid";
 import {FirstIconButton, NextIconButton, PreviousIconButton} from "../button/iconbuttons";
 
 export const Paginator = ({defaultPage, onChange}) => {

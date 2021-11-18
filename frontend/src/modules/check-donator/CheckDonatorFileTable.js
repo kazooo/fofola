@@ -3,7 +3,7 @@ import {Box} from "@material-ui/core";
 
 import {getOutputFiles} from "./slice";
 import {downloadOutputFile, removeFile} from "./saga";
-import {FofolaTable} from "../../components/temporary/FofolaTable";
+import {FofolaTable} from "../../components/table/FofolaTable";
 import {DeleteIconButton, DownloadIconButton} from "../../components/button/iconbuttons";
 import {columns} from "./constants";
 

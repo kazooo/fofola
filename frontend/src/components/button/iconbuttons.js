@@ -56,16 +56,6 @@ export const DeleteIconButton = ({onClick}) => (
     </IconButton>
 );
 
-export const UploadIconButton = ({onClick, onChange}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
-        onChange={onChange}
-    >
-        <PublishIcon />
-    </IconButton>
-);
-
 export const DownloadIconButton = ({onClick}) => (
     <IconButton
         size="small"

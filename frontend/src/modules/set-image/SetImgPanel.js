@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {clearAll, getPayload, isPayloadCompleted} from "./slice";
 import {setImg} from "./saga";
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 import {ClearButton, StartButton} from "../../components/button";
 
 export const SetImgPanel = () => {

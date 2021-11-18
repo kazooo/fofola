@@ -2,7 +2,7 @@ import {useState} from "react";
 import {useDispatch} from "react-redux";
 import {Box, Grid, TextField} from "@material-ui/core";
 
-import {HorizontallyCenteredBox} from "../../components/temporary/HorizontallyCenteredBox";
+import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
 import {AddButton, ClearButton} from "../../components/button";
 import {createVirtualCollection} from "./saga";
 

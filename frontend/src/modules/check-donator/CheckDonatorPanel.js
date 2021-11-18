@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {clearSettings, getDonator, getMode, getVcUuid} from "./slice";
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 import {ClearButton, StartButton} from "../../components/button";
 import {checkDonator} from "./saga";
 

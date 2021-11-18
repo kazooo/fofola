@@ -1,8 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
-import {InlineP} from "../../components/container/InlineP";
+import {InlineP} from "../../components/page/InlineP";
 import {clearUuids, getUuids} from "./slice";
 import {privateUuids, publicUuids} from "./saga";
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 import {ClearButton, LockButton, UnlockButton} from "../../components/button";
 
 export const ChangeAccessPanel = () => {

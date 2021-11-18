@@ -10,8 +10,8 @@ import {
 } from "./saga";
 
 import {DeleteIconButton, LogsIconButton, StopIconButton} from "../../components/button/iconbuttons";
-import {Paginator} from "../../components/temporary/Paginator";
-import {FofolaTable} from "../../components/temporary/FofolaTable";
+import {Paginator} from "../../components/table/Paginator";
+import {FofolaTable} from "../../components/table/FofolaTable";
 import {columns} from "./constants";
 
 export const InternalProcessesTable = () => {

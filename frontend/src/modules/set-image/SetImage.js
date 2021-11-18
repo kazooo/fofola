@@ -1,9 +1,9 @@
 import {SetImageForm} from "./SetImageForm";
 import {SetImgPanel} from "./SetImgPanel";
-import {FeatureMenu} from "../../components/temporary/FeatureMenu";
-import {FeatureContent} from "../../components/temporary/FeatureContent";
-import {SplitPageContainer} from "../../components/temporary/SplitPageContainer";
-import {FofolaPage} from "../../components/temporary/FofolaPage";
+import {FeatureMenu} from "../../components/page/FeatureMenu";
+import {FeatureContent} from "../../components/page/FeatureContent";
+import {SplitPageContainer} from "../../components/page/SplitPageContainer";
+import {FofolaPage} from "../../components/page/FofolaPage";
 
 export const SetImage = () => (
     <FofolaPage>

@@ -1,5 +1,5 @@
 import {useSelector} from "react-redux";
-import {SimpleListTable} from "../../components/temporary/SimpleListTable";
+import {SimpleListTable} from "../../components/table/SimpleListTable";
 import {getUuids} from "./slice";
 
 export const LinkDnntUuidsTable = () => {

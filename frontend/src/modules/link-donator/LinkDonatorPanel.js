@@ -1,8 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
-import {InlineP} from "../../components/container/InlineP";
+import {InlineP} from "../../components/page/InlineP";
 import {clearUuids, getDonator, getMode, getUuids} from "./slice";
 import {changeDonator} from "./saga";
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 import {ClearButton, StartButton} from "../../components/button";
 
 export const LinkDonatorPanel = () => {

@@ -1,5 +1,5 @@
 import {Box, createTheme, ThemeProvider} from "@material-ui/core";
-import {Navbar} from "../navbar/Navbar";
+import {Navbar} from "./Navbar";
 
 const theme = createTheme({
     typography: {

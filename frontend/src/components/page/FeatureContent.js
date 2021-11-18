@@ -1,4 +1,4 @@
-import {VerticalDirectedGrid} from "./VerticalDirectedGrid";
+import {VerticalDirectedGrid} from "../layout/VerticalDirectedGrid";
 
 export const FeatureContent = ({children}) => (
     <VerticalDirectedGrid>

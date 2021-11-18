@@ -2,8 +2,8 @@ import {useEffect} from "react";
 import {useDispatch} from "react-redux";
 import {makeStyles} from "@material-ui/core";
 
-import {HorizontallyCenteredBox} from "../../components/temporary/HorizontallyCenteredBox";
-import {FofolaPage} from "../../components/temporary/FofolaPage";
+import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
+import {FofolaPage} from "../../components/page/FofolaPage";
 
 import {loadVirtualCollections} from "./saga";
 import {Panel} from "./Panel";
@@ -33,7 +33,7 @@ export const VcManagement = () => {
     useEffect(() => {
         dispatch(loadVirtualCollections());
     }, []);
-    
+
     return (
         <FofolaPage>
             <HorizontallyCenteredBox width={'70%'}>

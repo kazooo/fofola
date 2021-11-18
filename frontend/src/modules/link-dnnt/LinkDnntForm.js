@@ -10,8 +10,8 @@ import {
     Select
 } from "@material-ui/core";
 
-import {LoadUuidsForm} from "../../components/temporary/LoadUuidsForm";
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {LoadUuidsForm} from "../../components/form/LoadUuidsForm";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 import {addUuids, getLabel, getMode, getProcessRecursive, setLabel, setMode, setProcessRecursive} from "./slice";
 import {labels, modes} from './constants';
 

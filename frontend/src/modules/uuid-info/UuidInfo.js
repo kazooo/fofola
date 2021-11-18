@@ -1,11 +1,11 @@
 import {UuidInfoForm} from "./UuidInfoForm";
 import {UuidInfoPanel} from "./UuidInfoPanel";
-import {FeatureMenu} from "../../components/temporary/FeatureMenu";
-import {FeatureContent} from "../../components/temporary/FeatureContent";
-import {SplitPageContainer} from "../../components/temporary/SplitPageContainer";
-import {FofolaPage} from "../../components/temporary/FofolaPage";
+import {FeatureMenu} from "../../components/page/FeatureMenu";
+import {FeatureContent} from "../../components/page/FeatureContent";
+import {SplitPageContainer} from "../../components/page/SplitPageContainer";
+import {FofolaPage} from "../../components/page/FofolaPage";
 import {Box} from "@material-ui/core";
-import {VerticalEmptyGap} from "../../components/temporary/VerticalEmptyGap";
+import {VerticalEmptyGap} from "../../components/layout/VerticalEmptyGap";
 
 export const UuidInfo = () => (
     <FofolaPage>

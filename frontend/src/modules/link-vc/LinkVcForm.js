@@ -5,9 +5,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import {setMode, addUuids, setVcUuid, getMode, getVcs} from "./slice";
 import {modes} from "./constants";
 
-import {LoadingComponent} from "../../components/temporary/LoadingComponent";
-import {LoadUuidsForm} from "../../components/temporary/LoadUuidsForm";
-import {Selector} from "../../components/temporary/Selector";
+import {LoadingComponent} from "../../components/page/LoadingComponent";
+import {LoadUuidsForm} from "../../components/form/LoadUuidsForm";
+import {Selector} from "../../components/form/Selector";
 
 export const LinkVcForm = () => {
 

@@ -1,9 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
 import {datastreams} from "./constants";
 import {getDatastream, isPayloadCompleted, setDatastream, setImg, setUuid} from "./slice";
-import {LoadUuidWithSelectorForm} from "../../components/temporary/LoadUuidWithSelectorForm";
+import {LoadUuidWithSelectorForm} from "../../components/form/LoadUuidWithSelectorForm";
 import {UploadButton} from "../../components/button";
-import {HorizontalDirectedGrid} from "../../components/temporary/HorizontalDirectedGrid";
+import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 
 export const SetImageForm = () => {
 
