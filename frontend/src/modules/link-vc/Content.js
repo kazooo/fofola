@@ -1,8 +1,8 @@
 import React from "react";
 import {useSelector} from "react-redux";
 
-import {LoadingComponent} from "../../components/page/LoadingComponent";
-import {Error} from "../../components/page/Error";
+import {Loading} from "../../components/info/Loading";
+import {Error} from "../../components/info/Error";
 import {SplitPageContainer} from "../../components/page/SplitPageContainer";
 import {FeatureMenu} from "../../components/page/FeatureMenu";
 import {LinkVcForm} from "./LinkVcForm";
@@ -19,7 +19,7 @@ export const Content = ({classes}) => {
 
     const loading = (
         <CenteredBox classes={classes.root}>
-            <LoadingComponent label={'Načítám virtuální sbírky...'} />
+            <Loading label={'Načítám virtuální sbírky...'} />
         </CenteredBox>
     );
 

@@ -1,7 +1,7 @@
 import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
 import {FofolaPage} from "../../components/page/FofolaPage";
 import {Box, makeStyles} from "@material-ui/core";
-import {Error} from "../../components/page/Error";
+import {Error} from "../../components/info/Error";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({

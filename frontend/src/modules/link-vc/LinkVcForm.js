@@ -5,7 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import {setMode, addUuids, setVcUuid, getMode, getVcs} from "./slice";
 import {modes} from "./constants";
 
-import {LoadingComponent} from "../../components/page/LoadingComponent";
+import {Loading} from "../../components/info/Loading";
 import {LoadUuidsForm} from "../../components/form/LoadUuidsForm";
 import {Selector} from "../../components/form/Selector";
 
@@ -68,7 +68,7 @@ export const LinkVcForm = () => {
         {
             vcs.length > 0
                 ? form
-                : <LoadingComponent label={'Načítám virtuální sbirky...'} />
+                : <Loading label={'Načítám virtuální sbirky...'} />
         }
     </Box>
 };

@@ -8,7 +8,7 @@ import {requestCheckDonatorOutputs} from "./saga";
 import {donators, modes} from "./constants";
 
 import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
-import {LoadingComponent} from "../../components/page/LoadingComponent";
+import {Loading} from "../../components/info/Loading";
 import {useInterval} from "../../effects/useInterval";
 
 const useStyles = makeStyles((theme) => ({
@@ -107,7 +107,7 @@ export const CheckDonatorForm = () => {
         {
             vcs.length > 0
                 ? form
-                : <LoadingComponent label={'Načítám virtuální sbirky...'} />
+                : <Loading label={'Načítám virtuální sbirky...'} />
         }
     </Box>
 };

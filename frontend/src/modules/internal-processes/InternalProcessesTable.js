@@ -10,8 +10,8 @@ import {
 } from "./saga";
 
 import {DeleteIconButton, LogsIconButton, StopIconButton} from "../../components/button/iconbuttons";
-import {Paginator} from "../../components/table/Paginator";
 import {FofolaTable} from "../../components/table/FofolaTable";
+import {Paginator} from "../../components/table/Paginator";
 import {columns} from "./constants";
 
 export const InternalProcessesTable = () => {
@@ -43,7 +43,9 @@ export const InternalProcessesTable = () => {
         dispatch(requestNewPageInternalProcesses());
     };
 
-    const paginator = <Paginator page={page} onChange={handleChangePage}/>
+    const paginatorEnabled = () => processesInfo.size > 0;
+
+    const paginator = <Paginator page={page} onChange={handleChangePage}  enabled={paginatorEnabled()} />
 
     return <Box>
         <FofolaTable
@@ -52,6 +54,7 @@ export const InternalProcessesTable = () => {
             paginator={paginator}
             isLoading={isLoading}
             loadingLabel="Načítám procesy..."
+            notFoundLabel="Fofola nemá žadný proces"
         />
     </Box>
 };

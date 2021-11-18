@@ -8,7 +8,8 @@ import {
     TableHead,
     TableRow
 } from "@material-ui/core";
-import {LoadingComponent} from "../page/LoadingComponent";
+import {Loading} from "../info/Loading";
+import {NotFound} from "../info/NotFound";
 
 const createStyles = ({width, height}) => {
     const styles = {
@@ -20,11 +21,11 @@ const createStyles = ({width, height}) => {
             borderStyle: 'solid'
         },
         tableContainer: {
-            maxHeight: height,
+            height: height,
             maxWidth: 1700,
             borderRadius: 5,
         },
-        loading: {
+        allSpace: {
             width: width,
             height: 510,
         }
@@ -32,8 +33,15 @@ const createStyles = ({width, height}) => {
     return makeStyles(styles)();
 };
 
-export const FofolaTable = ({columns, rows, height = 600,
-                                loadingLabel = null, isLoading = false, paginator = null}) => {
+export const FofolaTable = ({
+                                columns,
+                                rows,
+                                height = 600,
+                                loadingLabel = null,
+                                notFoundLabel = null,
+                                isLoading = false,
+                                paginator = null
+}) => {
 
     const classes = createStyles({
         width: columns.reduce((total, arg) => total + arg, 0),
@@ -66,8 +74,14 @@ export const FofolaTable = ({columns, rows, height = 600,
     ));
 
     const loading = <TableRow hover role="checkbox" tabIndex={-1}>
-        <TableCell colSpan={columns.length} className={classes.loading}>
-            <LoadingComponent label={loadingLabel} />
+        <TableCell colSpan={columns.length} className={classes.allSpace}>
+            <Loading label={loadingLabel} />
+        </TableCell>
+    </TableRow>;
+
+    const noRows = <TableRow hover role="checkbox" tabIndex={-1}>
+        <TableCell colSpan={columns.length} className={classes.allSpace}>
+            <NotFound label={notFoundLabel} />
         </TableCell>
     </TableRow>;
 
@@ -80,7 +94,7 @@ export const FofolaTable = ({columns, rows, height = 600,
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {isLoading ? loading : preparedRows}
+                    {isLoading ? loading : preparedRows.size > 0 ? preparedRows : noRows}
                 </TableBody>
             </Table>
         </TableContainer>

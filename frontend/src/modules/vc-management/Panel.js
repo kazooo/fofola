@@ -3,8 +3,8 @@ import {Box} from "@material-ui/core";
 import {useSelector} from "react-redux";
 
 import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
-import {LoadingComponent} from "../../components/page/LoadingComponent";
-import {Error} from "../../components/page/Error";
+import {Loading} from "../../components/info/Loading";
+import {Error} from "../../components/info/Error";
 
 import {getIsLoading, getIsLoadingError} from "./slice";
 import {CreateForm} from "./CreateForm";
@@ -36,7 +36,7 @@ export const Panel = ({classes}) => {
 
     const loading = (
         <HorizontallyCenteredBox>
-            <LoadingComponent label={'Načítám virtuální sbírky...'} />
+            <Loading label={'Načítám virtuální sbírky...'} />
         </HorizontallyCenteredBox>
     );
 

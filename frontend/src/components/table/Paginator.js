@@ -1,12 +1,12 @@
-import {usePagination} from "../../effects/usePagination";
-import {HorizontalDirectedGrid} from "../layout/HorizontalDirectedGrid";
 import {FirstIconButton, NextIconButton, PreviousIconButton} from "../button/iconbuttons";
+import {HorizontalDirectedGrid} from "../layout/HorizontalDirectedGrid";
+import {usePagination} from "../../effects/usePagination";
 
-export const Paginator = ({defaultPage, onChange}) => {
+export const Paginator = ({defaultPage, onChange, enabled = true}) => {
 
     const [page, nextPage, previousPage, firstPage] = usePagination(onChange, defaultPage);
 
-    return <HorizontalDirectedGrid>
+    return enabled && <HorizontalDirectedGrid>
         {page !== 0 &&
             <FirstIconButton onClick={firstPage} />
         }

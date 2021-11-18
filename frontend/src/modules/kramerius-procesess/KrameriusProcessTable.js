@@ -1,11 +1,12 @@
 import {useDispatch, useSelector} from "react-redux";
 import {Box} from "@material-ui/core";
-import {FofolaTable} from "../../components/table/FofolaTable";
-import {getCurrentPage, getIsLoading, getProcessesInfo, setPage} from "./slice";
-import {columns} from "./constants";
+
 import {DeleteIconButton, StopIconButton} from "../../components/button/iconbuttons";
+import {getCurrentPage, getIsLoading, getProcessesInfo, setPage} from "./slice";
 import {removeProcess, requestNewPageProcessesInfo, stopProcess} from "./saga";
+import {FofolaTable} from "../../components/table/FofolaTable";
 import {Paginator} from "../../components/table/Paginator";
+import {columns} from "./constants";
 
 export const KrameriusProcessTable = () => {
 
@@ -32,7 +33,9 @@ export const KrameriusProcessTable = () => {
         dispatch(requestNewPageProcessesInfo());
     };
 
-    const paginator = <Paginator page={page} onChange={handleChangePage}/>
+    const paginatorEnabled = () => processesInfo.size > 0;
+
+    const paginator = <Paginator page={page} onChange={handleChangePage} enabled={paginatorEnabled()} />
 
     return <Box>
         <FofolaTable
@@ -41,6 +44,7 @@ export const KrameriusProcessTable = () => {
             paginator={paginator}
             isLoading={isLoading}
             loadingLabel="Načítám procesy..."
+            notFoundLabel="Připojený Kramerius nevratil žadný proces"
         />
     </Box>
 }
