@@ -3,7 +3,7 @@ import {useState} from "react";
 export const usePagination = (onChange, defaultPage = 0, defaultItemsPerPage = 10) => {
 
     const [page, setPage] = useState(defaultPage);
-    const [itemsPerPage, setItemsPerPage] = useState(defaultItemsPerPage);
+    const [itemsPerPage] = useState(defaultItemsPerPage);
 
     const nextPage = event => {
         event.preventDefault();

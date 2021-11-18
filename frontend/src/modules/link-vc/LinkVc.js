@@ -23,7 +23,7 @@ export const LinkVc = () => {
 
     useEffect(() => {
         dispatch(loadVirtualCollections());
-    }, []);
+    }, [dispatch]);
 
     return <Content classes={classes} />;
 };

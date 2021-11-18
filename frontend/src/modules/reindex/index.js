@@ -1,7 +1,9 @@
 import saga from "./saga";
 import {reindexSlice} from "./slice";
 
-export default {
+const reindexModule = {
     saga,
     reducer: reindexSlice.reducer,
 }
+
+export default reindexModule;

@@ -74,6 +74,7 @@ function* removeFileSaga(action) {
     }
 }
 
+// eslint-disable-next-line require-yield
 function* downloadFileSaga(action) {
     const url = BASE_URL + '/check-donator/download/' + action.payload;
     const win = window.open(url, '_self');

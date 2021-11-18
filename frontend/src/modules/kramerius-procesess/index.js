@@ -1,7 +1,9 @@
 import saga from "./saga";
 import {krameriusProcessSlice} from "./slice";
 
-export default {
+const krameriusProcessesModule = {
     saga,
     reducer: krameriusProcessSlice.reducer,
 }
+
+export default krameriusProcessesModule;

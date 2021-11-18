@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {Box, FormControl, InputLabel, makeStyles, MenuItem, Select, TextField} from "@material-ui/core";
 
-import {getDonator, getMode, getVcs, getVcUuid, setDonator, setMode, setVcUuid} from "./slice";
+import {getDonator, getMode, getVcs, setDonator, setMode, setVcUuid} from "./slice";
 import {requestCheckDonatorOutputs} from "./saga";
 import {donators, modes} from "./constants";
 

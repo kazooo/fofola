@@ -1,7 +1,9 @@
 import saga from "./saga";
 import {uuidInfoSlice} from "./slice";
 
-export default {
+const uuidInfoModule = {
     saga,
     reducer: uuidInfoSlice.reducer,
 }
+
+export default uuidInfoModule;

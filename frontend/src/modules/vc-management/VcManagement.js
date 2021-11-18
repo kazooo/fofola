@@ -32,7 +32,7 @@ export const VcManagement = () => {
 
     useEffect(() => {
         dispatch(loadVirtualCollections());
-    }, []);
+    }, [dispatch]);
 
     return (
         <FofolaPage>

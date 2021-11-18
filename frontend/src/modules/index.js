@@ -14,7 +14,7 @@ import linkVcModule from "./link-vc";
 import deleteModule from "./delete";
 import pdfModule from "./pdf";
 
-export default {
+const modules = {
     internalProcessesModule,
     krameriusProcessModule,
     perioPartsPublishModule,
@@ -31,3 +31,5 @@ export default {
     pdfModule,
     vcModule,
 };
+
+export default modules;

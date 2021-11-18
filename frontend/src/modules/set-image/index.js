@@ -1,7 +1,9 @@
 import {setImgSlice} from "./slice";
 import saga from "./saga";
 
-export default {
+const setImgModule = {
     saga,
     reducer: setImgSlice.reducer,
 };
+
+export default setImgModule;

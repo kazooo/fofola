@@ -1,7 +1,9 @@
 import {linkDnntSlice} from "./slice";
 import saga from "./saga";
 
-export default {
+const linkDnntModule = {
     saga,
     reducer: linkDnntSlice.reducer,
 };
+
+export default linkDnntModule;

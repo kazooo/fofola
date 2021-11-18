@@ -1,7 +1,9 @@
 import saga from "./saga";
 import {internalProcessesSlice} from "./slice";
 
-export default {
+const internalProcessesModule = {
     saga,
     reducer: internalProcessesSlice.reducer,
 }
+
+export default internalProcessesModule;

@@ -68,6 +68,7 @@ function* removeFileSaga(action) {
     }
 }
 
+// eslint-disable-next-line require-yield
 function* downloadFileSaga(action) {
     const url = BASE_URL + '/pdf/get/' + action.payload;
     const win = window.open(url, '_blank');

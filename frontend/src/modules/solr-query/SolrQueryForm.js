@@ -39,7 +39,7 @@ export const SolrQueryForm = () => {
 
     useEffect(() => {
         dispatch(requestOutputFiles());
-    }, [])
+    }, [dispatch])
 
     useInterval(() => {
         dispatch(requestOutputFiles());

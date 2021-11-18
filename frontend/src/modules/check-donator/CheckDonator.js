@@ -23,7 +23,7 @@ export const CheckDonator = () => {
 
     useEffect(() => {
         dispatch(loadVirtualCollections());
-    }, []);
+    }, [dispatch]);
 
     return <Content classes={classes} />;
 };

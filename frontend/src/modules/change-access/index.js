@@ -1,7 +1,9 @@
 import saga from "./saga";
 import {changeAccessSlice} from "./slice";
 
-export default {
+const changeAccessModule = {
     saga,
     reducer: changeAccessSlice.reducer,
 }
+
+export default changeAccessModule;

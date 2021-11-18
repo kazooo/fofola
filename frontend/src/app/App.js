@@ -13,7 +13,7 @@ import {InternalProcesses} from "../modules/internal-processes/InternalProcesses
 import {Pdf} from "../modules/pdf/Pdf";
 import {SolrQuery} from "../modules/solr-query/SolrQuery";
 import {PerioPartsPublish} from "../modules/perio-parts/PerioPartsPublish";
-import {SetImage} from "../modules/set-image/SetImage";
+// import {SetImage} from "../modules/set-image/SetImage";
 import {VcManagement} from "../modules/vc-management/VcManagement";
 import {LinkDnnt} from "../modules/link-dnnt/LinkDnnt";
 import {Error404} from "../modules/404/Error404";

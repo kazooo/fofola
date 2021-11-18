@@ -1,8 +1,8 @@
-import {call, put, select, takeEvery} from "redux-saga/effects";
+import {call, put, takeEvery} from "redux-saga/effects";
 import {createAction} from "@reduxjs/toolkit";
 
 import {request} from "../../utils/superagent";
-import {createActionType, getCurrentPage, removeProcessInfo, setProcessesInfo, toggleIsLoading} from "./slice";
+import {createActionType, removeProcessInfo, setProcessesInfo, toggleIsLoading} from "./slice";
 import {snackbar} from "../../utils/snack/saga";
 import {
     cantLoadNextPage,
@@ -35,8 +35,8 @@ export default function* watcherSaga() {
 
 function* requestCurrentPageProcessSaga(action) {
     try {
-        const page = yield select(getCurrentPage);
         /* TODO create pagination for internal processes */
+        // const page = yield select(getCurrentPage);
         const payload = yield call(() => request
             .get("/internal-processes/all")
         );
@@ -80,6 +80,7 @@ function* removeProcessSaga(action) {
     }
 }
 
+// eslint-disable-next-line require-yield
 function* openLogsSaga(action) {
     const url = BASE_URL + '/internal-processes/logs/' + action.payload + '.log';
     const win = window.open(url, '_blank');

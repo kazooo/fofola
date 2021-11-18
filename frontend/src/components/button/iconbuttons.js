@@ -7,7 +7,6 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
-import PublishIcon from "@material-ui/icons/Publish";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import DescriptionIcon from '@material-ui/icons/Description';
 

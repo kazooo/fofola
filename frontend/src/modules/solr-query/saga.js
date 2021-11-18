@@ -6,7 +6,8 @@ import {createActionType, setOutputFiles, removeOutputFile as removeOutputFileFr
 import {snackbar} from "../../utils/snack/saga";
 import {
     cantLoadFilesMsg,
-    cantRemoveFileMsg, cantSolrQueryMsg,
+    cantRemoveFileMsg,
+    cantSolrQueryMsg,
     successRemoveFileMsg,
     successSolrQueryMsg
 } from "../../utils/constants/messages";
@@ -69,6 +70,7 @@ function* removeOutputFileSaga(action) {
     }
 }
 
+// eslint-disable-next-line require-yield
 function* downloadOutputFileSaga(action) {
     const fileName = action.payload;
     const url = BASE_URL + '/solr-response/download/' + fileName;

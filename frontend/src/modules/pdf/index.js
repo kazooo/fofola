@@ -1,7 +1,9 @@
 import saga from "./saga";
 import {pdfSlice} from "./slice";
 
-export default {
+const pdfModule = {
     saga,
     reducer: pdfSlice.reducer,
 }
+
+export default pdfModule;

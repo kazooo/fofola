@@ -1,7 +1,10 @@
 import saga from "./saga";
 import {solrQuerySlice} from "./slice";
 
-export default {
+const solrQueryModule = {
     saga,
     reducer: solrQuerySlice.reducer,
 }
+
+export default solrQueryModule;
+

@@ -1,7 +1,9 @@
 import saga from "./saga";
 import {vcSlice} from "./slice";
 
-export default {
+const vcModule = {
     saga,
     reducer: vcSlice.reducer,
 };
+
+export default vcModule;
