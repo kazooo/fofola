@@ -9,7 +9,7 @@ export const vcSlice = createSlice({
     },
     reducers: {
         setVcs: (state, action) => {
-            state.vcs = action.payload;
+            state.vcs = action.payload ? action.payload : [];
         },
         setIsLoading: (state, action) => {
             state.isLoading = action.payload;
