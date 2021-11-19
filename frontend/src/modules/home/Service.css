@@ -15,5 +15,5 @@
 .button:hover {
     border-color: #6F3317;
     color: black;
-    background: #F88F2A url("../../img/hover-btn.png");
+    background: #F88F2A url("../../../src/img/hover-btn.png");
 }

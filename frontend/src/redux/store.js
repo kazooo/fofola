@@ -16,11 +16,7 @@ const initialSagaMiddleware = createSagaMiddleware();
 const middlewares = [
     ...getDefaultMiddleware({
         thunk: false,
-        serializableCheck: {
-            ignoredActions: ['setImg/setImg'],
-            ignoredActionPaths: ['payload.img'],
-            ignoredPaths: ['setImg.img'],
-        },
+        serializableCheck: false,
     }),
     initialSagaMiddleware
 ];

@@ -8,11 +8,6 @@ server:
     path: /error
 
 spring:
-  thymeleaf:
-    enabled: false
-    check-template: false
-    check-template-location: false
-
   jpa:
     database: POSTGRESQL
     generate-ddl: true
@@ -25,19 +20,22 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-
   servlet:
     multipart:
       max-file-size: -1
       max-request-size: -1
-
   lifecycle:
     timeout-per-shutdown-phase: 10s
 
 management:
-  endpoint:
-    info:
-      enabled: true
+  endpoints:
+    web:
+      base-path: /api/management
+      exposure:
+        include: info, startup
+      cors:
+        allowed-methods: OPTIONS, GET
+        allowed-origins: '*'
   info:
     build:
       enabled: true

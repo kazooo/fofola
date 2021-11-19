@@ -1,10 +1,33 @@
-import React from "react";
-import {ServiceContainer} from "../components/service/ServiceContainer";
-import {ServiceCard} from "../components/service/ServiceCard";
-import {Service} from "../components/service/Service";
+import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
 
-export const Home = () => (
-    <ServiceContainer title="Fofola">
+import {ServiceContainer} from "./ServiceContainer";
+import {ServiceCard} from "./ServiceCard";
+import {Service} from "./Service";
+import {requestEnvInfo} from "./saga";
+import {getBuildTime, getCommitId, getGitBranch, getStartupTime, getVersion} from "./slice";
+
+export const Home = () => {
+    const dispatch = useDispatch();
+    const startupTime = useSelector(state => getStartupTime(state));
+    const buildTime = useSelector(state => getBuildTime(state));
+    const version = useSelector(state => getVersion(state));
+    const gitBranch = useSelector(state => getGitBranch(state));
+    const commitId = useSelector(state => getCommitId(state));
+
+    useEffect(() => {
+        dispatch(requestEnvInfo());
+    }, [dispatch]);
+
+    const info = {
+        startupTime,
+        buildTime,
+        version,
+        gitBranch,
+        commitId,
+    };
+
+    return <ServiceContainer title="Fofola" info={info}>
         <ServiceCard title="Zobrazování metadat">
             <Service link="/uuid-info"> Vypsat základní info o UUID </Service>
             <Service link="/solr-query"> Dotaz na Solr </Service>
@@ -30,5 +53,5 @@ export const Home = () => (
         <ServiceCard title="Interní věci">
             <Service link="/internal-processes"> Processy Fofoly </Service>
         </ServiceCard>
-    </ServiceContainer>
-);
+    </ServiceContainer>;
+};

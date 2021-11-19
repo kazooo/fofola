@@ -12,6 +12,7 @@ import setImgModule from "./set-image";
 import reindexModule from "./reindex";
 import linkVcModule from "./link-vc";
 import deleteModule from "./delete";
+import homeModule from "./home";
 import pdfModule from "./pdf";
 
 const modules = {
@@ -28,6 +29,7 @@ const modules = {
     setImgModule,
     linkVcModule,
     deleteModule,
+    homeModule,
     pdfModule,
     vcModule,
 };

@@ -49,3 +49,5 @@ export const criticalErrorMessage = 'Vznikla kritická chyba! Pro vice informace
 export const cantLoadFilesMsg = 'Není možne načíst výstupní soubory ze serveru!';
 export const cantLoadVcMsg = 'Není možne načíst virtuální sbírky ze serveru!';
 export const cantLoadNextPage = 'Není možne načíst další stránku ze serveru!';
+
+export const cantLoadEnvInfo = 'Není možne načíst informace o aplikaci! Zkontrolujte připojení k serveru!';

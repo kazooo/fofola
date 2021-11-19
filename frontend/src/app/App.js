@@ -1,6 +1,7 @@
 import React from 'react';
 import {HashRouter, Route, Switch} from 'react-router-dom'
-import {Home} from "./Home";
+
+import {Home} from "../modules/home/Home";
 import {Reindex} from "../modules/reindex/Reindex";
 import {Delete} from "../modules/delete/Delete";
 import {ChangeAccess} from "../modules/change-access/ChangeAccess";
