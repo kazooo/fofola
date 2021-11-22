@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -78,7 +79,9 @@ public class KrameriusApi {
         String url = krameriusHost + CLIENT_API_V5 + "/pdf/parent";
         url = ApiConfiguration.buildUri(url, params);
         ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, byte[].class);
-        Files.write(Paths.get(outFilePath), Objects.requireNonNull(response.getBody()));
+        final Path outputPDFFile = Paths.get(outFilePath);
+        Files.createDirectories(outputPDFFile.getParent());
+        Files.write(outputPDFFile, Objects.requireNonNull(response.getBody()));
     }
 
     class Parameters {
