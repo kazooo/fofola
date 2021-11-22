@@ -94,7 +94,7 @@ export const SolrQueryForm = () => {
                     label="Z"
                     value={from}
                     variant="outlined"
-                    placeholder="dd-mm-yyyy"
+                    placeholder="yyyy"
                     onChange={e => changeFrom(e.target.value)}
                     size="small"
                     inputProps={{ maxLength: 40 }}
@@ -105,7 +105,7 @@ export const SolrQueryForm = () => {
                     label="Do"
                     value={to}
                     variant="outlined"
-                    placeholder="dd-mm-yyyy"
+                    placeholder="yyyy"
                     onChange={e => changeTo(e.target.value)}
                     size="small"
                     inputProps={{ maxLength: 40 }}
