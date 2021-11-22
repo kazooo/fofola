@@ -87,7 +87,7 @@ public class SolrVCLinker {
     }
 
     private SolrQuery createSolrQuery(String uuid) {
-        String allPartsQueryStr = "pid_path:/" + uuid.trim() + ".*/";
+        String allPartsQueryStr = "pid_path:/" + uuid.trim() + "\\/.*/";
         SolrQuery query = new SolrQuery(allPartsQueryStr);
         query.addField("PID");
         query.addField("collection");
