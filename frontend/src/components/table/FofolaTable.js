@@ -94,7 +94,7 @@ export const FofolaTable = ({
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {isLoading ? loading : preparedRows.size > 0 ? preparedRows : noRows}
+                    {isLoading ? loading : preparedRows.length > 0 ? preparedRows : noRows}
                 </TableBody>
             </Table>
         </TableContainer>
