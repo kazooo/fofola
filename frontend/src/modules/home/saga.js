@@ -11,26 +11,34 @@ export const REQUEST_ENV_INFO = createActionType("REQUEST_ENV_INFO");
 
 export const requestEnvInfo = createAction(REQUEST_ENV_INFO);
 
+const UNDEFINED_VALUE = null;
+const dateTimeFormat = 'HH:MM:SS DD/MM/YYYY';
+
 export default function* watcherSaga() {
     yield takeEvery(REQUEST_ENV_INFO, requestEnvInfoSaga);
 };
 
 function* requestEnvInfoSaga() {
-    const dateTimeFormat = "HH:MM:SS DD/MM/YYYY";
     try {
         const startupPayload = yield call(() => request.get("/management/startup"));
         const infoPayload = yield call(() => request.get("/management/info"));
 
-        const startupTime = moment(startupPayload.body?.timeline.startTime).format(dateTimeFormat);
-        const buildTime = moment(infoPayload.body?.build.time).format(dateTimeFormat);
-        const version = infoPayload.body?.build.version;
-        const gitBranch = infoPayload.body?.git.branch;
-        const commitId = infoPayload.body?.git.commit.id;
+        const startupTimeRaw = startupPayload.body?.timeline.startTime;
+        const buildTimeRaw = infoPayload.body?.build.time;
 
+        const startupTime = startupTimeRaw ? moment(startupTimeRaw).format(dateTimeFormat) : UNDEFINED_VALUE;
         yield put(setStartupTime(startupTime));
+
+        const buildTime = buildTimeRaw ? moment(buildTimeRaw).format(dateTimeFormat) : UNDEFINED_VALUE;
         yield put(setBuildTime(buildTime));
+
+        const version = infoPayload.body?.build.version ?? UNDEFINED_VALUE;
         yield put(setVersion(version));
+
+        const gitBranch = infoPayload.body?.git.branch ?? UNDEFINED_VALUE;
         yield put(setGitBranch(gitBranch));
+
+        const commitId = infoPayload.body?.git.commit.id ?? UNDEFINED_VALUE;
         yield put(setCommitId(commitId));
     } catch (e) {
         yield put(snackbar.error(cantLoadEnvInfo));

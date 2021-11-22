@@ -33,21 +33,41 @@ const Title = ({title}) => (
 
 const InfoBlock = ({startupTime, buildTime, version, gitBranch, commitId}) => (
     <Box sx={{float:"left"}}>
-        <Box component={"p"}>
-            Startup Time: {startupTime}
-        </Box>
-        <Box component={"p"}>
-            Build Time: {buildTime}
-        </Box>
-        <Box component={"p"}>
-            Git branch: {gitBranch}
-        </Box>
-        <Box component={"p"}>
-            Commit ID: {commitId}
-        </Box>
-        <Box component={"p"}>
-            Version: {version}
-        </Box>
+        {
+            startupTime && (
+                <Box component={"p"}>
+                    Startup Time: {startupTime}
+                </Box>
+            )
+        }
+        {
+            buildTime && (
+                <Box component={"p"}>
+                    Build Time: {buildTime}
+                </Box>
+            )
+        }
+        {
+            gitBranch && (
+                <Box component={"p"}>
+                    Git branch: {gitBranch}
+                </Box>
+            )
+        }
+        {
+            commitId && (
+                <Box component={"p"}>
+                    Commit ID: {commitId}
+                </Box>
+            )
+        }
+        {
+            version && (
+                <Box component={"p"}>
+                    Version: {version}
+                </Box>
+            )
+        }
     </Box>
 );
 
