@@ -15,13 +15,19 @@ export const KrameriusProcessTable = () => {
     const isLoading = useSelector(state => getIsLoading(state));
     const processesInfo = useSelector(state => getProcessesInfo(state));
 
+    const canStop = state => state === 'RUNNING' || state === 'PLANNED';
+
     const createDataWithButtons = (data) => {
         return data.map((row) => ({
             ...row,
             action:
                 <Box>
-                    <StopIconButton onClick={() => dispatch(stopProcess([row.uuid]))}/>
-                    <DeleteIconButton onClick={() => dispatch(removeProcess([row.uuid]))}/>
+                    {
+                        canStop(row.state) && (
+                            <StopIconButton onClick={() => dispatch(stopProcess(row.uuid))}/>
+                        )
+                    }
+                    <DeleteIconButton onClick={() => dispatch(removeProcess(row.uuid))}/>
                 </Box>
         }));
     }

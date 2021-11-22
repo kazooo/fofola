@@ -50,13 +50,13 @@ function* requestProcessesInfoLoadingSaga(action) {
 
 function* removeProcessSaga(action) {
     try {
-        yield call(() => request
+        const response = yield call(() => request
             .delete("/k-processes/" + action.payload)
         );
-        yield put(removeProcessInfo(action.payload));
+        yield put(removeProcessInfo(response ?? action.payload));
         yield put(snackbar.success(successRemoveProcessMsg));
     } catch (e) {
-        yield put(snackbar.success(cantRemoveProcessMsg));
+        yield put(snackbar.error(cantRemoveProcessMsg));
         console.error(e);
     }
 }
