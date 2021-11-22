@@ -44,7 +44,7 @@ export const cantRemoveProcessMsg = 'Není možne vymazat proces!';
 export const successRemoveFileMsg = 'Soubor byl uspešně vymazán ze serveru!';
 export const cantRemoveFileMsg = 'Není možne vymazat výstupní soubory ze serveru!';
 
-export const criticalErrorMessage = 'Vznikla kritická chyba! Pro vice informace, zkontrolujte konzoli prohlížeče.';
+export const cantGetUuidInfo = 'Není možné získat informace o UUID ze serveru!';
 
 export const cantLoadFilesMsg = 'Není možne načíst výstupní soubory ze serveru!';
 export const cantLoadVcMsg = 'Není možne načíst virtuální sbírky ze serveru!';

@@ -5,7 +5,7 @@ import {request} from "../../utils/superagent";
 import {clearUuidInfo, addUuidInfo, createActionType} from "./slice";
 import {snackbar} from "../../utils/snack/saga";
 import {
-    criticalErrorMessage,
+    cantGetUuidInfo,
     getCantMakePrivateMsg,
     getCantMakePublicMsg,
     getCantReindexMsg, getMakePrivateMsg,
@@ -38,7 +38,7 @@ function* getUuidInfoSaga(action) {
         );
         yield put(addUuidInfo(payload.body));
     } catch (e) {
-        yield put(snackbar.error(criticalErrorMessage));
+        yield put(snackbar.error(cantGetUuidInfo));
         console.error(e);
     }
 }
