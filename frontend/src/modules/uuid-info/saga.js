@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {call, put, takeEvery} from "redux-saga/effects";
 
 import {request} from "../../utils/superagent";
-import {clearUuidInfo, addUuidInfo, createActionType} from "./slice";
+import {addUuidInfo, createActionType} from "./slice";
 import {snackbar} from "../../utils/snack/saga";
 import {
     cantGetUuidInfo,
@@ -50,7 +50,6 @@ function* reindexSaga(action) {
             .post("/reindex")
             .send(uuids)
         );
-        yield put(clearUuidInfo())
         yield put(snackbar.success(getReindexMsg(uuids.length)));
     } catch (e) {
         yield put(snackbar.error(getCantReindexMsg(uuids.length)));
@@ -65,7 +64,6 @@ function* publicSaga(action) {
             .post('/access/public')
             .send(uuids)
         );
-        yield put(clearUuidInfo());
         yield put(snackbar.success(getMakePublicMsg(uuids.length)));
     } catch (e) {
         yield put(snackbar.error(getCantMakePublicMsg(uuids.length)));
@@ -80,7 +78,6 @@ function* privateSaga(action) {
             .post('/access/private')
             .send(uuids)
         );
-        yield put(clearUuidInfo());
         yield put(snackbar.success(getMakePrivateMsg(uuids.length)));
     } catch (e) {
         yield put(snackbar.error(getCantMakePrivateMsg(uuids.length)));
