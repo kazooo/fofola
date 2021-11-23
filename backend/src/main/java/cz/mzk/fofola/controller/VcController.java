@@ -9,8 +9,10 @@ import cz.mzk.fofola.service.VcService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,10 +35,14 @@ public class VcController {
         return virtualCollections;
     }
 
-    @PostMapping
-    public ResponseEntity<String> createVc(@RequestBody final CreateVcRequest createVcRequest) {
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> createVc(@RequestPart(value = "vcData") final CreateVcRequest createVcRequest,
+                                           @RequestPart(value = "fullImg", required = false) final MultipartFile fullImg,
+                                           @RequestPart(value = "thumbImg", required = false) final MultipartFile thumbImg) {
         final VirtualCollection virtualCollection = new VirtualCollection();
         BeanUtils.copyProperties(createVcRequest, virtualCollection);
+        virtualCollection.setFullImg(fullImg);
+        virtualCollection.setThumbImg(thumbImg);
         final String uuid = vcService.createVc(virtualCollection);
         return ResponseEntity.ok(uuid);
     }

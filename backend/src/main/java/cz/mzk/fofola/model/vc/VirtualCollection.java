@@ -3,6 +3,7 @@ package cz.mzk.fofola.model.vc;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
@@ -13,6 +14,8 @@ public class VirtualCollection {
     private String nameEn;
     private String descriptionCz;
     private String descriptionEn;
+    private MultipartFile fullImg;
+    private MultipartFile thumbImg;
 
     public static VirtualCollection from(final VC vc) {
         final VirtualCollection virtualCollection = new VirtualCollection();

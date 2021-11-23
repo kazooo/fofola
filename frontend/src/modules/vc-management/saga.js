@@ -50,9 +50,29 @@ function* loadVirtualCollectionsSaga() {
 
 function* createVirtualCollectionSaga(action) {
     try {
+        const {nameCz, nameEn, textCz, textEn, fullImg, thumbImg} = action.payload;
+
+        const formData = new FormData();
+
+        formData.append("fullImg", fullImg);
+        formData.append("thumbImg", thumbImg);
+
+        formData.append('vcData', new Blob([
+            JSON.stringify({
+                    "nameCz": nameCz,
+                    "nameEn": nameEn,
+                    "textCz": textCz,
+                    "textEn": textEn,
+                }
+            )],
+            {
+                type: "application/json"
+            })
+        );
+
         yield call(() => request
             .post('/vc')
-            .send(action.payload)
+            .send(formData)
         );
         yield put(snackbar.success(successCreateVcMsg));
     } catch (e) {
