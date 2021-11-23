@@ -4,9 +4,8 @@ import {useSelector} from "react-redux";
 
 import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
 import {Loading} from "../../components/info/Loading";
-import {Error} from "../../components/info/Error";
 
-import {getIsLoading, getIsLoadingError} from "./slice";
+import {getIsLoading} from "./slice";
 import {CreateForm} from "./CreateForm";
 import {EditForm} from "./EditForm";
 import {Options} from "./Options";
@@ -15,7 +14,6 @@ import {Tabs} from "./Tabs";
 export const Panel = ({classes}) => {
     const [tabNum, setTabNum] = useState(0);
     const isLoading = useSelector(state => getIsLoading(state));
-    const isLoadingError = useSelector(state => getIsLoadingError(state));
 
     const handleChange = (event, newValue) => {
         setTabNum(newValue);
@@ -40,21 +38,9 @@ export const Panel = ({classes}) => {
         </HorizontallyCenteredBox>
     );
 
-    const error = (
-        <HorizontallyCenteredBox>
-            <Error label={'Chyba při načtení virtuálních sbírek!'} />
-        </HorizontallyCenteredBox>
-    );
-
     return <Box className={classes.root}>
         {
-            isLoading && loading
-        }
-        {
-            isLoadingError && error
-        }
-        {
-            !isLoading && !isLoadingError && panel
+            isLoading ? loading : panel
         }
     </Box>;
 };
