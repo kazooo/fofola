@@ -36,6 +36,12 @@ public class VcService {
         if (virtualCollection.getDescriptionEn() != null) {
             fedoraApi.setLongTextEn(uuid, virtualCollection.getDescriptionEn());
         }
+        if (virtualCollection.getFullImg() != null) {
+            fedoraApi.setFullImg(uuid, virtualCollection.getFullImg());
+        }
+        if (virtualCollection.getThumbImg() != null) {
+            fedoraApi.setThumbnailImg(uuid, virtualCollection.getThumbImg());
+        }
         return uuid;
     }
 }

@@ -5,6 +5,7 @@ import {Box} from "@material-ui/core";
 import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
 import {Buttons, styles, VCDescriptions, VCNames} from "./components";
 import {createVirtualCollection} from "./saga";
+import {AddButton} from "../../components/button";
 
 export const CreateForm = () => {
     const dispatch = useDispatch();
@@ -29,7 +30,7 @@ export const CreateForm = () => {
     }
 
     const buttonFuncs = {
-        createVc,
+        actionButton: <AddButton onClick={createVc}>Vytvořit</AddButton>,
         handleClear,
         setFullImg,
         setThumbImg,

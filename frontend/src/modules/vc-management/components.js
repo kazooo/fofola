@@ -1,5 +1,5 @@
 import {Box, Grid, TextField} from "@material-ui/core";
-import {AddButton, ClearButton, UploadButton} from "../../components/button";
+import {ClearButton, UploadButton} from "../../components/button";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 
 export const styles = {
@@ -81,7 +81,7 @@ export const VCDescriptions = ({textCz, textEn, setTextCz, setTextEn}) => {
     );
 };
 
-export const Buttons = ({anyContent, ready, handleClear, createVc, fullImg, setFullImg, thumbImg, setThumbImg}) => {
+export const Buttons = ({anyContent, ready, handleClear, actionButton, fullImg, setFullImg, thumbImg, setThumbImg}) => {
     return (
         <Box style={styles.wrapperStyle}>
             <Grid container style={styles.containerStyle}>
@@ -101,7 +101,7 @@ export const Buttons = ({anyContent, ready, handleClear, createVc, fullImg, setF
                 {
                     ready && (
                         <Grid item xs={3} align="center">
-                            <AddButton onClick={createVc}>Vytvořit</AddButton>
+                            {actionButton}
                         </Grid>
                     )
                 }

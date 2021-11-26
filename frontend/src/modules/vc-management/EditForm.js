@@ -1,38 +1,38 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Box, Grid, TextField} from "@material-ui/core";
+import {Box, TextField} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
-import {AddButton, ClearButton} from "../../components/button";
-import {updateVirtualCollection} from "./saga";
-import {getIsLoadingError, getVcs} from "./slice";
+import {Buttons, styles, VCDescriptions, VCNames} from "./components";
 import {Error} from "../../components/info/Error";
+import {getIsLoadingError, getVcs} from "./slice";
+import {updateVirtualCollection} from "./saga";
+import {AddButton} from "../../components/button";
 
 export const EditForm = () => {
     const dispatch = useDispatch();
     const [uuid, setUuid] = useState(null);
     const [nameCz, setNameCz] = useState('');
     const [nameEn, setNameEn] = useState('');
-    const [textCz, setTextCz] = useState('');
-    const [textEn, setTextEn] = useState('');
+    const [descriptionCz, setDescriptionCz] = useState('');
+    const [descriptionEn, setDescriptionEn] = useState('');
+    const [fullImg, setFullImg] = useState(null);
+    const [thumbImg, setThumbImg] = useState(null);
     const vcs = useSelector(state => getVcs(state));
 
     const isLoadingError = useSelector(state => getIsLoadingError(state));
 
-    const anyContent = nameCz || nameEn || textCz || textEn;
-    const ready = uuid && nameCz && nameEn && textCz && textEn;
-
     const updateVc = () => {
-        dispatch(updateVirtualCollection({uuid, nameCz, nameEn, textCz, textEn}));
+        dispatch(updateVirtualCollection({uuid, nameCz, nameEn, descriptionCz, descriptionEn, fullImg, thumbImg}));
     }
 
     const loadVcUuid = (event, values) => {
         if (values) {
             setNameCz(values.nameCz);
             setNameEn(values.nameEn);
-            setTextCz(values.descriptionCz);
-            setTextEn(values.descriptionEn);
+            setDescriptionCz(values.descriptionCz);
+            setDescriptionEn(values.descriptionEn);
         }
         setUuid(values ? values.uuid : '')
     }
@@ -40,29 +40,18 @@ export const EditForm = () => {
     const handleClear = () => {
         setNameCz('');
         setNameEn('');
-        setTextCz('');
-        setTextEn('');
+        setDescriptionCz('');
+        setDescriptionEn('');
+        setFullImg(null);
+        setThumbImg(null);
     }
 
-    const styles = {
-        stringInputStyle: {
-            width: '100%',
-        },
-        textInputStyle: {
-            width: '100%',
-        },
-        wrapperStyle: {
-            padding: '30px 15px 0 30px',
-        },
-        containerStyle: {
-            width: '100%',
-        }
-    }
-
-    const containerProps = {
-        spacing: 2,
-        alignContent: "center",
-        justifyContent: "center"
+    const buttonFuncs = {
+        actionButton: <AddButton onClick={updateVc}>Upravit</AddButton>,
+        updateVc,
+        handleClear,
+        setFullImg,
+        setThumbImg,
     }
 
     const content = (
@@ -85,74 +74,27 @@ export const EditForm = () => {
                 </HorizontallyCenteredBox>
             </Box>
 
-            <Box style={styles.wrapperStyle}>
-                <Grid container style={styles.containerStyle} {...containerProps}>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Název virtuální sbírky v češtině"
-                            variant="outlined"
-                            value={nameCz}
-                            style={styles.stringInputStyle}
-                            onChange={e => setNameCz(e.target.value)}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Název virtuální sbírky v angličtině"
-                            variant="outlined"
-                            value={nameEn}
-                            style={styles.stringInputStyle}
-                            onChange={e => setNameEn(e.target.value)}
-                        />
-                    </Grid>
-                </Grid>
-            </Box>
+            <VCNames
+                nameCz={nameCz}
+                nameEn={nameEn}
+                setNameCz={setNameCz}
+                setNameEn={setNameEn}
+            />
 
-            <Box style={styles.wrapperStyle}>
-                <Grid container style={styles.containerStyle} {...containerProps}>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Popis virtuální sbírky v češtině"
-                            multiline
-                            rows={10}
-                            value={textCz}
-                            style={styles.textInputStyle}
-                            variant="outlined"
-                            onChange={e => setTextCz(e.target.value)}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Popis virtuální sbírky v angličtině"
-                            multiline
-                            rows={10}
-                            value={textEn}
-                            style={styles.textInputStyle}
-                            variant="outlined"
-                            onChange={e => setTextEn(e.target.value)}
-                        />
-                    </Grid>
-                </Grid>
-            </Box>
+            <VCDescriptions
+                textCz={descriptionCz}
+                textEn={descriptionEn}
+                setTextCz={setDescriptionCz}
+                setTextEn={setDescriptionEn}
+            />
 
-            <Box style={styles.wrapperStyle}>
-                <Grid container style={styles.containerStyle}>
-                    {
-                        anyContent && (
-                            <Grid item xs={6} align="center">
-                                <ClearButton onClick={handleClear}>Vyčistit</ClearButton>
-                            </Grid>
-                        )
-                    }
-                    {
-                        ready && (
-                            <Grid item xs={6} align="center">
-                                <AddButton onClick={updateVc}>Upravit</AddButton>
-                            </Grid>
-                        )
-                    }
-                </Grid>
-            </Box>
+            <Buttons
+                anyContent={nameCz || nameEn || descriptionCz || descriptionEn || fullImg || thumbImg}
+                ready={nameCz && nameEn && descriptionCz && descriptionEn}
+                fullImg={fullImg}
+                thumbImg={thumbImg}
+                {...buttonFuncs}
+            />
         </Box>
     );
 

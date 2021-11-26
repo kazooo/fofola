@@ -141,10 +141,9 @@ public class FedoraApi {
         return result.getWriter().toString();
     }
 
-    private void setDatastream(String uuid, Datastreams dataStream, HttpEntity<Object> entity)
-            throws IOException {
+    private void setDatastream(String uuid, Datastreams dataStream, HttpEntity<Object> entity) throws IOException {
         String url = fedoraHost + "/objects/" + uuid + "/datastreams/" + dataStream.name;
-        Map<String, String> uriParams = new HashMap<String, String>() {{
+        Map<String, String> uriParams = new HashMap<>() {{
             put("controlGroup", dataStream.controlGroup);
             put("versionable", dataStream.versionable);
             put("dsState", dataStream.state);

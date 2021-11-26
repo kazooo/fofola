@@ -50,26 +50,7 @@ function* loadVirtualCollectionsSaga() {
 
 function* createVirtualCollectionSaga(action) {
     try {
-        const {nameCz, nameEn, descriptionCz, descriptionEn, fullImg, thumbImg} = action.payload;
-
-        const formData = new FormData();
-
-        formData.append("fullImg", fullImg);
-        formData.append("thumbImg", thumbImg);
-
-        formData.append('vcData', new Blob([
-            JSON.stringify({
-                    "nameCz": nameCz,
-                    "nameEn": nameEn,
-                    "descriptionCz": descriptionCz,
-                    "descriptionEn": descriptionEn,
-                }
-            )],
-            {
-                type: "application/json"
-            })
-        );
-
+        const formData = yield createVcRequest(action);
         yield call(() => request
             .post('/vc')
             .send(formData)
@@ -83,13 +64,39 @@ function* createVirtualCollectionSaga(action) {
 
 function* updateVirtualCollectionSaga(action) {
     try {
+        const formData = yield createVcRequest(action);
         yield call(() => request
             .put('/vc')
-            .send(action.payload)
+            .send(formData)
         );
         yield put(snackbar.success(successUpdateVcMsg));
     } catch (e) {
         yield put(snackbar.error(cantUpdateVcMsg));
         console.error(e);
     }
+}
+
+function createVcRequest(action) {
+    const {uuid, nameCz, nameEn, descriptionCz, descriptionEn, fullImg, thumbImg} = action.payload;
+
+    const formData = new FormData();
+
+    formData.append("fullImg", fullImg);
+    formData.append("thumbImg", thumbImg);
+
+    formData.append('vcData', new Blob([
+            JSON.stringify({
+                    "uuid": uuid,
+                    "nameCz": nameCz,
+                    "nameEn": nameEn,
+                    "descriptionCz": descriptionCz,
+                    "descriptionEn": descriptionEn,
+                }
+            )],
+        {
+            type: "application/json"
+        })
+    );
+
+    return formData;
 }
