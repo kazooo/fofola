@@ -2,8 +2,7 @@ import {useState} from "react";
 import {useDispatch} from "react-redux";
 import {Box} from "@material-ui/core";
 
-import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
-import {Buttons, styles, VCDescriptions, VCNames} from "./components";
+import {Buttons, Panel, VCDescriptions, VCNames} from "./components";
 import {createVirtualCollection} from "./saga";
 import {AddButton} from "../../components/button";
 
@@ -18,7 +17,7 @@ export const CreateForm = () => {
 
     const createVc = () => {
         dispatch(createVirtualCollection({nameCz, nameEn, descriptionCz, descriptionEn, fullImg, thumbImg}));
-    }
+    };
 
     const handleClear = () => {
         setNameCz('');
@@ -27,23 +26,30 @@ export const CreateForm = () => {
         setDescriptionEn('');
         setFullImg(null);
         setThumbImg(null);
-    }
+    };
 
     const buttonFuncs = {
         actionButton: <AddButton onClick={createVc}>Vytvořit</AddButton>,
         handleClear,
         setFullImg,
         setThumbImg,
-    }
+    };
 
-    return <Box>
-        <Box style={styles.wrapperStyle}>
-            <HorizontallyCenteredBox width={'70%'}>
+    const panelItems = [
+        {
+            style: {
+                width: "70%"
+            },
+            component: (
                 <Box style={{padding: '9px'}}>
                     Zadejte názvy a texty virtuální sbírky v češtině a angličtině, Kramerius doplní UUID sbírky samostatně.
                 </Box>
-            </HorizontallyCenteredBox>
-        </Box>
+            ),
+        }
+    ];
+
+    return <Box>
+        <Panel items={panelItems} />
 
         <VCNames
             nameCz={nameCz}

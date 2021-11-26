@@ -11,7 +11,7 @@ import {EditForm} from "./EditForm";
 import {Options} from "./Options";
 import {Tabs} from "./Tabs";
 
-export const Panel = ({classes}) => {
+export const Sidebar = ({classes}) => {
     const [tabNum, setTabNum] = useState(0);
     const isLoading = useSelector(state => getIsLoading(state));
 

@@ -6,7 +6,7 @@ import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCente
 import {FofolaPage} from "../../components/page/FofolaPage";
 
 import {loadVirtualCollections} from "./saga";
-import {Panel} from "./Panel";
+import {Sidebar} from "./Sidebar";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,7 +37,7 @@ export const VcManagement = () => {
     return (
         <FofolaPage>
             <HorizontallyCenteredBox width={'70%'}>
-                <Panel classes={classes} />
+                <Sidebar classes={classes} />
             </HorizontallyCenteredBox>
         </FofolaPage>
     );

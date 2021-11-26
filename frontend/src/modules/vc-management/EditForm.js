@@ -4,10 +4,11 @@ import {Box, TextField} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
-import {Buttons, styles, VCDescriptions, VCNames} from "./components";
+import {loadVirtualCollections, updateVirtualCollection} from "./saga";
+import {RefreshIconButton} from "../../components/button/iconbuttons";
+import {Buttons, Panel, VCDescriptions, VCNames} from "./components";
 import {Error} from "../../components/info/Error";
 import {getIsLoadingError, getVcs} from "./slice";
-import {updateVirtualCollection} from "./saga";
 import {AddButton} from "../../components/button";
 
 export const EditForm = () => {
@@ -25,7 +26,11 @@ export const EditForm = () => {
 
     const updateVc = () => {
         dispatch(updateVirtualCollection({uuid, nameCz, nameEn, descriptionCz, descriptionEn, fullImg, thumbImg}));
-    }
+    };
+
+    const reloadVcs = () => {
+        dispatch(loadVirtualCollections());
+    };
 
     const loadVcUuid = (event, values) => {
         if (values) {
@@ -35,7 +40,7 @@ export const EditForm = () => {
             setDescriptionEn(values.descriptionEn);
         }
         setUuid(values ? values.uuid : '')
-    }
+    };
 
     const handleClear = () => {
         setNameCz('');
@@ -44,35 +49,46 @@ export const EditForm = () => {
         setDescriptionEn('');
         setFullImg(null);
         setThumbImg(null);
-    }
+    };
 
     const buttonFuncs = {
         actionButton: <AddButton onClick={updateVc}>Upravit</AddButton>,
-        updateVc,
         handleClear,
         setFullImg,
         setThumbImg,
-    }
+    };
+
+    const panelItems = [
+        {
+            style: {
+                width: "70%",
+            },
+            component: (
+                <Autocomplete
+                    options={vcs}
+                    getOptionLabel={(option) => option.nameCz}
+                    onChange={loadVcUuid}
+                    renderInput={(params) =>
+                        <TextField
+                            {...params}
+                            label="Název virtuální sbirky"
+                            variant="outlined"
+                            size="small"
+                        />
+                    }
+                />
+            )
+        },
+        {
+            component: (
+                <RefreshIconButton onClick={reloadVcs} />
+            )
+        }
+    ];
 
     const content = (
         <Box>
-            <Box style={styles.wrapperStyle}>
-                <HorizontallyCenteredBox width={'50%'}>
-                    <Autocomplete
-                        options={vcs}
-                        getOptionLabel={(option) => option.nameCz}
-                        onChange={loadVcUuid}
-                        renderInput={(params) =>
-                            <TextField
-                                {...params}
-                                label="Název virtuální sbirky"
-                                variant="outlined"
-                                size="small"
-                            />
-                        }
-                    />
-                </HorizontallyCenteredBox>
-            </Box>
+            <Panel items={panelItems} />
 
             <VCNames
                 nameCz={nameCz}

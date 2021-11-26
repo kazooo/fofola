@@ -1,3 +1,4 @@
+import React from "react";
 import {Box, Grid, TextField} from "@material-ui/core";
 import {ClearButton, UploadButton} from "../../components/button";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
@@ -20,8 +21,25 @@ export const styles = {
 const containerProps = {
     spacing: 2,
     alignContent: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    alignItems: "center",
 };
+
+export const Panel = ({items}) => {
+    const gridItems = items.map(item =>
+        <Grid item style={item.style}>
+            {item.component}
+        </Grid>
+    );
+
+    return (
+        <Box style={styles.wrapperStyle} width={"100%"}>
+            <Grid container style={styles.containerStyle} {...containerProps}>
+                {gridItems}
+            </Grid>
+        </Box>
+    );
+}
 
 export const VCNames = ({nameCz, nameEn, setNameCz, setNameEn}) => {
     return (
