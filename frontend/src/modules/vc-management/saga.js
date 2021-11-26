@@ -50,7 +50,7 @@ function* loadVirtualCollectionsSaga() {
 
 function* createVirtualCollectionSaga(action) {
     try {
-        const {nameCz, nameEn, textCz, textEn, fullImg, thumbImg} = action.payload;
+        const {nameCz, nameEn, descriptionCz, descriptionEn, fullImg, thumbImg} = action.payload;
 
         const formData = new FormData();
 
@@ -61,8 +61,8 @@ function* createVirtualCollectionSaga(action) {
             JSON.stringify({
                     "nameCz": nameCz,
                     "nameEn": nameEn,
-                    "textCz": textCz,
-                    "textEn": textEn,
+                    "descriptionCz": descriptionCz,
+                    "descriptionEn": descriptionEn,
                 }
             )],
             {

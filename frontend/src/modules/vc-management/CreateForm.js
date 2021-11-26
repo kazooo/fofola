@@ -10,20 +10,20 @@ export const CreateForm = () => {
     const dispatch = useDispatch();
     const [nameCz, setNameCz] = useState('');
     const [nameEn, setNameEn] = useState('');
-    const [textCz, setTextCz] = useState('');
-    const [textEn, setTextEn] = useState('');
+    const [descriptionCz, setDescriptionCz] = useState('');
+    const [descriptionEn, setDescriptionEn] = useState('');
     const [fullImg, setFullImg] = useState(null);
     const [thumbImg, setThumbImg] = useState(null);
 
     const createVc = () => {
-        dispatch(createVirtualCollection({nameCz, nameEn, textCz, textEn, fullImg, thumbImg}));
+        dispatch(createVirtualCollection({nameCz, nameEn, descriptionCz, descriptionEn, fullImg, thumbImg}));
     }
 
     const handleClear = () => {
         setNameCz('');
         setNameEn('');
-        setTextCz('');
-        setTextEn('');
+        setDescriptionCz('');
+        setDescriptionEn('');
         setFullImg(null);
         setThumbImg(null);
     }
@@ -52,15 +52,15 @@ export const CreateForm = () => {
         />
 
         <VCDescriptions
-            textCz={textCz}
-            textEn={textEn}
-            setTextCz={setTextCz}
-            setTextEn={setTextEn}
+            textCz={descriptionCz}
+            textEn={descriptionEn}
+            setTextCz={setDescriptionCz}
+            setTextEn={setDescriptionEn}
         />
 
         <Buttons
-            anyContent={nameCz || nameEn || textCz || textEn || fullImg || thumbImg}
-            ready={nameCz && nameEn && textCz && textEn}
+            anyContent={nameCz || nameEn || descriptionCz || descriptionEn || fullImg || thumbImg}
+            ready={nameCz && nameEn && descriptionCz && descriptionEn}
             fullImg={fullImg}
             thumbImg={thumbImg}
             {...buttonFuncs}

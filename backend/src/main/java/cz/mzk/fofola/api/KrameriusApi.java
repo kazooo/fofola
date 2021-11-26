@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.model.vc.VC;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class KrameriusApi {
@@ -25,20 +28,22 @@ public class KrameriusApi {
 
     private static final String CLIENT_API_V4 = "/search/api/v4.6";
     private static final String CLIENT_API_V5 = "/search/api/v5.0";
+    private static final String ADMIN_API_V5 = "/search/api/v5.0/admin";
+
+    private static final boolean DEFAULT_VC_CAN_LEAVE_FLAG = true;
 
     public KrameriusApi(String kh, String ku, String kp) {
         krameriusHost = kh;
         restTemplate = ApiConfiguration.getConfiguredTemplate();
         authHeaders = ApiConfiguration.createAuthHeaders(ku, kp);
+        authHeaders.setContentType(MediaType.APPLICATION_JSON);
         authHttpEntity = new HttpEntity<>(authHeaders);
     }
 
     public KrameriusProcess planNewProcess(String def, String... ps) {
         String url = krameriusHost + CLIENT_API_V4 + "/processes?def=" + def;
-        HttpHeaders requestHeaders = new HttpHeaders(authHeaders);
-        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
         Parameters params = new Parameters(ps);
-        HttpEntity<String> requestEntity = new HttpEntity<>(gson.toJson(params), requestHeaders);
+        HttpEntity<String> requestEntity = new HttpEntity<>(gson.toJson(params), authHeaders);
         ResponseEntity<KrameriusProcess> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, KrameriusProcess.class);
         return response.getBody();
     }
@@ -70,9 +75,32 @@ public class KrameriusApi {
         restTemplate.exchange(url, HttpMethod.DELETE, authHttpEntity, JsonObject.class);
     }
 
-    public List<VC> getVirtualCollections() {
-        String vcFetchUrl = krameriusHost + CLIENT_API_V5 + "/vc";
-        return Arrays.asList(Objects.requireNonNull(restTemplate.getForObject(vcFetchUrl, VC[].class)));
+    public List<VC> getAllVirtualCollections() {
+        final String url = krameriusHost + ADMIN_API_V5 + "/vc";
+        final Optional<VC[]> vcs = Optional.ofNullable(
+                restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, VC[].class).getBody()
+        );
+
+        if (vcs.isPresent()) {
+            final List<String> vcUuids = Arrays.stream(vcs.get()).map(VC::getPid).collect(Collectors.toList());
+            return vcUuids.stream().map(this::getVirtualCollection).collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
+    }
+
+    public VC getVirtualCollection(final String vcUuid) {
+        final String url = krameriusHost + CLIENT_API_V5 + "/vc/" + vcUuid;
+        return restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, VC.class).getBody();
+    }
+
+    public VC createEmptyVirtualCollection() {
+        final String url = krameriusHost + ADMIN_API_V5 + "/vc";
+        final CreateVirtualCollectionRequest request = CreateVirtualCollectionRequest.builder()
+                .canLeave(DEFAULT_VC_CAN_LEAVE_FLAG)
+                .build();
+        final HttpEntity<CreateVirtualCollectionRequest> requestAuthEntity = new HttpEntity<>(request, authHeaders);
+        return restTemplate.postForObject(url, requestAuthEntity, VC.class);
     }
 
     public void generateAndDownloadPDF(Map<String, String> params, String outFilePath) throws IOException {
@@ -84,10 +112,16 @@ public class KrameriusApi {
         Files.write(outputPDFFile, Objects.requireNonNull(response.getBody()));
     }
 
-    class Parameters {
+    private static class Parameters {
         private final List<String> parameters; // {"parameters":["first","second","third"]}
         Parameters(String... parameters) {
             this.parameters = new ArrayList<>(Arrays.asList(parameters));
         }
+    }
+
+    @Data
+    @Builder
+    private static class CreateVirtualCollectionRequest {
+        private boolean canLeave;
     }
 }
