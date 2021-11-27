@@ -28,10 +28,19 @@ export const InternalProcessesTable = () => {
                 <Box>
                     {
                         row.state === 'ACTIVE' &&
-                        <StopIconButton onClick={() => dispatch(stopInternalProcess(row.id))}/>
+                        <StopIconButton
+                            onClick={() => dispatch(stopInternalProcess(row.id))}
+                            tooltip={"Pozastavit proces"}
+                        />
                     }
-                    <DeleteIconButton onClick={() => dispatch(removeInternalProcess(row.id))}/>
-                    <LogsIconButton onClick={() => dispatch(openInternalProcessLogs(row.id))} />
+                    <DeleteIconButton
+                        onClick={() => dispatch(removeInternalProcess(row.id))}
+                        tooltip={"Vymazat proces"}
+                    />
+                    <LogsIconButton
+                        onClick={() => dispatch(openInternalProcessLogs(row.id))}
+                        tooltip={"Logy procesu"}
+                    />
                 </Box>
         }));
     }

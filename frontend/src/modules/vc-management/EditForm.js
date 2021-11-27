@@ -61,7 +61,7 @@ export const EditForm = () => {
     const panelItems = [
         {
             style: {
-                width: "70%",
+                width: "50%",
             },
             component: (
                 <Autocomplete
@@ -81,7 +81,10 @@ export const EditForm = () => {
         },
         {
             component: (
-                <RefreshIconButton onClick={reloadVcs} />
+                <RefreshIconButton
+                    onClick={reloadVcs}
+                    tooltip={"Načíst aktuální virtuální sbírky"}
+                />
             )
         }
     ];

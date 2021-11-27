@@ -21,9 +21,15 @@ export const SolrQueryFileTable = () => {
                     <Box>
                         {
                             readyToDownload(fileName) &&
-                            <DownloadIconButton onClick={() => dispatch(downloadOutputFile(fileName))} />
+                            <DownloadIconButton
+                                onClick={() => dispatch(downloadOutputFile(fileName))}
+                                tooltip={"Stahnout soubor"}
+                            />
                         }
-                        <DeleteIconButton onClick={() => dispatch(removeOutputFile(fileName))} />
+                        <DeleteIconButton
+                            onClick={() => dispatch(removeOutputFile(fileName))}
+                            tooltip={"Vymazat soubor"}
+                        />
                     </Box>
             })
         )

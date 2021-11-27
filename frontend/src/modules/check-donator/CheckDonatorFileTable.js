@@ -22,9 +22,15 @@ export const CheckDonatorFileTable = () => {
                     <Box>
                         {
                             readyToDownload(fileName) &&
-                            <DownloadIconButton onClick={() => dispatch(downloadOutputFile(fileName))} />
+                            <DownloadIconButton
+                                onClick={() => dispatch(downloadOutputFile(fileName))}
+                                tooltip={"Stahnout soubor"}
+                            />
                         }
-                        <DeleteIconButton onClick={() => dispatch(removeFile(fileName))} />
+                        <DeleteIconButton
+                            onClick={() => dispatch(removeFile(fileName))}
+                            tooltip={"Vymazat soubor"}
+                        />
                     </Box>
             })
         )

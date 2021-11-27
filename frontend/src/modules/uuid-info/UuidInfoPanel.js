@@ -16,9 +16,18 @@ export const UuidInfoPanel = () => {
             ...row,
             action:
                 <Box>
-                    <RefreshIconButton onClick={() => dispatch(reindexUuids([row.uuid]))}/>
-                    <UnlockIconButton onClick={() => dispatch(publicUuids([row.uuid]))}/>
-                    <LockIconButton onClick={() => dispatch(privateUuids([row.uuid]))}/>
+                    <RefreshIconButton
+                        onClick={() => dispatch(reindexUuids([row.uuid]))}
+                        tooltip={"Reindexovat"}
+                    />
+                    <UnlockIconButton
+                        onClick={() => dispatch(publicUuids([row.uuid]))}
+                        tooltip={"Zveřejnit"}
+                    />
+                    <LockIconButton
+                        onClick={() => dispatch(privateUuids([row.uuid]))}
+                        tooltip={"Zneveřejnit"}
+                    />
                 </Box>
         }));
     }

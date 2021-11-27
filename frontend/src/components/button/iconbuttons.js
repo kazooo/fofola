@@ -1,4 +1,4 @@
-import {IconButton} from "@material-ui/core";
+import {IconButton, Tooltip, withStyles} from "@material-ui/core";
 import CachedIcon from '@material-ui/icons/Cached';
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
@@ -10,92 +10,99 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import DescriptionIcon from '@material-ui/icons/Description';
 
-export const RefreshIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const RefreshIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <CachedIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
 
-export const LockIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const LockIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <LockIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
 
-export const UnlockIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const UnlockIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <LockOpenIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
 
-export const StopIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const StopIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <StopIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
 
-export const DeleteIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const DeleteIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <DeleteOutlineIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
 
-export const DownloadIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const DownloadIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <GetAppIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
 
-export const NextIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const NextIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <NavigateNextIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
 
-export const PreviousIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const PreviousIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <NavigateBeforeIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
 
-export const FirstIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const FirstIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <FirstPageIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
 
-export const LogsIconButton = ({onClick}) => (
-    <IconButton
-        size="small"
-        onClick={onClick}
+export const LogsIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
     >
         <DescriptionIcon />
-    </IconButton>
+    </IconButtonWrapper>
 );
+
+const IconButtonWrapper = ({tooltip, onClick, children}) => (
+    <StyledTooltip title={tooltip == null ? '' : tooltip}>
+        <IconButton
+            size="small"
+            onClick={onClick}
+        >
+            {children}
+        </IconButton>
+    </StyledTooltip>
+);
+
+const StyledTooltip = withStyles({
+    tooltip: {
+        fontSize: "0.7em",
+    }
+})(Tooltip);

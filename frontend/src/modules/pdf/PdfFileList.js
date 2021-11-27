@@ -28,9 +28,15 @@ export const PdfFileList = () => {
                 <Box>
                     {
                         readyToDownload(row.state) &&
-                        <DownloadIconButton onClick={() => dispatch(downloadPdfFile(row.uuid))} />
+                        <DownloadIconButton
+                            onClick={() => dispatch(downloadPdfFile(row.uuid))}
+                            tooltip={"Stahnout soubor"}
+                        />
                     }
-                    <DeleteIconButton onClick={() => dispatch(removePdfFile(row.id))} />
+                    <DeleteIconButton
+                        onClick={() => dispatch(removePdfFile(row.id))}
+                        tooltip={"Vymazat soubor"}
+                    />
                 </Box>
         }));
     }

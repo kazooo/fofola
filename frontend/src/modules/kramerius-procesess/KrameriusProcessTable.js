@@ -24,10 +24,16 @@ export const KrameriusProcessTable = () => {
                 <Box>
                     {
                         canStop(row.state) && (
-                            <StopIconButton onClick={() => dispatch(stopProcess(row.uuid))}/>
+                            <StopIconButton
+                                onClick={() => dispatch(stopProcess(row.uuid))}
+                                tooltip={"Pozastavit process"}
+                            />
                         )
                     }
-                    <DeleteIconButton onClick={() => dispatch(removeProcess(row.uuid))}/>
+                    <DeleteIconButton
+                        onClick={() => dispatch(removeProcess(row.uuid))}
+                        tooltip={"Vymazat process"}
+                    />
                 </Box>
         }));
     }
@@ -39,7 +45,7 @@ export const KrameriusProcessTable = () => {
         dispatch(requestNewPageProcessesInfo());
     };
 
-    const paginatorEnabled = () => processesInfo.size > 0;
+    const paginatorEnabled = () => processesInfo.length > 0;
 
     const paginator = <Paginator page={page} onChange={handleChangePage} enabled={paginatorEnabled()} />
 
