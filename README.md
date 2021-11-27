@@ -8,13 +8,13 @@ která chybí administrátorům systému. Aplikace nabízí přívětivé grafic
 procesů jak v rámci Krameria (posíláním požadavků na API) tak i v rámci samotné aplikace.
 
 Fofola slouží ke spouštění následujících procesů:
-- reindexace dokumentů přes Krameria
-- změna přístupových práv k dokumentům
-- editace obrázku jednotlivých stránek
-- přidání nebo odebrání dokumentů do/z virtuálních sbírek
-- přidání nebo odebrání donátorů z dokumentů, a také kontrolu přítomnosti donátorů u dokumentů z virtuální sbírky
+- změna přístupových práv, reindexace a mazání dokumentů přes Krameria
+- vytváření a editace virtuálních sbírek
+- přidávání nebo odebírání dokumentů do/z virtuálních sbírek
+- přidávání nebo odebírání donátorů z dokumentů, a také kontrolu přítomnosti donátorů u dokumentů z virtuálních sbírek
 - zveřejnění dokumentů a jejich následovníků podle přístupových práv
 - asynchronní generování PDF dokumentů podle kořenových uuid
+- přidávání nebo odebírání DNNT příznaků
 
 Fofola je schopna zobrazovat stav jednotlivých dokumentů a celých stromů dokumentů.
 Umožňuje zobrazování stavů interních procesů a procesů v Krameriu, a také základní manipulaci s těmito procesy.
@@ -22,7 +22,7 @@ Umožňuje zobrazování stavů interních procesů a procesů v Krameriu, a tak
 ## Parametry aplikace
 
 Pro svoji práci Fofola musí byt napojená na Krameria, [Apache Solr](https://lucene.apache.org/solr/)
-a [Fedoru](https://duraspace.org/fedora/), které Kramerius používá.
+a [Fedora Common Repository](https://duraspace.org/fedora/), které Kramerius používá.
 Fofola používá databázi Postgres, a pokud není specifikována externí databáze, 
 spouští interní [H2 in-memory databázi](https://www.h2database.com/). 
 Fofola je konfigurovatelná přes proměnné prostředí, níže je uveden seznam, popis a defaultní hodnoty.
@@ -105,9 +105,9 @@ services:
 ## Použité technologie
 
 Hlavním jádrem Fofoly je REST API pro přijetí požadavků, které je napsáno v Javě
-s použitím [Spring Boot](https://spring.io/projects/spring-boot) frameworku. 
-Grafické rozhraní je vytvořeno za pomoci čistého JavaScriptu s elementy šablonovacího jazyku [Thymeleaf](https://www.thymeleaf.org/).
-V budoucnu se plánuje GUI ve frameworku [React](https://reactjs.org/). 
+s použitím [Spring Boot](https://spring.io/projects/spring-boot) frameworku.
+Grafické rozhraní je vytvořeno za pomoci frameworků [React](https://reactjs.org/) a 
+[Redux](https://redux.js.org/).
 
 ## Licence
 
@@ -115,4 +115,3 @@ V budoucnu se plánuje GUI ve frameworku [React](https://reactjs.org/).
 
 ## Autoří
 [Aleksei Ermak](https://github.com/kazooo) a skvěle nápady členů týmu OSDD MZK.
- 
