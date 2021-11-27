@@ -28,7 +28,7 @@ public class DonatorLinkerProcess extends Process {
 
         donator = (String) data.get("donator");
         mode = (String) data.get("mode");
-        rootUuids = (List<String>) data.get("root_uuids");
+        rootUuids = (List<String>) data.get("uuids");
         fedoraHost = fofolaConfig.getFedoraHost();
         fedoraUser = fofolaConfig.getFedoraUser();
         fedoraPswd = fofolaConfig.getFedoraPswd();
