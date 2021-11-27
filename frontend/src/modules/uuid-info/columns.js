@@ -1,3 +1,5 @@
+import {Link} from "@material-ui/core";
+
 export const columns = [
     {
         id: 'tableAction',
@@ -47,6 +49,7 @@ export const columns = [
         label: 'URL obrázku',
         maxWidth: 170,
         align: 'center',
+        format: (value) => value !== 'no image' ? <Link href={value} target={"_blank"}>link</Link> : value,
     },
     {
         id: 'rootTitle',
