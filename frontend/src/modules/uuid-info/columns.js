@@ -49,7 +49,12 @@ export const columns = [
         label: 'URL obrázku',
         maxWidth: 170,
         align: 'center',
-        format: (value) => value !== 'no image' ? <Link href={value} target={"_blank"}>link</Link> : value,
+        format: (value) => {
+            if (value === null || value === 'no image') {
+                return value;
+            }
+            return <Link href={value} target={"_blank"}>link</Link>;
+        },
     },
     {
         id: 'rootTitle',
