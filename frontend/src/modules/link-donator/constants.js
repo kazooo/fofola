@@ -5,8 +5,12 @@ export const donators = [
     },
     {
         value: "norway",
-        text: "NORWAY"
-    }
+        text: "Norway Grants"
+    },
+    {
+        value: "ilnorway",
+        text: "Iceland Liechtenstein Norway Grants"
+    },
 ];
 export const modes = [
     {

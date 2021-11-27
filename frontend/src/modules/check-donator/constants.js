@@ -3,6 +3,7 @@ export const CHECK_HASNT_DONATOR = "CHECK_HASN_DONATOR";
 
 export const EODOPEN = "eodopen";
 export const NORWAY = "norway";
+export const ILNORWAY = "ilnorway";
 
 export const donators = [
     {
@@ -11,8 +12,12 @@ export const donators = [
     },
     {
         value: NORWAY,
-        text: "NORWAY"
-    }
+        text: "Norway Grants"
+    },
+    {
+        value: ILNORWAY,
+        text: "Iceland Liechtenstein Norway Grants"
+    },
 ];
 
 export const modes = [
