@@ -21,10 +21,9 @@ import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 task createDockerfile(type: Dockerfile) {
     dependsOn ':backend:bootJar'
     destFile.set(project.file('build/Dockerfile'))
-    from('adoptopenjdk/openjdk14')
+    from('adoptopenjdk/openjdk14:alpine-jre')
     label(['maintainer': 'Aleksei Ermak "aleksei.ermak@gmail.com"'])
     copyFile(jarName, '/app/fofola.jar')
-    runCommand('apt-get clean install curl nmap autoclean')
     entryPoint('java')
     exposePort(8081)
     defaultCommand('-Xmx2g', '-jar', '/app/fofola.jar')
