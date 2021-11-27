@@ -1,10 +1,11 @@
 import {useDispatch} from "react-redux";
 import {useEffect, useState} from "react";
-import {useInterval} from "../../effects/useInterval";
-import {Checkbox} from "../../components/form/Checkbox";
+import {Grid} from "@material-ui/core";
+
 import {requestInternalProcesses, requestNewPageInternalProcesses} from "./saga";
-import {Box, Grid} from "@material-ui/core";
 import {RefreshIconButton} from "../../components/button/iconbuttons";
+import {Checkbox} from "../../components/form/Checkbox";
+import {useInterval} from "../../effects/useInterval";
 
 export const InternalProcessMenu = () => {
     const dispatch = useDispatch();
@@ -13,7 +14,7 @@ export const InternalProcessMenu = () => {
 
     useEffect(() => {
         dispatch(requestNewPageInternalProcesses());
-    }, []);
+    }, [dispatch]);
 
     useInterval(() => {
         dispatch(requestInternalProcesses());

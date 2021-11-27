@@ -1,5 +1,10 @@
 export const columns = [
     {
+        id: 'tableAction',
+        maxWidth: 30,
+        align: 'center',
+    },
+    {
         id: 'uuid',
         label: 'Uuid',
         maxWidth: 303,

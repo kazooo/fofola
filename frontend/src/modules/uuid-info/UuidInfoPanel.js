@@ -1,10 +1,16 @@
 import {useDispatch, useSelector} from "react-redux";
-import {getUuidInfo} from "./slice";
 import {Box} from "@material-ui/core";
+
+import {
+    CloseIconButton,
+    LockIconButton,
+    RefreshIconButton,
+    UnlockIconButton
+} from "../../components/button/iconbuttons";
 import {FofolaTable} from "../../components/table/FofolaTable";
-import {columns} from "./constants";
-import {privateUuids, publicUuids, reindexUuids} from "./saga";
-import {LockIconButton, RefreshIconButton, UnlockIconButton} from "../../components/button/iconbuttons";
+import {getOneUuidInfo, privateUuids, publicUuids, reindexUuids} from "./saga";
+import {getUuidInfo, removeUuidInfo} from "./slice";
+import {columns} from "./columns";
 
 export const UuidInfoPanel = () => {
 
@@ -13,6 +19,18 @@ export const UuidInfoPanel = () => {
 
     const createDataWithButtons = (data) => {
         return data.map((row) => ({
+            tableAction: (
+                <Box>
+                    <RefreshIconButton
+                        onClick={() => dispatch(getOneUuidInfo(row.uuid))}
+                        tooltip={"Obnovit"}
+                    />
+                    <CloseIconButton
+                        onClick={() => dispatch(removeUuidInfo(row.uuid))}
+                        tooltip={"Vymazat z tabulky"}
+                    />
+                </Box>
+            ),
             ...row,
             action:
                 <Box>

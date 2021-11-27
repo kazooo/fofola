@@ -7,13 +7,13 @@ import cz.mzk.fofola.service.KProcessService;
 import cz.mzk.fofola.service.UuidService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 @AllArgsConstructor
 @Slf4j
@@ -23,7 +23,7 @@ public class KOperationsController {
     private final KProcessService kProcessService;
 
     @PostMapping("/uuid-info")
-    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public List<UuidStateResponse> checkUuidState(@RequestBody List<String> uuids) {
         List<UuidStateResponse> states = new ArrayList<>();
         for (String uuid : uuids) {
@@ -35,8 +35,16 @@ public class KOperationsController {
         return states;
     }
 
+    @GetMapping("/uuid-info/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public UuidStateResponse checkOnlyOneUuid(@PathVariable("uuid") final String uuid) {
+        final String trueUuid = UuidService.makeUuid(uuid);
+        log.info("Checking: " + trueUuid);
+        return uuidCheckService.checkUuidState(trueUuid);
+    }
+
     @PostMapping("/access/public")
-    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     private List<KrameriusProcess> makePublic(@RequestBody List<String> uuids) {
         List<KrameriusProcess> krameriusProcesses = new ArrayList<>();
         for (String uuid : uuids) {
@@ -48,7 +56,7 @@ public class KOperationsController {
     }
 
     @PostMapping("/access/private")
-    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     private List<KrameriusProcess> makePrivate(@RequestBody List<String> uuids) {
         List<KrameriusProcess> krameriusProcesses = new ArrayList<>();
         for (String uuid : uuids) {
@@ -61,6 +69,7 @@ public class KOperationsController {
     }
 
     @DeleteMapping("/delete")
+    @ResponseStatus(HttpStatus.OK)
     public void delete(@RequestBody List<String> uuids) {
         for (String uuid : uuids) {
             uuid = UuidService.makeUuid(uuid);

@@ -9,6 +9,15 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import DescriptionIcon from '@material-ui/icons/Description';
+import CloseIcon from '@material-ui/icons/Close';
+
+export const CloseIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
+    >
+        <CloseIcon />
+    </IconButtonWrapper>
+);
 
 export const RefreshIconButton = (props) => (
     <IconButtonWrapper

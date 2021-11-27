@@ -14,7 +14,7 @@ export const KrameriusProcessMenu = () => {
 
     useEffect(() => {
         dispatch(requestNewPageProcessesInfo());
-    }, []);
+    }, [dispatch]);
 
     useInterval(() => {
         dispatch(requestProcessesInfo());

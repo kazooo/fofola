@@ -9,6 +9,12 @@ export const uuidInfoSlice = createSlice({
         addUuidInfo: (state, action) => {
             state.uuidInfo = state.uuidInfo.concat(action.payload);
         },
+        addOneUuidInfo: (state, action) => {
+            state.uuidInfo = state.uuidInfo.map(info => info.uuid !== action.payload.uuid ? info : action.payload);
+        },
+        removeUuidInfo: (state, action) => {
+            state.uuidInfo = state.uuidInfo.filter(info => info.uuid !== action.payload);
+        },
         clearUuidInfo: (state, action) => {
             state.uuidInfo = [];
         }
@@ -16,5 +22,5 @@ export const uuidInfoSlice = createSlice({
 });
 
 export const getUuidInfo = state => state.uuidInfoModule.uuidInfo;
-export const {addUuidInfo, clearUuidInfo} = uuidInfoSlice.actions;
+export const {addUuidInfo, addOneUuidInfo, removeUuidInfo, clearUuidInfo} = uuidInfoSlice.actions;
 export const createActionType = actionName => uuidInfoSlice.name + "/" + actionName;
