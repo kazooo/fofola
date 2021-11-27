@@ -100,7 +100,7 @@ public abstract class DnntLabelLinker {
         if (!processRecursive) {
             return new SolrQuery("PID:\"" + uuid + "\"");
         } else {
-            return new SolrQuery("pid_path:/.*\\/" + uuid + "\\/.*/");
+            return new SolrQuery("pid_path:/.*\\/" + uuid + "\\/.*/ OR PID:\"" + uuid + "\"");
         }
     }
 
