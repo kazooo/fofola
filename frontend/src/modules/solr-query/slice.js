@@ -6,8 +6,8 @@ export const solrQuerySlice = createSlice({
     initialState: {
         outputFiles: [],
         model: MONOGRAPH,
-        from: '',
-        to: '',
+        from: '*',
+        to: '*',
         access: PRIVATE_ACCESS,
         field: UUID,
     },
@@ -35,8 +35,8 @@ export const solrQuerySlice = createSlice({
         },
         clearParams: (state, action) => {
             state.model = MONOGRAPH;
-            state.from = '';
-            state.to = '';
+            state.from = '*';
+            state.to = '*';
             state.access = PRIVATE_ACCESS;
             state.field = UUID;
         },

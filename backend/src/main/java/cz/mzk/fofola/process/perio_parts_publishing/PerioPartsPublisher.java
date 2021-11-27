@@ -77,7 +77,7 @@ public class PerioPartsPublisher {
 
     private SolrQuery createQueryForChildNodes(String parentUuid) {
         String queryStr =
-                "parent_uuid:\"" + parentUuid + "\"" +
+                "parent_pid:\"" + parentUuid + "\"" +
                 " AND !PID:\"" + parentUuid + "\"" +
                 " AND !fedora.model:\"page\"";
         SolrQuery query = new SolrQuery(queryStr);
