@@ -76,14 +76,24 @@ public class KrameriusApi {
     }
 
     public List<VC> getAllVirtualCollections() {
-        final String url = krameriusHost + ADMIN_API_V5 + "/vc";
-        final Optional<VC[]> vcs = Optional.ofNullable(
-                restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, VC[].class).getBody()
+        final String fedoraFetchUrl = krameriusHost + ADMIN_API_V5 + "/vc";
+        final Optional<VC[]> fedoraVcs = Optional.ofNullable(
+                restTemplate.exchange(fedoraFetchUrl, HttpMethod.GET, authHttpEntity, VC[].class).getBody()
         );
 
-        if (vcs.isPresent()) {
-            final List<String> vcUuids = Arrays.stream(vcs.get()).map(VC::getPid).collect(Collectors.toList());
-            return vcUuids.stream().map(this::getVirtualCollection).collect(Collectors.toList());
+        final String solrFetchUrl = krameriusHost + CLIENT_API_V5 + "/vc";
+        final Optional<VC[]> solrVcs = Optional.ofNullable(
+                restTemplate.exchange(solrFetchUrl, HttpMethod.GET, authHttpEntity, VC[].class).getBody()
+        );
+
+        if (fedoraVcs.isPresent() && solrVcs.isPresent()) {
+            final List<String> fedoraVcUuids = Arrays.stream(fedoraVcs.get()).map(VC::getPid).collect(Collectors.toList());
+            final List<String> solrVcUuids = Arrays.stream(solrVcs.get()).map(VC::getPid).collect(Collectors.toList());
+            fedoraVcUuids.removeAll(solrVcUuids);
+            final List<VC> rest = fedoraVcUuids.stream().map(this::getVirtualCollection).collect(Collectors.toList());
+            final List<VC> vcs = Arrays.asList(solrVcs.get());
+            vcs.addAll(rest);
+            return vcs;
         }
 
         return Collections.emptyList();
