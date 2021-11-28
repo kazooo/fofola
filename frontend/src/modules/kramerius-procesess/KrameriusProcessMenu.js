@@ -31,7 +31,7 @@ export const KrameriusProcessMenu = () => {
             </Grid>
             <Grid item>
                 <RefreshIconButton
-                    onClick={() => dispatch(requestProcessesInfo())}
+                    onClick={() => dispatch(requestNewPageProcessesInfo())}
                     tooltip={"Obnovit stránku procesů"}
                 />
             </Grid>

@@ -31,7 +31,7 @@ export const InternalProcessMenu = () => {
             </Grid>
             <Grid item>
                 <RefreshIconButton
-                    onClick={() => dispatch(requestInternalProcesses())}
+                    onClick={() => dispatch(requestNewPageInternalProcesses())}
                     tooltip={"Obnovit stránku procesů"}
                 />
             </Grid>
