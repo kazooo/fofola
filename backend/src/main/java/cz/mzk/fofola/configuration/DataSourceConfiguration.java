@@ -13,23 +13,27 @@ import javax.sql.DataSource;
 public class DataSourceConfiguration {
 
     @Bean
-    public DataSource getDataSource(FofolaConfiguration config) {
-        DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
-        if (!config.getDbJdbcUrl().isEmpty() &&
-            !config.getDbUser().isEmpty() &&
-            !config.getDbPswd().isEmpty()) {
+    public DataSource getDataSource(final FofolaConfiguration config) {
+        final DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
+        if (externalDbExists(config)) {
             log.info("Existing PostgreSQL database found, configuring connection...");
             dataSourceBuilder.driverClassName("org.postgresql.Driver");
-            dataSourceBuilder.url(config.getDbJdbcUrl());
-            dataSourceBuilder.username(config.getDbUser());
-            dataSourceBuilder.password(config.getDbPswd());
+            dataSourceBuilder.url(config.getPostgresJdbcUrl());
+            dataSourceBuilder.username(config.getPostgresUser());
+            dataSourceBuilder.password(config.getPostgresPswd());
         } else {
             log.info("No external PostgreSQL database found, configuring in-memory database...");
             dataSourceBuilder.driverClassName("org.h2.Driver");
-            dataSourceBuilder.url("jdbc:h2:mem:fofola");
-            dataSourceBuilder.username("user");
-            dataSourceBuilder.password("pswd");
+            dataSourceBuilder.url(config.getH2JdbcUrl());
+            dataSourceBuilder.username(config.getH2User());
+            dataSourceBuilder.password(config.getH2Pswd());
         }
         return dataSourceBuilder.build();
+    }
+
+    private boolean externalDbExists(final FofolaConfiguration config) {
+        return !config.getPostgresJdbcUrl().isEmpty() &&
+                !config.getPostgresUser().isEmpty() &&
+                !config.getPostgresPswd().isEmpty();
     }
 }

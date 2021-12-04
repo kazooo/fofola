@@ -3,11 +3,13 @@ trace: false
 
 server:
   shutdown: graceful
-  port: ${FOFOLA_PORT:8081}
+  port: ${PORT:8081}
   error:
     path: /error
 
 spring:
+  h2:
+    console.enabled: true
   jpa:
     database: POSTGRESQL
     generate-ddl: true
