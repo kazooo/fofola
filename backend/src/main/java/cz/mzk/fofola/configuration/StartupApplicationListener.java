@@ -1,20 +1,22 @@
 package cz.mzk.fofola.configuration;
 
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.TimeZone;
 
-@Component
+@Configuration
+@AllArgsConstructor
+@Slf4j
 public class StartupApplicationListener {
 
-    public static String appStartupTime;
+    private final FofolaConfiguration config;
 
     @PostConstruct
-    private void init() {
-        SimpleDateFormat dt = new SimpleDateFormat("hh:mm:ss dd-MM-yyyy");
-        Date date = new Date();
-        appStartupTime = dt.format(date);
+    public void setApplicationTimeZone() {
+        log.info("Setup a timezone for the application: " + config.getTimezone().getDisplayName());
+        TimeZone.setDefault(config.getTimezone());
     }
 }
