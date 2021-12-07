@@ -13,7 +13,8 @@ import {
 import {LoadUuidsForm} from "../../components/form/LoadUuidsForm";
 import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
 import {addUuids, getLabel, getMode, getProcessRecursive, setLabel, setMode, setProcessRecursive} from "./slice";
-import {labels, modes} from './constants';
+import {dnntLabels} from "../constants";
+import {modes} from './constants';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -36,7 +37,7 @@ export const LinkDnntForm = () => {
     ));
 
     const modeOptions = createOptions(modes);
-    const labelOptions = createOptions(labels);
+    const labelOptions = createOptions(dnntLabels);
 
     const loadUuids = (uuids) => {
         dispatch(addUuids(uuids));
