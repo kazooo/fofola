@@ -9,6 +9,7 @@ import cz.mzk.fofola.repository.FProcessRepository;
 import cz.mzk.fofola.process.ProcessEventNotifier;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Constructor;
@@ -59,7 +60,7 @@ public class ProcessManagementService {
     }
 
     public List<ProcessDTO> findAllProcess() {
-        return processRepository.findAll();
+        return processRepository.findAll(Sort.by(Sort.Direction.DESC, "start"));
     }
 
     public void removeInfoFromDB(String id) {
