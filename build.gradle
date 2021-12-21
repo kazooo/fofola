@@ -17,6 +17,10 @@ clean.doFirst {
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
 
 task createDockerfile(type: Dockerfile) {
     dependsOn ':backend:bootJar'
@@ -40,4 +44,48 @@ task buildLatest(type: DockerTagImage) {
     imageId = buildImage.getImageId()
     repository = dockerRepository
     tag = 'latest'
+}
+
+task pushImage(type: DockerPushImage) {
+    dependsOn buildLatest
+    images = [dockerImageName + ':' + appVersion, dockerImageName + ':latest']
+}
+
+task createDBContainer(type: DockerCreateContainer) {
+    targetImageId 'postgres:11.5'
+    containerName = 'fofola-postgres'
+    hostConfig.autoRemove = true
+}
+
+task createFofolaContainer(type: DockerCreateContainer) {
+    dependsOn buildLatest
+    containerName = 'fofola'
+    targetImageId buildLatest.getImageId()
+    hostConfig.portBindings = ['8081:8081']
+    hostConfig.autoRemove = true
+    tty = true
+}
+
+task startDBContainer(type: DockerStartContainer) {
+    dependsOn createDBContainer
+    targetContainerId createDBContainer.getContainerId()
+}
+
+task startFofolaContainer(type: DockerStartContainer) {
+    dependsOn startDBContainer, createFofolaContainer
+    targetContainerId createFofolaContainer.getContainerId()
+}
+
+task stopDBContainer(type: DockerStopContainer) {
+    targetContainerId createDBContainer.getContainerId()
+}
+
+task stopFofolaContainer(type: DockerStopContainer) {
+    dependsOn stopDBContainer
+    targetContainerId createFofolaContainer.getContainerId()
+}
+
+task dockerFunctionalTestFofola(type: Test) {
+    dependsOn startFofolaContainer
+    finalizedBy stopFofolaContainer
 }
