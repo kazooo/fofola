@@ -1,6 +1,7 @@
 package cz.mzk.fofola.process.solr_response;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
+import cz.mzk.fofola.enums.dnnt.DnntLabelEnum;
 import cz.mzk.fofola.model.doc.SolrField;
 import cz.mzk.fofola.model.process.Process;
 import cz.mzk.fofola.model.process.ProcessParams;
@@ -27,29 +28,36 @@ public class SolrResponseWritingProcess extends Process {
     private final String accessibility;
     private final String yearFrom;
     private final String yearTo;
+    private final DnntLabelEnum dnntLabel;
+    private final String field;
 
     public SolrResponseWritingProcess(ProcessParams params) throws IOException {
         super(params);
-        FofolaConfiguration fofolaConfig = params.getConfig();
-        Map<String, ?> data = params.getData();
-        model = (String) data.get("model");
-        accessibility = (String) data.get("accessibility");
-        yearFrom = (String) data.get("year_from");
-        yearTo = (String) data.get("year_to");
+
+        final FofolaConfiguration fofolaConfig = params.getConfig();
+        final Map<String, ?> data = params.getData();
+
+        model = (String) data.getOrDefault("model", null);
+        accessibility = (String) data.getOrDefault("access", null);
+        yearFrom = (String) data.get("yearFrom");
+        yearTo = (String) data.get("yearTo");
+        dnntLabel = DnntLabelEnum.of((String) data.getOrDefault("dnntLabel", null));
+        field = (String) data.getOrDefault("field", null);
+
         solrHost = fofolaConfig.getSolrHost();
     }
 
     @Override
     public TerminationReason process() throws Exception {
-        SolrClient solrClient = SolrService.buildClient(solrHost);
-        String readyOutFileName = FileService.fileNameWithDateStampPrefix("solr-response.txt");
-        File notReadyOutFile = FileService.getSolrRespOutputFile("not-ready-" + readyOutFileName);
-        PrintWriter output = new PrintWriter(notReadyOutFile);
-        SolrQuery params = createQuery();
+        final SolrClient solrClient = SolrService.buildClient(solrHost);
+        final String readyOutFileName = FileService.fileNameWithDateStampPrefix("solr-response.txt");
+        final File notReadyOutFile = FileService.getSolrRespOutputFile("not-ready-" + readyOutFileName);
+        final PrintWriter output = new PrintWriter(notReadyOutFile);
+        final SolrQuery params = createQuery();
 
-        Consumer<SolrDocument> logic = solrDoc -> {
-            String uuid = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);
-            output.println(uuid);
+        final Consumer<SolrDocument> logic = solrDoc -> {
+            final String fieldValue = (String) solrDoc.getFieldValue(field);
+            output.println(fieldValue);
         };
 
         try {
@@ -73,17 +81,30 @@ public class SolrResponseWritingProcess extends Process {
     }
 
     private SolrQuery createQuery() {
-        List<String> queryParts = new ArrayList<>();
-        if (model != null)
+        final List<String> queryParts = new ArrayList<>();
+
+        if (model != null) {
             queryParts.add(SolrField.MODEL_FIELD_NAME + ":\"" + model +"\"");
-        if (accessibility != null)
+        }
+
+        if (accessibility != null) {
             queryParts.add(SolrField.ACCESSIBILITY + ":\"" + accessibility +"\"");
-        if (yearTo != null || yearFrom != null)
+        }
+
+        if (yearTo != null || yearFrom != null) {
             queryParts.add(getYearRange());
-        String query = String.join(" AND ", queryParts);
+        }
+
+        if (dnntLabel != null) {
+            queryParts.add(SolrField.DNNT_LABELS + ":\"" + dnntLabel.value() + "\"");
+        }
+
+        final String query = String.join(" AND ", queryParts);
         logger.info(query);
-        SolrQuery queryParams = new SolrQuery(query);
-        queryParams.addField(SolrField.UUID_FIELD_NAME);
+
+        final SolrQuery queryParams = new SolrQuery(query);
+        queryParams.addField(field);
+
         return queryParams;
     }
 

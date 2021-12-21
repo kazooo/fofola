@@ -22,12 +22,12 @@ export const Selector = ({selectOptions,
 
     const selectedValue = selectOptions.find(
         option => option.value === selectedOption
-    ).value;
+    )?.value;
 
     return <FormControl variant="outlined" size="small" className={classes.formControl}>
         <InputLabel>{selectLabel}</InputLabel>
         <Select
-            value={selectedValue}
+            value={selectedValue ? selectedValue : ''}
             onChange={e => onSelectOptionChange(e.target.value)}
             label={selectLabel}
         >

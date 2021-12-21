@@ -8,9 +8,9 @@ public enum DnntLabelEnum {
     DNNTT("dnntt"),
     COVID("covid");
 
-    private String value;
+    private final String value;
 
-    private DnntLabelEnum(String value) {
+    DnntLabelEnum(final String value) {
         this.value = value;
     }
 
@@ -19,8 +19,12 @@ public enum DnntLabelEnum {
     }
 
     @JsonCreator
-    public static DnntLabelEnum of(String value) {
-        for (DnntLabelEnum label : DnntLabelEnum.values()) {
+    public static DnntLabelEnum of(final String value) {
+        if (value == null) {
+            return null;
+        }
+
+        for (final DnntLabelEnum label : DnntLabelEnum.values()) {
             if (label.value.equals(value)) {
                 return label;
             }
