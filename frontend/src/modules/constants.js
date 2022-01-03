@@ -66,6 +66,7 @@ export const SolrField = Object.freeze({
     },
 });
 
+/* just arrays of objects from structures above */
 export const dnntLabels = Object.keys(DnntLabel).map((key) => DnntLabel[key]);
 export const models = Object.keys(Model).map((key) => Model[key]);
 export const accesses = Object.keys(Access).map((key) => Access[key]);

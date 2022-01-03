@@ -1,3 +1,20 @@
+import {accesses, dnntLabels, models} from "../constants";
+
+export const ExtendedSolrFieldValue = Object.freeze({
+    ANY: {
+        text: 'jakýkoliv',
+        value: 'any',
+    },
+    NONE: {
+        text: 'žádný',
+        value: 'none',
+    },
+});
+
+export const extendedDnntLabels = [...dnntLabels, ExtendedSolrFieldValue.ANY, ExtendedSolrFieldValue.NONE];
+export const extendedAccesses = [...accesses, ExtendedSolrFieldValue.ANY, ExtendedSolrFieldValue.NONE];
+export const extendedModels = [...models,ExtendedSolrFieldValue.ANY, ExtendedSolrFieldValue.NONE];
+
 export const columns = [
     {
         id: 'filename',

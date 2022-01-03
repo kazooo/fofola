@@ -14,7 +14,7 @@ public class ProcessParams {
 
     private String id;
     private ProcessType type;
-    private Map<String, ?> data;
+    private Map<String, Object> data;
     private FofolaConfiguration config;
     private ProcessEventNotifier eventNotifier;
 }

@@ -2,19 +2,20 @@ import {useDispatch} from 'react-redux';
 import {useEffect, useState} from 'react';
 import {Box, Grid, TextField} from '@material-ui/core';
 
-import {accesses, dnntLabels, models, SolrField, solrFields} from '../constants';
+import {extendedAccesses, extendedModels, extendedDnntLabels, ExtendedSolrFieldValue} from "./constants";
 import {ClearButton, StartButton} from '../../components/button';
 import {requestOutputFiles, sendSolrQuery} from './saga';
 import {Selector} from '../../components/form/Selector';
 import {useInterval} from '../../effects/useInterval';
+import {SolrField, solrFields} from '../constants';
 
 export const SolrQueryForm = () => {
 
     const [from, setFrom] = useState(null);
     const [to, setTo] = useState(null);
-    const [model, setModel] = useState(null);
-    const [access, setAccess] = useState(null);
-    const [dnntLabel, setDnntLabel] = useState(null);
+    const [model, setModel] = useState(ExtendedSolrFieldValue.ANY.value);
+    const [access, setAccess] = useState(ExtendedSolrFieldValue.ANY.value);
+    const [dnntLabel, setDnntLabel] = useState(ExtendedSolrFieldValue.ANY.value);
     const [field, setField] = useState(SolrField.UUID.value);
 
     const ready = from !== null && to !== null;
@@ -47,9 +48,9 @@ export const SolrQueryForm = () => {
     const clear = () => {
         setFrom(null);
         setTo(null);
-        setModel(null);
-        setAccess(null);
-        setDnntLabel(null);
+        setModel(ExtendedSolrFieldValue.ANY.value);
+        setAccess(ExtendedSolrFieldValue.ANY.value);
+        setDnntLabel(ExtendedSolrFieldValue.ANY.value);
         setField(SolrField.UUID.value);
     }
 
@@ -85,7 +86,7 @@ export const SolrQueryForm = () => {
             <Grid item>
                 <Selector
                     selectLabel='Model'
-                    selectOptions={models}
+                    selectOptions={extendedModels}
                     selectedOption={model}
                     onSelectOptionChange={setModel}
                 />
@@ -93,7 +94,7 @@ export const SolrQueryForm = () => {
             <Grid item>
                 <Selector
                     selectLabel='Dostupnost'
-                    selectOptions={accesses}
+                    selectOptions={extendedAccesses}
                     selectedOption={access}
                     onSelectOptionChange={setAccess}
                 />
@@ -101,7 +102,7 @@ export const SolrQueryForm = () => {
             <Grid item>
                 <Selector
                     selectLabel='DNNT label'
-                    selectOptions={dnntLabels}
+                    selectOptions={extendedDnntLabels}
                     selectedOption={dnntLabel}
                     onSelectOptionChange={setDnntLabel}
                 />

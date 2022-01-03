@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-
 public class SolrResponseWritingProcess extends Process {
 
     private final String solrHost;
@@ -28,21 +27,31 @@ public class SolrResponseWritingProcess extends Process {
     private final String accessibility;
     private final String yearFrom;
     private final String yearTo;
-    private final DnntLabelEnum dnntLabel;
+    private final String dnntLabel;
     private final String field;
+
+    public static final String ANY_FIELD_VALUE = "any";
+    public static final String NO_FIELD_VALUE = "none";
 
     public SolrResponseWritingProcess(ProcessParams params) throws IOException {
         super(params);
 
         final FofolaConfiguration fofolaConfig = params.getConfig();
-        final Map<String, ?> data = params.getData();
+        final Map<String, Object> data = params.getData();
 
-        model = (String) data.getOrDefault("model", null);
-        accessibility = (String) data.getOrDefault("access", null);
         yearFrom = (String) data.get("yearFrom");
         yearTo = (String) data.get("yearTo");
-        dnntLabel = DnntLabelEnum.of((String) data.getOrDefault("dnntLabel", null));
+        model = (String) data.getOrDefault("model", ANY_FIELD_VALUE);
+        accessibility = (String) data.getOrDefault("access", ANY_FIELD_VALUE);
         field = (String) data.getOrDefault("field", null);
+
+        final String dnntLabelRaw = (String) data.getOrDefault("dnntLabel", ANY_FIELD_VALUE);
+        final DnntLabelEnum dnntLabelEnum = DnntLabelEnum.of(dnntLabelRaw);
+        if (dnntLabelEnum != null) {
+            dnntLabel = dnntLabelEnum.value();
+        } else {
+            dnntLabel = dnntLabelRaw;
+        }
 
         solrHost = fofolaConfig.getSolrHost();
     }
@@ -84,19 +93,20 @@ public class SolrResponseWritingProcess extends Process {
         final List<String> queryParts = new ArrayList<>();
 
         if (model != null) {
-            queryParts.add(SolrField.MODEL_FIELD_NAME + ":\"" + model +"\"");
+            queryParts.add(wrapFieldQuery(SolrField.MODEL_FIELD_NAME, model));
         }
 
         if (accessibility != null) {
-            queryParts.add(SolrField.ACCESSIBILITY + ":\"" + accessibility +"\"");
+            queryParts.add(wrapFieldQuery(SolrField.ACCESSIBILITY, accessibility));
+
+        }
+
+        if (dnntLabel != null) {
+            queryParts.add(wrapFieldQuery(SolrField.DNNT_LABELS, dnntLabel));
         }
 
         if (yearTo != null || yearFrom != null) {
             queryParts.add(getYearRange());
-        }
-
-        if (dnntLabel != null) {
-            queryParts.add(SolrField.DNNT_LABELS + ":\"" + dnntLabel.value() + "\"");
         }
 
         final String query = String.join(" AND ", queryParts);
@@ -106,6 +116,16 @@ public class SolrResponseWritingProcess extends Process {
         queryParams.addField(field);
 
         return queryParams;
+    }
+
+    private String wrapFieldQuery(final String fieldName, final String fieldValue) {
+        if (ANY_FIELD_VALUE.equals(fieldValue)) {
+            return fieldName + ":*";
+        } else if (NO_FIELD_VALUE.equals(fieldValue)) {
+            return "-" + fieldName + ":*";
+        } else {
+            return fieldName + ":\"" + fieldValue + "\"";
+        }
     }
 
     private String getYearRange() {
