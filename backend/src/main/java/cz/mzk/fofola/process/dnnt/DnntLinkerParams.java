@@ -1,6 +1,7 @@
 package cz.mzk.fofola.process.dnnt;
 
 import cz.mzk.fofola.api.FedoraApi;
+import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.enums.dnnt.DnntLabelEnum;
 import cz.mzk.fofola.service.SolrService;
@@ -30,13 +31,8 @@ public class DnntLinkerParams {
         label = Objects.requireNonNull(DnntLabelEnum.of((String) data.get("label"))).value();
         processRecursive = (Boolean) data.get("processRecursive");
 
-        final String fedoraHost = fofolaConfig.getFedoraHost();
-        final String fedoraUser = fofolaConfig.getFedoraUser();
-        final String fedoraPswd = fofolaConfig.getFedoraPswd();
-        final String solrHost = fofolaConfig.getSolrHost();
-
-        this.solrClient = SolrService.buildClient(solrHost);
-        this.fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
+        this.solrClient = SolrService.buildClient(fofolaConfig.getSolrHost());
+        this.fedoraApi = ApiConfiguration.getFedoraApi(fofolaConfig);
 
         this.logger = logger;
         this.maxDocsPerQuery = maxDocsPerQuery;

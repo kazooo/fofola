@@ -1,6 +1,7 @@
 package cz.mzk.fofola.process.check_donator;
 
 import cz.mzk.fofola.api.FedoraApi;
+import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.doc.SolrField;
 import cz.mzk.fofola.model.process.ProcessParams;
@@ -23,7 +24,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-
 public class CheckDonatorProcess extends Process {
 
     private final String vcId;
@@ -44,7 +44,7 @@ public class CheckDonatorProcess extends Process {
 
         xmlService = new XMLService();
         solrClient = SolrService.buildClient(fofolaConfig.getSolrHost());
-        fedoraApi = new FedoraApi(fofolaConfig.getFedoraHost(), fofolaConfig.getFedoraUser(), fofolaConfig.getFedoraPswd());
+        fedoraApi = ApiConfiguration.getFedoraApi(fofolaConfig);
     }
 
     @Override

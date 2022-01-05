@@ -1,6 +1,8 @@
 package cz.mzk.fofola.process.donator_linker;
 
 import cz.mzk.fofola.api.FedoraApi;
+import cz.mzk.fofola.configuration.ApiConfiguration;
+import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.doc.SolrField;
 import cz.mzk.fofola.service.SolrService;
 import cz.mzk.fofola.service.UuidService;
@@ -22,7 +24,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-
 public class DonatorLinker {
 
     private final SolrClient solrClient;
@@ -31,11 +32,10 @@ public class DonatorLinker {
     private final Logger logger;
     private final XMLService xmlService;
 
-    public DonatorLinker(String fedoraHost, String fedoraUser, String fedoraPswd,
-                         String solrHost, int maxDocsPerQuery, Logger logger)
+    public DonatorLinker(final FofolaConfiguration configuration, int maxDocsPerQuery, Logger logger)
             throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
-        solrClient = SolrService.buildClient(solrHost);
-        fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
+        solrClient = SolrService.buildClient(configuration.getSolrHost());
+        fedoraApi = ApiConfiguration.getFedoraApi(configuration);
         xmlService = new XMLService();
         this.logger = logger;
         this.maxDocsPerQuery = maxDocsPerQuery;

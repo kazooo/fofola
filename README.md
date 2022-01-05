@@ -26,26 +26,29 @@ Fofola používá databázi Postgres, a pokud není specifikována externí data
 spouští interní [H2 in-memory databázi](https://www.h2database.com/) (dostupná na http://host/port/h2-console). 
 Fofola je konfigurovatelná přes proměnné prostředí, níže je uveden seznam, popis a defaultní hodnoty.
 
-|       parameter       |                               description                               |              example              | required |   default value    |
-|:---------------------:|:-----------------------------------------------------------------------:|:---------------------------------:|:--------:|:------------------:|
-|    KRAMERIUS_HOST     |                              url Krameria                               |        http://kramerius.cz        |   true   |                    |
-|    KRAMERIUS_USER     |                     login uživatele s admin. právy                      |           krameriusUser           |   true   |                    |
-|    KRAMERIUS_PSWD     |                        heslo uživatele Krameria                         |           krameriusPswd           |   true   |                    |
-|      FEDORA_HOST      |                               url Fedory                                |         http://fedora.cz          |   true   |                    |
-|      FEDORA_USER      |                         login uživatele Fedory                          |            fedoraUser             |   true   |                    |
-|      FEDORA_PSWD      |                         heslo uživatele Fedory                          |            fedoraPswd             |   true   |                    |
-|       SOLR_HOST       |                        url Solru s názvem jádra                         |   http://solr.cz/solr/kramerius   |   true   |                    |
-| POSTGRES_DB_JDBC_URL  |                              url databázi                               | jdbc:postgresql://postgres/fofola |  false   |                    |
-|   POSTGRES_DB_USER    |                        login uživatele databázi                         |           postgresUser            |  false   |                    |
-|   POSTGRES_DB_PSWD    |                        heslo uživatele databázi                         |           postgresPswd            |  false   |                    |
-|    H2_DB_JDBC_URL     |                             url H2 databázi                             |        jdbc:h2:mem:fofola         |  false   | jdbc:h2:mem:fofola |
-|      H2_DB_USER       |                       login uživatele H2 databázi                       |              h2_user              |  false   |        user        |
-|      H2_DB_PSWD       |                       heslo uživatele H2 databázi                       |              h2_pswd              |  false   |        pswd        |
-|         PORT          |                               port Fofoly                               |               8080                |  false   |        8081        |
-|       TIMEZONE        |                             timezona Fofoly                             |           Europe/Prague           |  false   |  timezona systému  |
-|    H2_LOGGING_LVL     |                       úroveň logování H2 databázi                       |               DEBUG               |  false   |        WARN        |
-| HIBERNATE_LOGGING_LVL |           úroveň logování [Hibernate](https://hibernate.org/)           |               DEBUG               |  false   |        WARN        |
-|  HIKARI_LOGGING_LVL   | úroveň logování [HikariCP](https://github.com/brettwooldridge/HikariCP) |               DEBUG               |  false   |        WARN        |
+|         parameter          |                               description                               |              example              | required |   default value    |
+|:--------------------------:|:-----------------------------------------------------------------------:|:---------------------------------:|:--------:|:------------------:|
+|       KRAMERIUS_HOST       |                              url Krameria                               |        http://kramerius.cz        |   true   |                    |
+|       KRAMERIUS_USER       |                     login uživatele s admin. právy                      |           krameriusUser           |   true   |                    |
+|       KRAMERIUS_PSWD       |                        heslo uživatele Krameria                         |           krameriusPswd           |   true   |                    |
+|        FEDORA_HOST         |                               url Fedory                                |         http://fedora.cz          |   true   |                    |
+|        FEDORA_USER         |                         login uživatele Fedory                          |            fedoraUser             |   true   |                    |
+|        FEDORA_PSWD         |                         heslo uživatele Fedory                          |            fedoraPswd             |   true   |                    |
+|         SOLR_HOST          |                        url Solru s názvem jádra                         |   http://solr.cz/solr/kramerius   |   true   |                    |
+|    POSTGRES_DB_JDBC_URL    |                              url databázi                               | jdbc:postgresql://postgres/fofola |  false   |                    |
+|      POSTGRES_DB_USER      |                        login uživatele databázi                         |           postgresUser            |  false   |                    |
+|      POSTGRES_DB_PSWD      |                        heslo uživatele databázi                         |           postgresPswd            |  false   |                    |
+|       H2_DB_JDBC_URL       |                             url H2 databázi                             |        jdbc:h2:mem:fofola         |  false   | jdbc:h2:mem:fofola |
+|         H2_DB_USER         |                       login uživatele H2 databázi                       |              h2_user              |  false   |        user        |
+|         H2_DB_PSWD         |                       heslo uživatele H2 databázi                       |              h2_pswd              |  false   |        pswd        |
+|            PORT            |                               port Fofoly                               |               8080                |  false   |        8081        |
+|          TIMEZONE          |                             timezona Fofoly                             |           Europe/Prague           |  false   |  timezona systému  |
+| REQUEST_CONNECTION_TIMEOUT |                    timeout pro odchozí requesty (ms)                    |               60000               |  false   |       100000       |
+|      MAX_CONNECTIONS       |                       maximální množství spojení                        |                100                |  false   |         10         |
+| MAX_CONNECTIONS_PER_ROUTE  |             maximální množství spojení pro jednotlivé porty             |                100                |  false   |         10         |
+|       H2_LOGGING_LVL       |                       úroveň logování H2 databázi                       |               DEBUG               |  false   |        WARN        |
+|   HIBERNATE_LOGGING_LVL    |           úroveň logování [Hibernate](https://hibernate.org/)           |               DEBUG               |  false   |        WARN        |
+|     HIKARI_LOGGING_LVL     | úroveň logování [HikariCP](https://github.com/brettwooldridge/HikariCP) |               DEBUG               |  false   |        WARN        |
 
 
 Fofola se spouští s uvedenými parametry jako .jar soubor

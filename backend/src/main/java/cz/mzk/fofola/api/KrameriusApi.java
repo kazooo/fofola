@@ -32,9 +32,9 @@ public class KrameriusApi {
 
     private static final boolean DEFAULT_VC_CAN_LEAVE_FLAG = true;
 
-    public KrameriusApi(String kh, String ku, String kp) {
+    public KrameriusApi(String kh, String ku, String kp, final RestTemplate restTemplate) {
         krameriusHost = kh;
-        restTemplate = ApiConfiguration.getConfiguredTemplate();
+        this.restTemplate = restTemplate;
         authHeaders = ApiConfiguration.createAuthHeaders(ku, kp);
         authHeaders.setContentType(MediaType.APPLICATION_JSON);
         authHttpEntity = new HttpEntity<>(authHeaders);
@@ -91,7 +91,7 @@ public class KrameriusApi {
             final List<String> solrVcUuids = Arrays.stream(solrVcs.get()).map(VC::getPid).collect(Collectors.toList());
             fedoraVcUuids.removeAll(solrVcUuids);
             final List<VC> rest = fedoraVcUuids.stream().map(this::getVirtualCollection).collect(Collectors.toList());
-            final List<VC> vcs = Arrays.asList(solrVcs.get());
+            final List<VC> vcs = new ArrayList<>(Arrays.asList(solrVcs.get()));
             vcs.addAll(rest);
             return vcs;
         }

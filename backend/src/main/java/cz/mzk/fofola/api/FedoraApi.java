@@ -34,10 +34,10 @@ public class FedoraApi {
     private final DocumentBuilder xmlParser;
     private final Transformer xmlTransformer;
 
-    public FedoraApi(String fh, String fu, String fp)
+    public FedoraApi(String fh, String fu, String fp, final RestTemplate restTemplate)
             throws ParserConfigurationException, TransformerConfigurationException {
         fedoraHost = fh;
-        restTemplate = ApiConfiguration.getConfiguredTemplate();
+        this.restTemplate = restTemplate;
         authHeaders = ApiConfiguration.createAuthHeaders(fu, fp);
         authHttpEntity = new HttpEntity<>(authHeaders);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

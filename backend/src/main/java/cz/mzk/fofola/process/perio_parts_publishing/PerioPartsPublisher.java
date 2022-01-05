@@ -1,6 +1,7 @@
 package cz.mzk.fofola.process.perio_parts_publishing;
 
-import cz.mzk.fofola.api.FedoraApi;
+import cz.mzk.fofola.configuration.ApiConfiguration;
+import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.service.SolrService;
 import cz.mzk.fofola.service.UuidService;
 import cz.mzk.fofola.repository.FedoraDocumentRepository;
@@ -18,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-
 public class PerioPartsPublisher {
 
     private final FedoraDocumentRepository fedoraRepository;
@@ -26,13 +26,12 @@ public class PerioPartsPublisher {
     private final Logger logger;
     private final int maxDocs;
 
-    public PerioPartsPublisher(String fedoraHost, String fedoraUser, String fedoraPswd,
-                               String solrHost, int maxDocsPerQuery, Logger logger)
+    public PerioPartsPublisher(final FofolaConfiguration configuration, final int maxDocsPerQuery, final Logger logger)
             throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
         this.logger = logger;
         maxDocs = maxDocsPerQuery;
-        solrClient = SolrService.buildClient(solrHost);
-        fedoraRepository = new FedoraDocumentRepository(new XMLService(), new FedoraApi(fedoraHost, fedoraUser, fedoraPswd));
+        solrClient = SolrService.buildClient(configuration.getSolrHost());
+        fedoraRepository = new FedoraDocumentRepository(new XMLService(), ApiConfiguration.getFedoraApi(configuration));
     }
 
     public void checkPartsAndMakePublic(String rootUuid) {

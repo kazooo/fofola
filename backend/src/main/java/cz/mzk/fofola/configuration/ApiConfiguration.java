@@ -5,9 +5,15 @@ import cz.mzk.fofola.api.KrameriusApi;
 import cz.mzk.fofola.api.PlusEncoderInterceptor;
 import cz.mzk.fofola.api.RestTemplateErrorHandler;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,14 +27,44 @@ import java.util.Map;
 public class ApiConfiguration {
 
     @Bean
-    public FedoraApi getFedoraApi(FofolaConfiguration config)
+    public static FedoraApi getFedoraApi(final FofolaConfiguration config)
             throws ParserConfigurationException, TransformerConfigurationException {
-        return new FedoraApi(config.getFedoraHost(), config.getFedoraUser(), config.getFedoraPswd());
+        final ClientHttpRequestFactory factory = createRequestFactory(config);
+        return new FedoraApi(
+                config.getFedoraHost(),
+                config.getFedoraUser(),
+                config.getFedoraPswd(),
+                createConfiguredTemplate(factory)
+        );
     }
 
     @Bean
-    public KrameriusApi getKrameriusApi(FofolaConfiguration config) {
-        return new KrameriusApi(config.getKrameriusHost(), config.getKrameriusUser(), config.getKrameriusPswd());
+    public static KrameriusApi getKrameriusApi(final FofolaConfiguration config) {
+        final ClientHttpRequestFactory factory = createRequestFactory(config);
+        return new KrameriusApi(
+                config.getKrameriusHost(),
+                config.getKrameriusUser(),
+                config.getKrameriusPswd(),
+                createConfiguredTemplate(factory)
+        );
+    }
+
+    @Bean
+    public static ClientHttpRequestFactory createRequestFactory(final FofolaConfiguration config) {
+        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setMaxTotal(config.getMaxConnections());
+        connectionManager.setDefaultMaxPerRoute(config.getMaxConnectionsPerRoute());
+
+        final RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(config.getRequestConnectionTimeout())
+                .build();
+
+        final CloseableHttpClient httpClient = HttpClientBuilder.create()
+                .setConnectionManager(connectionManager)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
+
+        return new HttpComponentsClientHttpRequestFactory(httpClient);
     }
 
     public static HttpHeaders createAuthHeaders(String user, String pswd) {
@@ -48,8 +84,8 @@ public class ApiConfiguration {
         return builder.encode().build().toUri().toString();
     }
 
-    public static RestTemplate getConfiguredTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
+    private static RestTemplate createConfiguredTemplate(final ClientHttpRequestFactory factory) {
+        RestTemplate restTemplate = new RestTemplate(factory);
         restTemplate.setErrorHandler(new RestTemplateErrorHandler());
         restTemplate.setInterceptors(Collections.singletonList(new PlusEncoderInterceptor()));
         return restTemplate;

@@ -1,6 +1,8 @@
 package cz.mzk.fofola.process.vc_linker;
 
 import cz.mzk.fofola.api.FedoraApi;
+import cz.mzk.fofola.configuration.ApiConfiguration;
+import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.service.XMLService;
 import org.w3c.dom.*;
 
@@ -28,10 +30,10 @@ public class FedoraVCLinker {
     private final XPathExpression collectionsXPath;
     private final XPathExpression childrenXPath;
 
-    public FedoraVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd, Logger log)
+    public FedoraVCLinker(final FofolaConfiguration configuration, final Logger log)
             throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
         logger = log;
-        fedoraApi = new FedoraApi(fedoraHost, fedoraUser, fedoraPswd);
+        fedoraApi = ApiConfiguration.getFedoraApi(configuration);
         collectionsXPath = XMLService.compile("/*/*/*[local-name() = 'isMemberOfCollection']/@*[local-name() = 'resource']");
         childrenXPath = XMLService.compile("/*/*" +
                 "/*[starts-with(local-name(), 'has')]" +

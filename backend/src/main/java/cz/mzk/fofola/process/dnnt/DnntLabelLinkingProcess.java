@@ -19,6 +19,7 @@ public class DnntLabelLinkingProcess extends Process {
     private final DnntLabelLinkingRunner runner;
     private final List<String> uuids;
 
+    @SuppressWarnings("unchecked")
     public DnntLabelLinkingProcess(final ProcessParams params)
             throws IOException, TransformerConfigurationException, XPathExpressionException, ParserConfigurationException {
         super(params);

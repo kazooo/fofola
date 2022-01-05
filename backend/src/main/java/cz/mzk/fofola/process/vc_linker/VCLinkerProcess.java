@@ -9,15 +9,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-
 public class VCLinkerProcess extends Process {
 
     private final String vcUuid;
     private final List<String> rootUuids;
-    private final String solrHost;
-    private final String fedoraHost;
-    private final String fedoraUser;
-    private final String fedoraPswd;
+    private final FofolaConfiguration configuration;
 
     private final String mode;
     private static final String MODE_LINK = "LINK_MODE";
@@ -26,24 +22,16 @@ public class VCLinkerProcess extends Process {
     @SuppressWarnings("unchecked")
     public VCLinkerProcess(ProcessParams params) throws IOException {
         super(params);
-        FofolaConfiguration fofolaConfig = params.getConfig();
+        configuration = params.getConfig();
         Map<String, ?> data = params.getData();
-
         mode = (String) data.get("mode");
         vcUuid = (String) data.get("vcUuid");
         rootUuids = (List<String>) data.get("uuids");
-        solrHost = fofolaConfig.getSolrHost();
-        fedoraHost = fofolaConfig.getFedoraHost();
-        fedoraUser = fofolaConfig.getFedoraUser();
-        fedoraPswd = fofolaConfig.getFedoraPswd();
     }
 
     @Override
     public TerminationReason process() throws Exception {
-        KrameriusVCLinker vcLinker  = new KrameriusVCLinker(
-                fedoraHost, fedoraUser, fedoraPswd,
-                solrHost, logger
-        );
+        KrameriusVCLinker vcLinker  = new KrameriusVCLinker(configuration, logger);
         if (mode.equals(MODE_LINK)) {
             for (String rootUuid : rootUuids) {
                 vcLinker.linkToVcByRootUuid(vcUuid, rootUuid);

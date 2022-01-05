@@ -13,30 +13,20 @@ import java.util.Map;
 public class PerioPartsPublishingProcess extends Process {
 
     private final List<String> rootUuids;
-    private final String solrHost;
-    private final String fedoraHost;
-    private final String fedoraUser;
-    private final String fedoraPswd;
+    private final FofolaConfiguration configuration;
 
     @SuppressWarnings("unchecked")
     public PerioPartsPublishingProcess(ProcessParams params) throws IOException {
         super(params);
-        FofolaConfiguration fofolaConfig = params.getConfig();
-        Map<String, ?> data = params.getData();
-
+        final Map<String, ?> data = params.getData();
+        configuration = params.getConfig();
         rootUuids = (List<String>) data.get("root_uuids");
-        solrHost = fofolaConfig.getSolrHost();
-        fedoraHost = fofolaConfig.getFedoraHost();
-        fedoraUser = fofolaConfig.getFedoraUser();
-        fedoraPswd = fofolaConfig.getFedoraPswd();
     }
 
     @Override
     public TerminationReason process() throws Exception {
-        PerioPartsPublisher publisher = new PerioPartsPublisher(
-                fedoraHost, fedoraUser, fedoraPswd, solrHost, 1500, logger
-        );
-        for (String rootUuid : rootUuids) {
+        final PerioPartsPublisher publisher = new PerioPartsPublisher(configuration, 1500, logger);
+        for (final String rootUuid : rootUuids) {
             publisher.checkPartsAndMakePublic(rootUuid);
             if (Thread.interrupted()) {
                 return TerminationReason.USER_COMMAND;

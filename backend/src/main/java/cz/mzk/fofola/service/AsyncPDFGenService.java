@@ -42,7 +42,7 @@ public class AsyncPDFGenService {
     }
 
     private Map<String, String> prepareParams(String uuid) {
-        return new HashMap<String, String>() {{
+        return new HashMap<>() {{
             put("pid", uuid);
             put("pageType", "TEXT");
             put("format", "A4");
@@ -85,7 +85,7 @@ public class AsyncPDFGenService {
     }
 
     public void removeLogAndFile(Long id) {
-        AsyncPDFGenLog genLog = logRepository.getOne(id);
+        AsyncPDFGenLog genLog = logRepository.getById(id);
         String fileName = genLog.getUuid() + ".pdf";
         try {
             FileService.removePDFOutputFile(fileName);

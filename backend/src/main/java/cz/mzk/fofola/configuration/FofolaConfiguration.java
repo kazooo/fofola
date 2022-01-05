@@ -49,4 +49,10 @@ public class FofolaConfiguration {
     /* Additional */
     @Value("${TIMEZONE:#{T(java.util.TimeZone).getDefault()}}")
     private TimeZone timezone;
+    @Value("${REQUEST_CONNECTION_TIMEOUT:100000}")
+    private int requestConnectionTimeout;
+    @Value("${MAX_CONNECTIONS:10}")
+    private int maxConnections;
+    @Value("${MAX_CONNECTIONS_PER_ROUTE:10}")
+    private int maxConnectionsPerRoute;
 }

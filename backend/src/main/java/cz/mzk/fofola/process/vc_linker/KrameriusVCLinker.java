@@ -1,5 +1,6 @@
 package cz.mzk.fofola.process.vc_linker;
 
+import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.service.SolrService;
 import cz.mzk.fofola.service.UuidService;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -10,7 +11,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.logging.Logger;
-
 
 /**
  * The core class of linker. It collects all children of root uuid (by a cursor or a single request)
@@ -23,11 +23,10 @@ public class KrameriusVCLinker {
     private final SolrVCLinker solrVCLinker;
     private final FedoraVCLinker fedoraVCLinker;
 
-    public KrameriusVCLinker(String fedoraHost, String fedoraUser, String fedoraPswd,
-                             String solrHost, Logger logger)
+    public KrameriusVCLinker(final FofolaConfiguration configuration, Logger logger)
             throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
-        solrVCLinker = new SolrVCLinker(SolrService.buildClient(solrHost), logger);
-        fedoraVCLinker = new FedoraVCLinker(fedoraHost, fedoraUser, fedoraPswd, logger);
+        solrVCLinker = new SolrVCLinker(SolrService.buildClient(configuration.getSolrHost()), logger);
+        fedoraVCLinker = new FedoraVCLinker(configuration, logger);
     }
 
     public void unlinkFromVcByRootUuid(String vcId, String rootUuid)
