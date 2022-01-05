@@ -1,6 +1,5 @@
 # Fofola
 
-[![Build Status](https://travis-ci.com/kazooo/fofola.svg?branch=master)](https://travis-ci.com/kazooo/fofola)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 Fofola je jednoduchá webová aplikace pro rozšířenou administraci knihovního systému [Kramerius](https://system-kramerius.cz/en/),
