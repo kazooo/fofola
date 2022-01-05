@@ -4,8 +4,8 @@ export const getCantMakePublicMsg = count => 'Není možne odeslat ' + count + '
 export const getMakePrivateMsg = count => 'Uspešně odesláno ' + count + ' uuid na zneveřejnování!';
 export const getCantMakePrivateMsg = count => 'Není možne odeslat ' + count + ' uuid na zneveřejnování!';
 
-export const getReindexMsg = count => 'Uspešně odesláno ' + count + ' uuid na kontrolu částí a zveřejnění kořenů!';
-export const getCantReindexMsg = count => 'Není možne odeslat ' + count + ' uuid na kontrolu částí a zveřejnění kořenů!';
+export const getReindexMsg = count => 'Uspešně odesláno ' + count + ' uuid na reindexaci!';
+export const getCantReindexMsg = count => 'Není možne odeslat ' + count + ' uuid na reindexaci!';
 
 export const getCheckDonatorMsg = count => 'Uspešně odesláno ' + count + ' uuid na kontrolu donátoru!';
 export const getCantCheckDonatorMsg = count => 'Není možne odeslat ' + count + ' uuid na kontrolu donátoru!';
