@@ -14,14 +14,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
-
 
 @Configuration
 public class ApiConfiguration {
@@ -49,24 +50,6 @@ public class ApiConfiguration {
         );
     }
 
-    @Bean
-    public static ClientHttpRequestFactory createRequestFactory(final FofolaConfiguration config) {
-        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setMaxTotal(config.getMaxConnections());
-        connectionManager.setDefaultMaxPerRoute(config.getMaxConnectionsPerRoute());
-
-        final RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(config.getRequestConnectionTimeout())
-                .build();
-
-        final CloseableHttpClient httpClient = HttpClientBuilder.create()
-                .setConnectionManager(connectionManager)
-                .setDefaultRequestConfig(requestConfig)
-                .build();
-
-        return new HttpComponentsClientHttpRequestFactory(httpClient);
-    }
-
     public static HttpHeaders createAuthHeaders(String user, String pswd) {
         final String credentials = user + ":" + pswd;
         String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
@@ -88,6 +71,26 @@ public class ApiConfiguration {
         RestTemplate restTemplate = new RestTemplate(factory);
         restTemplate.setErrorHandler(new RestTemplateErrorHandler());
         restTemplate.setInterceptors(Collections.singletonList(new PlusEncoderInterceptor()));
+        restTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         return restTemplate;
+    }
+
+    @Bean
+    public static ClientHttpRequestFactory createRequestFactory(final FofolaConfiguration config) {
+        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setMaxTotal(config.getMaxConnections());
+        connectionManager.setDefaultMaxPerRoute(config.getMaxConnectionsPerRoute());
+
+        final RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(config.getRequestConnectionTimeout())
+                .build();
+
+        final CloseableHttpClient httpClient = HttpClientBuilder.create()
+                .setConnectionManager(connectionManager)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
+
+        return new HttpComponentsClientHttpRequestFactory(httpClient);
     }
 }

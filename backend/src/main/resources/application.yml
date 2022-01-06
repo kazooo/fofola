@@ -6,6 +6,11 @@ server:
   port: ${PORT:8081}
   error:
     path: /error
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 spring:
   h2:
