@@ -104,13 +104,18 @@ public class KrameriusApi {
         return restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, VC.class).getBody();
     }
 
-    public VC createEmptyVirtualCollection() {
+    public VC createEmptyVc() {
         final String url = krameriusHost + ADMIN_API_V5 + "/vc";
         final CreateVirtualCollectionRequest request = CreateVirtualCollectionRequest.builder()
                 .canLeave(DEFAULT_VC_CAN_LEAVE_FLAG)
                 .build();
         final HttpEntity<CreateVirtualCollectionRequest> requestAuthEntity = new HttpEntity<>(request, authHeaders);
         return restTemplate.postForObject(url, requestAuthEntity, VC.class);
+    }
+
+    public String deleteVc(String uuid) {
+        final String url = krameriusHost + ADMIN_API_V5 + "/vc/" + uuid;
+        return restTemplate.exchange(url, HttpMethod.DELETE, authHttpEntity, String.class).getBody();
     }
 
     public void generateAndDownloadPDF(Map<String, String> params, String outFilePath) throws IOException {

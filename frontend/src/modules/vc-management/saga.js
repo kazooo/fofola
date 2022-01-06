@@ -1,9 +1,9 @@
-import {call, put, takeEvery} from "redux-saga/effects";
+import {call, put, select, takeEvery} from "redux-saga/effects";
 import {createAction} from "@reduxjs/toolkit";
 
 import {request} from "../../utils/superagent";
 import {
-    createActionType,
+    createActionType, getVcs,
     setIsLoading,
     setIsLoadingError,
     setVcs,
@@ -11,24 +11,29 @@ import {
 import {snackbar} from "../../utils/snack/saga";
 import {
     cantCreateVcMsg,
+    cantDeleteVcMsg,
     cantLoadVcMsg,
     cantUpdateVcMsg,
     successCreateVcMsg,
+    successDeleteVcMsg,
     successUpdateVcMsg
 } from "../../utils/constants/messages";
 
 const LOAD_VCS = createActionType('LOAD_VCS');
 const CREATE_VC = createActionType('CREATE_VC');
 const UPDATE_VC = createActionType('UPDATE_VC');
+const DELETE_VC = createActionType('DELETE_VC');
 
 export const loadVirtualCollections = createAction(LOAD_VCS);
 export const createVirtualCollection = createAction(CREATE_VC);
 export const updateVirtualCollection = createAction(UPDATE_VC);
+export const deleteVirtualCollection = createAction(DELETE_VC);
 
 export default function* watcherSaga() {
     yield takeEvery(LOAD_VCS, loadVirtualCollectionsSaga);
     yield takeEvery(CREATE_VC, createVirtualCollectionSaga);
     yield takeEvery(UPDATE_VC, updateVirtualCollectionSaga);
+    yield takeEvery(DELETE_VC, deleteVirtualCollectionSaga);
 }
 
 function* loadVirtualCollectionsSaga() {
@@ -72,6 +77,20 @@ function* updateVirtualCollectionSaga(action) {
         yield put(snackbar.success(successUpdateVcMsg));
     } catch (e) {
         yield put(snackbar.error(cantUpdateVcMsg));
+        console.error(e);
+    }
+}
+
+function* deleteVirtualCollectionSaga(action) {
+    try {
+        yield call(() => request.delete('/vc').send(action.payload));
+        const vcs = yield select(getVcs);
+        const uuid = action.payload.uuid;
+        const filteredVcs = vcs.filter(value => value.uuid !== uuid);
+        setVcs(filteredVcs);
+        yield put(snackbar.success(successDeleteVcMsg));
+    } catch (e) {
+        yield put(snackbar.error(cantDeleteVcMsg));
         console.error(e);
     }
 }

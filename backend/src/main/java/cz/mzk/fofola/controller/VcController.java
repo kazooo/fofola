@@ -4,6 +4,7 @@ import cz.mzk.fofola.api.KrameriusApi;
 import cz.mzk.fofola.model.vc.VC;
 import cz.mzk.fofola.model.vc.VirtualCollection;
 import cz.mzk.fofola.request.CreateVcRequest;
+import cz.mzk.fofola.request.DeleteVcRequest;
 import cz.mzk.fofola.request.UpdateVcRequest;
 import cz.mzk.fofola.service.VcService;
 import lombok.AllArgsConstructor;
@@ -72,5 +73,15 @@ public class VcController {
         virtualCollection.setFullImg(fullImg);
         virtualCollection.setThumbImg(thumbImg);
         return vcService.updateVc(virtualCollection);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteVc(@RequestBody final DeleteVcRequest deleteVcRequest) {
+        log.info(String.format(
+                "Got a request to delete an existing virtual collection with parameters: uuid: %s, name (cz): %s, (en): %s",
+                deleteVcRequest.getUuid(), deleteVcRequest.getNameCz(), deleteVcRequest.getNameEn())
+        );
+        return vcService.deleteVc(deleteVcRequest.getUuid());
     }
 }

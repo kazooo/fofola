@@ -4,12 +4,13 @@ import {Box, TextField} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
-import {loadVirtualCollections, updateVirtualCollection} from "./saga";
+import {deleteVirtualCollection, loadVirtualCollections, updateVirtualCollection} from "./saga";
 import {RefreshIconButton} from "../../components/button/iconbuttons";
 import {Buttons, Panel, VCDescriptions, VCNames} from "./components";
+import {ModalWrapper} from "../../components/form/ModalWrapper";
+import {AddButton, ClearButton} from "../../components/button";
 import {Error} from "../../components/info/Error";
 import {getIsLoadingError, getVcs} from "./slice";
-import {AddButton} from "../../components/button";
 
 export const EditForm = () => {
     const dispatch = useDispatch();
@@ -21,6 +22,7 @@ export const EditForm = () => {
     const [fullImg, setFullImg] = useState(null);
     const [thumbImg, setThumbImg] = useState(null);
     const vcs = useSelector(state => getVcs(state));
+    const [autocompleteValue, setAutocompleteValue] = useState(null);
 
     const isLoadingError = useSelector(state => getIsLoadingError(state));
 
@@ -38,11 +40,20 @@ export const EditForm = () => {
             setNameEn(values.nameEn);
             setDescriptionCz(values.descriptionCz);
             setDescriptionEn(values.descriptionEn);
+            setAutocompleteValue(values);
+            setUuid(values.uuid);
+        } else {
+            cleanAll();
         }
-        setUuid(values ? values.uuid : '')
     };
 
-    const handleClear = () => {
+    const cleanAll = () => {
+        setUuid('');
+        setAutocompleteValue(null);
+        cleanValues();
+    };
+
+    const cleanValues = () => {
         setNameCz('');
         setNameEn('');
         setDescriptionCz('');
@@ -51,9 +62,28 @@ export const EditForm = () => {
         setThumbImg(null);
     };
 
+    const deleteVc = () => {
+        dispatch(deleteVirtualCollection({uuid, nameCz, nameEn}));
+        cleanAll();
+    };
+
+    const deleteButton = (
+        <ModalWrapper
+            callback={deleteVc}
+            title={'POZOR'}
+            titleColor={'secondary'}
+            description={'Chcete opravdu smazat vybranou virtuální sbírku?'}
+            okMsg={'Ano'}
+            cancelMsg={'Ne'}
+        >
+            <ClearButton>Vymazat sbírku</ClearButton>
+        </ModalWrapper>
+    );
+
     const buttonFuncs = {
         actionButton: <AddButton onClick={updateVc}>Upravit</AddButton>,
-        handleClear,
+        deleteButton,
+        cleanButton: <ClearButton onClick={cleanValues}>Vyčistit</ClearButton>,
         setFullImg,
         setThumbImg,
     };
@@ -66,6 +96,7 @@ export const EditForm = () => {
             component: (
                 <Autocomplete
                     options={vcs}
+                    value={autocompleteValue}
                     getOptionLabel={(option) => option.nameCz}
                     onChange={loadVcUuid}
                     renderInput={(params) =>
@@ -110,6 +141,7 @@ export const EditForm = () => {
             <Buttons
                 anyContent={nameCz || nameEn || descriptionCz || descriptionEn || fullImg || thumbImg}
                 ready={nameCz && nameEn && descriptionCz && descriptionEn}
+                loaded={uuid && uuid !== ''}
                 fullImg={fullImg}
                 thumbImg={thumbImg}
                 {...buttonFuncs}

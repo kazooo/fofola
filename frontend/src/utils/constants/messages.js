@@ -32,6 +32,8 @@ export const successCreateVcMsg = 'Virtuální sbírka byla uspešně vytvořena
 export const cantCreateVcMsg = 'Není možne vytvořit virtuální sbírku!';
 export const successUpdateVcMsg = 'Virtuální sbírka byla uspešně upravena!';
 export const cantUpdateVcMsg = 'Není možne upravit virtuální sbírku!';
+export const successDeleteVcMsg = 'Virtuální sbírka byla uspešně vymazana!';
+export const cantDeleteVcMsg = 'Není možne vymazat virtuální sbírku!';
 
 export const successSolrQueryMsg = 'Dotaz byl uspešně odeslán na zpracování!';
 export const cantSolrQueryMsg = 'Není možne odeslat dotaz na zpracování!';

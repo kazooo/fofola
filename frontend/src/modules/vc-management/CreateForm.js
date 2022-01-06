@@ -1,10 +1,10 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {useDispatch} from "react-redux";
 import {Box} from "@material-ui/core";
 
 import {Buttons, Panel, VCDescriptions, VCNames} from "./components";
 import {createVirtualCollection} from "./saga";
-import {AddButton} from "../../components/button";
+import {AddButton, ClearButton} from "../../components/button";
 
 export const CreateForm = () => {
     const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export const CreateForm = () => {
 
     const buttonFuncs = {
         actionButton: <AddButton onClick={createVc}>Vytvořit</AddButton>,
-        handleClear,
+        cleanButton: <ClearButton onClick={handleClear}>Vyčistit</ClearButton>,
         setFullImg,
         setThumbImg,
     };

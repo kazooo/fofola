@@ -17,7 +17,7 @@ public class VcService {
     private final FedoraApi fedoraApi;
 
     public String createVc(final VirtualCollection virtualCollection) throws IOException {
-        final VC newVirtualCollection = krameriusApi.createEmptyVirtualCollection();
+        final VC newVirtualCollection = krameriusApi.createEmptyVc();
         virtualCollection.setUuid(newVirtualCollection.getPid());
         return updateVc(virtualCollection);
     }
@@ -43,5 +43,9 @@ public class VcService {
             fedoraApi.setThumbnailImg(uuid, virtualCollection.getThumbImg());
         }
         return uuid;
+    }
+
+    public String deleteVc(final String uuid) {
+        return krameriusApi.deleteVc(uuid);
     }
 }

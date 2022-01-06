@@ -1,6 +1,6 @@
 import React from "react";
 import {Box, Grid, TextField} from "@material-ui/core";
-import {ClearButton, UploadButton} from "../../components/button";
+import {UploadButton} from "../../components/button";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 
 export const styles = {
@@ -99,7 +99,7 @@ export const VCDescriptions = ({textCz, textEn, setTextCz, setTextEn}) => {
     );
 };
 
-export const Buttons = ({anyContent, ready, handleClear, actionButton, fullImg, setFullImg, thumbImg, setThumbImg}) => {
+export const Buttons = ({anyContent, ready, loaded, actionButton, deleteButton, cleanButton, fullImg, setFullImg, thumbImg, setThumbImg}) => {
     return (
         <Box style={styles.wrapperStyle}>
             <Grid container style={styles.containerStyle}>
@@ -110,15 +110,22 @@ export const Buttons = ({anyContent, ready, handleClear, actionButton, fullImg, 
                     <UploadImgButton img={thumbImg} setFunc={setThumbImg} label={"Vybrat THUMB obrázek"} />
                 </Grid>
                 {
-                    anyContent && (
-                        <Grid item xs={3} align="center">
-                            <ClearButton onClick={handleClear}>Vyčistit</ClearButton>
+                    anyContent && cleanButton && (
+                        <Grid item xs={2} align="center">
+                            {cleanButton}
                         </Grid>
                     )
                 }
                 {
-                    ready && (
-                        <Grid item xs={3} align="center">
+                    loaded && deleteButton && (
+                        <Grid item xs={2} align="center">
+                            {deleteButton}
+                        </Grid>
+                    )
+                }
+                {
+                    ready && actionButton && (
+                        <Grid item xs={2} align="center">
                             {actionButton}
                         </Grid>
                     )
