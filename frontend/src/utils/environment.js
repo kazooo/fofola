@@ -1,4 +1,4 @@
-const DEFAULT_BASE_URL = 'http://localhost:3000/api';
-const ENV_BASE_URL = window.location.origin + '/api';
+const DEV_BASE_URL = 'http://localhost:8081/api';
+const PROD_BASE_URL = window.location.origin + '/api';
 
-export const BASE_URL = ENV_BASE_URL ? ENV_BASE_URL : DEFAULT_BASE_URL;
+export const BASE_URL = process.env.NODE_ENV === 'production' ? PROD_BASE_URL : DEV_BASE_URL;
