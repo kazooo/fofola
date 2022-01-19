@@ -66,13 +66,14 @@ public class DnntLabelUnlinkRunnerImpl extends DnntLabelLinker implements DnntLa
         }
     }
 
-    private boolean removeDnntFlagFromSolr(String uuid, SolrDocument doc) {
+    private boolean removeDnntFlagFromSolr(final String uuid, final SolrDocument doc) {
         boolean updated = false;
-        List<String> labels = doc.getDnntLabels();
+        final List<String> labels = doc.getDnntLabels();
 
         if (labels != null && labels.contains(label)) {
             labels.remove(label);
-            final SolrInputDocument inputDoc = modifyDnntParams(uuid, null, labels);
+            final Boolean isDnnt = !labels.isEmpty() ? true : null;
+            final SolrInputDocument inputDoc = modifyDnntParams(uuid, isDnnt, labels);
             try {
                 solrClient.add(inputDoc);
                 updated = true;

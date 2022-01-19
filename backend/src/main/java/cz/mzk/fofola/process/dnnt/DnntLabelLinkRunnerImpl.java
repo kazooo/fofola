@@ -63,15 +63,21 @@ public class DnntLabelLinkRunnerImpl extends DnntLabelLinker implements DnntLabe
         relsExtRootNode.appendChild(dnnFlagNode);
     }
 
-    private boolean addDnntFlagToSolr(String uuid, SolrDocument doc) {
+    private boolean addDnntFlagToSolr(final String uuid, final SolrDocument doc) {
         boolean updated = false;
         List<String> labels = doc.getDnntLabels();
+        final Boolean isDnnt = doc.getDnnt();
+
+        /* update only "dnnt" field even if the document contains required label */
+        if (isDnnt == null || !isDnnt) {
+            updated = true;
+        }
 
         if (labels != null && !labels.contains(label)) {
             labels.add(label);
             updated = true;
         } else if (labels == null) {
-            labels = new ArrayList<String>() {{
+            labels = new ArrayList<>() {{
                 add(label);
             }};
             updated = true;
