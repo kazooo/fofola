@@ -28,6 +28,7 @@ public class SolrResponseWritingProcess extends Process {
     private final String yearFrom;
     private final String yearTo;
     private final String dnntLabel;
+    private final String dnntFlag;
     private final String field;
 
     public static final String ANY_FIELD_VALUE = "any";
@@ -43,6 +44,7 @@ public class SolrResponseWritingProcess extends Process {
         yearTo = (String) data.get("yearTo");
         model = (String) data.getOrDefault("model", ANY_FIELD_VALUE);
         accessibility = (String) data.getOrDefault("access", ANY_FIELD_VALUE);
+        dnntFlag = (String) data.getOrDefault("dnntFlag", ANY_FIELD_VALUE);
         field = (String) data.getOrDefault("field", null);
 
         final String dnntLabelRaw = (String) data.getOrDefault("dnntLabel", ANY_FIELD_VALUE);
@@ -99,6 +101,10 @@ public class SolrResponseWritingProcess extends Process {
         if (accessibility != null) {
             queryParts.add(wrapFieldQuery(SolrField.ACCESSIBILITY, accessibility));
 
+        }
+
+        if (dnntFlag != null) {
+            queryParts.add(wrapFieldQuery(SolrField.DNNT_FLAG, dnntFlag));
         }
 
         if (dnntLabel != null) {

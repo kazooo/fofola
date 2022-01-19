@@ -17,4 +17,5 @@ public class SolrField {
     public static final String COLLECTION_FIELD_NAME = "collection";
     public static final String ACCESSIBILITY = "dostupnost";
     public static final String DNNT_LABELS = "dnnt-labels";
+    public static final String DNNT_FLAG = "dnnt";
 }

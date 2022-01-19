@@ -2,7 +2,7 @@ import {useDispatch} from 'react-redux';
 import {useEffect, useState} from 'react';
 import {Box, Grid, TextField} from '@material-ui/core';
 
-import {extendedAccesses, extendedModels, extendedDnntLabels, ExtendedSolrFieldValue} from "./constants";
+import {extendedAccesses, extendedModels, extendedDnntLabels, ExtendedSolrFieldValue, dnntFlags} from "./constants";
 import {ClearButton, StartButton} from '../../components/button';
 import {requestOutputFiles, sendSolrQuery} from './saga';
 import {Selector} from '../../components/form/Selector';
@@ -16,6 +16,7 @@ export const SolrQueryForm = () => {
     const [model, setModel] = useState(ExtendedSolrFieldValue.ANY.value);
     const [access, setAccess] = useState(ExtendedSolrFieldValue.ANY.value);
     const [dnntLabel, setDnntLabel] = useState(ExtendedSolrFieldValue.ANY.value);
+    const [dnntFlag, setDnntFlag] = useState(ExtendedSolrFieldValue.ANY.value);
     const [field, setField] = useState(SolrField.UUID.value);
 
     const ready = from !== null && to !== null;
@@ -40,6 +41,7 @@ export const SolrQueryForm = () => {
                 'model': model,
                 'access': access,
                 'dnntLabel': dnntLabel,
+                'dnntFlag': dnntFlag,
                 'field': field,
             }));
         }
@@ -51,6 +53,7 @@ export const SolrQueryForm = () => {
         setModel(ExtendedSolrFieldValue.ANY.value);
         setAccess(ExtendedSolrFieldValue.ANY.value);
         setDnntLabel(ExtendedSolrFieldValue.ANY.value);
+        setDnntFlag(ExtendedSolrFieldValue.ANY.value);
         setField(SolrField.UUID.value);
     }
 
@@ -66,7 +69,7 @@ export const SolrQueryForm = () => {
                     label='Z'
                     value={from}
                     variant='outlined'
-                    placeholder='yyyy'
+                    placeholder='yyyy or *'
                     onChange={e => setFrom(e.target.value)}
                     size='small'
                     inputProps={{ maxLength: 40 }}
@@ -77,7 +80,7 @@ export const SolrQueryForm = () => {
                     label='Do'
                     value={to}
                     variant='outlined'
-                    placeholder='yyyy'
+                    placeholder='yyyy or *'
                     onChange={e => setTo(e.target.value)}
                     size='small'
                     inputProps={{ maxLength: 40 }}
@@ -105,6 +108,14 @@ export const SolrQueryForm = () => {
                     selectOptions={extendedDnntLabels}
                     selectedOption={dnntLabel}
                     onSelectOptionChange={setDnntLabel}
+                />
+            </Grid>
+            <Grid item>
+                <Selector
+                    selectLabel='DNNT flag'
+                    selectOptions={dnntFlags}
+                    selectedOption={dnntFlag}
+                    onSelectOptionChange={setDnntFlag}
                 />
             </Grid>
             <Grid item>

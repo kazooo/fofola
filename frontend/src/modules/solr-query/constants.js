@@ -11,6 +11,7 @@ export const ExtendedSolrFieldValue = Object.freeze({
     },
 });
 
+export const dnntFlags = [ExtendedSolrFieldValue.ANY, ExtendedSolrFieldValue.NONE];
 export const extendedDnntLabels = [...dnntLabels, ExtendedSolrFieldValue.ANY, ExtendedSolrFieldValue.NONE];
 export const extendedAccesses = [...accesses, ExtendedSolrFieldValue.ANY, ExtendedSolrFieldValue.NONE];
 export const extendedModels = [...models,ExtendedSolrFieldValue.ANY, ExtendedSolrFieldValue.NONE];
