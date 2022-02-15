@@ -22,6 +22,10 @@ public class FofolaConfiguration {
     @Value("${SOLR_HOST:http://localhost:8983/solr/kramerius}")
     private String solrHost;
 
+    /* Sugo */
+    @Value("${SUGO_HOST:http://localhost:8082/solr/kramerius}")
+    private String sugoHost;
+
     /* Kramerius */
     @Value("${KRAMERIUS_HOST:http://localhost}")
     private String krameriusHost;

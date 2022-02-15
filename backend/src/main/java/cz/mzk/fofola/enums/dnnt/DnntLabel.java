@@ -1,8 +1,12 @@
 package cz.mzk.fofola.enums.dnnt;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public enum DnntLabelEnum {
+@Getter
+@AllArgsConstructor
+public enum DnntLabel {
 
     DNNTO("dnnto"),
     DNNTT("dnntt"),
@@ -10,21 +14,13 @@ public enum DnntLabelEnum {
 
     private final String value;
 
-    DnntLabelEnum(final String value) {
-        this.value = value;
-    }
-
-    public String value() {
-        return this.value;
-    }
-
     @JsonCreator
-    public static DnntLabelEnum of(final String value) {
+    public static DnntLabel of(final String value) {
         if (value == null) {
             return null;
         }
 
-        for (final DnntLabelEnum label : DnntLabelEnum.values()) {
+        for (final DnntLabel label : DnntLabel.values()) {
             if (label.value.equals(value)) {
                 return label;
             }

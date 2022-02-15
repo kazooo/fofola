@@ -1,9 +1,6 @@
 package cz.mzk.fofola.configuration;
 
-import cz.mzk.fofola.api.FedoraApi;
-import cz.mzk.fofola.api.KrameriusApi;
-import cz.mzk.fofola.api.PlusEncoderInterceptor;
-import cz.mzk.fofola.api.RestTemplateErrorHandler;
+import cz.mzk.fofola.api.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -48,6 +45,12 @@ public class ApiConfiguration {
                 config.getKrameriusPswd(),
                 createConfiguredTemplate(factory)
         );
+    }
+
+    @Bean
+    public static SugoApi getSugoApi(final FofolaConfiguration config) {
+        final ClientHttpRequestFactory factory = createRequestFactory(config);
+        return new SugoApi(config.getSugoHost(), createConfiguredTemplate(factory));
     }
 
     public static HttpHeaders createAuthHeaders(String user, String pswd) {

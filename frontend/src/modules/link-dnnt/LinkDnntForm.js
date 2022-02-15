@@ -12,7 +12,17 @@ import {
 
 import {LoadUuidsForm} from "../../components/form/LoadUuidsForm";
 import {HorizontalDirectedGrid} from "../../components/layout/HorizontalDirectedGrid";
-import {addUuids, getLabel, getMode, getProcessRecursive, setLabel, setMode, setProcessRecursive} from "./slice";
+import {
+    addUuids,
+    getMode,
+    isLabelSelectorDisabled,
+    setLabel,
+    setMode,
+    setProcessRecursive,
+    isProcessRecursiveCheckboxDisabled,
+    getProcessRecursiveByMode,
+    getLabelByMode,
+} from "./slice";
 import {dnntLabels} from "../constants";
 import {modes} from './constants';
 
@@ -26,9 +36,12 @@ const useStyles = makeStyles((theme) => ({
 export const LinkDnntForm = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const mode = useSelector(state => getMode(state));
-    const label = useSelector(state => getLabel(state));
-    const processRecursive = useSelector(state => getProcessRecursive(state));
+    const mode = useSelector(getMode);
+    const label = useSelector(getLabelByMode);
+    const processRecursive = useSelector(getProcessRecursiveByMode);
+
+    const processRecursiveDisabled = useSelector(isProcessRecursiveCheckboxDisabled);
+    const labelSelectorDisabled = useSelector(isLabelSelectorDisabled);
 
     const createOptions = options => options.map((option, index) => (
         <MenuItem key={index} value={option.value}>
@@ -64,6 +77,7 @@ export const LinkDnntForm = () => {
                     value={label}
                     onChange={e => changeLabel(e.target.value)}
                     label={"Label"}
+                    disabled={labelSelectorDisabled}
                 >
                     {labelOptions}
                 </Select>
@@ -83,6 +97,7 @@ export const LinkDnntForm = () => {
                     checked={processRecursive}
                     onChange={changeProcessRecursive}
                     color="primary"
+                    disabled={processRecursiveDisabled}
                 />}
                 label="Zpracovat všechny podřízené časti"
             />
