@@ -42,12 +42,14 @@ export const columns = [
         label: 'Staré labely',
         width: 170,
         align: 'center',
+        format: (value) => value.join(', '),
     },
     {
         id: 'newLabels',
         label: 'Nové labely',
         width: 170,
         align: 'center',
+        format: (value) => value.join(', '),
     },
     {
         id: 'notes',
