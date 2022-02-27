@@ -10,31 +10,31 @@ export const columns = [
     {
         id: 'changeDateTime',
         label: 'Datum změny',
-        width: 250,
+        width: 150,
         align: 'center',
     },
     {
         id: 'uuid',
         label: 'Interní UUID',
-        width: 170,
+        width: 400,
         align: 'center',
     },
     {
         id: 'model',
         label: 'Model',
-        width: 100,
+        width: 70,
         align: 'center',
     },
     {
         id: 'access',
         label: 'Dostupnost',
-        width: 100,
+        width: 70,
         align: 'center',
     },
     {
         id: 'cnb',
         label: 'ČNB',
-        width: 100,
+        width: 70,
         align: 'center',
     },
     {

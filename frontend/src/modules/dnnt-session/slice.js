@@ -7,6 +7,7 @@ export const dnntSessionSlice = createSlice({
         sessions: [],
         isLoading: false,
         currentPage: 0,
+        numFound: 0,
         fromDateTime: null,
         toDateTime: null,
         direction: SugoSessionDirection.Any.value,
@@ -26,6 +27,9 @@ export const dnntSessionSlice = createSlice({
         },
         setCurrentPage: (state, action) => {
             state.currentPage = action.payload;
+        },
+        setNumFound: (state, action) => {
+            state.numFound = action.payload;
         },
         setFromDateTime: (state, action) => {
             state.fromDateTime = action.payload;
@@ -57,8 +61,12 @@ export const getDirection = state => state.dnntSessionModule.direction;
 export const getRequestor = state => state.dnntSessionModule.requestor;
 export const getOperation = state => state.dnntSessionModule.operation;
 export const getStatus = state => state.dnntSessionModule.status;
+export const getIsPaginatorEnabled = state => state.dnntTransitionModule.numFound > 0;
 
-export const {setSessions, clearSessions, toggleIsLoading,
-              setCurrentPage, setOperation, setRequestor,
-              setStatus, setToDateTime, setFromDateTime, setDirection} = dnntSessionSlice.actions;
+export const {
+    setSessions, setNumFound, clearSessions, toggleIsLoading,
+    setCurrentPage, setOperation, setRequestor,
+    setStatus, setToDateTime, setFromDateTime, setDirection
+} = dnntSessionSlice.actions;
+
 export const createActionType = actionName => `${dnntSessionSlice.name}/${actionName}`;

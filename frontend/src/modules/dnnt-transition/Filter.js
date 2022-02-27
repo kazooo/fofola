@@ -200,7 +200,7 @@ const TextField = ({label, value, classNames, onChange, placeholder, width = 200
             placeholder={placeholder}
             onChange={e => onChange(e.target.value)}
             size='small'
-            inputProps={{ maxLength: 40 }}
+            inputProps={{ maxLength: 150 }}
             style={{ width: width }}
         />
     </FormControl>

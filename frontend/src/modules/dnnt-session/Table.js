@@ -4,10 +4,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {FofolaTable} from '../../components/table/FofolaTable';
 import {Paginator} from '../../components/table/Paginator';
 
-import {getCurrentPage, getIsLoading, getSessions, setCurrentPage} from './slice';
-import {requestSessionPage} from "./saga";
+import {getCurrentPage, getIsLoading, getIsPaginatorEnabled, getSessions, setCurrentPage} from './slice';
+import {requestSessionPage} from './saga';
 import {columns} from './constants';
-import {useEffect} from "react";
+import {useEffect} from 'react';
 
 export const  Table = () => {
 
@@ -15,9 +15,13 @@ export const  Table = () => {
     const page = useSelector(getCurrentPage);
     const isLoading = useSelector(getIsLoading);
     const sessions = useSelector(getSessions);
+    const paginatorEnabled = useSelector(getIsPaginatorEnabled);
 
     useEffect(() => {
         dispatch(requestSessionPage());
+        return () => {
+            dispatch(setCurrentPage(0));
+        }
     }, [dispatch]);
 
     const handleChangePage = (newPage, processesPerPage) => {
@@ -25,9 +29,7 @@ export const  Table = () => {
         dispatch(requestSessionPage());
     };
 
-    const paginatorEnabled = () => sessions.size > 0;
-
-    const paginator = <Paginator page={page} onChange={handleChangePage}  enabled={paginatorEnabled()} />
+    const paginator = <Paginator page={page} onChange={handleChangePage}  enabled={paginatorEnabled} />
 
     return <Box>
         <FofolaTable

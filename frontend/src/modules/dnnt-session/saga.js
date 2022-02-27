@@ -1,23 +1,29 @@
-import {call, put, select, takeEvery} from "redux-saga/effects";
+import {createAction} from '@reduxjs/toolkit';
+import {call, put, select, takeEvery} from 'redux-saga/effects';
+import moment from 'moment';
+
+import {request} from '../../utils/superagent';
+import {snackbar} from '../../utils/snack/saga';
+import {cantLoadNextPage} from '../../utils/constants/messages';
+
 import {
     createActionType,
     getCurrentPage,
     getDirection,
-    getFromDateTime, getOperation,
-    getRequestor, getStatus, getToDateTime,
+    getFromDateTime,
+    getOperation,
+    getRequestor,
+    getStatus,
+    getToDateTime,
+    setNumFound,
     setSessions,
     toggleIsLoading
-} from "./slice";
-import {createAction} from "@reduxjs/toolkit";
-import {request} from "../../utils/superagent";
-import {snackbar} from "../../utils/snack/saga";
-import {cantLoadNextPage} from "../../utils/constants/messages";
-import moment from "moment";
+} from './slice';
 
-const DATE_PATTERN = "hh:mm DD/MM/YYYY";
-const OUTPUT_DATE_PATTERN = "YYYY-MM-DDThh:mm:ss.sss";
+const DATE_PATTERN = 'hh:mm DD/MM/YYYY';
+const OUTPUT_DATE_PATTERN = 'YYYY-MM-DDTHH:mm:ss.sss';
 
-const REQUEST_CURRENT_PAGE = createActionType("REQUEST_CURRENT_PAGE");
+const REQUEST_CURRENT_PAGE = createActionType('REQUEST_CURRENT_PAGE');
 
 export const requestSessionPage = createAction(REQUEST_CURRENT_PAGE);
 
@@ -51,10 +57,14 @@ function* requestWithLoading(action) {
 
     try {
         const payload = yield call(() => request
-            .get("/sugo/sessions")
+            .get('/sugo/sessions')
             .query(Object.fromEntries(queryParams))
         );
+        
         const sessions = payload.body['entities'];
+        const numFound = payload.body['numFound'];
+
+        yield put(setNumFound(numFound));
         if (sessions) {
             yield put(setSessions(sessions));
         }

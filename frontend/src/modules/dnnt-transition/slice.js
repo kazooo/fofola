@@ -7,6 +7,7 @@ export const dnntTransitionSlice = createSlice({
         transitions: [],
         isLoading: false,
         currentPage: 0,
+        numFound: 0,
         fromDateTime: null,
         toDateTime: null,
         internalUuid: '',
@@ -28,6 +29,9 @@ export const dnntTransitionSlice = createSlice({
         },
         setCurrentPage: (state, action) => {
             state.currentPage = action.payload;
+        },
+        setNumFound: (state, action) => {
+            state.numFound = action.payload;
         },
         setFromDateTime: (state, action) => {
             state.fromDateTime = action.payload;
@@ -70,9 +74,10 @@ export const getAccess = state => state.dnntTransitionModule.access;
 export const getCnb = state => state.dnntTransitionModule.cnb;
 export const getSourceIdentifier = state => state.dnntTransitionModule.sourceIdentifier;
 export const getSourceUuid = state => state.dnntTransitionModule.sourceUuid;
+export const getIsPaginatorEnabled = state => state.dnntTransitionModule.numFound > 0;
 
 export const {
-    setTransitions, clearTransitions, toggleIsLoading,
+    setTransitions, setNumFound, toggleIsLoading,
     setCurrentPage, setFromDateTime, setToDateTime,
     setInternalUuid, setModel,
     setAccess, setCnb, setSourceIdentifier, setSourceUuid

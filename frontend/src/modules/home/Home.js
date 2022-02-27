@@ -47,7 +47,7 @@ export const Home = () => {
             <Service link='/link-donator'> Přídat/odstranit příznak donátoru </Service>
             <Service link='/check-donator'> Kontrola příznaku donátoru </Service>
         </ServiceCard>
-        <ServiceCard title='DNNT'>
+        <ServiceCard title='Sugo'>
             <Service link='/dnnt-mark'>Přídat/odstranit DNNT label</Service>
             <Service link='/dnnt-transition'>Přehled interních změn v DNNT labelech</Service>
             <Service link='/dnnt-session'>DNNT processy</Service>

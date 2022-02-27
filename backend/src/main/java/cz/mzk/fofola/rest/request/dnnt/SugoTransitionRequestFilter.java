@@ -25,4 +25,6 @@ public class SugoTransitionRequestFilter {
 
     private String sourceIdentifier;
     private String sourceUuid;
+
+    private Integer page;
 }

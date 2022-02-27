@@ -16,13 +16,13 @@ import {
     getModel,
     getSourceIdentifier,
     getSourceUuid,
-    getToDateTime,
+    getToDateTime, setNumFound,
     setTransitions,
     toggleIsLoading
 } from './slice';
 
 const DATE_PATTERN = 'hh:mm DD/MM/YYYY';
-const OUTPUT_DATE_PATTERN = 'YYYY-MM-DDThh:mm:ss.sss';
+const OUTPUT_DATE_PATTERN = 'YYYY-MM-DDTHH:mm:ss.sss';
 
 const REQUEST_CURRENT_PAGE = createActionType('REQUEST_CURRENT_PAGE');
 
@@ -65,7 +65,11 @@ function* requestWithLoading(action) {
             .get('/sugo/transitions')
             .query(Object.fromEntries(queryParams))
         );
+
         const transitions = payload.body['entities'];
+        const numFound = payload.body['numFound'];
+
+        yield put(setNumFound(numFound));
         if (transitions) {
             yield put(setTransitions(transitions));
         }

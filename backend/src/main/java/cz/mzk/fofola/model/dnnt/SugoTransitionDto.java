@@ -1,6 +1,8 @@
 package cz.mzk.fofola.model.dnnt;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import cz.mzk.fofola.constants.dnnt.Label;
+import cz.mzk.fofola.model.dnnt.serializer.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +17,8 @@ import java.util.List;
 @Builder
 public class SugoTransitionDto {
     private Long id;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime changeDateTime;
 
     private String uuid;
