@@ -1,5 +1,6 @@
 import internalProcessesModule from './internal-processes';
 import krameriusProcessModule from './kramerius-procesess';
+import dnntTransitionModule from './dnnt-transition';
 import perioPartsPublishModule from './perio-parts';
 import checkDonatorModule from './check-donator';
 import changeAccessModule from './change-access';
@@ -20,6 +21,7 @@ const modules = {
     internalProcessesModule,
     krameriusProcessModule,
     perioPartsPublishModule,
+    dnntTransitionModule,
     checkDonatorModule,
     changeAccessModule,
     linkDonatorModule,

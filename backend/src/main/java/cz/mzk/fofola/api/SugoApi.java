@@ -3,7 +3,9 @@ package cz.mzk.fofola.api;
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.model.dnnt.SugoMarkParams;
 import cz.mzk.fofola.model.dnnt.SugoSessionPageDto;
-import cz.mzk.fofola.rest.request.SugoSessionRequestFilter;
+import cz.mzk.fofola.model.dnnt.SugoTransitionPageDto;
+import cz.mzk.fofola.rest.request.dnnt.SugoSessionRequestFilter;
+import cz.mzk.fofola.rest.request.dnnt.SugoTransitionRequestFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ public class SugoApi {
     private final static String CLEAN_ENDPOINT = "/api/command/clean";
 
     private final static String SESSION_QUERY_ENDPOINT = "/api/query/session";
+    private final static String TRANSITION_QUERY_ENDPOINT = "/api/query/transition";
 
     public SugoApi(final String sugoHost, final RestTemplate restTemplate) {
         this.sugoHost = sugoHost;
@@ -38,7 +41,18 @@ public class SugoApi {
             return Objects.requireNonNull(response.getBody());
         } else {
             log.warn("Can't get sessions from Sugo, response code: " + response.getStatusCode());
-            return SugoSessionPageDto.builder().sessions(List.of()).numFound(0L).build();
+            return SugoSessionPageDto.builder().entities(List.of()).numFound(0L).build();
+        }
+    }
+
+    public SugoTransitionPageDto getTransitions(final SugoTransitionRequestFilter requestFilter) {
+        final String url = buildUrl(TRANSITION_QUERY_ENDPOINT, requestFilter);
+        final ResponseEntity<SugoTransitionPageDto> response = restTemplate.getForEntity(url, SugoTransitionPageDto.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn("Can't get transitions from Sugo, response code: " + response.getStatusCode());
+            return SugoTransitionPageDto.builder().entities(List.of()).numFound(0L).build();
         }
     }
 

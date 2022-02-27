@@ -49,6 +49,7 @@ export const Home = () => {
         </ServiceCard>
         <ServiceCard title='DNNT'>
             <Service link='/dnnt-mark'>Přídat/odstranit DNNT label</Service>
+            <Service link='/dnnt-transition'>Přehled interních změn v DNNT labelech</Service>
             <Service link='/dnnt-session'>DNNT processy</Service>
         </ServiceCard>
         <ServiceCard title='Interní věci'>

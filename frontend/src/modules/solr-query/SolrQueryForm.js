@@ -2,21 +2,21 @@ import {useDispatch} from 'react-redux';
 import {useEffect, useState} from 'react';
 import {Box, Grid, TextField} from '@material-ui/core';
 
-import {extendedAccesses, extendedModels, extendedDnntLabels, ExtendedSolrFieldValue, dnntFlags} from "./constants";
+import {extendedAccesses, extendedModels, extendedDnntLabels, dnntFlags} from "./constants";
+import {ExtendedFieldValue, SolrField, solrFields} from '../constants';
 import {ClearButton, StartButton} from '../../components/button';
 import {requestOutputFiles, sendSolrQuery} from './saga';
 import {Selector} from '../../components/form/Selector';
 import {useInterval} from '../../effects/useInterval';
-import {SolrField, solrFields} from '../constants';
 
 export const SolrQueryForm = () => {
 
     const [from, setFrom] = useState(null);
     const [to, setTo] = useState(null);
-    const [model, setModel] = useState(ExtendedSolrFieldValue.ANY.value);
-    const [access, setAccess] = useState(ExtendedSolrFieldValue.ANY.value);
-    const [dnntLabel, setDnntLabel] = useState(ExtendedSolrFieldValue.ANY.value);
-    const [dnntFlag, setDnntFlag] = useState(ExtendedSolrFieldValue.ANY.value);
+    const [model, setModel] = useState(ExtendedFieldValue.ANY.value);
+    const [access, setAccess] = useState(ExtendedFieldValue.ANY.value);
+    const [dnntLabel, setDnntLabel] = useState(ExtendedFieldValue.ANY.value);
+    const [dnntFlag, setDnntFlag] = useState(ExtendedFieldValue.ANY.value);
     const [field, setField] = useState(SolrField.UUID.value);
 
     const ready = from !== null && to !== null;
@@ -50,10 +50,10 @@ export const SolrQueryForm = () => {
     const clear = () => {
         setFrom(null);
         setTo(null);
-        setModel(ExtendedSolrFieldValue.ANY.value);
-        setAccess(ExtendedSolrFieldValue.ANY.value);
-        setDnntLabel(ExtendedSolrFieldValue.ANY.value);
-        setDnntFlag(ExtendedSolrFieldValue.ANY.value);
+        setModel(ExtendedFieldValue.ANY.value);
+        setAccess(ExtendedFieldValue.ANY.value);
+        setDnntLabel(ExtendedFieldValue.ANY.value);
+        setDnntFlag(ExtendedFieldValue.ANY.value);
         setField(SolrField.UUID.value);
     }
 

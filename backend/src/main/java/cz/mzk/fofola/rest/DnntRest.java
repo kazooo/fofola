@@ -2,7 +2,9 @@ package cz.mzk.fofola.rest;
 
 import cz.mzk.fofola.api.SugoApi;
 import cz.mzk.fofola.model.dnnt.SugoSessionPageDto;
-import cz.mzk.fofola.rest.request.SugoSessionRequestFilter;
+import cz.mzk.fofola.model.dnnt.SugoTransitionPageDto;
+import cz.mzk.fofola.rest.request.dnnt.SugoSessionRequestFilter;
+import cz.mzk.fofola.rest.request.dnnt.SugoTransitionRequestFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,5 +24,11 @@ public class DnntRest {
     @ResponseStatus(HttpStatus.OK)
     public SugoSessionPageDto getSessions(final SugoSessionRequestFilter requestFilter) {
         return sugoApi.getSessions(requestFilter);
+    }
+
+    @GetMapping("/transitions")
+    @ResponseStatus(HttpStatus.OK)
+    public SugoTransitionPageDto getTransitions(final SugoTransitionRequestFilter requestFilter) {
+        return sugoApi.getTransitions(requestFilter);
     }
 }

@@ -1,4 +1,4 @@
-package cz.mzk.fofola.rest.request;
+package cz.mzk.fofola.rest.request.vc;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

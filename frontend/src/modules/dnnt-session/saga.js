@@ -54,8 +54,10 @@ function* requestWithLoading(action) {
             .get("/sugo/sessions")
             .query(Object.fromEntries(queryParams))
         );
-        const sessions = payload.body['sessions'];
-        yield put(setSessions(sessions));
+        const sessions = payload.body['entities'];
+        if (sessions) {
+            yield put(setSessions(sessions));
+        }
     } catch (e) {
         yield put(snackbar.error(cantLoadNextPage));
         console.error(e);

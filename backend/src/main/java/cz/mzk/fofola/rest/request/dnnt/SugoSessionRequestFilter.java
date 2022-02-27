@@ -1,4 +1,4 @@
-package cz.mzk.fofola.rest.request;
+package cz.mzk.fofola.rest.request.dnnt;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import cz.mzk.fofola.constants.dnnt.Direction;

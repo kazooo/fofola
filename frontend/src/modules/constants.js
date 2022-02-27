@@ -66,6 +66,17 @@ export const SolrField = Object.freeze({
     },
 });
 
+export const ExtendedFieldValue = Object.freeze({
+    ANY: {
+        text: 'jakýkoliv',
+        value: 'any',
+    },
+    NONE: {
+        text: 'žádný',
+        value: 'none',
+    },
+});
+
 /* just arrays of objects from structures above */
 export const dnntLabels = Object.keys(DnntLabel).map((key) => DnntLabel[key]);
 export const models = Object.keys(Model).map((key) => Model[key]);

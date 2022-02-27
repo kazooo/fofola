@@ -6,8 +6,8 @@ import {
     MenuItem,
     Select,
     TextField
-} from "@material-ui/core";
-import {useDispatch, useSelector} from "react-redux";
+} from '@material-ui/core';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {
     getDirection,
@@ -23,14 +23,14 @@ import {
     setRequestor,
     setStatus,
     setToDateTime
-} from "./slice";
-import {SearchButton} from "../../components/button";
-import {requestSessionPage} from "./saga";
+} from './slice';
+import {SearchButton} from '../../components/button';
+import {requestSessionPage} from './saga';
 import {
     sugoSessionDirections,
     sugoSessionOperations,
     sugoSessionRequestors,
-    sugoSessionStatuses} from "./constants";
+    sugoSessionStatuses} from './constants';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -89,14 +89,15 @@ export const Filter = () => {
         dispatch(requestSessionPage());
     };
 
-    return <Box>
+    return (
+        <Box>
         <Grid container
               spacing={2}
-              alignItems={"center"}
-              justifyContent={"center"}
+              alignItems={'center'}
+              justifyContent={'center'}
         >
             <Grid item>
-                <FormControl variant="outlined" size="small" className={classes.formControl}>
+                <FormControl variant='outlined' size='small' className={classes.formControl}>
                     <TextField
                         label='Z'
                         value={fromDateTime}
@@ -109,7 +110,7 @@ export const Filter = () => {
                 </FormControl>
             </Grid>
             <Grid item>
-                <FormControl variant="outlined" size="small" className={classes.formControl}>
+                <FormControl variant='outlined' size='small' className={classes.formControl}>
                     <TextField
                         label='Do'
                         value={toDateTime}
@@ -164,11 +165,12 @@ export const Filter = () => {
             </Grid>
         </Grid>
     </Box>
+    );
 };
 
 const SelectorField = ({label, value, onChange, options, classNames}) => {
     return (
-        <FormControl variant="outlined" size="small" className={classNames}>
+        <FormControl variant='outlined' size='small' className={classNames}>
             <InputLabel>{label}</InputLabel>
             <Select
                 value={value}
