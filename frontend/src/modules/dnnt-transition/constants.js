@@ -57,7 +57,7 @@ export const columns = [
     },
     {
         id: 'sourceIdentifier',
-        label: 'Zdrojový ID',
+        label: 'ID zdroje',
         width: 100,
         align: 'center',
     },
