@@ -1,4 +1,4 @@
-package cz.mzk.fofola.controller;
+package cz.mzk.fofola.rest;
 
 import cz.mzk.fofola.model.pdf.AsyncPDFGenLog;
 import cz.mzk.fofola.service.AsyncPDFGenService;

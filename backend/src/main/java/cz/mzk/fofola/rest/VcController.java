@@ -1,11 +1,11 @@
-package cz.mzk.fofola.controller;
+package cz.mzk.fofola.rest;
 
 import cz.mzk.fofola.api.KrameriusApi;
 import cz.mzk.fofola.model.vc.VC;
 import cz.mzk.fofola.model.vc.VirtualCollection;
-import cz.mzk.fofola.request.CreateVcRequest;
-import cz.mzk.fofola.request.DeleteVcRequest;
-import cz.mzk.fofola.request.UpdateVcRequest;
+import cz.mzk.fofola.rest.request.CreateVcRequest;
+import cz.mzk.fofola.rest.request.DeleteVcRequest;
+import cz.mzk.fofola.rest.request.UpdateVcRequest;
 import cz.mzk.fofola.service.VcService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

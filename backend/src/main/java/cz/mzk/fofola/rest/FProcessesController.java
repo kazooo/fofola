@@ -1,4 +1,4 @@
-package cz.mzk.fofola.controller;
+package cz.mzk.fofola.rest;
 
 import cz.mzk.fofola.model.process.ProcessDTO;
 import cz.mzk.fofola.service.ProcessManagementService;

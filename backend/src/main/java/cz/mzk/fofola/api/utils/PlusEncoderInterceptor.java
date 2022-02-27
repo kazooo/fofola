@@ -1,4 +1,4 @@
-package cz.mzk.fofola.api;
+package cz.mzk.fofola.api.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpRequest;

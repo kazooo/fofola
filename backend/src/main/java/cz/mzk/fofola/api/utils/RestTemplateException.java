@@ -1,4 +1,4 @@
-package cz.mzk.fofola.api;
+package cz.mzk.fofola.api.utils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

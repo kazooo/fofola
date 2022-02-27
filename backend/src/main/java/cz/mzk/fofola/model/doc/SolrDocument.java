@@ -1,6 +1,6 @@
 package cz.mzk.fofola.model.doc;
 
-import cz.mzk.fofola.constants.SolrFieldName;
+import cz.mzk.fofola.constants.solr.SolrFieldName;
 import lombok.Getter;
 import org.apache.solr.common.SolrDocumentList;
 

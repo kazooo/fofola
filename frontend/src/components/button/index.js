@@ -7,6 +7,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import PublishIcon from '@material-ui/icons/Publish';
 import AddIcon from '@material-ui/icons/Add';
+import SearchIcon from '@material-ui/icons/Search';
 
 export const StartButton = ({children, onClick}) => (
     <IconButton
@@ -67,6 +68,15 @@ export const UploadButton = ({children, onClick, onChange = null, type = null}) 
 export const AddButton = ({children, onClick}) => (
     <IconButton
         icon={<AddIcon />}
+        onClick={onClick}
+    >
+        {children}
+    </IconButton>
+);
+
+export const SearchButton = ({children, onClick}) => (
+    <IconButton
+        icon={<SearchIcon />}
         onClick={onClick}
     >
         {children}

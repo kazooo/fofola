@@ -1,16 +1,17 @@
 package cz.mzk.fofola.api;
 
 import cz.mzk.fofola.configuration.ApiConfiguration;
-import cz.mzk.fofola.enums.dnnt.DnntLabel;
+import cz.mzk.fofola.model.dnnt.SugoMarkParams;
+import cz.mzk.fofola.model.dnnt.SugoSessionPageDto;
+import cz.mzk.fofola.rest.request.SugoSessionRequestFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 public class SugoApi {
@@ -23,31 +24,46 @@ public class SugoApi {
     private final static String SYNC_ENDPOINT = "/api/command/sync";
     private final static String CLEAN_ENDPOINT = "/api/command/clean";
 
+    private final static String SESSION_QUERY_ENDPOINT = "/api/query/session";
+
     public SugoApi(final String sugoHost, final RestTemplate restTemplate) {
         this.sugoHost = sugoHost;
         this.restTemplate = restTemplate;
     }
 
-    public void mark(final DnntLabel label, final Boolean recursively, final List<String> uuids) {
-        final Map<String, String> urlParams = createParams(label, recursively);
-        final String url = buildUrl(MARK_ENDPOINT, urlParams);
+    public SugoSessionPageDto getSessions(final SugoSessionRequestFilter requestFilter) {
+        final String url = buildUrl(SESSION_QUERY_ENDPOINT, requestFilter);
+        final ResponseEntity<SugoSessionPageDto> response = restTemplate.getForEntity(url, SugoSessionPageDto.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn("Can't get sessions from Sugo, response code: " + response.getStatusCode());
+            return SugoSessionPageDto.builder().sessions(List.of()).numFound(0L).build();
+        }
+    }
+
+    public void mark(final SugoMarkParams params, final List<String> uuids) {
+        final String url = buildUrl(MARK_ENDPOINT, params);
         final HttpEntity<Object> body = convertToBody(uuids);
-        if (!sendSuccess(url, body)) {
+        if (sendFailed(url, body)) {
             log.warn(String.format(
                     "Can't send %d uuids to %s mark by %s label!",
-                    uuids.size(), recursively ? "recursively" : "non-recursively", label.getValue()
+                    uuids.size(),
+                    params.getRecursively() ? "recursively" : "non-recursively",
+                    params.getLabel().getValue()
             ));
         }
     }
 
-    public void unmark(final DnntLabel label, final Boolean recursively, final List<String> uuids) {
-        final Map<String, String> urlParams = createParams(label, recursively);
-        final String url = buildUrl(UNMARK_ENDPOINT, urlParams);
+    public void unmark(final SugoMarkParams params, final List<String> uuids) {
+        final String url = buildUrl(UNMARK_ENDPOINT, params);
         final HttpEntity<Object> body = convertToBody(uuids);
-        if (!sendSuccess(url, body)) {
+        if (sendFailed(url, body)) {
             log.warn(String.format(
                     "Can't send %d uuids to %s unmark by %s label!",
-                    uuids.size(), recursively ? "recursively" : "non-recursively", label.getValue()
+                    uuids.size(),
+                    params.getRecursively() ? "recursively" : "non-recursively",
+                    params.getLabel().getValue()
             ));
         }
     }
@@ -55,35 +71,24 @@ public class SugoApi {
     public void sync(final List<String> uuids) {
         final String url = buildUrl(SYNC_ENDPOINT, null);
         final HttpEntity<Object> body = convertToBody(uuids);
-        if (!sendSuccess(url, body)) {
+        if (sendFailed(url, body)) {
             log.warn(String.format("Can't send %d uuids to synchronize with DNNT source!", uuids.size()));
         }
     }
 
-    public void clean(final Boolean recursively, final List<String> uuids) {
-        final Map<String, String> urlParams = createParams(null, recursively);
-        final String url = buildUrl(CLEAN_ENDPOINT, urlParams);
+    public void clean(final SugoMarkParams params, final List<String> uuids) {
+        final String url = buildUrl(CLEAN_ENDPOINT, params);
         final HttpEntity<Object> body = convertToBody(uuids);
-        if (!sendSuccess(url, body)) {
+        if (sendFailed(url, body)) {
             log.warn(String.format(
                     "Can't send %d uuids to %s clean all labels!",
-                    uuids.size(), recursively ? "recursively" : "non-recursively"
+                    uuids.size(),
+                    params.getRecursively() ? "recursively" : "non-recursively"
             ));
         }
     }
 
-    private Map<String, String> createParams(final DnntLabel label, final Boolean recursively) {
-        final Map<String, String> urlParams = new HashMap<>();
-        if (label != null) {
-            urlParams.put("label", label.getValue());
-        }
-        if (recursively != null) {
-            urlParams.put("recursive", recursively.toString());
-        }
-        return urlParams;
-    }
-
-    private String buildUrl(final String endpoint, final Map<String, String> urlParams) {
+    private String buildUrl(final String endpoint, final Object urlParams) {
         if (urlParams != null) {
             return ApiConfiguration.buildUri(sugoHost + "/" + endpoint, urlParams);
         } else {
@@ -95,8 +100,8 @@ public class SugoApi {
         return new HttpEntity<>(uuids);
     }
 
-    private boolean sendSuccess(final String url, final Object body) {
+    private boolean sendFailed(final String url, final Object body) {
         final ResponseEntity<String> response = restTemplate.postForEntity(url, body, String.class);
-        return response.getStatusCode().equals(HttpStatus.OK);
+        return !response.getStatusCode().equals(HttpStatus.ACCEPTED);
     }
 }

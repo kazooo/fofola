@@ -1,4 +1,4 @@
-package cz.mzk.fofola.enums.dnnt;
+package cz.mzk.fofola.constants.dnnt;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum DnntLabelLinkMode {
+public enum MarkMode {
 
     LINK("link"),
     UNLINK("unlink"),
@@ -16,8 +16,8 @@ public enum DnntLabelLinkMode {
     private final String value;
 
     @JsonCreator
-    public static DnntLabelLinkMode of(String value) {
-        for (DnntLabelLinkMode linkMode : DnntLabelLinkMode.values()) {
+    public static MarkMode of(String value) {
+        for (MarkMode linkMode : MarkMode.values()) {
             if (linkMode.value.equals(value)) {
                 return linkMode;
             }

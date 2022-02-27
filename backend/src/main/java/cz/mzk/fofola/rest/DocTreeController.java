@@ -1,4 +1,4 @@
-package cz.mzk.fofola.controller;
+package cz.mzk.fofola.rest;
 
 import com.google.gson.Gson;
 import cz.mzk.fofola.model.DocTreeNode;

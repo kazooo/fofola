@@ -1,4 +1,4 @@
-package cz.mzk.fofola.constants;
+package cz.mzk.fofola.constants.solr;
 
 public class SolrFieldName {
 

@@ -1,4 +1,4 @@
-package cz.mzk.fofola.enums.dnnt;
+package cz.mzk.fofola.constants.dnnt;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum DnntLabel {
+public enum Label {
 
     DNNTO("dnnto"),
     DNNTT("dnntt"),
@@ -15,12 +15,12 @@ public enum DnntLabel {
     private final String value;
 
     @JsonCreator
-    public static DnntLabel of(final String value) {
+    public static Label of(final String value) {
         if (value == null) {
             return null;
         }
 
-        for (final DnntLabel label : DnntLabel.values()) {
+        for (final Label label : Label.values()) {
             if (label.value.equals(value)) {
                 return label;
             }

@@ -1,5 +1,6 @@
 package cz.mzk.fofola.api;
 
+import cz.mzk.fofola.api.utils.RestTemplateException;
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.model.doc.Datastreams;
 import lombok.extern.slf4j.Slf4j;

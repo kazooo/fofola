@@ -1,12 +1,11 @@
-package cz.mzk.fofola.request;
+package cz.mzk.fofola.rest.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class UpdateVcRequest {
-    private String uuid;
+public class CreateVcRequest {
     private String nameCz;
     private String nameEn;
     private String descriptionCz;

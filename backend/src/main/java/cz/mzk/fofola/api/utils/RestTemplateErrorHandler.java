@@ -1,4 +1,4 @@
-package cz.mzk.fofola.api;
+package cz.mzk.fofola.api.utils;
 
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;

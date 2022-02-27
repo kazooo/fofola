@@ -1,6 +1,10 @@
 package cz.mzk.fofola.configuration;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.mzk.fofola.api.*;
+import cz.mzk.fofola.api.utils.PlusEncoderInterceptor;
+import cz.mzk.fofola.api.utils.RestTemplateErrorHandler;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -62,11 +66,16 @@ public class ApiConfiguration {
         return httpHeaders;
     }
 
-    public static String buildUri(String url, Map<String, ?> params) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-        for (Map.Entry<String, ?> entry : params.entrySet()) {
-            builder.queryParam(entry.getKey(), entry.getValue());
-        }
+    public static String buildUri(final String url, final Map<String, ?> params) {
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+        params.forEach(builder::queryParam);
+        return builder.encode().build().toUri().toString();
+    }
+
+    public static String buildUri(final String url, final Object objectParams) {
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.convertValue(objectParams, new TypeReference<Map<String,String>>(){}).forEach(builder::queryParam);
         return builder.encode().build().toUri().toString();
     }
 

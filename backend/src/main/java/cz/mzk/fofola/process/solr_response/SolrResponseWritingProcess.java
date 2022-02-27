@@ -1,7 +1,7 @@
 package cz.mzk.fofola.process.solr_response;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.enums.dnnt.DnntLabel;
+import cz.mzk.fofola.constants.dnnt.Label;
 import cz.mzk.fofola.model.doc.SolrField;
 import cz.mzk.fofola.model.process.Process;
 import cz.mzk.fofola.model.process.ProcessParams;
@@ -48,9 +48,9 @@ public class SolrResponseWritingProcess extends Process {
         field = (String) data.getOrDefault("field", null);
 
         final String dnntLabelRaw = (String) data.getOrDefault("dnntLabel", ANY_FIELD_VALUE);
-        final DnntLabel dnntLabel = DnntLabel.of(dnntLabelRaw);
-        if (dnntLabel != null) {
-            this.dnntLabel = dnntLabel.getValue();
+        final Label label = Label.of(dnntLabelRaw);
+        if (label != null) {
+            this.dnntLabel = label.getValue();
         } else {
             this.dnntLabel = dnntLabelRaw;
         }
