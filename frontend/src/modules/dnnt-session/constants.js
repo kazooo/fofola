@@ -113,6 +113,14 @@ export const SugoSessionStatuses = Object.freeze({
         text: 'ukončený',
         value: 'FINISHED',
     },
+    TerminatedByException: {
+        text: 'Zrušeno výjimkou',
+        value: 'TERMINATED_BY_EXCEPTION',
+    },
+    TerminatedByShutdown: {
+        text: 'Zrušeno vypínáním',
+        value: 'TERMINATED_BY_SHUTDOWN',
+    },
     Any: {
         text: 'jakýkoliv',
         value: 'any',
