@@ -25,7 +25,7 @@ import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
 task createDockerfile(type: Dockerfile) {
     dependsOn ':backend:bootJar'
     destFile.set(project.file('build/Dockerfile'))
-    from('adoptopenjdk/openjdk14:alpine-jre')
+    from('adoptopenjdk/openjdk16:jre-16.0.1_9')
     label(['maintainer': 'Aleksei Ermak "aleksei.ermak@gmail.com"'])
     copyFile(jarName, '/app/fofola.jar')
     entryPoint('java')
