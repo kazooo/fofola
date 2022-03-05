@@ -46,6 +46,10 @@ export const Model = Object.freeze({
         value: 'graphic',
         text: 'graphic',
     },
+    MONOGRAPHUNIT: {
+        value: 'monographunit',
+        text: 'monographunit',
+    },
 });
 
 export const Access = Object.freeze({
