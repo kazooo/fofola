@@ -5,29 +5,17 @@ import {ServiceContainer} from './ServiceContainer';
 import {ServiceCard} from './ServiceCard';
 import {Service} from './Service';
 import {requestEnvInfo} from './saga';
-import {getBuildTime, getCommitId, getGitBranch, getStartupTime, getVersion} from './slice';
+import {getAppInfo} from './slice';
 
 export const Home = () => {
     const dispatch = useDispatch();
-    const startupTime = useSelector(state => getStartupTime(state));
-    const buildTime = useSelector(state => getBuildTime(state));
-    const version = useSelector(state => getVersion(state));
-    const gitBranch = useSelector(state => getGitBranch(state));
-    const commitId = useSelector(state => getCommitId(state));
+    const appInfo = useSelector(getAppInfo);
 
     useEffect(() => {
         dispatch(requestEnvInfo());
     }, [dispatch]);
 
-    const info = {
-        startupTime,
-        buildTime,
-        version,
-        gitBranch,
-        commitId,
-    };
-
-    return <ServiceContainer title='Fofola' info={info}>
+    return <ServiceContainer title='Fofola' info={appInfo}>
         <ServiceCard title='Zobrazování metadat'>
             <Service link='/uuid-info'> Vypsat základní info o UUID </Service>
             <Service link='/solr-query'> Dotaz na Solr </Service>
