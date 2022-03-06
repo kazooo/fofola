@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {SugoSessionDirection, SugoSessionOperation, SugoSessionRequestor, SugoSessionStatuses} from "./constants";
+import {SugoSessionDirection, SugoSessionOperation, SugoSessionRequestor, SugoSessionStatuses} from '../constants';
 
 export const dnntSessionSlice = createSlice({
     name: 'dnntSession',

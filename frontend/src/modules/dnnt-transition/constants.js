@@ -1,4 +1,4 @@
-import {accesses, ExtendedFieldValue, models} from '../constants';
+import {accesses, ExtendedFieldValue, models, SugoSessionRequestor} from '../constants';
 
 export const columns = [
     {
@@ -68,6 +68,13 @@ export const columns = [
         label: 'Zdrojový UUID',
         width: 170,
         align: 'center',
+    },
+    {
+        id: 'requestor',
+        label: 'Requestor',
+        width: 100,
+        align: 'center',
+        format: value => Object.values(SugoSessionRequestor).find(requestor => requestor.value === value).text,
     },
 ];
 

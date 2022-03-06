@@ -30,7 +30,7 @@ import {
     sugoSessionDirections,
     sugoSessionOperations,
     sugoSessionRequestors,
-    sugoSessionStatuses} from './constants';
+    sugoSessionStatuses} from '../constants';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
