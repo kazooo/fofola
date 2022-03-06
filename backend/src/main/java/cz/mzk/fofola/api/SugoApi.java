@@ -1,9 +1,11 @@
 package cz.mzk.fofola.api;
 
 import cz.mzk.fofola.configuration.ApiConfiguration;
+import cz.mzk.fofola.model.dnnt.SugoDataPageDto;
 import cz.mzk.fofola.model.dnnt.SugoMarkParams;
 import cz.mzk.fofola.model.dnnt.SugoSessionPageDto;
 import cz.mzk.fofola.model.dnnt.SugoTransitionPageDto;
+import cz.mzk.fofola.rest.request.dnnt.SugoDataRequestFilter;
 import cz.mzk.fofola.rest.request.dnnt.SugoSessionRequestFilter;
 import cz.mzk.fofola.rest.request.dnnt.SugoTransitionRequestFilter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +28,25 @@ public class SugoApi {
     private final static String SYNC_ENDPOINT = "/api/command/sync";
     private final static String CLEAN_ENDPOINT = "/api/command/clean";
 
+    private final static String DATA_QUERY_ENDPOINT = "/api/query/data/complete";
     private final static String SESSION_QUERY_ENDPOINT = "/api/query/session";
     private final static String TRANSITION_QUERY_ENDPOINT = "/api/query/transition";
 
     public SugoApi(final String sugoHost, final RestTemplate restTemplate) {
         this.sugoHost = sugoHost;
         this.restTemplate = restTemplate;
+    }
+
+    public SugoDataPageDto getData(final SugoDataRequestFilter requestFilter) {
+        final String url = buildUrl(DATA_QUERY_ENDPOINT, null);
+        final HttpEntity<Object> body = convertToBody(requestFilter);
+        final ResponseEntity<SugoDataPageDto> response = send(url, body, SugoDataPageDto.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn("Can't get sessions from Sugo, response code: " + response.getStatusCode());
+            return SugoDataPageDto.builder().entities(List.of()).numFound(0L).build();
+        }
     }
 
     public SugoSessionPageDto getSessions(final SugoSessionRequestFilter requestFilter) {
@@ -110,12 +125,15 @@ public class SugoApi {
         }
     }
 
-    private HttpEntity<Object> convertToBody(final List<String> uuids) {
-        return new HttpEntity<>(uuids);
+    private HttpEntity<Object> convertToBody(final Object object) {
+        return new HttpEntity<>(object);
     }
 
-    private boolean sendFailed(final String url, final Object body) {
-        final ResponseEntity<String> response = restTemplate.postForEntity(url, body, String.class);
-        return !response.getStatusCode().equals(HttpStatus.ACCEPTED);
+    private <T> boolean sendFailed(final String url, final Object body) {
+        return !send(url, body, String.class).getStatusCode().equals(HttpStatus.ACCEPTED);
+    }
+
+    private <T> ResponseEntity<T> send(final String url, final Object body, final Class<T> responseClass) {
+        return restTemplate.postForEntity(url, body, responseClass);
     }
 }

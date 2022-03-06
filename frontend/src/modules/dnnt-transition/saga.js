@@ -72,6 +72,8 @@ function* requestWithLoading(action) {
         yield put(setNumFound(numFound));
         if (transitions) {
             yield put(setTransitions(transitions));
+        } else {
+            yield put(setTransitions([]));
         }
     } catch (e) {
         yield put(snackbar.error(cantLoadNextPage));

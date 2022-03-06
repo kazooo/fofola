@@ -14,6 +14,7 @@ import setImgModule from './set-image';
 import reindexModule from './reindex';
 import linkVcModule from './link-vc';
 import deleteModule from './delete';
+import dnntInfo from './dnnt-info';
 import homeModule from './home';
 import pdfModule from './pdf';
 
@@ -33,6 +34,7 @@ const modules = {
     setImgModule,
     linkVcModule,
     deleteModule,
+    dnntInfo,
     homeModule,
     pdfModule,
     vcModule,

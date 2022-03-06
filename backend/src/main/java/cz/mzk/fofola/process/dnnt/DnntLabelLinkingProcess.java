@@ -3,6 +3,7 @@ package cz.mzk.fofola.process.dnnt;
 import cz.mzk.fofola.api.SugoApi;
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
+import cz.mzk.fofola.constants.dnnt.BasicLabel;
 import cz.mzk.fofola.constants.dnnt.Label;
 import cz.mzk.fofola.constants.dnnt.MarkMode;
 import cz.mzk.fofola.model.dnnt.SugoMarkParams;
@@ -33,7 +34,7 @@ public class DnntLabelLinkingProcess extends Process {
         this.uuids = (List<String>) data.get("uuids");
 
         mode = MarkMode.of((String) data.get("mode"));
-        label = Label.of((String) data.get("label"));
+        label = BasicLabel.of((String) data.get("label"));
         processRecursive = (Boolean) data.get("processRecursive");
         this.sugoApi = ApiConfiguration.getSugoApi(fofolaConfig);
     }

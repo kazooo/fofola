@@ -1,7 +1,6 @@
 package cz.mzk.fofola.model.dnnt;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import cz.mzk.fofola.constants.dnnt.Label;
 import cz.mzk.fofola.model.dnnt.serializer.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,9 +29,9 @@ public class SugoTransitionDto {
     private String sourceIdentifier;
     private String sourceUuid;
 
-    private List<Label> currentLabels;
+    private List<String> currentLabels;
     private Boolean currentDnntFlag;
-    private List<Label> newLabels;
+    private List<String> newLabels;
     private Boolean newDnntFlag;
 
     private String notes;

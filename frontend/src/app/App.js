@@ -18,7 +18,8 @@ import {PerioPartsPublish} from '../modules/perio-parts/PerioPartsPublish';
 import {VcManagement} from '../modules/vc-management/VcManagement';
 import {LinkDnnt} from '../modules/dnnt-mark/LinkDnnt';
 import {DnntSession} from '../modules/dnnt-session/DnntSession';
-import {DnntTransition} from "../modules/dnnt-transition/DnntTransition";
+import {DnntTransition} from '../modules/dnnt-transition/DnntTransition';
+import {DnntInfo} from '../modules/dnnt-info/DnntInfo';
 import {Error404} from '../modules/404/Error404';
 
 export const App = () => (
@@ -42,6 +43,7 @@ export const App = () => (
                     <Route path='/dnnt-mark' component={LinkDnnt} />
                     <Route path='/dnnt-session' component={DnntSession} />
                     <Route path='/dnnt-transition' component={DnntTransition} />
+                    <Route path='/dnnt-info' component={DnntInfo} />
                     <Route component={Error404} />
             </Switch>
     </HashRouter>
