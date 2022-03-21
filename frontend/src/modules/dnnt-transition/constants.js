@@ -74,7 +74,7 @@ export const columns = [
         label: 'Requestor',
         width: 100,
         align: 'center',
-        format: value => Object.values(SugoSessionRequestor).find(requestor => requestor.value === value).text,
+        format: value => Object.values(SugoSessionRequestor).find(requestor => requestor.value === value)?.text,
     },
 ];
 

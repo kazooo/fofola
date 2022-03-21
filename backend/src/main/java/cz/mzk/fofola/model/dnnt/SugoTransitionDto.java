@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 public class SugoTransitionDto {
     private Long id;
+    private String requestor;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime changeDateTime;
