@@ -13,6 +13,13 @@ export const DnntLabel = Object.freeze({
     },
 });
 
+export const DnntLinkingMode = Object.freeze({
+    Link: 'link',
+    Unlink: 'unlink',
+    Synchronize: 'sync',
+    Clean: 'clean'
+});
+
 export const Model = Object.freeze({
     MONOGRAPH: {
         value: 'monograph',

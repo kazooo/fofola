@@ -1,25 +1,20 @@
-export const DnntLinkingMode = Object.freeze({
-    Link: 'link',
-    Unlink: 'unlink',
-    Synchronize: 'sync',
-    Clean: 'clean'
-});
+import {DnntLinkingMode} from '../constants';
 
 export const modes = [
     {
         value: DnntLinkingMode.Link,
-        text: "přidat"
+        text: 'přidat'
     },
     {
         value: DnntLinkingMode.Unlink,
-        text: "odebrat"
+        text: 'odebrat'
     },
     {
         value: DnntLinkingMode.Synchronize,
-        text: "synchronizovat"
+        text: 'synchronizovat'
     },
     {
         value: DnntLinkingMode.Clean,
-        text: "vyčistit"
+        text: 'vyčistit'
     }
 ];

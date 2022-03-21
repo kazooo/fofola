@@ -1,16 +1,16 @@
-import {useDispatch, useSelector} from "react-redux";
-import {Box} from "@material-ui/core";
+import {useDispatch, useSelector} from 'react-redux';
+import {Box} from '@material-ui/core';
 
 import {
     CloseIconButton,
     LockIconButton,
     RefreshIconButton,
     UnlockIconButton
-} from "../../components/button/iconbuttons";
-import {FofolaTable} from "../../components/table/FofolaTable";
-import {getOneUuidInfo, privateUuids, publicUuids, reindexUuids} from "./saga";
-import {getUuidInfo, removeUuidInfo} from "./slice";
-import {columns} from "./columns";
+} from '../../components/button/iconbuttons';
+import {FofolaTable} from '../../components/table/FofolaTable';
+import {getOneUuidInfo, privateUuids, publicUuids, reindexUuids} from './saga';
+import {getUuidInfo, removeUuidInfo} from './slice';
+import {columns} from './columns';
 
 export const UuidInfoPanel = () => {
 
@@ -23,11 +23,11 @@ export const UuidInfoPanel = () => {
                 <Box>
                     <RefreshIconButton
                         onClick={() => dispatch(getOneUuidInfo(row.uuid))}
-                        tooltip={"Obnovit"}
+                        tooltip={'Obnovit'}
                     />
                     <CloseIconButton
                         onClick={() => dispatch(removeUuidInfo(row.uuid))}
-                        tooltip={"Vymazat z tabulky"}
+                        tooltip={'Vymazat z tabulky'}
                     />
                 </Box>
             ),
@@ -36,19 +36,19 @@ export const UuidInfoPanel = () => {
                 <Box>
                     <RefreshIconButton
                         onClick={() => dispatch(reindexUuids([row.uuid]))}
-                        tooltip={"Reindexovat"}
+                        tooltip={'Reindexovat'}
                     />
                     <UnlockIconButton
                         onClick={() => dispatch(publicUuids([row.uuid]))}
-                        tooltip={"Zveřejnit"}
+                        tooltip={'Zveřejnit'}
                     />
                     <LockIconButton
                         onClick={() => dispatch(privateUuids([row.uuid]))}
-                        tooltip={"Zneveřejnit"}
+                        tooltip={'Zneveřejnit'}
                     />
                 </Box>
         }));
-    }
+    };
 
     const preparedRows = createDataWithButtons(uuidInfo);
 

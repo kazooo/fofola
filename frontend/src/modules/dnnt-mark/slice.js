@@ -1,6 +1,6 @@
-import {createSelector, createSlice} from "@reduxjs/toolkit";
-import {DnntLinkingMode} from "./constants";
-import {DnntLabel} from "../constants";
+import {createSelector, createSlice} from '@reduxjs/toolkit';
+import {DnntLinkingMode} from '../constants';
+import {DnntLabel} from '../constants';
 
 export const linkDnntSlice = createSlice({
     name: 'linkDnnt',
@@ -57,4 +57,4 @@ export const getProcessRecursiveByMode = createSelector(
 );
 
 export const {addUuids, clearUuids, setLabel, setMode, setProcessRecursive} = linkDnntSlice.actions;
-export const createActionType = actionName => linkDnntSlice.name + "/" + actionName;
+export const createActionType = actionName => linkDnntSlice.name + '/' + actionName;

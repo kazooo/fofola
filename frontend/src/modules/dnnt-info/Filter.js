@@ -6,6 +6,7 @@ import {ClearButton, SearchButton} from '../../components/button';
 
 import {LoadStringsFromFileForm} from '../../components/form/LoadStringsFromFileForm';
 import {requestInfoPage} from './saga';
+import {clearInfo} from './slice';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -53,6 +54,7 @@ export const Filter = () => {
     };
 
     const clear = () => {
+        dispatch(clearInfo());
         setInternalUuid('');
         setSourceUuid('');
         setCnb('');

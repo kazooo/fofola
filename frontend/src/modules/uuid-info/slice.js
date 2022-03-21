@@ -1,7 +1,7 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
 export const uuidInfoSlice = createSlice({
-    name: "uuidInfo",
+    name: 'uuidInfo',
     initialState: {
         uuidInfo: []
     },
@@ -23,4 +23,4 @@ export const uuidInfoSlice = createSlice({
 
 export const getUuidInfo = state => state.uuidInfoModule.uuidInfo;
 export const {addUuidInfo, addOneUuidInfo, removeUuidInfo, clearUuidInfo} = uuidInfoSlice.actions;
-export const createActionType = actionName => uuidInfoSlice.name + "/" + actionName;
+export const createActionType = actionName => uuidInfoSlice.name + '/' + actionName;

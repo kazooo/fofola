@@ -1,5 +1,10 @@
 export const columns = [
     {
+        id: 'tableAction',
+        maxWidth: 30,
+        align: 'center',
+    },
+    {
         id: 'uuid',
         label: 'Interní UUID',
         width: 300,
@@ -52,6 +57,12 @@ export const columns = [
         id: 'sourceLicence',
         label: 'Zdrojová licence',
         width: 70,
+        align: 'center',
+    },
+    {
+        id: 'action',
+        label: 'Akce',
+        maxWidth: 100,
         align: 'center',
     },
 ];

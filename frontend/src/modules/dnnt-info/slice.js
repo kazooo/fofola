@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
 export const dnntInfoSlice = createSlice({
     name: 'dnntInfo',
@@ -9,6 +9,13 @@ export const dnntInfoSlice = createSlice({
     reducers: {
         setInfo: (state, action) => {
             state.info = action.payload;
+        },
+        removeInfo: (state, action) => {
+            const {uuid, sourceIdentifier} = action.payload;
+            state.info = state.info.filter(info => info.uuid !== uuid && info.sourceIdentifier !== sourceIdentifier);
+        },
+        clearInfo: (state, action) => {
+            state.info = [];
         },
         toggleIsLoading: (state, action) => {
             state.isLoading = !state.isLoading;
@@ -21,6 +28,8 @@ export const getIsLoading = state => state.dnntInfo.isLoading;
 
 export const {
     setInfo,
+    removeInfo,
+    clearInfo,
     toggleIsLoading,
 } = dnntInfoSlice.actions;
 
