@@ -14,9 +14,11 @@ import {
     getFromDateTime,
     getInternalUuid,
     getModel,
+    getRequestor,
     getSourceIdentifier,
     getSourceUuid,
-    getToDateTime, setNumFound,
+    getToDateTime,
+    setNumFound,
     setTransitions,
     toggleIsLoading
 } from './slice';
@@ -44,6 +46,7 @@ function* requestWithLoading(action) {
     const cnb = yield select(getCnb);
     const sourceIdentifier = yield select(getSourceIdentifier);
     const sourceUuid = yield select(getSourceUuid);
+    const requestor = yield select(getRequestor);
 
     /* filter 'any' values */
     const queryParams = Object.entries(
@@ -55,6 +58,7 @@ function* requestWithLoading(action) {
             cnb,
             sourceIdentifier,
             sourceUuid,
+            requestor,
             from: fromDateTime && moment(fromDateTime, DATE_PATTERN).format(OUTPUT_DATE_PATTERN),
             to: toDateTime && moment(toDateTime, DATE_PATTERN).format(OUTPUT_DATE_PATTERN)
         }

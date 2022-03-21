@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {ExtendedFieldValue} from '../constants';
+
+import {ExtendedFieldValue, SugoSessionRequestor} from '../constants';
 
 export const dnntTransitionSlice = createSlice({
     name: 'dnntTransition',
@@ -16,6 +17,7 @@ export const dnntTransitionSlice = createSlice({
         cnb: '',
         sourceIdentifier: '',
         sourceUuid: '',
+        requestor: SugoSessionRequestor.Any.value,
     },
     reducers: {
         setTransitions: (state, action) => {
@@ -60,6 +62,9 @@ export const dnntTransitionSlice = createSlice({
         setSourceUuid: (state, action) => {
             state.sourceUuid = action.payload;
         },
+        setRequestor: (state, action) => {
+            state.requestor = action.payload;
+        },
     },
 });
 
@@ -74,13 +79,14 @@ export const getAccess = state => state.dnntTransitionModule.access;
 export const getCnb = state => state.dnntTransitionModule.cnb;
 export const getSourceIdentifier = state => state.dnntTransitionModule.sourceIdentifier;
 export const getSourceUuid = state => state.dnntTransitionModule.sourceUuid;
+export const getRequestor = state => state.dnntTransitionModule.requestor;
 export const getIsPaginatorEnabled = state => state.dnntTransitionModule.numFound > 0;
 
 export const {
     setTransitions, setNumFound, toggleIsLoading,
     setCurrentPage, setFromDateTime, setToDateTime,
     setInternalUuid, setModel,
-    setAccess, setCnb, setSourceIdentifier, setSourceUuid
+    setAccess, setCnb, setSourceIdentifier, setSourceUuid, setRequestor
 } = dnntTransitionSlice.actions;
 
 export const createActionType = actionName => `${dnntTransitionSlice.name}/${actionName}`;

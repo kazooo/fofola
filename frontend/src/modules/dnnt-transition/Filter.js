@@ -11,12 +11,15 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 
 import {SearchButton} from '../../components/button';
+import {sugoSessionRequestors} from '../constants';
+
 import {
     getAccess,
     getCnb,
     getFromDateTime,
     getInternalUuid,
     getModel,
+    getRequestor,
     getSourceIdentifier,
     getSourceUuid,
     getToDateTime,
@@ -26,6 +29,7 @@ import {
     setFromDateTime,
     setInternalUuid,
     setModel,
+    setRequestor,
     setSourceIdentifier,
     setSourceUuid,
     setToDateTime
@@ -52,6 +56,7 @@ export const Filter = () => {
     const cnb = useSelector(getCnb);
     const sourceIdentifier = useSelector(getSourceIdentifier);
     const sourceUuid = useSelector(getSourceUuid);
+    const requestor = useSelector(getRequestor);
 
     const createOptions = options => options.map((option, index) => (
         <MenuItem key={index} value={option.value}>
@@ -61,6 +66,7 @@ export const Filter = () => {
 
     const modelOptions = createOptions(extendedModels);
     const accessOptions = createOptions(extendedAccesses);
+    const requestors = createOptions(sugoSessionRequestors);
 
     const changeDateFrom = (date) => {
         dispatch(setFromDateTime(date));
@@ -92,6 +98,10 @@ export const Filter = () => {
 
     const changeSourceUuid = (uuid) => {
         dispatch(setSourceUuid(uuid));
+    };
+
+    const changeRequestor = (requestor) => {
+        dispatch(setRequestor(requestor));
     };
 
     const searchTransitions = () => {
@@ -179,6 +189,15 @@ export const Filter = () => {
                     placeholder='uuid:...'
                     classNames={classes.formControl}
                     onChange={changeSourceUuid}
+                />
+            </Grid>
+            <Grid item>
+                <SelectorField
+                    label='Requestor'
+                    value={requestor}
+                    onChange={changeRequestor}
+                    options={requestors}
+                    classNames={classes.formControl}
                 />
             </Grid>
             <Grid item>

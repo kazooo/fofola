@@ -14,6 +14,7 @@ import java.util.List;
 public class SugoTransitionRequestFilter {
     private List<Long> ids;
     private List<Long> sessionIds;
+    private String requestor;
     private String from;
     private String to;
 
