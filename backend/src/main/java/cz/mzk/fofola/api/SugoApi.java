@@ -71,49 +71,69 @@ public class SugoApi {
         }
     }
 
-    public void mark(final SugoMarkParams params, final List<String> uuids) {
+    public Long mark(final SugoMarkParams params, final List<String> uuids) {
         final String url = buildUrl(MARK_ENDPOINT, params);
         final HttpEntity<Object> body = convertToBody(uuids);
-        if (sendFailed(url, body)) {
+        final ResponseEntity<Long> sugoResponse = send(url, body, Long.class);
+
+        if (!sugoResponse.getStatusCode().equals(HttpStatus.ACCEPTED)) {
             log.warn(String.format(
                     "Can't send %d uuids to %s mark by %s label!",
                     uuids.size(),
                     params.getRecursively() ? "recursively" : "non-recursively",
                     params.getLabel().getValue()
             ));
+            return -1L;
+        } else {
+            return sugoResponse.getBody();
         }
     }
 
-    public void unmark(final SugoMarkParams params, final List<String> uuids) {
+    public Long unmark(final SugoMarkParams params, final List<String> uuids) {
         final String url = buildUrl(UNMARK_ENDPOINT, params);
         final HttpEntity<Object> body = convertToBody(uuids);
-        if (sendFailed(url, body)) {
+        final ResponseEntity<Long> sugoResponse = send(url, body, Long.class);
+
+        if (!sugoResponse.getStatusCode().equals(HttpStatus.ACCEPTED)) {
             log.warn(String.format(
                     "Can't send %d uuids to %s unmark by %s label!",
                     uuids.size(),
                     params.getRecursively() ? "recursively" : "non-recursively",
                     params.getLabel().getValue()
             ));
+            return -1L;
+        } else {
+            return sugoResponse.getBody();
         }
     }
 
-    public void sync(final List<String> uuids) {
+    public Long sync(final List<String> uuids) {
         final String url = buildUrl(SYNC_ENDPOINT, null);
         final HttpEntity<Object> body = convertToBody(uuids);
-        if (sendFailed(url, body)) {
+        final ResponseEntity<Long> sugoResponse = send(url, body, Long.class);
+
+        if (!sugoResponse.getStatusCode().equals(HttpStatus.ACCEPTED)) {
             log.warn(String.format("Can't send %d uuids to synchronize with DNNT source!", uuids.size()));
+            return -1L;
+        } else {
+            return sugoResponse.getBody();
         }
     }
 
-    public void clean(final SugoMarkParams params, final List<String> uuids) {
+    public Long clean(final SugoMarkParams params, final List<String> uuids) {
         final String url = buildUrl(CLEAN_ENDPOINT, params);
         final HttpEntity<Object> body = convertToBody(uuids);
-        if (sendFailed(url, body)) {
+        final ResponseEntity<Long> sugoResponse = send(url, body, Long.class);
+
+        if (!sugoResponse.getStatusCode().equals(HttpStatus.ACCEPTED)) {
             log.warn(String.format(
                     "Can't send %d uuids to %s clean all labels!",
                     uuids.size(),
                     params.getRecursively() ? "recursively" : "non-recursively"
             ));
+            return -1L;
+        } else {
+            return sugoResponse.getBody();
         }
     }
 
@@ -127,10 +147,6 @@ public class SugoApi {
 
     private HttpEntity<Object> convertToBody(final Object object) {
         return new HttpEntity<>(object);
-    }
-
-    private <T> boolean sendFailed(final String url, final Object body) {
-        return !send(url, body, String.class).getStatusCode().equals(HttpStatus.ACCEPTED);
     }
 
     private <T> ResponseEntity<T> send(final String url, final Object body, final Class<T> responseClass) {

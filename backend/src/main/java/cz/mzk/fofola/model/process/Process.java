@@ -9,7 +9,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-
 public abstract class Process {
 
     private final FileHandler fileHandler;
@@ -20,9 +19,8 @@ public abstract class Process {
     protected Process(ProcessParams params) throws IOException {
         this.params = params;
         eventNotifier = params.getEventNotifier();
-        SimpleFormatter formatter = new SimpleFormatter();
         fileHandler = FileService.getLogFileHandler(params.getId() + ".log");
-        fileHandler.setFormatter(formatter);
+        fileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(fileHandler);
         logger.setUseParentHandlers(false);
     }

@@ -145,6 +145,14 @@ export const SugoSessionStatuses = Object.freeze({
         text: 'ukončený',
         value: 'FINISHED',
     },
+    FinishedWithNegligibleIssues: {
+        text: 'ukončený se zanedbatelnými chybami',
+        value: 'FINISHED_WITH_NEGLIGIBLE_ISSUES',
+    },
+    FinishedWithSeriousIssues: {
+        text: 'ukončený se závažnými chybami',
+        value: 'FINISHED_WITH_SERIOUS_ISSUES',
+    },
     TerminatedByException: {
         text: 'zrušeno výjimkou',
         value: 'TERMINATED_BY_EXCEPTION',

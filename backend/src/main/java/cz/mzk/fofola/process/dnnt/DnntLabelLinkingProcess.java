@@ -41,18 +41,27 @@ public class DnntLabelLinkingProcess extends Process {
 
     @Override
     public TerminationReason process() throws Exception {
+        logger.info(String.format(
+                "Label %s, mode %s, processRecursive %s, documents %d",
+                label.getValue(), mode.getValue(), processRecursive.toString(), uuids.size()
+        ));
+        uuids.forEach(logger::info);
+
         final SugoMarkParams params = SugoMarkParams.builder()
                 .label(label)
                 .recursively(processRecursive)
                 .build();
 
+        final Long sugoSessionId;
         switch (mode) {
-            case LINK -> sugoApi.mark(params, uuids);
-            case UNLINK -> sugoApi.unmark(params, uuids);
-            case SYNC -> sugoApi.sync(uuids);
-            case CLEAN -> sugoApi.clean(params, uuids);
+            case LINK -> sugoSessionId = sugoApi.mark(params, uuids);
+            case UNLINK -> sugoSessionId = sugoApi.unmark(params, uuids);
+            case SYNC -> sugoSessionId = sugoApi.sync(uuids);
+            case CLEAN -> sugoSessionId = sugoApi.clean(params, uuids);
             default -> throw new IllegalArgumentException("Bad mode for DNNT linker: " + mode.getValue() + "!");
         }
+
+        logger.info("Sugo session id is " + sugoSessionId);
 
         return null;
     }
