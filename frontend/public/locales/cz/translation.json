@@ -1,0 +1,8 @@
+{
+  "feature": {
+    "delete": {
+      "title": "Mazání dokumentů",
+      "description": "Tady můžete naplanovat process mazání dokumentů. Fofola definuje process mazání v Krameriu, ten pak můžete vidět v administratorském rozhrání. V závislosti na zaškrtnutých checkboxech, můžete vymazat dokument pouze ze Solru, a to jak rekurzivně tak i jenom zadané UUID."
+    }
+  }
+}

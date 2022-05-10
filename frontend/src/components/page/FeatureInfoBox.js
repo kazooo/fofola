@@ -1,4 +1,5 @@
 import {Box, Grid, makeStyles, Typography} from '@material-ui/core';
+import {useTranslation} from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
     box: {
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 export const FeatureInfoBox = ({title, description}) => {
 
     const classes = useStyles();
+    const {t} = useTranslation();
 
     return (
         <Box className={classes.box}>
@@ -23,9 +25,9 @@ export const FeatureInfoBox = ({title, description}) => {
                 <Grid item xs={6}>
                     <Box className={classes.content}>
                         <Typography variant='h6' align='center' gutterBottom>
-                            {title}
+                            {t(title)}
                         </Typography>
-                        {description}
+                        {t(description)}
                     </Box>
                 </Grid>
             </Grid>
