@@ -1,12 +1,13 @@
-import {createAction} from "@reduxjs/toolkit";
-import {call, put, takeEvery} from "redux-saga/effects";
+import {createAction} from '@reduxjs/toolkit';
+import {call, put, takeEvery} from 'redux-saga/effects';
 
-import {request} from "../../utils/superagent";
-import {snackbar} from "../../utils/snack/saga";
-import {clearUuids, createActionType} from "./slice";
-import {getCantDeleteUuidsMsg, getDeleteUuidsMsg} from "../../utils/constants/messages";
+import {getCantDeleteUuidsMsg, getDeleteUuidsMsg} from '../../utils/constants/messages';
+import {snackbar} from '../../utils/snack/saga';
+import {request} from '../../utils/superagent';
 
-const DELETE_UUIDS = createActionType("DELETE_UUIDS");
+import {clearUuids, createActionType} from './slice';
+
+const DELETE_UUIDS = createActionType('DELETE_UUIDS');
 
 export const deleteUuids = createAction(DELETE_UUIDS);
 
@@ -15,10 +16,11 @@ export default function* watcherSaga() {
 }
 
 function* deleteSaga(action) {
-    const uuids = action.payload;
+    const { uuids, deleteFromSolrOnly, deleteRecursively } = action.payload;
     try {
         yield call(() => request
-            .delete("/delete")
+            .delete('/delete')
+            .query({ deleteFromSolrOnly, deleteRecursively })
             .send(uuids)
         );
         yield put(snackbar.success(getDeleteUuidsMsg(uuids.length)));

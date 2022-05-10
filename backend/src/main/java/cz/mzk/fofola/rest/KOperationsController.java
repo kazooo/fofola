@@ -70,11 +70,24 @@ public class KOperationsController {
 
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@RequestBody List<String> uuids) {
+    public void delete(@RequestParam final boolean deleteFromSolrOnly,
+                       @RequestParam final boolean deleteRecursively,
+                       @RequestBody final List<String> uuids) {
         for (String uuid : uuids) {
             uuid = UuidService.makeUuid(uuid);
-            log.info("Delete: " + uuid);
-            kProcessService.delete(uuid);
+
+            log.info(
+                    String.format(
+                            "Delete: %s, from index: %b, recursively: %b",
+                            uuid, deleteFromSolrOnly, deleteRecursively
+                    )
+            );
+
+            if (deleteFromSolrOnly) {
+                kProcessService.deleteFromIndex(uuid, deleteRecursively);
+            } else {
+                kProcessService.delete(uuid);
+            }
         }
     }
 }

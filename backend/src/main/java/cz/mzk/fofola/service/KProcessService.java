@@ -27,4 +27,12 @@ public class KProcessService {
     public KrameriusProcess delete(String uuid) {
         return krameriusApi.planNewProcess("delete", uuid, uuid);
     }
+
+    public KrameriusProcess deleteFromIndex(final String uuid, final boolean recursively) {
+        if (recursively) {
+            return krameriusApi.planNewProcess("reindex", "deleteDocument", uuid, uuid);
+        } else {
+            return krameriusApi.planNewProcess("reindex", "deletePid", uuid, uuid);
+        }
+    }
 }

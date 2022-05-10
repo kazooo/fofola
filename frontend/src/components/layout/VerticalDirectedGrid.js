@@ -4,6 +4,7 @@ import {Box, Grid} from "@material-ui/core";
 export const VerticalDirectedGrid = ({
                                   children,
                                   border = 0,
+                                  spacing = 0,
                                   borderRadius = 0,
                                   width = "inherited",
                                   height = "inherited",
@@ -30,6 +31,7 @@ export const VerticalDirectedGrid = ({
     >
         <Grid container
               direction="column"
+              spacing={spacing}
               alignItems={alignItems}
         >
             {gridItems}
