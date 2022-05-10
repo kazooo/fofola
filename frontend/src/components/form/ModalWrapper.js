@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
 import {Box, Button, Grid, Modal, Typography} from '@material-ui/core';
+import {useTranslation} from 'react-i18next';
+import React, {useState} from 'react';
 
 const style = {
     position: 'absolute',
@@ -16,6 +17,7 @@ const style = {
 
 export const ModalWrapper = ({children, callback, title, titleColor, description, okMsg, cancelMsg}) => {
     const [open, setOpen] = useState(false);
+    const {t} = useTranslation();
 
     const openModal = () => setOpen(true);
     const closeModal = () => setOpen(false);
@@ -44,24 +46,24 @@ export const ModalWrapper = ({children, callback, title, titleColor, description
                     <Grid container direction={'column'} spacing={3}>
                         <Grid item>
                             <Typography id='modal-modal-title' color={titleColor} align={'center'}>
-                                {title}
+                                {t(title)}
                             </Typography>
                         </Grid>
                         <Grid item>
                             <Typography id='modal-modal-description' align={'center'}>
-                                {description}
+                                {t(description)}
                             </Typography>
                         </Grid>
                         <Grid item>
                             <Grid container direction={'row'}>
                                 <Grid item xs={6} align='center'>
                                     <Button onClick={handleCancel} color={'primary'}>
-                                        {cancelMsg}
+                                        {t(cancelMsg)}
                                     </Button>
                                 </Grid>
                                 <Grid item xs={6} align='center'>
                                     <Button onClick={handleOk} color={'primary'}>
-                                        {okMsg}
+                                        {t(okMsg)}
                                     </Button>
                                 </Grid>
                             </Grid>

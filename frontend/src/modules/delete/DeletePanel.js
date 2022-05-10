@@ -2,8 +2,9 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {HorizontalDirectedGrid} from '../../components/layout/HorizontalDirectedGrid';
 import {VerticalDirectedGrid} from '../../components/layout/VerticalDirectedGrid';
+import {LabeledCheckbox} from '../../components/form/LabeledCheckbox';
 import {ClearButton, DeleteButton} from '../../components/button';
-import {Checkbox} from '../../components/form/Checkbox';
+import {ModalWrapper} from '../../components/form/ModalWrapper';
 import {InlineP} from '../../components/page/InlineP';
 
 import {deleteUuids} from './saga';
@@ -23,8 +24,7 @@ export const DeletePanel = () => {
     const deleteFromSolrOnly = useSelector(getDeleteFromSolrOnly);
     const deleteRecursively = useSelector(getDeleteRecursively);
 
-    const handleOnClick = (e) => {
-        e.preventDefault();
+    const handleOnClick = () => {
         dispatch(deleteUuids({ uuids, deleteFromSolrOnly, deleteRecursively }));
         handleToggleDeleteFromSolrOnly();
     };
@@ -48,15 +48,15 @@ export const DeletePanel = () => {
     return uuids.length > 0 && (
         <VerticalDirectedGrid>
             <HorizontalDirectedGrid>
-                <Checkbox
-                    label={'Smazat pouze ze Solru'}
+                <LabeledCheckbox
+                    label={'feature.delete.form.deleteFromSolrOnly'}
                     onChange={handleToggleDeleteFromSolrOnly}
                     checked={deleteFromSolrOnly}
                 />
                 {
                     deleteFromSolrOnly && (
-                        <Checkbox
-                            label={'Smazat rekurzivně'}
+                        <LabeledCheckbox
+                            label={'feature.delete.form.deleteRecursively'}
                             onChange={handleToggleDeleteRecursively}
                             checked={deleteRecursively}
                         />
@@ -64,9 +64,23 @@ export const DeletePanel = () => {
                 }
             </HorizontalDirectedGrid>
             <HorizontalDirectedGrid spacing={10}>
-                <DeleteButton onClick={handleOnClick}>Vymazat</DeleteButton>
+                <ModalWrapper
+                    callback={handleOnClick}
+                    title={'common.title.warning'}
+                    titleColor={'secondary'}
+                    description={
+                        deleteFromSolrOnly ?
+                            'feature.delete.confirmSolrOnly'
+                            :
+                            'feature.delete.confirmComplete'
+                    }
+                    okMsg={'common.yes'}
+                    cancelMsg={'common.no'}
+                >
+                    <DeleteButton />
+                </ModalWrapper>
                 <InlineP>Celkem: {uuids.length}</InlineP>
-                <ClearButton onClick={clear}>Vyčistit</ClearButton>
+                <ClearButton onClick={clear} />
             </HorizontalDirectedGrid>
         </VerticalDirectedGrid>
     );

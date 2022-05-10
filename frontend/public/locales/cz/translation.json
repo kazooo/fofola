@@ -1,8 +1,25 @@
 {
+  "common": {
+    "yes": "Ano",
+    "no": "Ne",
+    "title": {
+      "warning": "POZOR"
+    },
+    "button": {
+      "delete": "Vymazat",
+      "clear": "Vyčistit"
+    }
+  },
   "feature": {
     "delete": {
       "title": "Mazání dokumentů",
-      "description": "Tady můžete naplanovat process mazání dokumentů. Fofola definuje process mazání v Krameriu, ten pak můžete vidět v administratorském rozhrání. V závislosti na zaškrtnutých checkboxech, můžete vymazat dokument pouze ze Solru, a to jak rekurzivně tak i jenom zadané UUID."
+      "description": "Tady můžete naplanovat process mazání dokumentů. Fofola definuje process mazání v Krameriu, ten pak můžete vidět v administratorském rozhrání. V závislosti na zaškrtnutých checkboxech, můžete vymazat dokumenty pouze ze Solru, a to jak rekurzivně tak i jenom zadané UUID.",
+      "form": {
+        "deleteFromSolrOnly": "Smazat pouze ze Solru",
+        "deleteRecursively": "Smazat rekurzivně"
+      },
+      "confirmComplete": "Chcete opravdu smazat zadané UUID z Krameria? Reimport je jediná možnost vratit vymazané dokumenty.",
+      "confirmSolrOnly": "Chcete opravdu smazat zadané UUID ze Solru? Reindexací můžete vratit vymazané dokumenty."
     }
   }
 }

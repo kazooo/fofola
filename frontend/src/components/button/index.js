@@ -1,5 +1,5 @@
-import privateImg from "../../img/private.png";
-import {Button} from "@material-ui/core";
+import privateImg from '../../img/private.png';
+import {Button} from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import ClearIcon from '@material-ui/icons/Clear';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
@@ -8,6 +8,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import PublishIcon from '@material-ui/icons/Publish';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
+import {useTranslation} from 'react-i18next';
 
 export const StartButton = ({children, onClick}) => (
     <IconButton
@@ -18,14 +19,18 @@ export const StartButton = ({children, onClick}) => (
     </IconButton>
 );
 
-export const ClearButton = ({children, onClick}) => (
-    <IconButton
-        icon={<ClearIcon />}
-        onClick={onClick}
-    >
-        {children}
-    </IconButton>
-);
+export const ClearButton = ({onClick}) => {
+    const {t} = useTranslation();
+
+    return (
+        <IconButton
+            icon={<ClearIcon />}
+            onClick={onClick}
+        >
+            {t('common.button.clear')}
+        </IconButton>
+    );
+};
 
 export const LockButton = ({children, onClick}) => (
     <IconButton
@@ -45,14 +50,18 @@ export const UnlockButton = ({children, onClick}) => (
     </IconButton>
 );
 
-export const DeleteButton = ({children, onClick}) => (
-    <IconButton
-        icon={<DeleteOutlineIcon />}
-        onClick={onClick}
-    >
-        {children}
-    </IconButton>
-);
+export const DeleteButton = ({onClick}) => {
+    const {t} = useTranslation();
+
+    return (
+        <IconButton
+            icon={<DeleteOutlineIcon/>}
+            onClick={onClick}
+        >
+            {t('common.button.delete')}
+        </IconButton>
+    );
+}
 
 export const UploadButton = ({children, onClick, onChange = null, type = null}) => (
     <IconButton
@@ -83,10 +92,10 @@ export const SearchButton = ({children, onClick}) => (
     </IconButton>
 );
 
-const IconButton = ({children, icon, onClick, onChange = null, type = "input"}) => (
+const IconButton = ({children, icon, onClick, onChange = null, type = 'input'}) => (
     <Button
-        variant="contained"
-        component="label"
+        variant='contained'
+        component='label'
         onClick={onClick}
         onChange={onChange}
         type={type}
@@ -106,15 +115,15 @@ const ImgButton = ({title, img, onClick}) => {
 
     return <button onClick={handleOnClick} title={title} style={{
         background: {img},
-        width: "20px",
-        height: "20px",
-        border: "0",
-        backgroundSize: "100%",
-        marginLeft: "5px",
-        marginRight: "5px",
+        width: '20px',
+        height: '20px',
+        border: '0',
+        backgroundSize: '100%',
+        marginLeft: '5px',
+        marginRight: '5px',
     }}/>;
 };
 
 export const MakePrivateButton = ({onClick}) => (
-    <ImgButton title={""} img={privateImg} onClick={onClick} />
+    <ImgButton title={''} img={privateImg} onClick={onClick} />
 );
