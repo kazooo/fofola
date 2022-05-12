@@ -1,8 +1,14 @@
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
+
 import './Service.css';
 
-export const Service = (props) => (
-    <Link to={props.link} className="button">
-        {props.children}
-    </Link>
-);
+export const Service = ({title, link}) => {
+    const {t} = useTranslation();
+    
+    return (
+        <Link to={link} className='button'>
+            {t(title)}
+        </Link>
+    );
+};

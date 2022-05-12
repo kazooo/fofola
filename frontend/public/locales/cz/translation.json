@@ -1,4 +1,15 @@
 {
+  "home": {
+    "title": "Fofola",
+    "section": {
+      "displayMetadata": "Zobrazování metadat",
+      "editMetadata": "Editace metadat",
+      "virtualCollection": "Virtuální sbírky",
+      "sugo": "Sugo",
+      "internal": "Interní věci"
+    }
+  },
+
   "common": {
     "yes": "Ano",
     "no": "Ne",
@@ -10,8 +21,49 @@
       "clear": "Vyčistit"
     }
   },
+
   "feature": {
+    "uuidInfo": {
+      "title": "Vypsat základní info o UUID"
+    },
+
+    "solrQuery": {
+      "title": "Dotaz na Solr"
+    },
+
+    "krameriusProcess": {
+      "title": "Správa procesů"
+    },
+
+    "pdf": {
+      "title": "Generování PDF"
+    },
+
+    "access": {
+      "title": "Změnit viditelnost dokumentů"
+    },
+
+    "reindex": {
+      "title": "Reindexace dokumentů"
+    },
+
+    "delete": {
+      "title": "Mazání dokumentů",
+      "description": "Tady můžete naplanovat process mazání dokumentů. Fofola definuje process mazání v Krameriu, ten pak můžete vidět v administratorském rozhrání. V závislosti na zaškrtnutých checkboxech, můžete vymazat dokumenty pouze ze Solru, a to jak rekurzivně tak i jenom zadané UUID.",
+      "form": {
+        "deleteFromSolrOnly": "Smazat pouze ze Solru",
+        "deleteRecursively": "Smazat rekurzivně"
+      },
+      "confirmComplete": "Chcete opravdu smazat zadané UUID z Krameria? Reimport je jediná možnost vratit vymazané dokumenty.",
+      "confirmSolrOnly": "Chcete opravdu smazat zadané UUID ze Solru? Reindexací můžete vratit vymazané dokumenty."
+    },
+
+    "perioPartsPublish": {
+      "title": "Zveřejnit části periodik"
+    },
+
     "vcManagement": {
+      "title": "Založit/editovat virtuální sbírku",
       "tab": {
         "create": "Založit virtuální sbírku",
         "edit": "Editovat virtuální sbírku"
@@ -36,15 +88,37 @@
         "error": "Chyba při načtení virtuálních sbírek!"
       }
     },
-    "delete": {
-      "title": "Mazání dokumentů",
-      "description": "Tady můžete naplanovat process mazání dokumentů. Fofola definuje process mazání v Krameriu, ten pak můžete vidět v administratorském rozhrání. V závislosti na zaškrtnutých checkboxech, můžete vymazat dokumenty pouze ze Solru, a to jak rekurzivně tak i jenom zadané UUID.",
-      "form": {
-        "deleteFromSolrOnly": "Smazat pouze ze Solru",
-        "deleteRecursively": "Smazat rekurzivně"
-      },
-      "confirmComplete": "Chcete opravdu smazat zadané UUID z Krameria? Reimport je jediná možnost vratit vymazané dokumenty.",
-      "confirmSolrOnly": "Chcete opravdu smazat zadané UUID ze Solru? Reindexací můžete vratit vymazané dokumenty."
+
+    "linkVc": {
+      "title": "Přídat/odstranit do/z virtuální sbírky"
+    },
+
+    "linkDonator": {
+      "title": "Přídat/odstranit příznak donátoru"
+    },
+
+    "checkDonator": {
+      "title": "Kontrola příznaku donátoru"
+    },
+
+    "dnntInfo": {
+      "title": "Vyhledávání v SDNNT"
+    },
+
+    "dnntMark": {
+      "title": "Přídat/odstranit DNNT label"
+    },
+
+    "dnntTransitions": {
+      "title": "Přehled interních změn v DNNT labelech"
+    },
+
+    "dnntSessions": {
+      "title": "DNNT processy"
+    },
+
+    "internalProcesses": {
+      "title": "Processy Fofoly"
     }
   }
 }

@@ -1,5 +1,5 @@
-import saga from "./saga";
-import {homeSlice} from "./slice";
+import saga from './saga';
+import {homeSlice} from './slice';
 
 const homeModule = {
     saga,

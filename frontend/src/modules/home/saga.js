@@ -1,14 +1,14 @@
-import {createAction} from "@reduxjs/toolkit";
-import {call, put, takeEvery} from "redux-saga/effects";
+import {createAction} from '@reduxjs/toolkit';
+import {call, put, takeEvery} from 'redux-saga/effects';
 import moment from 'moment';
 
-import {cantLoadEnvInfo} from "../../utils/constants/messages";
-import {snackbar} from "../../utils/snack/saga";
-import {request} from "../../utils/superagent";
+import {cantLoadEnvInfo} from '../../utils/constants/messages';
+import {snackbar} from '../../utils/snack/saga';
+import {request} from '../../utils/superagent';
 
-import {createActionType, setAppInfo} from "./slice";
+import {createActionType, setAppInfo} from './slice';
 
-export const REQUEST_ENV_INFO = createActionType("REQUEST_ENV_INFO");
+export const REQUEST_ENV_INFO = createActionType('REQUEST_ENV_INFO');
 
 export const requestEnvInfo = createAction(REQUEST_ENV_INFO);
 
@@ -20,8 +20,8 @@ export default function* watcherSaga() {
 
 function* requestEnvInfoSaga() {
     try {
-        const startupPayload = yield call(() => request.get("/management/startup"));
-        const infoPayload = yield call(() => request.get("/management/info"));
+        const startupPayload = yield call(() => request.get('/management/startup'));
+        const infoPayload = yield call(() => request.get('/management/info'));
 
         const startupTimeRaw = startupPayload.body?.timeline?.startTime;
         const buildTimeRaw = infoPayload.body?.build?.time;

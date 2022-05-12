@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
 export const homeSlice = createSlice({
     name: 'home',
@@ -19,5 +19,5 @@ export const homeSlice = createSlice({
 });
 
 export const getAppInfo = state => state.homeModule.appInfo;
-export const createActionType = actionName => homeSlice.name + "/" + actionName;
+export const createActionType = actionName => homeSlice.name + '/' + actionName;
 export const {setAppInfo} = homeSlice.actions;
