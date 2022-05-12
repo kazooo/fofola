@@ -1,5 +1,5 @@
-import React from "react";
-import {Tab, Tabs} from "@material-ui/core";
+import React from 'react';
+import {Tab, Tabs} from '@material-ui/core';
 
 export const Options = ({children, classes, value, handleChange}) => {
 
@@ -8,8 +8,8 @@ export const Options = ({children, classes, value, handleChange}) => {
     });
 
     return <Tabs
-        orientation="vertical"
-        variant="scrollable"
+        orientation='vertical'
+        variant='scrollable'
         value={value}
         onChange={handleChange}
         className={classes.options}

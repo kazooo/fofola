@@ -1,5 +1,5 @@
-import saga from "./saga";
-import {vcSlice} from "./slice";
+import saga from './saga';
+import {vcSlice} from './slice';
 
 const vcModule = {
     saga,

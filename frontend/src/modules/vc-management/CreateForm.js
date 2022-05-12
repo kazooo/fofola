@@ -1,13 +1,17 @@
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
-import {Box} from "@material-ui/core";
+import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {useTranslation} from 'react-i18next';
+import {Box} from '@material-ui/core';
 
-import {Buttons, Panel, VCDescriptions, VCNames} from "./components";
-import {createVirtualCollection} from "./saga";
-import {AddButton, ClearButton} from "../../components/button";
+import {AddButton, ClearButton} from '../../components/button';
+
+import {Buttons, Panel, VCDescriptions, VCNames} from './components';
+import {createVirtualCollection} from './saga';
 
 export const CreateForm = () => {
     const dispatch = useDispatch();
+    const {t} = useTranslation();
+
     const [nameCz, setNameCz] = useState('');
     const [nameEn, setNameEn] = useState('');
     const [descriptionCz, setDescriptionCz] = useState('');
@@ -30,7 +34,7 @@ export const CreateForm = () => {
 
     const buttonFuncs = {
         actionButton: <AddButton onClick={createVc}>Vytvořit</AddButton>,
-        cleanButton: <ClearButton onClick={handleClear}>Vyčistit</ClearButton>,
+        cleanButton: <ClearButton onClick={handleClear} />,
         setFullImg,
         setThumbImg,
     };
@@ -38,11 +42,11 @@ export const CreateForm = () => {
     const panelItems = [
         {
             style: {
-                width: "70%"
+                width: '70%'
             },
             component: (
                 <Box style={{padding: '9px'}}>
-                    Zadejte názvy a texty virtuální sbírky v češtině a angličtině, Kramerius doplní UUID sbírky samostatně.
+                    {t('feature.vcManagement.form.description')}
                 </Box>
             ),
         }

@@ -11,6 +11,31 @@
     }
   },
   "feature": {
+    "vcManagement": {
+      "tab": {
+        "create": "Založit virtuální sbírku",
+        "edit": "Editovat virtuální sbírku"
+      },
+      "confirmDelete": "Chcete opravdu smazat vybranou virtuální sbírku?",
+      "form": {
+        "description": "Zadejte názvy a texty virtuální sbírky v češtině a angličtině, Kramerius doplní UUID sbírky samostatně.",
+        "vcName": "Název virtuální sbirky",
+        "vcNameCz": "Název virtuální sbírky v češtině",
+        "vcNameEn": "Název virtuální sbírky v angličtině",
+        "vcDescriptionCz": "Popis virtuální sbírky v češtině",
+        "vcDescriptionEn": "Popis virtuální sbírky v angličtině"
+      },
+      "button": {
+        "loadVcs": "Načíst aktuální virtuální sbírky",
+        "chooseFullImg": "Vybrat FULL obrázek",
+        "chooseThumbImg": "Vybrat THUMB obrázek",
+        "delete": "Vymazat sbírku"
+      },
+      "loading": {
+        "active": "Načítám virtuální sbírky...",
+        "error": "Chyba při načtení virtuálních sbírek!"
+      }
+    },
     "delete": {
       "title": "Mazání dokumentů",
       "description": "Tady můžete naplanovat process mazání dokumentů. Fofola definuje process mazání v Krameriu, ten pak můžete vidět v administratorském rozhrání. V závislosti na zaškrtnutých checkboxech, můžete vymazat dokumenty pouze ze Solru, a to jak rekurzivně tak i jenom zadané UUID.",

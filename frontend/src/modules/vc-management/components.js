@@ -1,7 +1,9 @@
-import React from "react";
-import {Box, Grid, TextField} from "@material-ui/core";
-import {UploadButton} from "../../components/button";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {Box, Grid, TextField} from '@material-ui/core';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+
+import {UploadButton} from '../../components/button';
 
 export const styles = {
     stringInputStyle: {
@@ -20,9 +22,9 @@ export const styles = {
 
 const containerProps = {
     spacing: 2,
-    alignContent: "center",
-    justifyContent: "center",
-    alignItems: "center",
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
 };
 
 export const Panel = ({items}) => {
@@ -33,7 +35,7 @@ export const Panel = ({items}) => {
     );
 
     return (
-        <Box style={styles.wrapperStyle} width={"100%"}>
+        <Box style={styles.wrapperStyle} width={'100%'}>
             <Grid container style={styles.containerStyle} {...containerProps}>
                 {gridItems}
             </Grid>
@@ -42,13 +44,15 @@ export const Panel = ({items}) => {
 }
 
 export const VCNames = ({nameCz, nameEn, setNameCz, setNameEn}) => {
+    const {t} = useTranslation();
+
     return (
         <Box style={styles.wrapperStyle}>
             <Grid container style={styles.containerStyle} {...containerProps}>
                 <Grid item xs={6}>
                     <TextField
-                        label="Název virtuální sbírky v češtině"
-                        variant="outlined"
+                        label={t('feature.vcManagement.form.vcNameCz')}
+                        variant='outlined'
                         value={nameCz}
                         style={styles.stringInputStyle}
                         onChange={e => setNameCz(e.target.value)}
@@ -56,8 +60,8 @@ export const VCNames = ({nameCz, nameEn, setNameCz, setNameEn}) => {
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
-                        label="Název virtuální sbírky v angličtině"
-                        variant="outlined"
+                        label={t('feature.vcManagement.form.vcNameEn')}
+                        variant='outlined'
                         value={nameEn}
                         style={styles.stringInputStyle}
                         onChange={e => setNameEn(e.target.value)}
@@ -69,28 +73,30 @@ export const VCNames = ({nameCz, nameEn, setNameCz, setNameEn}) => {
 };
 
 export const VCDescriptions = ({textCz, textEn, setTextCz, setTextEn}) => {
+    const {t} = useTranslation();
+
     return (
         <Box style={styles.wrapperStyle}>
             <Grid container style={styles.containerStyle} {...containerProps}>
                 <Grid item xs={6}>
                     <TextField
-                        label="Popis virtuální sbírky v češtině"
+                        label={t('feature.vcManagement.form.vcDescriptionCz')}
                         multiline
                         rows={10}
                         value={textCz}
                         style={styles.textInputStyle}
-                        variant="outlined"
+                        variant='outlined'
                         onChange={e => setTextCz(e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
-                        label="Popis virtuální sbírky v angličtině"
+                        label={t('feature.vcManagement.form.vcDescriptionEn')}
                         multiline
                         rows={10}
                         value={textEn}
                         style={styles.textInputStyle}
-                        variant="outlined"
+                        variant='outlined'
                         onChange={e => setTextEn(e.target.value)}
                     />
                 </Grid>
@@ -103,29 +109,29 @@ export const Buttons = ({anyContent, ready, loaded, actionButton, deleteButton, 
     return (
         <Box style={styles.wrapperStyle}>
             <Grid container style={styles.containerStyle}>
-                <Grid item xs={3} align="center">
-                    <UploadImgButton img={fullImg} setFunc={setFullImg} label={"Vybrat FULL obrázek"} />
+                <Grid item xs={3} align='center'>
+                    <UploadImgButton img={fullImg} setFunc={setFullImg} label={'feature.vcManagement.button.chooseFullImg'} />
                 </Grid>
-                <Grid item xs={3} align="center">
-                    <UploadImgButton img={thumbImg} setFunc={setThumbImg} label={"Vybrat THUMB obrázek"} />
+                <Grid item xs={3} align='center'>
+                    <UploadImgButton img={thumbImg} setFunc={setThumbImg} label={'feature.vcManagement.button.chooseThumbImg'} />
                 </Grid>
                 {
                     anyContent && cleanButton && (
-                        <Grid item xs={2} align="center">
+                        <Grid item xs={2} align='center'>
                             {cleanButton}
                         </Grid>
                     )
                 }
                 {
                     loaded && deleteButton && (
-                        <Grid item xs={2} align="center">
+                        <Grid item xs={2} align='center'>
                             {deleteButton}
                         </Grid>
                     )
                 }
                 {
                     ready && actionButton && (
-                        <Grid item xs={2} align="center">
+                        <Grid item xs={2} align='center'>
                             {actionButton}
                         </Grid>
                     )
@@ -136,17 +142,19 @@ export const Buttons = ({anyContent, ready, loaded, actionButton, deleteButton, 
 };
 
 const UploadImgButton = ({label, img, setFunc}) => {
+    const {t} = useTranslation();
+
     const uploadImg = e => {
         const file = e.target.files[0];
         setFunc(file);
     };
 
     return (
-        <Grid container justifyContent={"center"} alignItems={"center"}>
+        <Grid container justifyContent={'center'} alignItems={'center'}>
             <Grid item>
                 <UploadButton onChange={uploadImg}>
-                    {label}
-                    <input type="file" hidden />
+                    {t(label)}
+                    <input type='file' hidden />
                 </UploadButton>
             </Grid>
             {

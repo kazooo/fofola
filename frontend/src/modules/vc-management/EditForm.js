@@ -1,19 +1,23 @@
-import React, {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {Box, TextField} from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useDispatch, useSelector} from 'react-redux';
+import {Box, TextField} from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
-import {deleteVirtualCollection, loadVirtualCollections, updateVirtualCollection} from "./saga";
-import {RefreshIconButton} from "../../components/button/iconbuttons";
-import {Buttons, Panel, VCDescriptions, VCNames} from "./components";
-import {ModalWrapper} from "../../components/form/ModalWrapper";
-import {AddButton, ClearButton} from "../../components/button";
-import {Error} from "../../components/info/Error";
-import {getIsLoadingError, getVcs} from "./slice";
+import {HorizontallyCenteredBox} from '../../components/layout/HorizontallyCenteredBox';
+import {RefreshIconButton} from '../../components/button/iconbuttons';
+import {ModalWrapper} from '../../components/form/ModalWrapper';
+import {AddButton, ClearButton} from '../../components/button';
+import {Error} from '../../components/info/Error';
+
+import {deleteVirtualCollection, loadVirtualCollections, updateVirtualCollection} from './saga';
+import {Buttons, Panel, VCDescriptions, VCNames} from './components';
+import {getIsLoadingError, getVcs} from './slice';
 
 export const EditForm = () => {
     const dispatch = useDispatch();
+    const {t} = useTranslation();
+    
     const [uuid, setUuid] = useState(null);
     const [nameCz, setNameCz] = useState('');
     const [nameEn, setNameEn] = useState('');
@@ -70,20 +74,20 @@ export const EditForm = () => {
     const deleteButton = (
         <ModalWrapper
             callback={deleteVc}
-            title={'POZOR'}
+            title={'common.title.warning'}
             titleColor={'secondary'}
-            description={'Chcete opravdu smazat vybranou virtuální sbírku?'}
-            okMsg={'Ano'}
-            cancelMsg={'Ne'}
+            description={'feature.vcManagement.confirmDelete'}
+            okMsg={'common.yes'}
+            cancelMsg={'common.no'}
         >
-            <ClearButton>Vymazat sbírku</ClearButton>
+            <ClearButton label={'feature.vcManagement.button.delete'} />
         </ModalWrapper>
     );
 
     const buttonFuncs = {
         actionButton: <AddButton onClick={updateVc}>Upravit</AddButton>,
         deleteButton,
-        cleanButton: <ClearButton onClick={cleanValues}>Vyčistit</ClearButton>,
+        cleanButton: <ClearButton onClick={cleanValues} />,
         setFullImg,
         setThumbImg,
     };
@@ -91,7 +95,7 @@ export const EditForm = () => {
     const panelItems = [
         {
             style: {
-                width: "50%",
+                width: '50%',
             },
             component: (
                 <Autocomplete
@@ -102,9 +106,9 @@ export const EditForm = () => {
                     renderInput={(params) =>
                         <TextField
                             {...params}
-                            label="Název virtuální sbirky"
-                            variant="outlined"
-                            size="small"
+                            label={t('feature.vcManagement.form.vcName')}
+                            variant='outlined'
+                            size='small'
                         />
                     }
                 />
@@ -114,7 +118,7 @@ export const EditForm = () => {
             component: (
                 <RefreshIconButton
                     onClick={reloadVcs}
-                    tooltip={"Načíst aktuální virtuální sbírky"}
+                    tooltip={t('feature.vcManagement.button.loadVcs')}
                 />
             )
         }
@@ -151,14 +155,14 @@ export const EditForm = () => {
 
     const error = (
         <HorizontallyCenteredBox>
-             <Box mt={"20%"}>
-                 <Error label={'Chyba při načtení virtuálních sbírek!'} />
+             <Box mt={'20%'}>
+                 <Error label={t('feature.vcManagement.loading.error')} />
              </Box>
         </HorizontallyCenteredBox>
     );
 
     return (
-      <Box height={"100%"}>
+      <Box height={'100%'}>
           {
               isLoadingError ? error : content
           }

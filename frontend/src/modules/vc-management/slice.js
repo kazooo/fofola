@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
 export const vcSlice = createSlice({
     name: 'vcSlice',
@@ -23,5 +23,5 @@ export const vcSlice = createSlice({
 export const getVcs = state => state.vcModule.vcs;
 export const getIsLoading = state => state.vcModule.isLoading;
 export const getIsLoadingError = state => state.vcModule.isLoadingError;
-export const createActionType = actionName => vcSlice.name + "/" + actionName;
+export const createActionType = actionName => vcSlice.name + '/' + actionName;
 export const {setVcs, setIsLoading, setIsLoadingError} = vcSlice.actions;

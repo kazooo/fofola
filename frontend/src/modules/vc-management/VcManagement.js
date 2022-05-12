@@ -1,12 +1,12 @@
-import {useEffect} from "react";
-import {useDispatch} from "react-redux";
-import {makeStyles} from "@material-ui/core";
+import {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {makeStyles} from '@material-ui/core';
 
-import {HorizontallyCenteredBox} from "../../components/layout/HorizontallyCenteredBox";
-import {FofolaPage} from "../../components/page/FofolaPage";
+import {HorizontallyCenteredBox} from '../../components/layout/HorizontallyCenteredBox';
+import {FofolaPage} from '../../components/page/FofolaPage';
 
-import {loadVirtualCollections} from "./saga";
-import {Sidebar} from "./Sidebar";
+import {loadVirtualCollections} from './saga';
+import {Sidebar} from './Sidebar';
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -33,7 +33,7 @@ i18n
 
         // react i18next special options (optional)
         react: {
-            useSuspense: false,
+            useSuspense: true,
             wait: false,
         },
     });

@@ -19,7 +19,7 @@ export const StartButton = ({children, onClick}) => (
     </IconButton>
 );
 
-export const ClearButton = ({onClick}) => {
+export const ClearButton = ({onClick, label = 'common.button.clear'}) => {
     const {t} = useTranslation();
 
     return (
@@ -27,7 +27,7 @@ export const ClearButton = ({onClick}) => {
             icon={<ClearIcon />}
             onClick={onClick}
         >
-            {t('common.button.clear')}
+            {t(label)}
         </IconButton>
     );
 };
@@ -50,7 +50,7 @@ export const UnlockButton = ({children, onClick}) => (
     </IconButton>
 );
 
-export const DeleteButton = ({onClick}) => {
+export const DeleteButton = ({onClick, label = 'common.button.delete'}) => {
     const {t} = useTranslation();
 
     return (
@@ -58,7 +58,7 @@ export const DeleteButton = ({onClick}) => {
             icon={<DeleteOutlineIcon/>}
             onClick={onClick}
         >
-            {t('common.button.delete')}
+            {t(label)}
         </IconButton>
     );
 }

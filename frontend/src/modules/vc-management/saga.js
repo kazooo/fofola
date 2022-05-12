@@ -1,14 +1,8 @@
-import {call, put, select, takeEvery} from "redux-saga/effects";
-import {createAction} from "@reduxjs/toolkit";
+import {call, put, select, takeEvery} from 'redux-saga/effects';
+import {createAction} from '@reduxjs/toolkit';
 
-import {request} from "../../utils/superagent";
-import {
-    createActionType, getVcs,
-    setIsLoading,
-    setIsLoadingError,
-    setVcs,
-} from "./slice";
-import {snackbar} from "../../utils/snack/saga";
+import {request} from '../../utils/superagent';
+import {snackbar} from '../../utils/snack/saga';
 import {
     cantCreateVcMsg,
     cantDeleteVcMsg,
@@ -17,7 +11,15 @@ import {
     successCreateVcMsg,
     successDeleteVcMsg,
     successUpdateVcMsg
-} from "../../utils/constants/messages";
+} from '../../utils/constants/messages';
+
+import {
+    createActionType,
+    getVcs,
+    setIsLoading,
+    setIsLoadingError,
+    setVcs,
+} from './slice';
 
 const LOAD_VCS = createActionType('LOAD_VCS');
 const CREATE_VC = createActionType('CREATE_VC');
@@ -100,20 +102,20 @@ function createVcRequest(action) {
 
     const formData = new FormData();
 
-    formData.append("fullImg", fullImg);
-    formData.append("thumbImg", thumbImg);
+    formData.append('fullImg', fullImg);
+    formData.append('thumbImg', thumbImg);
 
     formData.append('vcData', new Blob([
             JSON.stringify({
-                    "uuid": uuid,
-                    "nameCz": nameCz,
-                    "nameEn": nameEn,
-                    "descriptionCz": descriptionCz,
-                    "descriptionEn": descriptionEn,
+                    'uuid': uuid,
+                    'nameCz': nameCz,
+                    'nameEn': nameEn,
+                    'descriptionCz': descriptionCz,
+                    'descriptionEn': descriptionEn,
                 }
             )],
         {
-            type: "application/json"
+            type: 'application/json'
         })
     );
 
