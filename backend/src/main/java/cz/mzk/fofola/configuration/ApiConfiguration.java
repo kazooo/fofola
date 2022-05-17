@@ -3,6 +3,8 @@ package cz.mzk.fofola.configuration;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.mzk.fofola.api.*;
+import cz.mzk.fofola.api.fedora.FedoraApi;
+import cz.mzk.fofola.api.fedora.RIApi;
 import cz.mzk.fofola.api.utils.PlusEncoderInterceptor;
 import cz.mzk.fofola.api.utils.RestTemplateErrorHandler;
 import org.apache.commons.codec.binary.Base64;
@@ -55,6 +57,12 @@ public class ApiConfiguration {
     public static SugoApi getSugoApi(final FofolaConfiguration config) {
         final ClientHttpRequestFactory factory = createRequestFactory(config);
         return new SugoApi(config.getSugoHost(), createConfiguredTemplate(factory));
+    }
+
+    @Bean
+    public static RIApi getRIApi(final FofolaConfiguration config)
+            throws TransformerConfigurationException, ParserConfigurationException {
+        return new RIApi(getFedoraApi(config));
     }
 
     public static HttpHeaders createAuthHeaders(String user, String pswd) {

@@ -1,6 +1,6 @@
 package cz.mzk.fofola.process.img_editing;
 
-import cz.mzk.fofola.api.FedoraApi;
+import cz.mzk.fofola.api.fedora.FedoraApi;
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
 import cz.mzk.fofola.model.doc.Datastreams;

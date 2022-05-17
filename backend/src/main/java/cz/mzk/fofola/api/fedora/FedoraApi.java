@@ -1,10 +1,12 @@
-package cz.mzk.fofola.api;
+package cz.mzk.fofola.api.fedora;
 
 import cz.mzk.fofola.api.utils.RestTemplateException;
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.model.doc.Datastreams;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
@@ -23,7 +25,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
+import java.util.Optional;
 
 @Slf4j
 public class FedoraApi {
@@ -60,14 +62,38 @@ public class FedoraApi {
         return getDatastream(uuid, Datastreams.DC.name);
     }
 
-    private Document getDatastream(String uuid, String dsName) {
+    public String getTextCz(String uuid) {
+        return getDatastreamContent(uuid, Datastreams.TEXT_CS.name);
+    }
+
+    public String getTextEn(String uuid) {
+        return getDatastreamContent(uuid, Datastreams.TEXT_EN.name);
+    }
+
+    public String getLongTextCz(String uuid) {
+        return getDatastreamContent(uuid, Datastreams.LONG_TEXT_CS.name);
+    }
+
+    public String getLongTextEn(String uuid) {
+        return getDatastreamContent(uuid, Datastreams.LONG_TEXT_EN.name);
+    }
+
+    private Document getDatastream(final String uuid, final String dsName) {
         return getFedoraResource(fedoraHost + "/get/" + uuid + "/" + dsName);
     }
 
-    private Document getFedoraResource(String url) {
+    private String getDatastreamContent(final String uuid, final String dsName) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, String.class);
-            String docStr = Objects.requireNonNull(response.getBody());
+            return getFedoraTextResource(fedoraHost + "/objects/" + uuid + "/datastreams/" + dsName + "/content");
+        } catch (RestTemplateException e) {
+            log.warn("Error trying to get Fedora resource: " + e.getError());
+        }
+        return null;
+    }
+
+    private Document getFedoraResource(final String url) {
+        try {
+            final String docStr = Objects.requireNonNull(getFedoraTextResource(url));
             return xmlParser.parse(new InputSource(new StringReader(docStr)));
         } catch (SAXException | IOException e) {
             log.warn("XML parsing exception for " + url);
@@ -75,6 +101,10 @@ public class FedoraApi {
             log.warn("Error trying to get Fedora resource: " + e.getError());
         }
         return null;
+    }
+
+    private String getFedoraTextResource(final String url) {
+        return restTemplate.exchange(url, HttpMethod.GET, authHttpEntity, String.class).getBody();
     }
 
     public void setRelsExt(String uuid, Document relsExt) throws IOException, TransformerException {
@@ -129,6 +159,10 @@ public class FedoraApi {
         return new HttpEntity<>(image.getResource(), authMimeTypeHeader(mimeType));
     }
 
+    private HttpEntity<Object> formDataEntity(final MultiValueMap<Object, Object> formData, final String mimeType) {
+        return new HttpEntity<>(formData, authMimeTypeHeader(mimeType));
+    };
+
     private HttpHeaders authMimeTypeHeader(String mimeType) {
         HttpHeaders headers = new HttpHeaders(authHeaders);
         headers.setContentType(MediaType.parseMediaType(mimeType));
@@ -156,5 +190,26 @@ public class FedoraApi {
         if (!response.getStatusCode().equals(HttpStatus.CREATED))
             throw new IOException("POST " + dataStream.name + " for " + uuid +
                     ": Cannot set datastream, unexpected code " + response.getStatusCode());
+    }
+
+    public Optional<String> queryRi(final String query) throws IOException {
+        final String url = fedoraHost + "/risearch";
+
+        final MultiValueMap<Object, Object> formData = new LinkedMultiValueMap<>() {{
+            add("type", "triples");
+            add("lang", "spo");
+            add("format", "N-Triples");
+            add("dt", "on");
+            add("query", query);
+        }};
+
+        final ResponseEntity<String> response = restTemplate.postForEntity(
+                url, formDataEntity(formData, MediaType.APPLICATION_FORM_URLENCODED.toString()), String.class
+        );
+
+        if (!response.getStatusCode().equals(HttpStatus.OK)) {
+            throw new IOException("POST /risearch: Cannot query Resource Index, unexpected code " + response.getStatusCode());
+        }
+        return Optional.ofNullable(response.getBody());
     }
 }

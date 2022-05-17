@@ -1,7 +1,5 @@
 package cz.mzk.fofola.rest;
 
-import cz.mzk.fofola.api.KrameriusApi;
-import cz.mzk.fofola.model.vc.VC;
 import cz.mzk.fofola.model.vc.VirtualCollection;
 import cz.mzk.fofola.rest.request.vc.CreateVcRequest;
 import cz.mzk.fofola.rest.request.vc.DeleteVcRequest;
@@ -24,19 +22,17 @@ import java.util.*;
 @Slf4j
 public class VcController {
 
-    private final KrameriusApi krameriusApi;
     private final VcService vcService;
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<VirtualCollection> getAllVcs() {
+    public List<VirtualCollection> getAllVcs() throws IOException {
         log.info("Got a request to return all virtual collections.");
 
-        final List<VC> vcList = krameriusApi.getAllVirtualCollections();
-        final List<VirtualCollection> virtualCollections = new ArrayList<>();
-        vcList.forEach(vc -> virtualCollections.add(VirtualCollection.from(vc)));
-        virtualCollections.sort(Comparator.comparing(VirtualCollection::getNameCz));
-        return virtualCollections;
+        final List<VirtualCollection> virtualCollections = vcService.getAllVcs();
+        return virtualCollections.stream()
+                .sorted(Comparator.comparing(VirtualCollection::getNameCz))
+                .toList();
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
