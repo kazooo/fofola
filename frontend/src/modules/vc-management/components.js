@@ -105,7 +105,7 @@ export const VCDescriptions = ({textCz, textEn, setTextCz, setTextEn}) => {
     );
 };
 
-export const Buttons = ({anyContent, ready, loaded, actionButton, deleteButton, cleanButton, fullImg, setFullImg, thumbImg, setThumbImg}) => {
+export const Buttons = ({anyContent, loaded, actionButton, deleteButton, cleanButton, fullImg, setFullImg, thumbImg, setThumbImg}) => {
     return (
         <Box style={styles.wrapperStyle}>
             <Grid container style={styles.containerStyle}>
@@ -130,7 +130,7 @@ export const Buttons = ({anyContent, ready, loaded, actionButton, deleteButton, 
                     )
                 }
                 {
-                    ready && actionButton && (
+                    loaded && actionButton && (
                         <Grid item xs={2} align='center'>
                             {actionButton}
                         </Grid>

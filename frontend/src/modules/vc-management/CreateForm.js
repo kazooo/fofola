@@ -33,7 +33,7 @@ export const CreateForm = () => {
     };
 
     const buttonFuncs = {
-        actionButton: <AddButton onClick={createVc}>Vytvořit</AddButton>,
+        actionButton: <AddButton onClick={createVc} label={"common.button.create"} />,
         cleanButton: <ClearButton onClick={handleClear} />,
         setFullImg,
         setThumbImg,

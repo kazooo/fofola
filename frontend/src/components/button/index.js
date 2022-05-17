@@ -74,14 +74,18 @@ export const UploadButton = ({children, onClick, onChange = null, type = null}) 
     </IconButton>
 );
 
-export const AddButton = ({children, onClick}) => (
-    <IconButton
-        icon={<AddIcon />}
-        onClick={onClick}
-    >
-        {children}
-    </IconButton>
-);
+export const AddButton = ({onClick, label = 'common.button.add'}) => {
+    const {t} = useTranslation();
+
+    return (
+        <IconButton
+            icon={<AddIcon/>}
+            onClick={onClick}
+        >
+            {t(label)}
+        </IconButton>
+    );
+};
 
 export const SearchButton = ({children, onClick}) => (
     <IconButton

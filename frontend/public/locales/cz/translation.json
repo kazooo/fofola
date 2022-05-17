@@ -17,6 +17,9 @@
       "warning": "POZOR"
     },
     "button": {
+      "add": "Přidat",
+      "create": "Vytvořit",
+      "edit": "Upravit",
       "delete": "Vymazat",
       "clear": "Vyčistit"
     }

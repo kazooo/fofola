@@ -40,10 +40,10 @@ export const EditForm = () => {
 
     const loadVcUuid = (event, values) => {
         if (values) {
-            setNameCz(values.nameCz);
-            setNameEn(values.nameEn);
-            setDescriptionCz(values.descriptionCz);
-            setDescriptionEn(values.descriptionEn);
+            setNameCz(values.nameCz ? values.nameCz : '');
+            setNameEn(values.nameEn ? values.nameEn : '');
+            setDescriptionCz(values.descriptionCz ? values.descriptionCz : '');
+            setDescriptionEn(values.descriptionEn ? values.descriptionEn : '');
             setAutocompleteValue(values);
             setUuid(values.uuid);
         } else {
@@ -85,7 +85,7 @@ export const EditForm = () => {
     );
 
     const buttonFuncs = {
-        actionButton: <AddButton onClick={updateVc}>Upravit</AddButton>,
+        actionButton: <AddButton onClick={updateVc} label={"common.button.edit"} />,
         deleteButton,
         cleanButton: <ClearButton onClick={cleanValues} />,
         setFullImg,
@@ -144,7 +144,6 @@ export const EditForm = () => {
 
             <Buttons
                 anyContent={nameCz || nameEn || descriptionCz || descriptionEn || fullImg || thumbImg}
-                ready={nameCz && nameEn && descriptionCz && descriptionEn}
                 loaded={uuid && uuid !== ''}
                 fullImg={fullImg}
                 thumbImg={thumbImg}
@@ -162,10 +161,10 @@ export const EditForm = () => {
     );
 
     return (
-      <Box height={'100%'}>
-          {
-              isLoadingError ? error : content
-          }
-      </Box>
+        <Box height={'100%'}>
+            {
+                isLoadingError ? error : content
+            }
+        </Box>
     );
 };

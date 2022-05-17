@@ -24,18 +24,12 @@ public class VcService {
 
     public String updateVc(final VirtualCollection virtualCollection) throws IOException {
         final String uuid = virtualCollection.getUuid();
-        if (virtualCollection.getNameCz() != null) {
-            fedoraApi.setTextCz(uuid, virtualCollection.getNameCz());
-        }
-        if (virtualCollection.getNameEn() != null) {
-            fedoraApi.setTextEn(uuid, virtualCollection.getNameEn());
-        }
-        if (virtualCollection.getDescriptionCz() != null) {
-            fedoraApi.setLongTextCz(uuid, virtualCollection.getDescriptionCz());
-        }
-        if (virtualCollection.getDescriptionEn() != null) {
-            fedoraApi.setLongTextEn(uuid, virtualCollection.getDescriptionEn());
-        }
+
+        fedoraApi.setTextCz(uuid, virtualCollection.getNameCz());
+        fedoraApi.setTextEn(uuid, virtualCollection.getNameEn());
+        fedoraApi.setLongTextCz(uuid, virtualCollection.getDescriptionCz());
+        fedoraApi.setLongTextEn(uuid, virtualCollection.getDescriptionEn());
+
         if (virtualCollection.getFullImg() != null) {
             fedoraApi.setFullImg(uuid, virtualCollection.getFullImg());
         }
