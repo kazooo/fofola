@@ -28,8 +28,8 @@ const containerProps = {
 };
 
 export const Panel = ({items}) => {
-    const gridItems = items.map(item =>
-        <Grid item style={item.style}>
+    const gridItems = items.map((item, i) =>
+        <Grid item key={i} style={item.style}>
             {item.component}
         </Grid>
     );
