@@ -47,6 +47,7 @@ public class VcService {
     private VirtualCollection toVc(final RITriple triple) {
         final String uuid = triple.getObject();
         return VirtualCollection.builder()
+                .uuid(uuid)
                 .nameCz(fedoraApi.getTextCz(uuid))
                 .nameEn(fedoraApi.getTextEn(uuid))
                 .descriptionCz(fedoraApi.getLongTextCz(uuid))

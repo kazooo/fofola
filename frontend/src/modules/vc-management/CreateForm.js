@@ -71,7 +71,7 @@ export const CreateForm = () => {
 
         <Buttons
             anyContent={nameCz || nameEn || descriptionCz || descriptionEn || fullImg || thumbImg}
-            ready={nameCz && nameEn && descriptionCz && descriptionEn}
+            loaded={nameCz && nameEn && descriptionCz && descriptionEn}
             fullImg={fullImg}
             thumbImg={thumbImg}
             {...buttonFuncs}
