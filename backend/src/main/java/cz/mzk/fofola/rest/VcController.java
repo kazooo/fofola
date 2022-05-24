@@ -31,6 +31,11 @@ public class VcController {
 
         final List<VirtualCollection> virtualCollections = vcService.getAllVcs();
         return virtualCollections.stream()
+                .peek(vc -> {
+                    if (vc.getNameCz() == null) {
+                        vc.setNameCz("Unnamed virtual collection");
+                    }
+                })
                 .sorted(Comparator.comparing(VirtualCollection::getNameCz))
                 .toList();
     }
