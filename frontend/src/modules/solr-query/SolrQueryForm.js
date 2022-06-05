@@ -2,7 +2,7 @@ import {useDispatch} from 'react-redux';
 import {useEffect, useState} from 'react';
 import {Box, Grid} from '@material-ui/core';
 
-import {ClearButton, StartButton} from '../../components/button';
+import {ClearButton, RefreshButton, StartButton} from '../../components/button';
 import {TextField} from '../../components/form/TextField';
 import {Selector} from '../../components/form/Selector';
 import {useInterval} from '../../effects/useInterval';
@@ -28,12 +28,16 @@ export const SolrQueryForm = () => {
     const RELOAD_INTERVAL_MS = 5000;
 
     useEffect(() => {
-        dispatch(requestOutputFiles());
+        refresh()
     }, [dispatch])
 
     useInterval(() => {
-        dispatch(requestOutputFiles());
+        refresh()
     }, RELOAD_INTERVAL_MS);
+
+    const refresh = () => {
+        dispatch(requestOutputFiles());
+    };
 
     const submit = () => {
         if (ready) {
@@ -126,6 +130,12 @@ export const SolrQueryForm = () => {
                     selectOptions={solrFields}
                     selectedOption={field}
                     onSelectOptionChange={setField}
+                />
+            </Grid>
+            <Grid item>
+                <RefreshButton
+                    label={'feature.solrQuery.button.refreshList'}
+                    onClick={refresh}
                 />
             </Grid>
             {ready &&

@@ -9,6 +9,7 @@ import PublishIcon from '@material-ui/icons/Publish';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import {useTranslation} from 'react-i18next';
+import CachedIcon from '@material-ui/icons/Cached';
 
 export const StartButton = ({onClick, label = 'common.button.create'}) => {
     const {t} = useTranslation();
@@ -99,6 +100,19 @@ export const SearchButton = ({children, onClick}) => (
         {children}
     </IconButton>
 );
+
+export const RefreshButton = ({onClick, label = 'common.button.refresh'}) => {
+    const {t} = useTranslation();
+
+    return (
+        <IconButton
+            icon={<CachedIcon/>}
+            onClick={onClick}
+        >
+            {t(label)}
+        </IconButton>
+    );
+};
 
 const IconButton = ({children, icon, onClick, onChange = null, type = 'input'}) => (
     <Button
