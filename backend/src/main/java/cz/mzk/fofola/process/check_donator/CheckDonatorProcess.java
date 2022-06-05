@@ -3,7 +3,7 @@ package cz.mzk.fofola.process.check_donator;
 import cz.mzk.fofola.api.fedora.FedoraApi;
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.model.doc.SolrField;
+import cz.mzk.fofola.constants.solr.SolrField;
 import cz.mzk.fofola.model.process.ProcessParams;
 import cz.mzk.fofola.model.process.TerminationReason;
 import cz.mzk.fofola.service.FileService;
@@ -75,11 +75,11 @@ public class CheckDonatorProcess extends Process {
     }
 
     private SolrQuery prepareQuery() {
-        String query = SolrService.wrapQueryStr(SolrField.COLLECTION_FIELD_NAME, vcId) +
-                " AND NOT " + SolrService.wrapQueryStr(SolrField.MODEL_FIELD_NAME, "page");
+        String query = SolrService.wrapQueryStr(SolrField.COLLECTION, vcId) +
+                " AND NOT " + SolrService.wrapQueryStr(SolrField.MODEL, "page");
         SolrQuery solrQuery = new SolrQuery(query);
         solrQuery.addFilterQuery("{!frange l=1 u=1 v=eq(PID,root_pid)}"); // filter roots
-        solrQuery.addField(SolrField.UUID_FIELD_NAME);
+        solrQuery.addField(SolrField.UUID);
         return solrQuery;
     }
 
@@ -88,7 +88,7 @@ public class CheckDonatorProcess extends Process {
                 option == CheckOption.CHECK_HAS_DONATOR ? getHasDonatorCheckLogic() : getHasntDonatorCheckLogic();
 
         return solrDoc -> {
-            String uuid = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);
+            String uuid = (String) solrDoc.getFieldValue(SolrField.UUID);
             logger.info(uuid);
             Document relsExt = fedoraApi.getRelsExt(uuid);
             try {

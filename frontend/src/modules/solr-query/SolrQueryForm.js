@@ -1,6 +1,6 @@
-import {useDispatch} from 'react-redux';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Box, Grid} from '@material-ui/core';
+import {useDispatch} from 'react-redux';
 
 import {ClearButton, RefreshButton, StartButton} from '../../components/button';
 import {TextField} from '../../components/form/TextField';
@@ -13,31 +13,32 @@ import {requestOutputFiles, sendSolrQuery} from './saga';
 
 export const SolrQueryForm = () => {
 
-    const [from, setFrom] = useState(null);
-    const [to, setTo] = useState(null);
+    const [from, setFrom] = useState('');
+    const [to, setTo] = useState('');
     const [model, setModel] = useState(ExtendedFieldValue.ANY.value);
     const [access, setAccess] = useState(ExtendedFieldValue.ANY.value);
     const [dnntLabel, setDnntLabel] = useState(ExtendedFieldValue.ANY.value);
     const [dnntFlag, setDnntFlag] = useState(ExtendedFieldValue.ANY.value);
     const [field, setField] = useState(SolrField.UUID.value);
+    const [searchLink, setSearchLink] = useState('');
 
-    const ready = from !== null && to !== null;
+    const ready = (from !== '' && to !== '') || (searchLink !== '');
 
     const dispatch = useDispatch();
 
     const RELOAD_INTERVAL_MS = 5000;
 
+    const refresh = useCallback(() => {
+        dispatch(requestOutputFiles());
+    }, [dispatch]);
+
     useEffect(() => {
         refresh()
-    }, [dispatch])
+    }, [refresh])
 
     useInterval(() => {
         refresh()
     }, RELOAD_INTERVAL_MS);
-
-    const refresh = () => {
-        dispatch(requestOutputFiles());
-    };
 
     const submit = () => {
         if (ready) {
@@ -49,18 +50,20 @@ export const SolrQueryForm = () => {
                 'dnntLabel': dnntLabel,
                 'dnntFlag': dnntFlag,
                 'field': field,
+                'searchLink': decodeURI(searchLink),
             }));
         }
     };
 
     const clear = () => {
-        setFrom(null);
-        setTo(null);
+        setFrom('');
+        setTo('');
         setModel(ExtendedFieldValue.ANY.value);
         setAccess(ExtendedFieldValue.ANY.value);
         setDnntLabel(ExtendedFieldValue.ANY.value);
         setDnntFlag(ExtendedFieldValue.ANY.value);
         setField(SolrField.UUID.value);
+        setSearchLink('');
     }
 
     return <Box>
@@ -130,6 +133,17 @@ export const SolrQueryForm = () => {
                     selectOptions={solrFields}
                     selectedOption={field}
                     onSelectOptionChange={setField}
+                />
+            </Grid>
+            <Grid item>
+                <TextField
+                    label='feature.solrQuery.form.searchLink'
+                    value={searchLink}
+                    variant='outlined'
+                    placeholder='https://www.digitalniknihovna.cz/mzk/search?...'
+                    onChange={e => setSearchLink(e.target.value)}
+                    size='small'
+                    inputProps={{ maxLength: 500 }}
                 />
             </Grid>
             <Grid item>

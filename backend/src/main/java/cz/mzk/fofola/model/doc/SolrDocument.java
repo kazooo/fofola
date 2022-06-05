@@ -1,6 +1,6 @@
 package cz.mzk.fofola.model.doc;
 
-import cz.mzk.fofola.constants.solr.SolrFieldName;
+import cz.mzk.fofola.constants.solr.SolrField;
 import lombok.Getter;
 import org.apache.solr.common.SolrDocumentList;
 
@@ -12,16 +12,6 @@ import java.util.stream.Collectors;
 
 @Getter
 public class SolrDocument {
-
-    public final static String ID = "PID";
-    public final static String PARENT_PID = "parent_pid";
-    public final static String MODIFIED_DATE = "modified_date";
-    public final static String ROOT_TITLE = "root_title";
-    public final static String VISIBILITY = "dostupnost";
-    public final static String MODEL = "fedora.model";
-    public static final String ROOT_PID = "root_pid";
-    public static final String DC_TITLE = "dc.title";
-    public static final String RELS_EXT_INDEX = "rels_ext_index";
 
     private String uuid;
     private String rootTitle;
@@ -56,17 +46,17 @@ public class SolrDocument {
 
     @SuppressWarnings("unchecked")
     private SolrDocument(org.apache.solr.common.SolrDocument originDoc) {
-        uuid = (String) originDoc.getFieldValue(ID);
-        model = (String) originDoc.getFieldValue(MODEL);
-        dcTitle = (String) originDoc.getFieldValue(DC_TITLE);
-        rootPid = (String) originDoc.getFieldValue(ROOT_PID);
-        rootTitle = (String) originDoc.getFieldValue(ROOT_TITLE);
-        visibility = (String) originDoc.getFieldValue(VISIBILITY);
-        modifiedDate = (Date) originDoc.getFieldValue(MODIFIED_DATE);
-        parentPids = (List<String>) originDoc.getFieldValue(PARENT_PID);
-        relsExtIndex = (List<Integer>) originDoc.getFieldValue(RELS_EXT_INDEX);
-        dnnt = (Boolean) originDoc.getFieldValue(SolrFieldName.DNNT);
-        dnntLabels = (List<String>) originDoc.getFieldValue(SolrFieldName.DNNT_LABELS);
+        uuid = (String) originDoc.getFieldValue(SolrField.UUID);
+        model = (String) originDoc.getFieldValue(SolrField.MODEL);
+        dcTitle = (String) originDoc.getFieldValue(SolrField.TITLE);
+        rootPid = (String) originDoc.getFieldValue(SolrField.ROOT_PID);
+        rootTitle = (String) originDoc.getFieldValue(SolrField.ROOT_TITLE);
+        visibility = (String) originDoc.getFieldValue(SolrField.ACCESSIBILITY);
+        modifiedDate = (Date) originDoc.getFieldValue(SolrField.MODIFIED_DATE);
+        parentPids = (List<String>) originDoc.getFieldValue(SolrField.PARENT_PID);
+        relsExtIndex = (List<Integer>) originDoc.getFieldValue(SolrField.RELS_EXT_INDEX);
+        dnnt = (Boolean) originDoc.getFieldValue(SolrField.DNNT_FLAG);
+        dnntLabels = (List<String>) originDoc.getFieldValue(SolrField.DNNT_LABELS);
     }
 
     public static SolrDocument convert(org.apache.solr.common.SolrDocument originDoc) {

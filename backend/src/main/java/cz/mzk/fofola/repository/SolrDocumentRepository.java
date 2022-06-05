@@ -1,6 +1,7 @@
 package cz.mzk.fofola.repository;
 
 import cz.mzk.fofola.configuration.FofolaConfiguration;
+import cz.mzk.fofola.constants.solr.SolrField;
 import cz.mzk.fofola.model.doc.SolrDocument;
 import cz.mzk.fofola.service.SolrService;
 import org.apache.solr.client.solrj.SolrClient;
@@ -30,7 +31,7 @@ public class SolrDocumentRepository {
 
     public List<SolrDocument> getChildByParentUuid(String parentUuid) {
         try {
-            String queryStr = SolrDocument.PARENT_PID + ":\"" + parentUuid + "\" AND !PID:\"" + parentUuid + "\"";
+            String queryStr = SolrField.PARENT_PID + ":\"" + parentUuid + "\" AND !PID:\"" + parentUuid + "\"";
             SolrQuery params = new SolrQuery(queryStr);
             return SolrDocument.convert(solrClient.query(params).getResults());
         } catch (SolrServerException | IOException e) {

@@ -42,7 +42,8 @@
         "accessibility": "Dostupnost",
         "dnntLabel": "DNNT label",
         "dnntFlag": "DNNT flag",
-        "createList": "Vytvořit seznam"
+        "createList": "Vytvořit seznam",
+        "searchLink": "Vyhledávácí link v DK"
       },
       "button": {
         "createList": "Vytvořit seznam",

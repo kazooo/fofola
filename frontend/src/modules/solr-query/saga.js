@@ -1,22 +1,23 @@
-import {createAction} from "@reduxjs/toolkit";
-import {call, put, takeEvery} from "redux-saga/effects";
+import {createAction} from '@reduxjs/toolkit';
+import {call, put, takeEvery} from 'redux-saga/effects';
 
-import {request} from "../../utils/superagent";
-import {createActionType, setOutputFiles, removeOutputFile as removeOutputFileFromSlice} from "./slice";
-import {snackbar} from "../../utils/snack/saga";
+import {request} from '../../utils/superagent';
+import {snackbar} from '../../utils/snack/saga';
 import {
     cantLoadFilesMsg,
     cantRemoveFileMsg,
     cantSolrQueryMsg,
     successRemoveFileMsg,
     successSolrQueryMsg
-} from "../../utils/constants/messages";
-import {BASE_URL} from "../../utils/environment";
+} from '../../utils/constants/messages';
+import {BASE_URL} from '../../utils/environment';
 
-const SEND_SOLR_QUERY = createActionType("SEND_SOLR_QUERY");
-const REMOVE_OUTPUT_FILE = createActionType("REMOVE_OUTPUT_FILE");
-const REQUEST_OUTPUT_FILES = createActionType("REQUEST_OUTPUT_FILES");
-const DOWNLOAD_OUTPUT_FILE = createActionType("DOWNLOAD_OUTPUT_FILE");
+import {createActionType, setOutputFiles, removeOutputFile as removeOutputFileFromSlice} from './slice';
+
+const SEND_SOLR_QUERY = createActionType('SEND_SOLR_QUERY');
+const REMOVE_OUTPUT_FILE = createActionType('REMOVE_OUTPUT_FILE');
+const REQUEST_OUTPUT_FILES = createActionType('REQUEST_OUTPUT_FILES');
+const DOWNLOAD_OUTPUT_FILE = createActionType('DOWNLOAD_OUTPUT_FILE');
 
 export const sendSolrQuery = createAction(SEND_SOLR_QUERY);
 export const removeOutputFile = createAction(REMOVE_OUTPUT_FILE);
@@ -33,7 +34,7 @@ export default function* watcherSaga() {
 function* requestOutputFilesSaga(action) {
     try {
         const payload = yield call(() => request
-            .get("/solr-response/all")
+            .get('/solr-response/all')
         );
         yield put(setOutputFiles(payload.body));
     } catch (e) {
@@ -45,7 +46,7 @@ function* requestOutputFilesSaga(action) {
 function* sendSolrQuerySaga(action) {
     try {
         yield call(() => request
-            .post("/internal-processes/new/solr-response")
+            .post('/internal-processes/new/solr-response')
             .send(action.payload)
         );
         yield put(snackbar.success(successSolrQueryMsg));
@@ -60,7 +61,7 @@ function* removeOutputFileSaga(action) {
     try {
         const fileName = action.payload;
         yield call(() => request
-            .delete("/solr-response/remove/" + fileName)
+            .delete('/solr-response/remove/' + fileName)
         );
         yield put(removeOutputFileFromSlice(fileName));
         yield put(snackbar.success(successRemoveFileMsg));

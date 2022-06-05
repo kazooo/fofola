@@ -3,7 +3,7 @@ package cz.mzk.fofola.process.donator_linker;
 import cz.mzk.fofola.api.fedora.FedoraApi;
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.model.doc.SolrField;
+import cz.mzk.fofola.constants.solr.SolrField;
 import cz.mzk.fofola.service.SolrService;
 import cz.mzk.fofola.service.UuidService;
 import cz.mzk.fofola.service.XMLService;
@@ -45,7 +45,7 @@ public class DonatorLinker {
         rootUuid = UuidService.makeUuid(rootUuid);
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorLinkingLogic = solrDoc -> {
-            String docPID = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);
+            String docPID = (String) solrDoc.getFieldValue(SolrField.UUID);
             logger.info(docPID);
             try {
                 Document relsExt = fedoraApi.getRelsExt(docPID);
@@ -66,7 +66,7 @@ public class DonatorLinker {
         rootUuid = UuidService.makeUuid(rootUuid);
         SolrQuery query = createQueryForRootUuid(rootUuid);
         Consumer<SolrDocument> donatorUnlinkingLogic = solrDoc -> {
-            String docPID = (String) solrDoc.getFieldValue(SolrField.UUID_FIELD_NAME);
+            String docPID = (String) solrDoc.getFieldValue(SolrField.UUID);
             logger.info(docPID);
             try {
                 Document relsExt = fedoraApi.getRelsExt(docPID);
@@ -85,9 +85,9 @@ public class DonatorLinker {
     }
 
     private static SolrQuery createQueryForRootUuid(String rootUuid) {
-        String allDocsQueryStr = SolrService.wrapQueryStr(SolrField.ROOT_PID_FIELD_NAME, rootUuid.trim());
+        String allDocsQueryStr = SolrService.wrapQueryStr(SolrField.ROOT_PID, rootUuid.trim());
         SolrQuery query = new SolrQuery(allDocsQueryStr);
-        query.addField(SolrField.UUID_FIELD_NAME);
+        query.addField(SolrField.UUID);
         return query;
     }
 

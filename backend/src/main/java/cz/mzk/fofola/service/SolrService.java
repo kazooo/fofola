@@ -1,6 +1,6 @@
 package cz.mzk.fofola.service;
 
-import cz.mzk.fofola.model.doc.SolrField;
+import cz.mzk.fofola.constants.solr.SolrField;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -48,7 +48,7 @@ public class SolrService {
     public static void fetchByCursorAndApply(SolrQuery query, SolrClient solrClient,
                                              Consumer<SolrDocument> consumer)
             throws IOException, SolrServerException {
-        query.setSort(SolrQuery.SortClause.asc(SolrField.UUID_FIELD_NAME));
+        query.setSort(SolrQuery.SortClause.asc(SolrField.UUID));
         String cursorMark = CursorMarkParams.CURSOR_MARK_START;
         boolean done = false;
         while (!done) {
@@ -133,8 +133,8 @@ public class SolrService {
     }
 
     public static void insertModifiedDateNow(SolrInputDocument inputDoc) {
-        inputDoc.removeField(SolrField.MODIFIED_DATE_FIELD_NAME);
-        insertSetUpdate(inputDoc, SolrField.MODIFIED_DATE_FIELD_NAME, dateFormat.format(new Date()));
+        inputDoc.removeField(SolrField.MODIFIED_DATE);
+        insertSetUpdate(inputDoc, SolrField.MODIFIED_DATE, dateFormat.format(new Date()));
     }
 
     public static void fetchFacetApplyConsumer(SolrClient solrClient, SolrQuery query, Consumer<FacetField> consumer)
