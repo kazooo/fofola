@@ -1,4 +1,5 @@
 import {FormControl, InputLabel, makeStyles, MenuItem, Select} from "@material-ui/core";
+import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -12,6 +13,7 @@ export const Selector = ({selectOptions,
                          selectedOption,
                          onSelectOptionChange}) => {
 
+    const {t} = useTranslation();
     const classes = useStyles();
 
     const options = selectOptions.map((option, index) => (
@@ -25,11 +27,11 @@ export const Selector = ({selectOptions,
     )?.value;
 
     return <FormControl variant="outlined" size="small" className={classes.formControl}>
-        <InputLabel>{selectLabel}</InputLabel>
+        <InputLabel>{t(selectLabel)}</InputLabel>
         <Select
             value={selectedValue ? selectedValue : ''}
             onChange={e => onSelectOptionChange(e.target.value)}
-            label={selectLabel}
+            label={t(selectLabel)}
         >
             {options}
         </Select>

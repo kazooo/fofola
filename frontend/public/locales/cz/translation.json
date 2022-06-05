@@ -16,6 +16,10 @@
     "title": {
       "warning": "POZOR"
     },
+    "form": {
+      "from": "Z",
+      "to": "Do"
+    },
     "button": {
       "add": "Přidat",
       "create": "Vytvořit",
@@ -31,7 +35,18 @@
     },
 
     "solrQuery": {
-      "title": "Dotaz na Solr"
+      "title": "Dotaz na Solr",
+      "form": {
+        "model": "Model",
+        "accessibility": "Dostupnost",
+        "dnntLabel": "DNNT label",
+        "dnntFlag": "DNNT flag",
+        "createList": "Vytvořit seznam"
+      },
+      "button": {
+        "createList": "Vytvořit seznam",
+        "refreshList": "Obnovit seznam souborů"
+      }
     },
 
     "krameriusProcess": {

@@ -10,14 +10,18 @@ import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import {useTranslation} from 'react-i18next';
 
-export const StartButton = ({children, onClick}) => (
-    <IconButton
-        icon={<PlayArrowIcon />}
-        onClick={onClick}
-    >
-        {children}
-    </IconButton>
-);
+export const StartButton = ({onClick, label = 'common.button.create'}) => {
+    const {t} = useTranslation();
+
+    return (
+        <IconButton
+            icon={<PlayArrowIcon/>}
+            onClick={onClick}
+        >
+            {t(label)}
+        </IconButton>
+    );
+};
 
 export const ClearButton = ({onClick, label = 'common.button.clear'}) => {
     const {t} = useTranslation();

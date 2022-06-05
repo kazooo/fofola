@@ -1,13 +1,15 @@
 import {useDispatch} from 'react-redux';
 import {useEffect, useState} from 'react';
-import {Box, Grid, TextField} from '@material-ui/core';
+import {Box, Grid} from '@material-ui/core';
 
-import {extendedAccesses, extendedModels, extendedDnntLabels, dnntFlags} from "./constants";
-import {ExtendedFieldValue, SolrField, solrFields} from '../constants';
 import {ClearButton, StartButton} from '../../components/button';
-import {requestOutputFiles, sendSolrQuery} from './saga';
+import {TextField} from '../../components/form/TextField';
 import {Selector} from '../../components/form/Selector';
 import {useInterval} from '../../effects/useInterval';
+
+import {extendedAccesses, extendedModels, extendedDnntLabels, dnntFlags} from './constants';
+import {ExtendedFieldValue, SolrField, solrFields} from '../constants';
+import {requestOutputFiles, sendSolrQuery} from './saga';
 
 export const SolrQueryForm = () => {
 
@@ -66,7 +68,7 @@ export const SolrQueryForm = () => {
         >
             <Grid item>
                 <TextField
-                    label='Z'
+                    label='common.form.from'
                     value={from}
                     variant='outlined'
                     placeholder='yyyy or *'
@@ -77,7 +79,7 @@ export const SolrQueryForm = () => {
             </Grid>
             <Grid item>
                 <TextField
-                    label='Do'
+                    label='common.form.to'
                     value={to}
                     variant='outlined'
                     placeholder='yyyy or *'
@@ -88,7 +90,7 @@ export const SolrQueryForm = () => {
             </Grid>
             <Grid item>
                 <Selector
-                    selectLabel='Model'
+                    selectLabel='feature.solrQuery.form.model'
                     selectOptions={extendedModels}
                     selectedOption={model}
                     onSelectOptionChange={setModel}
@@ -96,7 +98,7 @@ export const SolrQueryForm = () => {
             </Grid>
             <Grid item>
                 <Selector
-                    selectLabel='Dostupnost'
+                    selectLabel='feature.solrQuery.form.accessibility'
                     selectOptions={extendedAccesses}
                     selectedOption={access}
                     onSelectOptionChange={setAccess}
@@ -104,7 +106,7 @@ export const SolrQueryForm = () => {
             </Grid>
             <Grid item>
                 <Selector
-                    selectLabel='DNNT label'
+                    selectLabel='feature.solrQuery.form.dnntLabel'
                     selectOptions={extendedDnntLabels}
                     selectedOption={dnntLabel}
                     onSelectOptionChange={setDnntLabel}
@@ -112,7 +114,7 @@ export const SolrQueryForm = () => {
             </Grid>
             <Grid item>
                 <Selector
-                    selectLabel='DNNT flag'
+                    selectLabel='feature.solrQuery.form.dnntFlag'
                     selectOptions={dnntFlags}
                     selectedOption={dnntFlag}
                     onSelectOptionChange={setDnntFlag}
@@ -120,7 +122,7 @@ export const SolrQueryForm = () => {
             </Grid>
             <Grid item>
                 <Selector
-                    selectLabel='Vytvořit seznam'
+                    selectLabel='feature.solrQuery.form.createList'
                     selectOptions={solrFields}
                     selectedOption={field}
                     onSelectOptionChange={setField}
@@ -128,12 +130,17 @@ export const SolrQueryForm = () => {
             </Grid>
             {ready &&
                 <Grid item>
-                    <StartButton onClick={submit}>Vytvořit seznam</StartButton>
+                    <StartButton
+                        label={'feature.solrQuery.button.createList'}
+                        onClick={submit}
+                    />
                 </Grid>
             }
             {ready &&
                 <Grid item>
-                    <ClearButton onClick={clear}>Vyčistit</ClearButton>
+                    <ClearButton
+                        onClick={clear}
+                    />
                 </Grid>
             }
         </Grid>
