@@ -57,6 +57,46 @@ export const Model = Object.freeze({
         value: 'monographunit',
         text: 'monographunit',
     },
+    CONVOLUTE: {
+        value: 'convolute',
+        text: 'convolute',
+    },
+    SUPPLEMENT: {
+        value: 'supplement',
+        text: 'supplement',
+    },
+    TRACK: {
+        value: 'track',
+        text: 'track',
+    },
+    SHEETMUSIC: {
+        value: 'sheetmusic',
+        text: 'sheetmusic',
+    },
+    SOUNDUNIT: {
+        value: 'soundunit',
+        text: 'soundunit',
+    },
+    INTERNALPART: {
+        value: 'internalpart',
+        text: 'internalpart',
+    },
+    SOUNDRECORDING: {
+        value: 'soundrecording',
+        text: 'soundrecording',
+    },
+    ARCHIVE: {
+        value: 'archive',
+        text: 'archive',
+    },
+    MANUSCRIPT: {
+        value: 'manuscript',
+        text: 'manuscript',
+    },
+    OLDPRINTSHEETMUSIC: {
+        value: 'oldprintsheetmusic',
+        text: 'oldprintsheetmusic',
+    },
 });
 
 export const Access = Object.freeze({
