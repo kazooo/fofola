@@ -3,9 +3,7 @@ package cz.mzk.fofola.process.dnnt;
 import cz.mzk.fofola.api.SugoApi;
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.constants.dnnt.BasicLabel;
-import cz.mzk.fofola.constants.dnnt.Label;
-import cz.mzk.fofola.constants.dnnt.MarkMode;
+import cz.mzk.fofola.constants.dnnt.*;
 import cz.mzk.fofola.model.dnnt.SugoMarkParams;
 import cz.mzk.fofola.model.process.Process;
 import cz.mzk.fofola.model.process.ProcessParams;
@@ -48,16 +46,20 @@ public class DnntLabelLinkingProcess extends Process {
         uuids.forEach(logger::info);
 
         final SugoMarkParams params = SugoMarkParams.builder()
+                .direction(Direction.REST_2_DST)
+                .requestor(Requestor.REST)
+                .operation(mode.getOperation())
+                .uuids(uuids)
                 .label(label)
                 .recursively(processRecursive)
                 .build();
 
         final Long sugoSessionId;
         switch (mode) {
-            case LINK -> sugoSessionId = sugoApi.mark(params, uuids);
-            case UNLINK -> sugoSessionId = sugoApi.unmark(params, uuids);
-            case SYNC -> sugoSessionId = sugoApi.sync(uuids);
-            case CLEAN -> sugoSessionId = sugoApi.clean(params, uuids);
+            case LINK -> sugoSessionId = sugoApi.mark(params);
+            case UNLINK -> sugoSessionId = sugoApi.unmark(params);
+            case SYNC -> sugoSessionId = sugoApi.sync(params);
+            case CLEAN -> sugoSessionId = sugoApi.clean(params);
             default -> throw new IllegalArgumentException("Bad mode for DNNT linker: " + mode.getValue() + "!");
         }
 

@@ -8,7 +8,7 @@ export const columns = [
         align: 'center',
     },
     {
-        id: 'changeDateTime',
+        id: 'modifiedDate',
         label: 'Datum změny',
         width: 150,
         align: 'center',
@@ -38,14 +38,14 @@ export const columns = [
         align: 'center',
     },
     {
-        id: 'currentLabels',
+        id: 'previousLabels',
         label: 'Staré labely',
         width: 170,
         align: 'center',
         format: (value) => value?.join(', '),
     },
     {
-        id: 'newLabels',
+        id: 'actualLabels',
         label: 'Nové labely',
         width: 170,
         align: 'center',
@@ -57,25 +57,25 @@ export const columns = [
         width: 170,
         align: 'center',
     },
-    {
-        id: 'sourceIdentifier',
-        label: 'ID zdroje',
-        width: 100,
-        align: 'center',
-    },
-    {
-        id: 'sourceUuid',
-        label: 'Zdrojový UUID',
-        width: 170,
-        align: 'center',
-    },
-    {
-        id: 'requestor',
-        label: 'Requestor',
-        width: 100,
-        align: 'center',
-        format: value => Object.values(SugoSessionRequestor).find(requestor => requestor.value === value)?.text,
-    },
+    // {
+    //     id: 'sourceIdentifier',
+    //     label: 'ID zdroje',
+    //     width: 100,
+    //     align: 'center',
+    // },
+    // {
+    //     id: 'sourceUuid',
+    //     label: 'Zdrojový UUID',
+    //     width: 170,
+    //     align: 'center',
+    // },
+    // {
+    //     id: 'requestor',
+    //     label: 'Requestor',
+    //     width: 100,
+    //     align: 'center',
+    //     format: value => Object.values(SugoSessionRequestor).find(requestor => requestor.value === value)?.text,
+    // },
 ];
 
 export const extendedAccesses = [...accesses, ExtendedFieldValue.ANY];

@@ -63,3 +63,7 @@ logging:
     org:
       h2: ${H2_LOGGING_LVL:WARN}
       hibernate: ${HIBERNATE_LOGGING_LVL:WARN}
+      springframework:
+        web:
+          client:
+            RestTemplate: WARN

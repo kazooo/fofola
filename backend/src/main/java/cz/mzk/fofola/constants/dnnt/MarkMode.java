@@ -8,12 +8,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MarkMode {
 
-    LINK("link"),
-    UNLINK("unlink"),
-    SYNC("sync"),
-    CLEAN("clean");
+    LINK("link", Operation.ADD_LABEL),
+    UNLINK("unlink", Operation.REMOVE_LABEL),
+    SYNC("sync", Operation.SYNCHRONIZE),
+    CLEAN("clean", Operation.CLEAN_LABELS);
 
     private final String value;
+    private final Operation operation;
 
     @JsonCreator
     public static MarkMode of(String value) {

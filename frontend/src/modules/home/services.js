@@ -65,10 +65,10 @@ export const sections = [
     {
         name: 'home.section.sugo',
         services: [
-            {
-                name: 'feature.dnntInfo.title',
-                route: '/dnnt-info',
-            },
+            // {
+            //     name: 'feature.dnntInfo.title',
+            //     route: '/dnnt-info',
+            // },
             {
                 name: 'feature.dnntMark.title',
                 route: '/dnnt-mark',

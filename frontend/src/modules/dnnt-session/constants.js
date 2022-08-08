@@ -8,13 +8,13 @@ export const columns = [
         align: 'center',
     },
     {
-        id: 'fromDateTime',
+        id: 'created',
         label: 'Z',
         width: 170,
         align: 'center',
     },
     {
-        id: 'toDateTime',
+        id: 'finished',
         label: 'Do',
         width: 170,
         align: 'center',

@@ -15,11 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class SugoTransitionDto {
-    private Long id;
-    private String requestor;
+    private String id;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime changeDateTime;
+    private LocalDateTime modifiedDate;
 
     private String uuid;
     private String name;
@@ -27,13 +26,8 @@ public class SugoTransitionDto {
     private String access;
     private String cnb;
 
-    private String sourceIdentifier;
-    private String sourceUuid;
-
-    private List<String> currentLabels;
-    private Boolean currentDnntFlag;
-    private List<String> newLabels;
-    private Boolean newDnntFlag;
+    private List<String> previousLabels;
+    private List<String> actualLabels;
 
     private String notes;
 }

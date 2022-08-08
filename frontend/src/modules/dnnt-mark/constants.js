@@ -9,10 +9,10 @@ export const modes = [
         value: DnntLinkingMode.Unlink,
         text: 'odebrat'
     },
-    {
-        value: DnntLinkingMode.Synchronize,
-        text: 'synchronizovat'
-    },
+    // {
+    //     value: DnntLinkingMode.Synchronize,
+    //     text: 'synchronizovat'
+    // },
     {
         value: DnntLinkingMode.Clean,
         text: 'vyčistit'

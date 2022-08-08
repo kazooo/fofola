@@ -15,11 +15,11 @@ import org.joda.time.LocalDateTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class SugoSessionDto {
-    private Long id;
+    private String id;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime fromDateTime;
+    private LocalDateTime created;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime toDateTime;
+    private LocalDateTime finished;
     private Direction direction;
     private Requestor requestor;
     private Operation operation;

@@ -169,10 +169,10 @@ export const SugoSessionOperation = Object.freeze({
         text: 'čištění labelů',
         value: 'CLEAN_LABELS',
     },
-    Synchronize: {
-        text: 'synchronizace',
-        value: 'SYNCHRONIZE',
-    },
+    // Synchronize: {
+    //     text: 'synchronizace',
+    //     value: 'SYNCHRONIZE',
+    // },
     Any: ExtendedFieldValue.ANY,
 });
 
