@@ -1,6 +1,7 @@
 package cz.mzk.fofola.constants.dnnt;
 
 public enum Status {
+    NOT_READY,
     ACTIVE,
     FINISHED,
     FINISHED_WITH_NEGLIGIBLE_ISSUES,

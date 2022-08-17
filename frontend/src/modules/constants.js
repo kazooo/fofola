@@ -177,6 +177,10 @@ export const SugoSessionOperation = Object.freeze({
 });
 
 export const SugoSessionStatuses = Object.freeze({
+    NotReady: {
+        text: 'připravuje se',
+        value: 'NOT_READY',
+    },
     Active: {
         text: 'aktivní',
         value: 'ACTIVE',
