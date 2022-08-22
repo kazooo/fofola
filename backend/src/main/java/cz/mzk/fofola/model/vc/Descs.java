@@ -1,12 +1,12 @@
 package cz.mzk.fofola.model.vc;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @Data
 @EqualsAndHashCode
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Descs {
     public String cs;
     public String en;
