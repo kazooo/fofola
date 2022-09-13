@@ -26,11 +26,11 @@ public class AsyncPDFGenService {
 
     private final String GET_PDF_API_ENDPOINT = "/pdf/get/";
 
-    @Async
-    public void start(String uuid, String name) {
+    @Async("pdfServiceThreadExecutor")
+    public void start(String uuid, String name, AsyncPDFGenLog genLog) {
         Map<String, String> params = prepareParams(uuid);
         String outFilePath = FileService.getPDFOutFilePath(uuid + ".pdf");
-        AsyncPDFGenLog genLog = saveActiveLog(uuid, name);
+        saveActiveLog(genLog);
 
         boolean success = generateAndDownloadPdf(params, outFilePath);
         if (success) {
@@ -39,6 +39,10 @@ public class AsyncPDFGenService {
             saveExceptionLog(genLog);
         }
         log.info("Finish asynchronous PDF generating for " + uuid + ", state: " + genLog.getState().name());
+    }
+
+    public AsyncPDFGenLog prepare(String uuid){
+        return saveWaitingLog(uuid, null);
     }
 
     private Map<String, String> prepareParams(String uuid) {
@@ -59,14 +63,19 @@ public class AsyncPDFGenService {
         }
     }
 
-    private AsyncPDFGenLog saveActiveLog(String uuid, String name) {
+    private AsyncPDFGenLog saveWaitingLog(String uuid, String name) {
         AsyncPDFGenLog genLog = new AsyncPDFGenLog();
-        genLog.setState(PDFGenState.ACTIVE);
+        genLog.setState(PDFGenState.WAITING);
         genLog.setUuid(uuid);
-        genLog.setName(name);
+        genLog.setName(uuid);
         genLog.setDate(new Date());
         logRepository.save(genLog);
         return genLog;
+    }
+
+    private void saveActiveLog(AsyncPDFGenLog genLog) {
+        genLog.setState(PDFGenState.ACTIVE);
+        logRepository.save(genLog);
     }
 
     private void saveFinishedLog(AsyncPDFGenLog genLog, String outFilePath) {
