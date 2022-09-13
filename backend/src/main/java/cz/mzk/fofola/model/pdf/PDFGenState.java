@@ -8,7 +8,6 @@ import lombok.Getter;
 public enum PDFGenState {
     
     ACTIVE("active"),
-
     WAITING("waiting"),
     FINISHED("finished"),
     EXCEPTION("exception");

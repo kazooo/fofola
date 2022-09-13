@@ -26,7 +26,7 @@ public class AsyncPDFGenService {
 
     private final String GET_PDF_API_ENDPOINT = "/pdf/get/";
 
-    @Async
+    @Async("pdfServiceThreadExecutor")
     public void start(String uuid, String name, AsyncPDFGenLog genLog) {
         Map<String, String> params = prepareParams(uuid);
         String outFilePath = FileService.getPDFOutFilePath(uuid + ".pdf");

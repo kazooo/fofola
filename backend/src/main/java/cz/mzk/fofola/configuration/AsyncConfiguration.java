@@ -11,7 +11,12 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfiguration {
 
-    @Bean
+    /**
+     * Creates custom executor for PDFGen with thread pool size of 2.
+     * Reason: Kramerius PDFResource allows max 2 concurrent sessions
+     * @return custom executor with max pool size of 2.
+     */
+    @Bean(name = "pdfServiceThreadExecutor")
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(2);
@@ -21,5 +26,4 @@ public class AsyncConfiguration {
         executor.initialize();
         return executor;
     }
-
 }
