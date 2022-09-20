@@ -62,6 +62,8 @@ public class PDFController {
     @ResponseStatus(HttpStatus.OK)
     public void startPDFGenerating(@PathVariable String uuid) {
         log.info("Start asynchronous PDF generating for " + uuid);
-        pdfGenService.start(uuid, null);
+        /* set to WAITING before ACTIVE for thread pool queue */
+        AsyncPDFGenLog genLog = pdfGenService.prepare(uuid);
+        pdfGenService.start(uuid, null, genLog);
     }
 }

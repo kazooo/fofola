@@ -19,7 +19,7 @@ export const PdfFileList = () => {
     const dispatch = useDispatch();
     const outputFiles = useSelector(state => getOutputFiles(state));
 
-    const readyToDownload = state => state !== 'EXCEPTION' && state !== 'ACTIVE';
+    const readyToDownload = state => state !== 'EXCEPTION' && state !== 'ACTIVE' && state !== 'WAITING';
 
     const createDataWithButtons = (data) => {
         return data.map((row) => ({
