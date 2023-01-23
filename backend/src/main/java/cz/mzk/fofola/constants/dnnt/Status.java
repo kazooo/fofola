@@ -3,6 +3,7 @@ package cz.mzk.fofola.constants.dnnt;
 public enum Status {
     NOT_READY,
     ACTIVE,
+    PAUSED,
     FINISHED,
     FINISHED_WITH_NEGLIGIBLE_ISSUES,
     FINISHED_WITH_SERIOUS_ISSUES,

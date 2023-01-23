@@ -185,6 +185,10 @@ export const SugoSessionStatuses = Object.freeze({
         text: 'aktivní',
         value: 'ACTIVE',
     },
+    Paused: {
+        text: 'pozastaveno',
+        value: 'PAUSED',
+    },
     Finished: {
         text: 'ukončený',
         value: 'FINISHED',
