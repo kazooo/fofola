@@ -38,5 +38,10 @@ i18n
         },
     });
 
+export const i18LoadedPromise = new Promise((resolve) => {
+    i18n.on('loaded', () => {
+        resolve(i18n);
+    });
+});
 
 export default i18n;

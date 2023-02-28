@@ -49,8 +49,6 @@ export const Table = () => {
                 columns={columns}
                 rows={preparedRows}
                 isLoading={isLoading}
-                loadingLabel='Načítám výsledky...'
-                notFoundLabel='Žadný výsledek...'
             />
         </Box>
     );

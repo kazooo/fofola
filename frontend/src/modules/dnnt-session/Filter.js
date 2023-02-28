@@ -27,7 +27,7 @@ import {
 import {SearchButton} from '../../components/button';
 import {requestSessionPage} from './saga';
 import {
-    sugoSessionDirections,
+    sugoSessionDirectionsExtended,
     sugoSessionOperations,
     sugoSessionRequestors,
     sugoSessionStatuses} from '../constants';
@@ -55,7 +55,7 @@ export const Filter = () => {
         </MenuItem>
     ));
 
-    const directions = createOptions(sugoSessionDirections);
+    const directions = createOptions(sugoSessionDirectionsExtended);
     const requestors = createOptions(sugoSessionRequestors);
     const operations = createOptions(sugoSessionOperations);
     const statuses = createOptions(sugoSessionStatuses);

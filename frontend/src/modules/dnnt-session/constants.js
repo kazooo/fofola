@@ -1,4 +1,4 @@
-import {SugoSessionDirection, SugoSessionOperation, SugoSessionRequestor, SugoSessionStatuses} from '../constants';
+import {SugoSessionDirectionExtended, SugoSessionOperation, SugoSessionRequestor, SugoSessionStatuses} from '../constants';
 
 export const columns = [
     {
@@ -24,7 +24,7 @@ export const columns = [
         label: 'Směr',
         width: 100,
         align: 'center',
-        format: value => Object.values(SugoSessionDirection).find(direction => direction.value === value).text,
+        format: value => Object.values(SugoSessionDirectionExtended).find(direction => direction.value === value).text,
     },
     {
         id: 'requestor',

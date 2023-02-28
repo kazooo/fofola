@@ -9,7 +9,7 @@ import {requestSessionPage} from './saga';
 import {columns} from './constants';
 import {useEffect} from 'react';
 
-export const  Table = () => {
+export const Table = () => {
 
     const dispatch = useDispatch();
     const page = useSelector(getCurrentPage);

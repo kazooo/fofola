@@ -81,6 +81,10 @@ export const sections = [
                 name: 'feature.dnntSessions.title',
                 route: '/dnnt-session',
             },
+            {
+                name: 'feature.dnntJobs.title',
+                route: '/dnnt-job',
+            },
         ],
     },
     {

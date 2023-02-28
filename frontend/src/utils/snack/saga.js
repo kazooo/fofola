@@ -1,6 +1,9 @@
 import {createAction} from "@reduxjs/toolkit";
-import {put, takeEvery} from "redux-saga/effects";
+import {put, takeEvery, call} from "redux-saga/effects";
+import i18n from "i18next";
 import {v4} from 'uuid';
+
+import {i18LoadedPromise} from "../i18n";
 
 import {addNotification, createActionType} from "./slice";
 
@@ -29,19 +32,27 @@ export default function* watcherSaga() {
 }
 
 function* infoSnackbarSaga(action) {
-    yield put(addNotification(createSnackbar(action.payload, 'info')));
+    yield call(() => i18LoadedPromise);
+    const t = i18n.getFixedT(action.payload.language);
+    yield put(addNotification(createSnackbar(t(action.payload), 'info')));
 }
 
 function* successSnackbarSaga(action) {
-    yield put(addNotification(createSnackbar(action.payload, 'success')));
+    yield call(() => i18LoadedPromise);
+    const t = i18n.getFixedT(action.payload.language);
+    yield put(addNotification(createSnackbar(t(action.payload), 'success')));
 }
 
 function* warningSnackbarSaga(action) {
-    yield put(addNotification(createSnackbar(action.payload, 'warning')));
+    yield call(() => i18LoadedPromise);
+    const t = i18n.getFixedT(action.payload.language);
+    yield put(addNotification(createSnackbar(t(action.payload), 'warning')));
 }
 
 function* errorSnackbarSaga(action) {
-    yield put(addNotification(createSnackbar(action.payload, 'error')));
+    yield call(() => i18LoadedPromise);
+    const t = i18n.getFixedT(action.payload.language);
+    yield put(addNotification(createSnackbar(t(action.payload), 'error')));
 }
 
 const createSnackbar = (message, variant) => (

@@ -27,6 +27,12 @@
       "refresh": "Obnovit",
       "delete": "Vymazat",
       "clear": "Vyčistit"
+    },
+    "table": {
+      "loading": {
+        "active": "Načítám entity...",
+        "error": "Chyba při načtení entit!"
+      }
     }
   },
 
@@ -134,11 +140,103 @@
     },
 
     "dnntSessions": {
-      "title": "DNNT processy"
+      "title": "DNNT procesy"
+    },
+
+    "dnntJobs": {
+      "title": "Automatizované procesy",
+      "buttons": {
+        "createJob": {
+          "title": "Vytvořit nový proces",
+          "tooltip": ""
+        }
+      },
+      "header": {
+        "autoReload": "Načítat automaticky (interval: 5 sec.)",
+        "buttons": {
+          "refresh": {
+            "tooltip": "Obnovit stránku procesů"
+          },
+          "create": {
+            "title": "Vytvořit proces"
+          }
+        }
+      },
+      "table": {
+        "columns": {
+          "id": "ID",
+          "title": "Název",
+          "description": "Popis",
+          "cronExpressionExplanation": "Periodicita",
+          "lastExecution": "Poslední spuštění",
+          "nextExecution": "Příští spuštění",
+          "actions": "Akce"
+        },
+        "loading": {
+          "active": "Načítám automatizované procesy...",
+          "error": "Chyba při načtení automatizovaných procesů!"
+        },
+        "buttons": {
+          "editJob": {
+            "tooltip": "Upravit proces"
+          },
+          "toggleJobActivity": {
+            "tooltip": {
+              "enable": "Aktivovat proces",
+              "disable": "Deaktivovat proces"
+            }
+          }
+        }
+      },
+      "form": {
+        "fields": {
+          "title": {
+            "title": "Název"
+          },
+          "description": {
+            "title": "Popis"
+          },
+          "cronExpression": {
+            "title": "CRON výraz"
+          },
+          "cronExpressionExplanation": {
+            "title": "Periodicita"
+          },
+          "active": {
+            "title": "Hned aktivní"
+          },
+          "sessionType": {
+            "title": "Typ zpracování"
+          },
+          "from": {
+            "title": "Z"
+          },
+          "to": {
+            "title": "Do"
+          },
+          "direction": {
+            "title": "Směr"
+          },
+          "solrQuery": {
+            "title": "Dotaz na Solr"
+          }
+        },
+        "buttons": {
+          "submit": {
+            "title": "Vytvořit"
+          },
+          "cancel": {
+            "title": "Zrušit"
+          }
+        }
+      },
+      "snacks": {
+        "cantLoadJobPreviews": "Není možne načíst další stránku ze serveru!"
+      }
     },
 
     "internalProcesses": {
-      "title": "Processy Fofoly"
+      "title": "Procesy Fofoly"
     }
   }
 }
