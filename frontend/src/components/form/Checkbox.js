@@ -1,6 +1,9 @@
 import {FormControlLabel, Checkbox as MuiCheckbox} from '@material-ui/core';
+import {useTranslation} from "react-i18next";
 
 export const Checkbox = ({label, checked, onChange}) => {
+    const {t} = useTranslation();
+
     return (
         <FormControlLabel
             control={
@@ -10,7 +13,7 @@ export const Checkbox = ({label, checked, onChange}) => {
                 />
             }
             onChange={onChange}
-            label={label}
+            label={t(label)}
         />
     );
 };

@@ -13,12 +13,19 @@
   "common": {
     "yes": "Ano",
     "no": "Ne",
+    "any": "jakýkoliv",
+    "none": "žádný",
     "title": {
       "warning": "POZOR"
     },
     "form": {
       "from": "Z",
-      "to": "Do"
+      "to": "Do",
+      "field": {
+        "error": {
+          "notNull": "Pole nemůže být prazdné!"
+        }
+      }
     },
     "button": {
       "add": "Přidat",
@@ -27,6 +34,110 @@
       "refresh": "Obnovit",
       "delete": "Vymazat",
       "clear": "Vyčistit"
+    },
+    "table": {
+      "loading": {
+        "active": "Načítám entity...",
+        "notFound": "Nebyly nalezeny žádné entity!",
+        "error": "Chyba při načtení entit!"
+      }
+    }
+  },
+  "constant": {
+    "sugo": {
+      "session": {
+        "status": {
+          "notReady": {
+            "title": "připravuje se"
+          },
+          "active": {
+            "title": "aktivní"
+          },
+          "paused": {
+            "title": "pozastaveno"
+          },
+          "finished": {
+            "title": "ukončený"
+          },
+          "cantPrepare": {
+            "title": "chyba při přípravě"
+          },
+          "finishedWithNegligibleIssues": {
+            "title": "ukončený se zanedbatelnými chybami"
+          },
+          "finishedWithSeriousIssues": {
+            "title": "ukončený se závažnými chybami"
+          },
+          "terminatedByException": {
+            "title": "ukončený výjimkou"
+          },
+          "terminatedByShutdown": {
+            "title": "ukončený vypnutím"
+          }
+        }
+      },
+      "label": {
+        "dnnto": {
+          "title": "DNNTO",
+          "description": "Dokumenty s tímto labelem jsou v Krameriu viditelné pouze pro přihlášené uživatele."
+        },
+        "dnntt": {
+          "title": "DNNTT",
+          "description": "Dokumenty s tímto labelem jsou v Krameriu viditelné pouze pro uživatele přihlášené terminálu v knihovně."
+        },
+        "covid": {
+          "title": "COVID",
+          "description": "Nevalidní label, používá se pro označení dokumentů, které mají nastavený COVID flag."
+        },
+        "license": {
+          "title": "LICENSE",
+          "description": "Interní label, používá se pro označení dokumentů, které mají nastavenou licenci."
+        }
+      },
+      "operation": {
+        "add": {
+          "title": "přidání labelu"
+        },
+        "remove": {
+          "title": "odebrání labelu"
+        },
+        "synchronize": {
+          "title": "synchronizace"
+        },
+        "clean": {
+          "title": "čištění labelů"
+        }
+      },
+      "direction": {
+        "krameriusToSdnnt": {
+          "title": "synchronizace interních záznamů"
+        },
+        "sdnntToKramerius": {
+          "title": "synchronizace SDNNT záznamů"
+        },
+        "selectedInKramerius": {
+          "title": "synchronizace vybraných dokumentů"
+        }
+      },
+      "requestor": {
+        "auto": {
+          "title": "automatická labelizace"
+        },
+        "rest": {
+          "title": "uživatel"
+        }
+      },
+      "jobType": {
+        "full": {
+          "title": "Všechno"
+        },
+        "changes": {
+          "title": "Změny"
+        },
+        "custom": {
+          "title": "Vlastní nastavení"
+        }
+      }
     }
   },
 
@@ -134,11 +245,176 @@
     },
 
     "dnntSessions": {
-      "title": "DNNT processy"
+      "title": "DNNT procesy"
+    },
+
+    "dnntJobs": {
+      "title": "Automatizované procesy",
+      "buttons": {
+        "createJob": {
+          "title": "Vytvořit nový proces",
+          "tooltip": ""
+        }
+      },
+      "header": {
+        "autoReload": "Načítat automaticky (interval: 5 sec.)",
+        "buttons": {
+          "refresh": {
+            "tooltip": "Obnovit stránku procesů"
+          },
+          "create": {
+            "title": "Vytvořit proces"
+          }
+        }
+      },
+      "table": {
+        "columns": {
+          "id": "ID",
+          "title": "Název",
+          "description": "Popis",
+          "cronExpressionExplanation": "Periodicita",
+          "lastExecution": "Poslední spuštění",
+          "nextExecution": "Příští spuštění",
+          "actions": "Akce"
+        },
+        "loading": {
+          "active": "Načítám automatizované procesy...",
+          "notFound": "Nebyly nalezeny žádné automatizované procesy...",
+          "error": "Chyba při načtení automatizovaných procesů!"
+        },
+        "buttons": {
+          "editJob": {
+            "tooltip": "Upravit proces"
+          },
+          "deleteJob": {
+            "tooltip": "Smazat proces"
+          },
+          "toggleJobActivity": {
+            "tooltip": {
+              "enable": "Aktivovat proces",
+              "disable": "Deaktivovat proces"
+            }
+          }
+        }
+      },
+      "form": {
+        "fields": {
+          "title": {
+            "title": "Název procesu"
+          },
+          "description": {
+            "title": "Popis procesu"
+          },
+          "cronExpression": {
+            "title": "Periodicita jako CRON výraz",
+            "error": {
+              "invalidFormat": "Nevalidní formát CRONu!"
+            }
+          },
+          "cronExpressionExplanation": {
+            "title": "Popis periodicity"
+          },
+          "active": {
+            "title": "Hned aktivní"
+          },
+          "type": {
+            "title": "Zpracovat"
+          },
+          "from": {
+            "title": "Z"
+          },
+          "to": {
+            "title": "Do",
+            "error": {
+              "cantBeAfterFromDate": "'Do' nesmí být před 'Z'!"
+            }
+          },
+          "direction": {
+            "title": "Směr"
+          },
+          "operation": {
+            "title": "Operace"
+          },
+          "labels": {
+            "title": "Label"
+          },
+          "recursive": {
+            "title": "Zpracovávat rekurzivně"
+          },
+          "fromRelative": {
+            "title": "Relativně oproti času spuštění"
+          },
+          "relativeFrom": {
+            "title": "Minut od spuštění"
+          },
+          "solrQuery": {
+            "title": "Dotaz na Solr"
+          },
+          "solrFilterQuery": {
+            "title": "Parametry dotazu"
+          }
+        },
+        "buttons": {
+          "submit": {
+            "create": {
+              "title": "Vytvořit"
+            },
+            "update": {
+              "title": "Upravit"
+            }
+          },
+          "cancel": {
+            "title": "Zrušit"
+          }
+        }
+      },
+      "request": {
+        "job": {
+          "load": {
+            "success": "Automatizovaný proces byl úspešně načten!",
+            "error": {
+              "cant": "Není možne načíst automatizovaný proces!"
+            }
+          },
+          "create": {
+            "success": "Automatizovaný proces byl úspešně vytvořen!",
+            "error": {
+              "cant": "Není možne vytvořit automatizovaný proces!"
+            }
+          },
+          "update": {
+            "success": "Automatizovaný proces byl úspešně upravěn!",
+            "error": {
+              "cant": "Není možne upravit automatizovaný proces!"
+            }
+          },
+          "toggle": {
+            "success": {
+              "activate": "Automatizovaný proces byl úspešně aktivován!",
+              "deactivate": "Automatizovaný proces byl úspešně deaktivován!"
+            },
+            "error": {
+              "cantActivate": "Není možne activovat automatizovaný proces!",
+              "cantDeactivate": "Není možne deaktivovat automatizovaný proces!"
+            }
+          },
+          "delete": {
+            "success": "Automatizovaný proces byl úspešně smazán!",
+            "error": {
+              "cant": "Není možne smazat automatizovaný proces!"
+            }
+          },
+          "loadPreviews": {
+            "error": {
+              "cant": "Není možne načíst automatizované procesy ze serveru!"
+            }
+          }
+        }
+      }
     },
 
     "internalProcesses": {
-      "title": "Processy Fofoly"
+      "title": "Procesy Fofoly"
     }
   }
 }

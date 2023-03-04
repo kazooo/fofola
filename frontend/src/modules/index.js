@@ -15,6 +15,7 @@ import reindexModule from './reindex';
 import linkVcModule from './link-vc';
 import deleteModule from './delete';
 import dnntInfo from './dnnt-info';
+import dnntJobs from './dnnt-job';
 import homeModule from './home';
 import pdfModule from './pdf';
 
@@ -35,6 +36,7 @@ const modules = {
     linkVcModule,
     deleteModule,
     dnntInfo,
+    dnntJobs,
     homeModule,
     pdfModule,
     vcModule,

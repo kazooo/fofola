@@ -27,10 +27,11 @@ import {
 import {SearchButton} from '../../components/button';
 import {requestSessionPage} from './saga';
 import {
-    sugoSessionDirections,
+    sugoSessionDirectionsExtended,
     sugoSessionOperations,
     sugoSessionRequestors,
     sugoSessionStatuses} from '../constants';
+import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Filter = () => {
+    const {t} = useTranslation();
     const classes = useStyles();
     const dispatch = useDispatch();
     const requestor = useSelector(getRequestor);
@@ -51,11 +53,11 @@ export const Filter = () => {
 
     const createOptions = options => options.map((option, index) => (
         <MenuItem key={index} value={option.value}>
-            {option.text}
+            {t(option.text)}
         </MenuItem>
     ));
 
-    const directions = createOptions(sugoSessionDirections);
+    const directions = createOptions(sugoSessionDirectionsExtended);
     const requestors = createOptions(sugoSessionRequestors);
     const operations = createOptions(sugoSessionOperations);
     const statuses = createOptions(sugoSessionStatuses);

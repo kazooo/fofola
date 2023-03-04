@@ -25,6 +25,7 @@ import {
 } from "./slice";
 import {dnntLabels} from "../constants";
 import {modes} from './constants';
+import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const LinkDnntForm = () => {
+    const {t} = useTranslation();
     const classes = useStyles();
     const dispatch = useDispatch();
     const mode = useSelector(getMode);
@@ -45,7 +47,7 @@ export const LinkDnntForm = () => {
 
     const createOptions = options => options.map((option, index) => (
         <MenuItem key={index} value={option.value}>
-            {option.text}
+            {t(option.text)}
         </MenuItem>
     ));
 

@@ -18,7 +18,7 @@ const middlewares = [
         thunk: false,
         serializableCheck: false,
     }),
-    initialSagaMiddleware
+    initialSagaMiddleware,
 ];
 
 export const store = configureStore({

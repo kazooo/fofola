@@ -46,7 +46,7 @@ public class DnntLabelLinkingProcess extends Process {
         uuids.forEach(logger::info);
 
         final SugoMarkParams params = SugoMarkParams.builder()
-                .direction(Direction.REST_2_DST)
+                .direction(Direction.SELECTED_IN_KRAMERIUS)
                 .requestor(Requestor.REST)
                 .operation(mode.getOperation())
                 .uuids(uuids)

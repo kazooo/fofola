@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "tools": ["src/utils/tools"]
+    }
+  },
+  "exclude": ["node_modules", "build"]
+}

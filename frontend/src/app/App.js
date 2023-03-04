@@ -20,6 +20,7 @@ import {LinkDnnt} from '../modules/dnnt-mark/LinkDnnt';
 import {DnntSession} from '../modules/dnnt-session/DnntSession';
 import {DnntTransition} from '../modules/dnnt-transition/DnntTransition';
 import {DnntInfo} from '../modules/dnnt-info/DnntInfo';
+import {DnntJob} from "../modules/dnnt-job/DnntJob";
 import {Error404} from '../modules/404/Error404';
 
 export const App = () => (
@@ -44,6 +45,7 @@ export const App = () => (
                     <Route path='/dnnt-session' component={DnntSession} />
                     <Route path='/dnnt-transition' component={DnntTransition} />
                     <Route path='/dnnt-info' component={DnntInfo} />
+                    <Route path='/dnnt-job' component={DnntJob} />
                     <Route component={Error404} />
             </Switch>
     </HashRouter>

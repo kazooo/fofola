@@ -1,16 +1,20 @@
 export const DnntLabel = Object.freeze({
     DNNTO: {
-        text: 'DNNTO',
+        text: 'constant.sugo.label.dnnto.title',
         value: 'dnnto',
     },
     DNNTT: {
-        text: 'DNNTT',
+        text: 'constant.sugo.label.dnntt.title',
         value: 'dnntt',
     },
     COVID: {
-        text: 'COVID',
+        text: 'constant.sugo.label.covid.title',
         value: 'covid',
     },
+    LICENSE: {
+        text: 'constant.sugo.label.license.title',
+        value: 'license',
+    }
 });
 
 export const DnntLinkingMode = Object.freeze({
@@ -119,38 +123,42 @@ export const SolrField = Object.freeze({
 
 export const ExtendedFieldValue = Object.freeze({
     ANY: {
-        text: 'jakýkoliv',
+        text: 'common.any',
         value: 'any',
     },
     NONE: {
-        text: 'žádný',
+        text: 'common.none',
         value: 'none',
     },
 });
 
 export const SugoSessionDirection = Object.freeze({
     Rest2Dst: {
-        text: 'požadavek uživatele',
-        value: 'REST_2_DST',
+        text: 'constant.sugo.direction.selectedInKramerius.title',
+        value: 'SELECTED_IN_KRAMERIUS',
     },
     Src2Dst: {
-        text: 'synchronizace SDNNT záznamů',
-        value: 'SRC_2_DST',
+        text: 'constant.sugo.direction.sdnntToKramerius.title',
+        value: 'SDNNT_TO_KRAMERIUS',
     },
     Dst2Src: {
-        text: 'synchronizace interních záznamů',
-        value: 'DST_2_SRC',
+        text: 'constant.sugo.direction.krameriusToSdnnt.title',
+        value: 'KRAMERIUS_TO_SDNNT',
     },
+});
+
+export const SugoSessionDirectionExtended = Object.freeze({
+    ...SugoSessionDirection,
     Any: ExtendedFieldValue.ANY,
 });
 
 export const SugoSessionRequestor = Object.freeze({
     Auto: {
-        text: 'automatická labelizace',
+        text: 'constant.sugo.requestor.auto.title',
         value: 'AUTO',
     },
     Rest: {
-        text: 'uživatel',
+        text: 'constant.sugo.requestor.rest.title',
         value: 'REST',
     },
     Any: ExtendedFieldValue.ANY,
@@ -158,67 +166,89 @@ export const SugoSessionRequestor = Object.freeze({
 
 export const SugoSessionOperation = Object.freeze({
     AddLabel: {
-        text: 'přídání labelu',
-        value: 'ADD_LABEL',
+        text: 'constant.sugo.operation.add.title',
+        value: 'ADD_LABELS',
     },
     RemoveLabel: {
-        text: 'odebirání labelu',
-        value: 'REMOVE_LABEL',
+        text: 'constant.sugo.operation.remove.title',
+        value: 'REMOVE_LABELS',
     },
     Clean: {
-        text: 'čištění labelů',
+        text: 'constant.sugo.operation.clean.title',
         value: 'CLEAN_LABELS',
     },
     Synchronize: {
-        text: 'synchronizace',
+        text: 'constant.sugo.operation.synchronize.title',
         value: 'SYNCHRONIZE',
     },
     Any: ExtendedFieldValue.ANY,
 });
 
-export const SugoSessionStatuses = Object.freeze({
+export const SugoSessionStatus = Object.freeze({
     NotReady: {
-        text: 'připravuje se',
+        text: 'constant.sugo.session.status.notReady.title',
         value: 'NOT_READY',
     },
     Active: {
-        text: 'aktivní',
+        text: 'constant.sugo.session.status.active.title',
         value: 'ACTIVE',
     },
     Paused: {
-        text: 'pozastaveno',
+        text: 'constant.sugo.session.status.paused.title',
         value: 'PAUSED',
     },
     Finished: {
-        text: 'ukončený',
+        text: 'constant.sugo.session.status.finished.title',
         value: 'FINISHED',
     },
+    CantPrepare: {
+        text: 'constant.sugo.session.status.cantPrepare.title',
+        value: 'CANT_PREPARE',
+    },
     FinishedWithNegligibleIssues: {
-        text: 'ukončený se zanedbatelnými chybami',
+        text: 'constant.sugo.session.status.finishedWithNegligibleIssues.title',
         value: 'FINISHED_WITH_NEGLIGIBLE_ISSUES',
     },
     FinishedWithSeriousIssues: {
-        text: 'ukončený se závažnými chybami',
+        text: 'constant.sugo.session.status.finishedWithSeriousIssues.title',
         value: 'FINISHED_WITH_SERIOUS_ISSUES',
     },
     TerminatedByException: {
-        text: 'zrušeno výjimkou',
+        text: 'constant.sugo.session.status.terminatedByException.title',
         value: 'TERMINATED_BY_EXCEPTION',
     },
     TerminatedByShutdown: {
-        text: 'zrušeno vypínáním',
+        text: 'constant.sugo.session.status.terminatedByShutdown.title',
         value: 'TERMINATED_BY_SHUTDOWN',
     },
     Any: ExtendedFieldValue.ANY,
 });
 
+export const SugoJobType = Object.freeze({
+    Full: {
+       text: 'constant.sugo.jobType.full.title',
+       value: 'FULL'
+    },
+    Changes: {
+       text: 'constant.sugo.jobType.changes.title',
+       value: 'CHANGES'
+    },
+    Custom: {
+       text: 'constant.sugo.jobType.custom.title',
+       value: 'CUSTOM'
+    }
+});
+
 /* just arrays of objects from structures above */
 export const dnntLabels = Object.keys(DnntLabel).map((key) => DnntLabel[key]);
+export const validDnntLabels = dnntLabels.filter((label) => ![DnntLabel.COVID].includes(label));
 export const models = Object.keys(Model).map((key) => Model[key]);
 export const accesses = Object.keys(Access).map((key) => Access[key]);
 export const solrFields = Object.keys(SolrField).map((key) => SolrField[key]);
 
-export const sugoSessionDirections = Object.keys(SugoSessionDirection).map((key) => SugoSessionDirection[key]);
+export const sugoSessionDirections = Object.keys(SugoSessionDirection).map((key) => SugoSessionDirectionExtended[key]);
+export const sugoSessionDirectionsExtended = Object.keys(SugoSessionDirectionExtended).map((key) => SugoSessionDirectionExtended[key]);
 export const sugoSessionRequestors = Object.keys(SugoSessionRequestor).map((key) => SugoSessionRequestor[key]);
 export const sugoSessionOperations = Object.keys(SugoSessionOperation).map((key) => SugoSessionOperation[key]);
-export const sugoSessionStatuses = Object.keys(SugoSessionStatuses).map((key) => SugoSessionStatuses[key]);
+export const sugoSessionStatuses = Object.keys(SugoSessionStatus).map((key) => SugoSessionStatus[key]);
+export const sugoJobTypes = Object.keys(SugoJobType).map((key) => SugoJobType[key]);

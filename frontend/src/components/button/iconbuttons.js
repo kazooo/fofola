@@ -10,6 +10,9 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import DescriptionIcon from '@material-ui/icons/Description';
 import CloseIcon from '@material-ui/icons/Close';
+import EditIcon from '@mui/icons-material/Edit';
+import {useTranslation} from "react-i18next";
+import {StyledTooltip} from "../common";
 
 export const CloseIconButton = (props) => (
     <IconButtonWrapper
@@ -99,19 +102,24 @@ export const LogsIconButton = (props) => (
     </IconButtonWrapper>
 );
 
-const IconButtonWrapper = ({tooltip, onClick, children}) => (
-    <StyledTooltip title={tooltip == null ? '' : tooltip}>
-        <IconButton
-            size="small"
-            onClick={onClick}
-        >
-            {children}
-        </IconButton>
-    </StyledTooltip>
+export const EditIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
+    >
+        <EditIcon />
+    </IconButtonWrapper>
 );
 
-const StyledTooltip = withStyles({
-    tooltip: {
-        fontSize: "0.7em",
-    }
-})(Tooltip);
+const IconButtonWrapper = ({tooltip, onClick, children}) => {
+    const {t} = useTranslation();
+    return (
+        <StyledTooltip title={tooltip && t(tooltip)}>
+            <IconButton
+                size="small"
+                onClick={onClick}
+            >
+                {children}
+            </IconButton>
+        </StyledTooltip>
+    );
+};

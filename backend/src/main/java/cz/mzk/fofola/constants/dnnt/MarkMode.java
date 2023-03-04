@@ -8,8 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MarkMode {
 
-    LINK("link", Operation.ADD_LABEL),
-    UNLINK("unlink", Operation.REMOVE_LABEL),
+    LINK("link", Operation.ADD_LABELS),
+    UNLINK("unlink", Operation.REMOVE_LABELS),
     SYNC("sync", Operation.SYNCHRONIZE),
     CLEAN("clean", Operation.CLEAN_LABELS);
 

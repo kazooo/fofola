@@ -36,6 +36,7 @@ import {
 } from './slice';
 import {requestSessionPage} from './saga';
 import {extendedAccesses, extendedModels} from './constants';
+import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Filter = () => {
+    const {t} = useTranslation();
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -60,7 +62,7 @@ export const Filter = () => {
 
     const createOptions = options => options.map((option, index) => (
         <MenuItem key={index} value={option.value}>
-            {option.text}
+            {t(option.text)}
         </MenuItem>
     ));
 

@@ -1,7 +1,7 @@
 package cz.mzk.fofola.constants.dnnt;
 
 public enum Direction {
-    REST_2_DST,
-    SRC_2_DST,
-    DST_2_SRC
+    SELECTED_IN_KRAMERIUS,
+    KRAMERIUS_TO_SDNNT,
+    SDNNT_TO_KRAMERIUS
 }

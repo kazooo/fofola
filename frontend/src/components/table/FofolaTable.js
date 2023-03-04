@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import {Loading} from "../info/Loading";
 import {NotFound} from "../info/NotFound";
+import {useTranslation} from "react-i18next";
 
 const createStyles = ({width, height}) => {
     const styles = {
@@ -37,11 +38,12 @@ export const FofolaTable = ({
                                 columns,
                                 rows,
                                 height = 600,
-                                loadingLabel = null,
-                                notFoundLabel = null,
+                                loadingLabel = 'common.table.loading.active',
+                                notFoundLabel = 'common.table.loading.notFound',
                                 isLoading = false,
                                 paginator = null
 }) => {
+    const {t} = useTranslation();
 
     const classes = createStyles({
         width: columns.reduce((total, arg) => total + arg, 0),
@@ -56,7 +58,7 @@ export const FofolaTable = ({
                 maxWidth: column.maxWidth,
             }}
         >
-            {column.label}
+            {t(column.label)}
         </TableCell>
     ));
 
@@ -64,9 +66,10 @@ export const FofolaTable = ({
         <TableRow hover role="checkbox" tabIndex={-1} key={index}>
             {columns.map((column) => {
                 const value = row[column.id];
+                const formattedValue = column.format ? column.format(value) : value;
                 return (
                     <TableCell key={column.id} align={column.align}>
-                        {column.format ? column.format(value) : value}
+                        {formattedValue}
                     </TableCell>
                 );
             })}

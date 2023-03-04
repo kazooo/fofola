@@ -9,6 +9,7 @@ public enum BasicLabel implements Label {
     DNNTO("dnnto"),
     DNNTT("dnntt"),
     COVID("covid"),
+    LICENSE("license"),
 
     NO_LABELS("NO_LABELS");
 

@@ -38,5 +38,34 @@ i18n
         },
     });
 
+/**
+ * This function creates a promise that resolves with the `i18n` object once the i18next library has finished loading.
+ *
+ * The purpose of this function is to avoid issues with asynchronous loading of the `i18next` library and translations.
+ * When `i18n` is not fully loaded and something tries to use it to retrieve translations, the result will be undefined or an error.
+ *
+ * To avoid this, the `i18nLoaded` promise is created and resolved only when the `loaded` event is emitted by `i18n`, indicating
+ * that the library has finished loading and is ready for use.
+ *
+ * @returns {Promise} A promise that resolves with the `i18n` object when the library has finished loading.
+ */
+export const i18nLoadedPromise = new Promise((resolve) => {
+    i18n.on('loaded', () => {
+        resolve(i18n);
+    });
+});
+
+/**
+ * This function creates a promise that resolves with the translation for the given key once the i18next library has finished loading.
+ * This function is a wrapper around the `i18n.t` function.
+ * It is used to avoid issues with asynchronous loading of the `i18next` library and translations.
+ *
+ * @param key The key of the translation to retrieve.
+ * @param options Options to pass to the `i18n.t` function.
+ * @returns {Promise<unknown>} A promise that resolves with the translation for the given key when the library has finished loading.
+ */
+export const i18nTranslate = (key, options = {}) => {
+    return i18nLoadedPromise.then((i18n) => i18n.t(key, options));
+};
 
 export default i18n;
