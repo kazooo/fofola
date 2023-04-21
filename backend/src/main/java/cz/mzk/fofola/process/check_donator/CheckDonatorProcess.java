@@ -57,7 +57,7 @@ public class CheckDonatorProcess extends Process {
         Consumer<SolrDocument> checkDonatorLogic = getCheckDonatorLogic(output);
 
         try {
-            SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+            SolrService.paginateByCursor(
                     query,
                     solrClient,
                     checkDonatorLogic,

@@ -18,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 
-
 public class SolrService {
 
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -30,7 +29,7 @@ public class SolrService {
                 .build();
     }
 
-    public static void iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+    public static void paginateByCursor(
             SolrQuery query, SolrClient solrClient,
             Consumer<SolrDocument> consumer, int maxDocs) throws IOException, SolrServerException {
         long numFound = queryForNumFound(query, solrClient);

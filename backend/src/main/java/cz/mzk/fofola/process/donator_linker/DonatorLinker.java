@@ -57,7 +57,7 @@ public class DonatorLinker {
                 logger.severe(Arrays.toString(e.getStackTrace()));
             }
         };
-        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+        SolrService.paginateByCursor(
                 query, solrClient, donatorLinkingLogic, maxDocsPerQuery
         );
     }
@@ -79,14 +79,14 @@ public class DonatorLinker {
                 logger.severe(Arrays.toString(e.getStackTrace()));
             }
         };
-        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+        SolrService.paginateByCursor(
                 query, solrClient, donatorUnlinkingLogic, maxDocsPerQuery
         );
     }
 
     private static SolrQuery createQueryForRootUuid(String rootUuid) {
-        String allDocsQueryStr = SolrService.wrapQueryStr(SolrField.ROOT_PID, rootUuid.trim());
-        SolrQuery query = new SolrQuery(allDocsQueryStr);
+        String rootDocQueryStr = SolrService.wrapQueryStr(SolrField.UUID, rootUuid.trim());
+        SolrQuery query = new SolrQuery(rootDocQueryStr);
         query.addField(SolrField.UUID);
         return query;
     }

@@ -88,7 +88,7 @@ public class SolrResponseWritingProcess extends Process {
         };
 
         try {
-            SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+            SolrService.paginateByCursor(
                     params,
                     solrClient,
                     logic,

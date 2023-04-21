@@ -39,7 +39,7 @@ public class SolrVCLinker {
 
     public void addVc(String vcId, String uuid) throws IOException, SolrServerException {
         SolrQuery params = createSolrQuery(uuid);
-        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+        SolrService.paginateByCursor(
                 params, solrClient, createLinkConsumer(vcId), 1500
         );
     }
@@ -63,7 +63,7 @@ public class SolrVCLinker {
 
     public void removeVc(String vcId, String uuid) throws IOException, SolrServerException {
         SolrQuery params = createSolrQuery(uuid);
-        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+        SolrService.paginateByCursor(
                 params, solrClient, createUnlinkConsumer(vcId), 1500
         );
     }

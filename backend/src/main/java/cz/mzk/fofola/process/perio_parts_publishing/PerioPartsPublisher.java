@@ -63,7 +63,7 @@ public class PerioPartsPublisher {
                 } catch (IOException | SolrServerException ignored) { }
             }
         };
-        SolrService.iterateByCursorIfMoreDocsElseBySingleRequestAndApply(
+        SolrService.paginateByCursor(
                 childQuery, solrClient, publisherConsumer, maxDocs
         );
         if (makePublic.get()) {
