@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum BasicLabel implements Label {
-    DNNTO("dnnto"),
-    DNNTT("dnntt"),
-    COVID("covid"),
-    LICENSE("license"),
+    DNNTO("DNNTO"),
+    DNNTT("DNNTT"),
+    COVID("COVID"),
+    LICENSE("LICENSE"),
 
     NO_LABELS("NO_LABELS");
 

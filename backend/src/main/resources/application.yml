@@ -3,7 +3,7 @@ trace: false
 
 server:
   shutdown: graceful
-  port: ${PORT:8081}
+  port: ${PORT:8082}
   error:
     path: /error
   servlet:

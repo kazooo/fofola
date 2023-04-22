@@ -14,28 +14,15 @@ import {SearchButton} from '../../components/button';
 import {sugoSessionRequestors} from '../constants';
 
 import {
-    getAccess,
-    getCnb,
     getFromDateTime,
     getInternalUuid,
-    getModel,
-    getRequestor,
-    getSourceIdentifier,
-    getSourceUuid,
     getToDateTime,
-    setAccess,
-    setCnb,
     setCurrentPage,
     setFromDateTime,
     setInternalUuid,
-    setModel,
-    setRequestor,
-    setSourceIdentifier,
-    setSourceUuid,
     setToDateTime
 } from './slice';
 import {requestSessionPage} from './saga';
-import {extendedAccesses, extendedModels} from './constants';
 import {useTranslation} from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,22 +40,6 @@ export const Filter = () => {
     const fromDateTime = useSelector(getFromDateTime);
     const toDateTime = useSelector(getToDateTime);
     const internalUuid = useSelector(getInternalUuid);
-    const model = useSelector(getModel);
-    const access = useSelector(getAccess);
-    const cnb = useSelector(getCnb);
-    const sourceIdentifier = useSelector(getSourceIdentifier);
-    const sourceUuid = useSelector(getSourceUuid);
-    const requestor = useSelector(getRequestor);
-
-    const createOptions = options => options.map((option, index) => (
-        <MenuItem key={index} value={option.value}>
-            {t(option.text)}
-        </MenuItem>
-    ));
-
-    const modelOptions = createOptions(extendedModels);
-    const accessOptions = createOptions(extendedAccesses);
-    const requestors = createOptions(sugoSessionRequestors);
 
     const changeDateFrom = (date) => {
         dispatch(setFromDateTime(date));
@@ -80,30 +51,6 @@ export const Filter = () => {
 
     const changeInternalUuid = (uuid) => {
         dispatch(setInternalUuid(uuid));
-    };
-
-    const changeModel = (model) => {
-        dispatch(setModel(model));
-    };
-
-    const changeAccess = (access) => {
-        dispatch(setAccess(access));
-    };
-
-    const changeCnb = (cnb) => {
-        dispatch(setCnb(cnb));
-    };
-
-    const changeSourceIdentifier = (sourceIdentifier) => {
-        dispatch(setSourceIdentifier(sourceIdentifier));
-    };
-
-    const changeSourceUuid = (uuid) => {
-        dispatch(setSourceUuid(uuid));
-    };
-
-    const changeRequestor = (requestor) => {
-        dispatch(setRequestor(requestor));
     };
 
     const searchTransitions = () => {
@@ -147,62 +94,6 @@ export const Filter = () => {
                 />
             </Grid>
             <Grid item>
-                <SelectorField
-                    label='Model'
-                    value={model}
-                    onChange={changeModel}
-                    options={modelOptions}
-                    classNames={classes.formControl}
-                />
-            </Grid>
-            <Grid item>
-                <SelectorField
-                    label='Dostupnost'
-                    value={access}
-                    onChange={changeAccess}
-                    options={accessOptions}
-                    classNames={classes.formControl}
-                />
-            </Grid>
-            <Grid item>
-                <TextField
-                    label='ČNB'
-                    value={cnb}
-                    placeholder='cnbXXXXX'
-                    classNames={classes.formControl}
-                    onChange={changeCnb}
-                    width={130}
-                />
-            </Grid>
-            <Grid item>
-                <TextField
-                    label='Zdrojový ID'
-                    value={sourceIdentifier}
-                    placeholder='OAI:...'
-                    classNames={classes.formControl}
-                    onChange={changeSourceIdentifier}
-                    width={120}
-                />
-            </Grid>
-            <Grid item>
-                <TextField
-                    label='Zdrojový UUID'
-                    value={sourceUuid}
-                    placeholder='uuid:...'
-                    classNames={classes.formControl}
-                    onChange={changeSourceUuid}
-                />
-            </Grid>
-            <Grid item>
-                <SelectorField
-                    label='Requestor'
-                    value={requestor}
-                    onChange={changeRequestor}
-                    options={requestors}
-                    classNames={classes.formControl}
-                />
-            </Grid>
-            <Grid item>
                 <SearchButton onClick={searchTransitions}>
                     Hledat
                 </SearchButton>
@@ -224,18 +115,5 @@ const TextField = ({label, value, classNames, onChange, placeholder, width = 200
             inputProps={{ maxLength: 150 }}
             style={{ width: width }}
         />
-    </FormControl>
-);
-
-const SelectorField = ({label, value, onChange, options, classNames}) => (
-    <FormControl variant='outlined' size='small' className={classNames}>
-        <InputLabel>{label}</InputLabel>
-        <Select
-            value={value}
-            onChange={e => onChange(e.target.value)}
-            label={label}
-        >
-            {options}
-        </Select>
     </FormControl>
 );

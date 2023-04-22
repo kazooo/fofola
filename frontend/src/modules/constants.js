@@ -1,19 +1,19 @@
 export const DnntLabel = Object.freeze({
     DNNTO: {
         text: 'constant.sugo.label.dnnto.title',
-        value: 'dnnto',
+        value: 'DNNTO',
     },
     DNNTT: {
         text: 'constant.sugo.label.dnntt.title',
-        value: 'dnntt',
+        value: 'DNNTT',
     },
     COVID: {
         text: 'constant.sugo.label.covid.title',
-        value: 'covid',
+        value: 'COVID',
     },
     LICENSE: {
         text: 'constant.sugo.label.license.title',
-        value: 'license',
+        value: 'LICENSE',
     }
 });
 

@@ -8,15 +8,9 @@ import {request} from '../../utils/superagent';
 
 import {
     createActionType,
-    getAccess,
-    getCnb,
     getCurrentPage,
     getFromDateTime,
     getInternalUuid,
-    getModel,
-    getRequestor,
-    getSourceIdentifier,
-    getSourceUuid,
     getToDateTime,
     setNumFound,
     setTransitions,
@@ -40,25 +34,13 @@ function* requestWithLoading(action) {
     const page = yield select(getCurrentPage);
     const fromDateTime = yield select(getFromDateTime);
     const toDateTime = yield select(getToDateTime);
-    const internalUuid = yield select(getInternalUuid);
-    const model = yield select(getModel);
-    const access = yield select(getAccess);
-    const cnb = yield select(getCnb);
-    const sourceIdentifier = yield select(getSourceIdentifier);
-    const sourceUuid = yield select(getSourceUuid);
-    const requestor = yield select(getRequestor);
+    const uuid = yield select(getInternalUuid);
 
     /* filter 'any' values */
     const queryParams = Object.entries(
         {
             page,
-            internalUuid,
-            model,
-            access,
-            cnb,
-            sourceIdentifier,
-            sourceUuid,
-            requestor,
+            uuid,
             from: fromDateTime && moment(fromDateTime, DATE_PATTERN).format(OUTPUT_DATE_PATTERN),
             to: toDateTime && moment(toDateTime, DATE_PATTERN).format(OUTPUT_DATE_PATTERN)
         }

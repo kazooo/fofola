@@ -1,14 +1,12 @@
-import {accesses, ExtendedFieldValue, models, SugoSessionRequestor} from '../constants';
-
 export const columns = [
     {
-        id: 'id',
-        label: 'Id',
-        width: 50,
+        id: 'sessionId',
+        label: 'Id procesu',
+        width: 300,
         align: 'center',
     },
     {
-        id: 'modifiedDate',
+        id: 'created',
         label: 'Datum změny',
         width: 150,
         align: 'center',
@@ -20,63 +18,17 @@ export const columns = [
         align: 'center',
     },
     {
-        id: 'model',
-        label: 'Model',
-        width: 70,
-        align: 'center',
-    },
-    {
-        id: 'access',
-        label: 'Dostupnost',
-        width: 70,
-        align: 'center',
-    },
-    {
-        id: 'cnb',
-        label: 'ČNB',
-        width: 70,
-        align: 'center',
-    },
-    {
-        id: 'previousLabels',
+        id: 'previousState',
         label: 'Staré labely',
         width: 170,
         align: 'center',
-        format: (value) => value?.join(', '),
+        format: (value) => value?.labels?.join(', '),
     },
     {
-        id: 'actualLabels',
+        id: 'currentState',
         label: 'Nové labely',
         width: 170,
         align: 'center',
-        format: (value) => value?.join(', '),
+        format: (value) => value?.labels?.join(', '),
     },
-    {
-        id: 'notes',
-        label: 'Poznámky',
-        width: 170,
-        align: 'center',
-    },
-    // {
-    //     id: 'sourceIdentifier',
-    //     label: 'ID zdroje',
-    //     width: 100,
-    //     align: 'center',
-    // },
-    // {
-    //     id: 'sourceUuid',
-    //     label: 'Zdrojový UUID',
-    //     width: 170,
-    //     align: 'center',
-    // },
-    // {
-    //     id: 'requestor',
-    //     label: 'Requestor',
-    //     width: 100,
-    //     align: 'center',
-    //     format: value => Object.values(SugoSessionRequestor).find(requestor => requestor.value === value)?.text,
-    // },
 ];
-
-export const extendedAccesses = [...accesses, ExtendedFieldValue.ANY];
-export const extendedModels = [...models, ExtendedFieldValue.ANY];

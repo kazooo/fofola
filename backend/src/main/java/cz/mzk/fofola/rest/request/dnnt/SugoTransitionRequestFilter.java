@@ -14,18 +14,8 @@ import java.util.List;
 public class SugoTransitionRequestFilter {
     private List<Long> ids;
     private List<Long> sessionIds;
-    private String requestor;
+    private String uuid;
     private String from;
     private String to;
-
-    private String internalUuid;
-    private String name;
-    private String model;
-    private String access;
-    private String cnb;
-
-    private String sourceIdentifier;
-    private String sourceUuid;
-
     private Integer page;
 }
