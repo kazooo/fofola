@@ -55,10 +55,10 @@ export const rules = new Map([
         JobField.CronExpression,
         {
             required: 'common.form.field.error.notNull',
-            pattern: {
-                value: /^(?:[0-9?*\/,-]+ ){5}[0-9?*\/,-]+$/,
-                message: 'feature.dnntJobs.form.fields.cronExpression.error.invalidFormat',
-            },
+            // pattern: {
+            //     value: /^(?:(?:[0-9?*\/,-]+ ){5}[0-9?*\/,-]+|(?:[0-9?*\/,-]+ ){4}[0-9?*\/,-]+(?:\s(?:SUN|MON|TUE|WED|THU|FRI|SAT)){1}(?:\s(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)){1}(?:\s[0-9?*\/,-]+){1})$/,
+            //     message: 'feature.dnntJobs.form.fields.cronExpression.error.invalidFormat',
+            // },
         },
     ],
     [
