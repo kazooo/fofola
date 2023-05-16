@@ -19,6 +19,7 @@ const OPEN_UPDATE_JOB_FORM = createActionType('OPEN_UPDATE_JOB_FORM');
 const SUBMIT_UPDATE_JOB_FORM = createActionType('SUBMIT_UPDATE_JOB_FORM');
 const TOGGLE_JOB_ACTIVITY = createActionType('TOGGLE_JOB_ACTIVITY');
 const DELETE_JOB = createActionType('DELETE_JOB');
+const TRIGGER_JOB = createActionType('TRIGGER_JOB');
 
 export const requestJobPreviews = createAction(REQUEST_JOB_PREVIEWS);
 export const submitCreateJobForm = createAction(SUBMIT_CREATE_JOB_FORM, (formValues, closeCallback) => ({payload: {formValues, closeCallback}}));
@@ -26,6 +27,7 @@ export const openUpdateJobForm = createAction(OPEN_UPDATE_JOB_FORM, (jobId) => (
 export const submitUpdateJobForm = createAction(SUBMIT_UPDATE_JOB_FORM, (formValues, closeCallback) => ({payload: {formValues, closeCallback}}));
 export const toggleJobActivity = createAction(TOGGLE_JOB_ACTIVITY, (jobId) => ({payload: {jobId}}));
 export const deleteJob = createAction(DELETE_JOB, (jobId) => ({payload: {jobId}}));
+export const triggerJob = createAction(TRIGGER_JOB, (jobId) => ({payload: {jobId}}));
 
 const SUGO_JOB_ENDPOINT = '/sugo/job';
 
@@ -36,6 +38,7 @@ export default function* watcherSaga() {
     yield takeLatest(SUBMIT_UPDATE_JOB_FORM, submitUpdateJobFormSaga);
     yield takeLatest(TOGGLE_JOB_ACTIVITY, toggleJobActivitySaga);
     yield takeLatest(DELETE_JOB, deleteJobSaga);
+    yield takeLatest(TRIGGER_JOB, triggerJobSaga);
 };
 
 function* requestJobPreviewsSaga(action) {
@@ -152,6 +155,20 @@ function* deleteJobSaga(action) {
         }
     } catch (e) {
         yield put(snackbar.error('feature.dnntJobs.request.job.delete.error.cant'));
+        console.error(e);
+    }
+}
+
+function* triggerJobSaga(action) {
+    try {
+        const response = yield call(() => request.put(`${SUGO_JOB_ENDPOINT}/${action.payload.jobId}/trigger`));
+        if (response.statusCode === 200 || response.statusCode === 202) {
+            yield put(snackbar.success('feature.dnntJobs.request.job.trigger.success'));
+        } else {
+            yield put(snackbar.error(translateServerError(response)));
+        }
+    } catch (e) {
+        yield put(snackbar.error('feature.dnntJobs.request.job.trigger.error.cant'));
         console.error(e);
     }
 }

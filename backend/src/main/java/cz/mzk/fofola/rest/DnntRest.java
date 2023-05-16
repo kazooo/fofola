@@ -77,4 +77,10 @@ public class DnntRest {
     public SugoJobDto toggleAutomaticJobActivity(@PathVariable final String jobId) {
         return sugoApi.toggleJob(jobId);
     }
+
+    @PutMapping(value = "/job/{jobId}/trigger", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public SugoJobDto triggerAutomaticJob(@PathVariable final String jobId) {
+        return sugoApi.triggerJob(jobId);
+    }
 }

@@ -11,6 +11,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import DescriptionIcon from '@material-ui/icons/Description';
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@mui/icons-material/Edit';
+import BoltTwoToneIcon from '@mui/icons-material/BoltTwoTone';
 import {useTranslation} from "react-i18next";
 import {StyledTooltip} from "../common";
 
@@ -107,6 +108,14 @@ export const EditIconButton = (props) => (
         {...props}
     >
         <EditIcon />
+    </IconButtonWrapper>
+);
+
+export const TriggerIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
+    >
+        <BoltTwoToneIcon />
     </IconButtonWrapper>
 );
 

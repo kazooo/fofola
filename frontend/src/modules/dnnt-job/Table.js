@@ -1,12 +1,12 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {Box} from '@material-ui/core';
 
-import {DeleteIconButton, EditIconButton} from '../../components/button/iconbuttons';
-import {FofolaTable} from '../../components/table/FofolaTable';
+import {DeleteIconButton, EditIconButton, TriggerIconButton} from 'components/button/iconbuttons';
+import {FofolaTable} from 'components/table/FofolaTable';
 import {getIsLoading, getJobs} from './slice';
 import {jobTableColumns} from './table';
-import {deleteJob, toggleJobActivity, openUpdateJobForm} from './saga';
-import {TooltipedSwitch} from "../../components/button/switch";
+import {deleteJob, toggleJobActivity, openUpdateJobForm, triggerJob} from './saga';
+import {TooltipedSwitch} from 'components/button/switch';
 
 export const Table = () => {
     const dispatch = useDispatch();
@@ -27,6 +27,10 @@ export const Table = () => {
                         tooltip={getLabel(job)}
                         checked={job.active}
                         onChange={() => dispatch(toggleJobActivity(job.id))}
+                    />
+                    <TriggerIconButton
+                        onClick={() => dispatch(triggerJob(job.id))}
+                        tooltip={'feature.dnntJobs.table.buttons.triggerJob.tooltip'}
                     />
                     <EditIconButton
                         onClick={() => dispatch(openUpdateJobForm(job.id))}

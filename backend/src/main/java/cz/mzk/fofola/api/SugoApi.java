@@ -221,6 +221,22 @@ public class SugoApi {
         }
     }
 
+    public SugoJobDto triggerJob(String jobId) {
+        final ResponseEntity<SugoJobDto> response =
+                update(JOB_ENDPOINT + "/" + jobId + "/trigger", null, SugoJobDto.class);
+
+        final HttpStatus statusCode = response.getStatusCode();
+        if (!statusCode.equals(HttpStatus.OK) && !statusCode.equals(HttpStatus.ACCEPTED)) {
+            log.warn(String.format(
+                    "Can't trigger an automatic job with id \"%s\", response code: %s",
+                    jobId, response.getStatusCode()
+            ));
+            return new SugoJobDto();
+        } else {
+            return response.getBody();
+        }
+    }
+
     private HttpEntity<Object> convertToBody(final Object object) {
         return new HttpEntity<>(object);
     }

@@ -283,6 +283,9 @@
           "error": "Chyba při načtení automatizovaných procesů!"
         },
         "buttons": {
+          "triggerJob": {
+            "tooltip": "Spustit proces"
+          },
           "editJob": {
             "tooltip": "Upravit proces"
           },
@@ -402,6 +405,12 @@
             "success": "Automatizovaný proces byl úspešně smazán!",
             "error": {
               "cant": "Není možne smazat automatizovaný proces!"
+            }
+          },
+          "trigger": {
+            "success": "Automatizovaný proces byl úspešně spuštěn!",
+            "error": {
+              "cant": "Není možne spustit automatizovaný proces!"
             }
           },
           "loadPreviews": {
