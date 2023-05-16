@@ -245,7 +245,57 @@
     },
 
     "dnntSessions": {
-      "title": "DNNT procesy"
+      "title": "DNNT procesy",
+      "table": {
+        "columns": {
+          "id": "Id",
+          "created": "Z",
+          "finished": "Do",
+          "direction": "Směr",
+          "requestor": "Žadatel",
+          "operation": "Operace",
+          "status": "Stav",
+          "actions": "Akce"
+        },
+        "loading": {
+          "active": "Načítám procesy...",
+          "notFound": "Nebyly nalezeny žádné procesy!",
+          "error": "Chyba při načtení procesů!"
+        },
+        "buttons": {
+          "pause": {
+            "tooltip": "Pozastavit proces"
+          },
+          "launch": {
+            "tooltip": "Spustit proces"
+          },
+          "terminate": {
+            "tooltip": "Zastavit proces"
+          }
+        }
+      },
+      "request": {
+        "session": {
+          "pause": {
+            "success": "Proces byl pozastaven",
+            "error": {
+              "cant": "Proces nelze pozastavit!"
+            }
+          },
+          "launch": {
+            "success": "Proces byl spuštěn",
+            "error": {
+              "cant": "Proces nelze spustit!"
+            }
+          },
+          "terminate": {
+            "success": "Proces byl zastaven",
+            "error": {
+              "cant": "Proces nelze zastavit!"
+            }
+          }
+        }
+      }
     },
 
     "dnntJobs": {

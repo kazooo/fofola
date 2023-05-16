@@ -9,6 +9,8 @@ import {
 } from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {SearchButton} from 'components/button';
+
 import {
     getDirection,
     getFromDateTime,
@@ -24,7 +26,6 @@ import {
     setStatus,
     setToDateTime
 } from './slice';
-import {SearchButton} from '../../components/button';
 import {requestSessionPage} from './saga';
 import {
     sugoSessionDirectionsExtended,

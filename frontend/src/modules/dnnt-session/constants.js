@@ -4,25 +4,25 @@ import {SugoSessionDirectionExtended, SugoSessionOperation, SugoSessionRequestor
 export const columns = [
     {
         id: 'id',
-        label: 'Id',
+        label: 'feature.dnntSessions.table.columns.id',
         width: 50,
         align: 'center',
     },
     {
         id: 'created',
-        label: 'Z',
+        label: 'feature.dnntSessions.table.columns.created',
         width: 170,
         align: 'center',
     },
     {
         id: 'finished',
-        label: 'Do',
+        label: 'feature.dnntSessions.table.columns.finished',
         width: 170,
         align: 'center',
     },
     {
         id: 'direction',
-        label: 'Směr',
+        label: 'feature.dnntSessions.table.columns.direction',
         width: 100,
         align: 'center',
         format: value => i18n.t(
@@ -34,7 +34,7 @@ export const columns = [
     },
     {
         id: 'requestor',
-        label: 'Requestor',
+        label: 'feature.dnntSessions.table.columns.requestor',
         width: 100,
         align: 'center',
         format: value => i18n.t(
@@ -46,7 +46,7 @@ export const columns = [
     },
     {
         id: 'operation',
-        label: 'Operace',
+        label: 'feature.dnntSessions.table.columns.operation',
         width: 100,
         align: 'center',
         format: value => i18n.t(
@@ -58,7 +58,7 @@ export const columns = [
     },
     {
         id: 'status',
-        label: 'Status',
+        label: 'feature.dnntSessions.table.columns.status',
         width: 100,
         align: 'center',
         format: value => i18n.t(
@@ -68,4 +68,10 @@ export const columns = [
                 .text
         ),
     },
+    {
+        id: 'actions',
+        label: 'feature.dnntSessions.table.columns.actions',
+        maxWidth: 100,
+        align: 'center',
+    }
 ];

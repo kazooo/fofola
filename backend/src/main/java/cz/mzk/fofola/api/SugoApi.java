@@ -1,10 +1,7 @@
 package cz.mzk.fofola.api;
 
 import cz.mzk.fofola.configuration.ApiConfiguration;
-import cz.mzk.fofola.model.dnnt.SugoDataPageDto;
-import cz.mzk.fofola.model.dnnt.SugoMarkParams;
-import cz.mzk.fofola.model.dnnt.SugoSessionPageDto;
-import cz.mzk.fofola.model.dnnt.SugoTransitionPageDto;
+import cz.mzk.fofola.model.dnnt.*;
 import cz.mzk.fofola.model.dnnt.job.CreateSugoJobDto;
 import cz.mzk.fofola.model.dnnt.job.SugoJobDto;
 import cz.mzk.fofola.model.dnnt.job.SugoJobPreviewPageDto;
@@ -14,7 +11,6 @@ import cz.mzk.fofola.rest.request.dnnt.SugoJobFilter;
 import cz.mzk.fofola.rest.request.dnnt.SugoSessionRequestFilter;
 import cz.mzk.fofola.rest.request.dnnt.SugoTransitionRequestFilter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,9 +26,9 @@ public class SugoApi {
     private final static String CREATE_SESSION_ENDPOINT = "/api/session";
 
     private final static String DATA_QUERY_ENDPOINT = "/api/query/data/complete";
-    private final static String SESSION_QUERY_ENDPOINT = "/api/session";
     private final static String TRANSITION_QUERY_ENDPOINT = "/api/transition";
 
+    private final static String SESSION_ENDPOINT = "/api/session";
     private final static String JOB_ENDPOINT = "/api/job";
 
     public SugoApi(final String sugoHost, final RestTemplate restTemplate) {
@@ -42,7 +38,7 @@ public class SugoApi {
 
     public SugoDataPageDto getData(final SugoDataRequestFilter requestFilter) {
         final HttpEntity<Object> body = convertToBody(requestFilter);
-        final ResponseEntity<SugoDataPageDto> response = create(DATA_QUERY_ENDPOINT, body, SugoDataPageDto.class);
+        final ResponseEntity<SugoDataPageDto> response = post(DATA_QUERY_ENDPOINT, body, SugoDataPageDto.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             return Objects.requireNonNull(response.getBody());
         } else {
@@ -52,7 +48,7 @@ public class SugoApi {
     }
 
     public SugoSessionPageDto getSessions(final SugoSessionRequestFilter requestFilter) {
-        final ResponseEntity<SugoSessionPageDto> response = get(SESSION_QUERY_ENDPOINT, requestFilter, SugoSessionPageDto.class);
+        final ResponseEntity<SugoSessionPageDto> response = get(SESSION_ENDPOINT, requestFilter, SugoSessionPageDto.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             return Objects.requireNonNull(response.getBody());
         } else {
@@ -74,7 +70,7 @@ public class SugoApi {
 
     public Long mark(final SugoMarkParams params) {
         final HttpEntity<Object> body = convertToBody(params);
-        final ResponseEntity<Long> sugoResponse = create(CREATE_SESSION_ENDPOINT, body, Long.class);
+        final ResponseEntity<Long> sugoResponse = post(CREATE_SESSION_ENDPOINT, body, Long.class);
 
         final HttpStatus statusCode = sugoResponse.getStatusCode();
         if (!(statusCode.equals(HttpStatus.ACCEPTED) || statusCode.equals(HttpStatus.CREATED))) {
@@ -92,7 +88,7 @@ public class SugoApi {
 
     public Long unmark(final SugoMarkParams params) {
         final HttpEntity<Object> body = convertToBody(params);
-        final ResponseEntity<Long> sugoResponse = create(CREATE_SESSION_ENDPOINT, body, Long.class);
+        final ResponseEntity<Long> sugoResponse = post(CREATE_SESSION_ENDPOINT, body, Long.class);
 
         final HttpStatus statusCode = sugoResponse.getStatusCode();
         if (!(statusCode.equals(HttpStatus.ACCEPTED) || statusCode.equals(HttpStatus.CREATED))) {
@@ -110,7 +106,7 @@ public class SugoApi {
 
     public Long sync(final SugoMarkParams params) {
         final HttpEntity<Object> body = convertToBody(params);
-        final ResponseEntity<Long> sugoResponse = create(CREATE_SESSION_ENDPOINT, body, Long.class);
+        final ResponseEntity<Long> sugoResponse = post(CREATE_SESSION_ENDPOINT, body, Long.class);
 
         final HttpStatus statusCode = sugoResponse.getStatusCode();
         if (!(statusCode.equals(HttpStatus.ACCEPTED) || statusCode.equals(HttpStatus.CREATED))) {
@@ -123,7 +119,7 @@ public class SugoApi {
 
     public Long clean(final SugoMarkParams params) {
         final HttpEntity<Object> body = convertToBody(params);
-        final ResponseEntity<Long> sugoResponse = create(CREATE_SESSION_ENDPOINT, body, Long.class);
+        final ResponseEntity<Long> sugoResponse = post(CREATE_SESSION_ENDPOINT, body, Long.class);
 
         final HttpStatus statusCode = sugoResponse.getStatusCode();
         if (!(statusCode.equals(HttpStatus.ACCEPTED) || statusCode.equals(HttpStatus.CREATED))) {
@@ -135,6 +131,48 @@ public class SugoApi {
             return -1L;
         } else {
             return sugoResponse.getBody();
+        }
+    }
+
+    public SugoSessionDto pauseSession(String sessionId) {
+        final ResponseEntity<SugoSessionDto> response =
+                put(SESSION_ENDPOINT + "/" + sessionId + "/pause", null, SugoSessionDto.class);
+        if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.ACCEPTED) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn(String.format(
+                    "Can't pause session with id %s, response code: %s",
+                    sessionId, response.getStatusCode()
+            ));
+            return null;
+        }
+    }
+
+    public SugoSessionDto launchSession(String sessionId) {
+        final ResponseEntity<SugoSessionDto> response =
+                put(SESSION_ENDPOINT + "/" + sessionId + "/launch", null, SugoSessionDto.class);
+        if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.ACCEPTED) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn(String.format(
+                    "Can't launch session with id %s, response code: %s",
+                    sessionId, response.getStatusCode()
+            ));
+            return null;
+        }
+    }
+
+    public SugoSessionDto terminateSession(String sessionId) {
+        final ResponseEntity<SugoSessionDto> response =
+                put(SESSION_ENDPOINT + "/" + sessionId + "/terminate", null, SugoSessionDto.class);
+        if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.ACCEPTED) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn(String.format(
+                    "Can't terminate session with id %s, response code: %s",
+                    sessionId, response.getStatusCode()
+            ));
+            return null;
         }
     }
 
@@ -163,7 +201,7 @@ public class SugoApi {
 
     public SugoJobDto createJob(final CreateSugoJobDto createJob) {
         final HttpEntity<Object> body = convertToBody(createJob);
-        final ResponseEntity<SugoJobDto> response = create(JOB_ENDPOINT, body, SugoJobDto.class);
+        final ResponseEntity<SugoJobDto> response = post(JOB_ENDPOINT, body, SugoJobDto.class);
 
         final HttpStatus statusCode = response.getStatusCode();
         if (!statusCode.equals(HttpStatus.CREATED)) {
@@ -176,7 +214,7 @@ public class SugoApi {
 
     public SugoJobDto updateJob(final UpdateSugoJobDto updateJob) {
         final HttpEntity<Object> body = convertToBody(updateJob);
-        final ResponseEntity<SugoJobDto> response = update(JOB_ENDPOINT, body, SugoJobDto.class);
+        final ResponseEntity<SugoJobDto> response = put(JOB_ENDPOINT, body, SugoJobDto.class);
 
         final HttpStatus statusCode = response.getStatusCode();
         if (!statusCode.equals(HttpStatus.ACCEPTED)) {
@@ -207,7 +245,7 @@ public class SugoApi {
 
     public SugoJobDto toggleJob(final String jobId) {
         final ResponseEntity<SugoJobDto> response =
-                update(JOB_ENDPOINT + "/" + jobId + "/toggle", null, SugoJobDto.class);
+                put(JOB_ENDPOINT + "/" + jobId + "/toggle", null, SugoJobDto.class);
 
         final HttpStatus statusCode = response.getStatusCode();
         if (!statusCode.equals(HttpStatus.OK) && !statusCode.equals(HttpStatus.ACCEPTED)) {
@@ -223,7 +261,7 @@ public class SugoApi {
 
     public SugoJobDto triggerJob(String jobId) {
         final ResponseEntity<SugoJobDto> response =
-                update(JOB_ENDPOINT + "/" + jobId + "/trigger", null, SugoJobDto.class);
+                put(JOB_ENDPOINT + "/" + jobId + "/trigger", null, SugoJobDto.class);
 
         final HttpStatus statusCode = response.getStatusCode();
         if (!statusCode.equals(HttpStatus.OK) && !statusCode.equals(HttpStatus.ACCEPTED)) {
@@ -251,11 +289,11 @@ public class SugoApi {
         return restTemplate.getForEntity(finalUrl, responseClass);
     }
 
-    private <T> ResponseEntity<T> create(final String url, final Object body, final Class<T> responseClass) {
+    private <T> ResponseEntity<T> post(final String url, final Object body, final Class<T> responseClass) {
         return restTemplate.postForEntity(sugoHost + url, body, responseClass);
     }
 
-    private <T> ResponseEntity<T> update(final String url, final HttpEntity<Object> body, final Class<T> responseClass) {
+    private <T> ResponseEntity<T> put(final String url, final HttpEntity<Object> body, final Class<T> responseClass) {
         return restTemplate.exchange(sugoHost + url, HttpMethod.PUT, body, responseClass);
     }
 

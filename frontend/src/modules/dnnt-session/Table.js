@@ -2,12 +2,14 @@ import {useEffect} from 'react';
 import {Box} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {FofolaTable} from '../../components/table/FofolaTable';
-import {Paginator} from '../../components/table/Paginator';
+import {PauseIconButton, LaunchIconButton, StopIconButton} from "components/button/iconbuttons";
+import {FofolaTable} from 'components/table/FofolaTable';
+import {Paginator} from 'components/table/Paginator';
 
 import {getCurrentPage, getIsLoading, getIsPaginatorEnabled, getSessions, setCurrentPage} from './slice';
-import {requestSessionPage} from './saga';
+import {requestSessionPage, pauseSession, launchSession, terminateSession} from './saga';
 import {columns} from './constants';
+import {SugoSessionStatus} from "../constants";
 
 export const Table = () => {
 
@@ -31,14 +33,44 @@ export const Table = () => {
 
     const paginator = <Paginator page={page} onChange={handleChangePage}  enabled={paginatorEnabled} />
 
+    const isActive = (session) => session.status === SugoSessionStatus.Active.value;
+
+    const isPaused = (session) => session.status === SugoSessionStatus.Paused.value;
+
+    const createRowsWithButtons = () => sessions.map((session) => ({
+        ...session,
+        actions: (
+            <Box>
+                {isPaused(session) && (
+                    <LaunchIconButton
+                        onClick={() => dispatch(launchSession(session.id))}
+                        tooltip={'feature.dnntSessions.table.buttons.launch.tooltip'}
+                    />
+                )}
+                {isActive(session) && (
+                    <PauseIconButton
+                        onClick={() => dispatch(pauseSession(session.id))}
+                        tooltip={'feature.dnntSessions.table.buttons.pause.tooltip'}
+                    />
+                )}
+                {isPaused(session) && (
+                    <StopIconButton
+                        onClick={() => dispatch(terminateSession(session.id))}
+                        tooltip={'feature.dnntSessions.table.buttons.terminate.tooltip'}
+                    />
+                )}
+            </Box>
+        ),
+    }));
+
     return <Box>
         <FofolaTable
             columns={columns}
-            rows={sessions}
+            rows={createRowsWithButtons()}
             paginator={paginator}
             isLoading={isLoading}
-            loadingLabel='Načítám procesy...'
-            notFoundLabel='Žadný DNNT process nebyl nalezen...'
+            loadingLabel={'feature.dnntSessions.table.loading.active'}
+            notFoundLabel={'feature.dnntSessions.table.loading.notFound'}
         />
     </Box>
 };

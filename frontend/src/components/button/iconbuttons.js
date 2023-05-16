@@ -12,6 +12,8 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import BoltTwoToneIcon from '@mui/icons-material/BoltTwoTone';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 import {useTranslation} from "react-i18next";
 import {StyledTooltip} from "../common";
 
@@ -116,6 +118,22 @@ export const TriggerIconButton = (props) => (
         {...props}
     >
         <BoltTwoToneIcon />
+    </IconButtonWrapper>
+);
+
+export const LaunchIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
+    >
+        <PlayArrowIcon />
+    </IconButtonWrapper>
+);
+
+export const PauseIconButton = (props) => (
+    <IconButtonWrapper
+        {...props}
+    >
+        <PauseIcon />
     </IconButtonWrapper>
 );
 

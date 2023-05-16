@@ -7,6 +7,7 @@ module.exports = function override(config) {
         ...config.resolve.alias,
         tools: path.resolve(__dirname, 'src/utils/tools.js'),
         components: path.resolve(__dirname, 'src/components'),
+        utils: path.resolve(__dirname, 'src/utils'),
     };
     return config;
 };

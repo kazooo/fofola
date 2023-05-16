@@ -1,6 +1,9 @@
 import {createAction} from '@reduxjs/toolkit';
 import {call, put, takeLatest, select} from 'redux-saga/effects';
 
+import {request, translateServerError} from 'utils/superagent';
+import {snackbar} from 'utils/snack/saga';
+
 import {
     createActionType,
     getJob,
@@ -10,8 +13,6 @@ import {
     toggleIsLoading,
     openUpdateJobForm as openUpdateJobFormSlice,
 } from './slice';
-import {request, translateServerError} from '../../utils/superagent';
-import {snackbar} from '../../utils/snack/saga';
 
 const REQUEST_JOB_PREVIEWS = createActionType('REQUEST_JOB_PREVIEWS');
 const SUBMIT_CREATE_JOB_FORM = createActionType('SUBMIT_CREATE_JOB_FORM');
