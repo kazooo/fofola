@@ -23,5 +23,7 @@ public class SugoSessionDto {
     private Direction direction;
     private Requestor requestor;
     private Operation operation;
+    private Long total;
+    private Long done;
     private Status status;
 }

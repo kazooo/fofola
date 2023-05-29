@@ -57,6 +57,18 @@ export const columns = [
         ),
     },
     {
+        id: 'total',
+        label: 'feature.dnntSessions.table.columns.total',
+        maxWidth: 100,
+        align: 'center',
+    },
+    {
+        id: 'done',
+        label: 'feature.dnntSessions.table.columns.done',
+        maxWidth: 100,
+        align: 'center',
+    },
+    {
         id: 'status',
         label: 'feature.dnntSessions.table.columns.status',
         width: 100,

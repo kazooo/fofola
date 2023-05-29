@@ -255,6 +255,8 @@
           "requestor": "Žadatel",
           "operation": "Operace",
           "status": "Stav",
+          "total": "Celkem",
+          "done": "Zpracovano",
           "actions": "Akce"
         },
         "loading": {

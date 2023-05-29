@@ -1,12 +1,13 @@
-import {call, put, takeEvery} from "redux-saga/effects";
-import {createAction} from "@reduxjs/toolkit";
+import {call, put, takeEvery} from 'redux-saga/effects';
+import {createAction} from '@reduxjs/toolkit';
 
-import {clearUuids, createActionType, setIsLoading, setIsLoadingError, setVcs} from "./slice";
-import {request} from "../../utils/superagent";
-import {snackbar} from "../../utils/snack/saga";
-import {cantLoadVcMsg, getCantVcMsg, getLinkVcMsg} from "../../utils/constants/messages";
+import {cantLoadVcMsg, getCantVcMsg, getLinkVcMsg} from 'utils/constants/messages';
+import {snackbar} from 'utils/snack/saga';
+import {request} from 'utils/superagent';
 
-const CHANGE_VC = createActionType("CHANGE_VC");
+import {clearUuids, createActionType, setIsLoading, setIsLoadingError, setVcs} from './slice';
+
+const CHANGE_VC = createActionType('CHANGE_VC');
 const LOAD_VCS = createActionType('LOAD_VCS');
 
 export const changeVc = createAction(CHANGE_VC);
