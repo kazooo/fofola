@@ -1,8 +1,8 @@
-import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
-import {snackbarSlice} from "../utils/snack/slice";
+import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
+import {snackbarSlice} from 'utils/snack/slice';
 import snackbarSaga from '../utils/snack/saga';
-import createSagaMiddleware from "redux-saga";
-import modules from "../modules";
+import createSagaMiddleware from 'redux-saga';
+import modules from '../modules';
 
 const sagas = Object.values(modules).map(module => module.saga);
 sagas.push(snackbarSaga);

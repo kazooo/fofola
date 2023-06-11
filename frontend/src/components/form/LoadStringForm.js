@@ -1,28 +1,29 @@
-import {useState} from "react";
-import {Box, Button, Grid, TextField} from "@material-ui/core";
+import {useState} from 'react';
+import {Box, Grid, TextField} from '@material-ui/core';
+import {IconButton} from 'components/button';
 
 export const LoadStringForm = ({size, label, placeholder, button, submitFunc}) => {
 
-    const [text, setText] = useState("");
+    const [text, setText] = useState('');
 
     const handleOnClick = (e) => {
         e.preventDefault();
         if (text)
             submitFunc(text);
-        setText("");
+        setText('');
     }
 
     return <Box>
         <Grid container
               spacing={1}
-              alignItems="center"
+              alignItems='center'
         >
             <Grid item>
                 <TextField
-                    id="outlined-basic"
+                    id='outlined-basic'
                     label={label}
                     value={text}
-                    variant="outlined"
+                    variant='outlined'
                     placeholder={placeholder}
                     onChange={e => setText(e.target.value)}
                     size={size}
@@ -30,13 +31,9 @@ export const LoadStringForm = ({size, label, placeholder, button, submitFunc}) =
                 />
             </Grid>
             <Grid item>
-                <Button
-                    onClick={handleOnClick}
-                    variant="contained"
-                    style={{ fontSize: '12px' }}
-                >
+                <IconButton onClick={handleOnClick}>
                     {button}
-                </Button>
+                </IconButton>
             </Grid>
         </Grid>
     </Box>

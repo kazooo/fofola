@@ -7,6 +7,7 @@ import changeAccessModule from './change-access';
 import linkDonatorModule from './link-donator';
 import dnntSessionModule from './dnnt-session';
 import solrQueryModule from './solr-query';
+import dnntAlertModule from './dnnt-alert';
 import linkDnntModule from './dnnt-mark';
 import uuidInfoModule from './uuid-info';
 import vcModule from './vc-management';
@@ -28,6 +29,7 @@ const modules = {
     changeAccessModule,
     linkDonatorModule,
     dnntSessionModule,
+    dnntAlertModule,
     solrQueryModule,
     linkDnntModule,
     uuidInfoModule,

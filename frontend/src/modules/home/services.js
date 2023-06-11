@@ -85,6 +85,10 @@ export const sections = [
                 name: 'feature.dnntJobs.title',
                 route: '/dnnt-job',
             },
+            {
+                name: 'feature.dnntAlerts.title',
+                route: '/dnnt-alert',
+            },
         ],
     },
     {

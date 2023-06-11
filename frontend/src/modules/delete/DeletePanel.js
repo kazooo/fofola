@@ -1,11 +1,11 @@
 import {useDispatch, useSelector} from 'react-redux';
 
-import {HorizontalDirectedGrid} from '../../components/layout/HorizontalDirectedGrid';
-import {VerticalDirectedGrid} from '../../components/layout/VerticalDirectedGrid';
-import {LabeledCheckbox} from '../../components/form/LabeledCheckbox';
-import {ClearButton, DeleteButton} from '../../components/button';
-import {ModalWrapper} from '../../components/form/ModalWrapper';
-import {InlineP} from '../../components/page/InlineP';
+import {HorizontalDirectedGrid} from 'components/layout/HorizontalDirectedGrid';
+import {VerticalDirectedGrid} from 'components/layout/VerticalDirectedGrid';
+import {LabeledCheckbox} from 'components/form/LabeledCheckbox';
+import {ClearButton, DeleteButton} from 'components/button';
+import {ModalWrapper} from 'components/form/ModalWrapper';
+import {InlineP} from 'components/page/InlineP';
 
 import {deleteUuids} from './saga';
 import {
@@ -65,7 +65,7 @@ export const DeletePanel = () => {
             </HorizontalDirectedGrid>
             <HorizontalDirectedGrid spacing={10}>
                 <ModalWrapper
-                    callback={handleOnClick}
+                    onOk={handleOnClick}
                     title={'common.title.warning'}
                     titleColor={'secondary'}
                     description={

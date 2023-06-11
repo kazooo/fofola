@@ -1,5 +1,5 @@
 import privateImg from '../../img/private.png';
-import {Button} from '@material-ui/core';
+import {Button, withStyles} from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import ClearIcon from '@material-ui/icons/Clear';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
@@ -10,6 +10,24 @@ import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import {useTranslation} from 'react-i18next';
 import CachedIcon from '@material-ui/icons/Cached';
+import DoneIcon from '@material-ui/icons/Done';
+import {mainColor, StyledTooltip} from "components/common";
+
+export const DoneButton = ({
+    onClick,
+    tooltip,
+    disabled = false,
+    label = 'common.button.done',
+    variant = 'contained',
+}) => {
+    const {t} = useTranslation();
+
+    return (
+        <IconButton icon={<DoneIcon/>} onClick={onClick} tooltip={tooltip} disabled={disabled} variant={variant}>
+            {t(label)}
+        </IconButton>
+    );
+}
 
 export const StartButton = ({onClick, label = 'common.button.create'}) => {
     const {t} = useTranslation();
@@ -114,19 +132,54 @@ export const RefreshButton = ({onClick, label = 'common.button.refresh'}) => {
     );
 };
 
-const IconButton = ({children, icon, onClick, onChange = null, type = 'input'}) => (
-    <Button
-        variant='contained'
-        component='label'
-        onClick={onClick}
-        onChange={onChange}
-        type={type}
-        style={{ fontSize: '12px' }}
-        endIcon={icon}
-    >
-        {children}
-    </Button>
-)
+export const IconButton = ({
+    children,
+    icon,
+    tooltip,
+    onClick,
+    onChange = null,
+    type = 'input',
+    disabled = false,
+    variant = 'contained',
+}) => {
+    const {t} = useTranslation();
+
+    const StyledButton = withStyles({
+        root: {
+            "&.Mui-disabled": {
+                pointerEvents: "auto"
+            }
+        }
+    })(Button);
+
+    const button = (
+        <StyledButton
+            variant={variant}
+            component={'label'}
+            size={'small'}
+            onClick={disabled ? undefined : onClick}
+            onChange={onChange}
+            type={type}
+            style={{
+                fontSize: '15px',
+                borderColor: mainColor,
+                textTransform: 'none',
+            }}
+            disabled={disabled}
+            endIcon={icon}
+        >
+            {children}
+        </StyledButton>
+    );
+
+    const tooltipButton = (
+        <StyledTooltip title={tooltip && t(tooltip)}>
+            {button}
+        </StyledTooltip>
+    );
+
+    return tooltip ? tooltipButton : button;
+}
 
 const ImgButton = ({title, img, onClick}) => {
 

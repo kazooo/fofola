@@ -2,17 +2,15 @@ package cz.mzk.fofola.rest;
 
 import cz.mzk.fofola.api.SugoApi;
 import cz.mzk.fofola.model.dnnt.SugoDataPageDto;
-import cz.mzk.fofola.model.dnnt.SugoSessionDto;
-import cz.mzk.fofola.model.dnnt.SugoSessionPageDto;
-import cz.mzk.fofola.model.dnnt.SugoTransitionPageDto;
-import cz.mzk.fofola.model.dnnt.job.CreateSugoJobDto;
-import cz.mzk.fofola.model.dnnt.job.SugoJobDto;
-import cz.mzk.fofola.model.dnnt.job.SugoJobPreviewPageDto;
-import cz.mzk.fofola.model.dnnt.job.UpdateSugoJobDto;
-import cz.mzk.fofola.rest.request.dnnt.SugoDataRequestFilter;
-import cz.mzk.fofola.rest.request.dnnt.SugoJobFilter;
-import cz.mzk.fofola.rest.request.dnnt.SugoSessionRequestFilter;
-import cz.mzk.fofola.rest.request.dnnt.SugoTransitionRequestFilter;
+import cz.mzk.fofola.model.dnnt.alert.SugoAlertStats;
+import cz.mzk.fofola.model.dnnt.session.SugoSessionDto;
+import cz.mzk.fofola.model.dnnt.session.SugoSessionPageDto;
+import cz.mzk.fofola.model.dnnt.transition.SugoTransitionPageDto;
+import cz.mzk.fofola.model.dnnt.alert.SugoAlertDto;
+import cz.mzk.fofola.model.dnnt.alert.SugoAlertPreviewPageDto;
+import cz.mzk.fofola.model.dnnt.job.*;
+import cz.mzk.fofola.rest.request.dnnt.*;
+import cz.mzk.fofola.service.SugoService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class DnntRest {
 
     private SugoApi sugoApi;
+    private SugoService sugoService;
 
     @GetMapping(value = "/session", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
@@ -111,5 +110,32 @@ public class DnntRest {
     public SugoJobDto triggerAutomaticJob(@PathVariable final String jobId) {
         log.info("Triggering job {}", jobId);
         return sugoApi.triggerJob(jobId);
+    }
+
+    @GetMapping(value = "/alert/unsolved", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public SugoAlertPreviewPageDto getUnsolvedAlerts(final SugoAlertFilter filter) {
+        filter.setSolved(false);
+        return sugoService.getAlertPreviews(filter);
+    }
+
+    @GetMapping(value = "/alert/{alertId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public SugoAlertDto getAlert(@PathVariable final String alertId) {
+        log.debug("Getting alert {}", alertId);
+        return sugoService.getAlert(alertId);
+    }
+
+    @PutMapping(value = "/alert/{alertId}/solve", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public SugoAlertDto solveAlert(@PathVariable final String alertId) {
+        log.info("Solving alert {}", alertId);
+        return sugoService.solveAlert(alertId);
+    }
+
+    @GetMapping(value = "/alert/stats", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public SugoAlertStats getAlertStats() {
+        return sugoService.getAlertStats();
     }
 }

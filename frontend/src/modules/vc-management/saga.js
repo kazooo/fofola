@@ -1,8 +1,8 @@
 import {call, put, select, takeEvery} from 'redux-saga/effects';
 import {createAction} from '@reduxjs/toolkit';
 
-import {request} from '../../utils/superagent';
-import {snackbar} from '../../utils/snack/saga';
+import {request} from 'utils/superagent';
+import {snackbar} from 'utils/snack/saga';
 import {
     cantCreateVcMsg,
     cantDeleteVcMsg,
@@ -11,7 +11,7 @@ import {
     successCreateVcMsg,
     successDeleteVcMsg,
     successUpdateVcMsg
-} from '../../utils/constants/messages';
+} from 'utils/constants/messages';
 
 import {
     createActionType,

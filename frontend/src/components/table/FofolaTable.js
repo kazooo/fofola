@@ -7,15 +7,15 @@ import {
     TableContainer,
     TableHead,
     TableRow
-} from "@material-ui/core";
-import {Loading} from "../info/Loading";
-import {NotFound} from "../info/NotFound";
-import {useTranslation} from "react-i18next";
+} from '@material-ui/core';
+import {Loading} from '../info/Loading';
+import {NotFound} from '../info/NotFound';
+import {useTranslation} from 'react-i18next';
 
 const createStyles = ({width, height}) => {
     const styles = {
         root: {
-            backgroundColor: "rgba(255, 255, 255, 1.0)",
+            backgroundColor: 'rgba(255, 255, 255, 1.0)',
             borderRadius: 5,
             border: 1,
             borderColor: 'black',
@@ -35,13 +35,13 @@ const createStyles = ({width, height}) => {
 };
 
 export const FofolaTable = ({
-                                columns,
-                                rows,
-                                height = 600,
-                                loadingLabel = 'common.table.loading.active',
-                                notFoundLabel = 'common.table.loading.notFound',
-                                isLoading = false,
-                                paginator = null
+    columns, 
+    rows,
+    height = 600,
+    loadingLabel = 'common.table.loading.active',
+    notFoundLabel = 'common.table.loading.notFound',
+    isLoading = false,
+    paginator = null
 }) => {
     const {t} = useTranslation();
 
@@ -63,7 +63,7 @@ export const FofolaTable = ({
     ));
 
     const preparedRows = rows.map((row, index) => (
-        <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+        <TableRow hover role='checkbox' tabIndex={-1} key={index}>
             {columns.map((column) => {
                 const value = row[column.id];
                 const formattedValue = column.format ? column.format(value) : value;
@@ -76,13 +76,13 @@ export const FofolaTable = ({
         </TableRow>
     ));
 
-    const loading = <TableRow hover role="checkbox" tabIndex={-1}>
+    const loading = <TableRow hover role='checkbox' tabIndex={-1}>
         <TableCell colSpan={columns.length} className={classes.allSpace}>
             <Loading label={loadingLabel} />
         </TableCell>
     </TableRow>;
 
-    const noRows = <TableRow hover role="checkbox" tabIndex={-1}>
+    const noRows = <TableRow hover role='checkbox' tabIndex={-1}>
         <TableCell colSpan={columns.length} className={classes.allSpace}>
             <NotFound label={notFoundLabel} />
         </TableCell>
@@ -90,7 +90,7 @@ export const FofolaTable = ({
 
     return <Box className={classes.root}>
         <TableContainer className={classes.tableContainer}>
-            <Table stickyHeader aria-label="sticky table">
+            <Table stickyHeader aria-label='sticky table'>
                 <TableHead>
                     <TableRow>
                         {header}

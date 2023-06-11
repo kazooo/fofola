@@ -2,19 +2,21 @@ package cz.mzk.fofola.api;
 
 import cz.mzk.fofola.configuration.ApiConfiguration;
 import cz.mzk.fofola.model.dnnt.*;
-import cz.mzk.fofola.model.dnnt.job.CreateSugoJobDto;
-import cz.mzk.fofola.model.dnnt.job.SugoJobDto;
-import cz.mzk.fofola.model.dnnt.job.SugoJobPreviewPageDto;
-import cz.mzk.fofola.model.dnnt.job.UpdateSugoJobDto;
-import cz.mzk.fofola.rest.request.dnnt.SugoDataRequestFilter;
-import cz.mzk.fofola.rest.request.dnnt.SugoJobFilter;
-import cz.mzk.fofola.rest.request.dnnt.SugoSessionRequestFilter;
-import cz.mzk.fofola.rest.request.dnnt.SugoTransitionRequestFilter;
+import cz.mzk.fofola.model.dnnt.alert.SugoAlertStats;
+import cz.mzk.fofola.model.dnnt.alert.SugoRawAlertDto;
+import cz.mzk.fofola.model.dnnt.alert.SugoRawAlertPreviewPageDto;
+import cz.mzk.fofola.model.dnnt.job.*;
+import cz.mzk.fofola.model.dnnt.session.SugoSessionDto;
+import cz.mzk.fofola.model.dnnt.session.SugoSessionPageDto;
+import cz.mzk.fofola.model.dnnt.transition.SugoTransitionPageDto;
+import cz.mzk.fofola.rest.request.dnnt.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -30,6 +32,7 @@ public class SugoApi {
 
     private final static String SESSION_ENDPOINT = "/api/session";
     private final static String JOB_ENDPOINT = "/api/job";
+    private final static String ALERT_ENDPOINT = "/api/alert";
 
     public SugoApi(final String sugoHost, final RestTemplate restTemplate) {
         this.sugoHost = sugoHost;
@@ -272,6 +275,52 @@ public class SugoApi {
             return new SugoJobDto();
         } else {
             return response.getBody();
+        }
+    }
+
+    public SugoRawAlertPreviewPageDto getAlertPreviews(final SugoAlertFilter filter) {
+        final ResponseEntity<SugoRawAlertPreviewPageDto> response = get(ALERT_ENDPOINT, filter, SugoRawAlertPreviewPageDto.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn("Can't get alerts from Sugo, response code: " + response.getStatusCode());
+            return SugoRawAlertPreviewPageDto.builder().entities(List.of()).numFound(0L).build();
+        }
+    }
+
+    public SugoRawAlertDto getAlert(final String alertId) {
+        final ResponseEntity<SugoRawAlertDto> response = get(ALERT_ENDPOINT + "/" + alertId, null, SugoRawAlertDto.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn(String.format(
+                    "Can't get alert with id \"%s\" from Sugo, response code: %s",
+                    alertId, response.getStatusCode()
+            ));
+            return SugoRawAlertDto.builder().build();
+        }
+    }
+
+    public SugoRawAlertDto solveAlert(final String alertId) {
+        final ResponseEntity<SugoRawAlertDto> response = put(ALERT_ENDPOINT + "/" + alertId + "/solve", null, SugoRawAlertDto.class);
+        if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.ACCEPTED) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn(String.format(
+                    "Can't solve alert with id %s, response code: %s",
+                    alertId, response.getStatusCode()
+            ));
+            return null;
+        }
+    }
+
+    public SugoAlertStats getAlertStats() {
+        final ResponseEntity<SugoAlertStats> response = get(ALERT_ENDPOINT + "/stats", null, SugoAlertStats.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return Objects.requireNonNull(response.getBody());
+        } else {
+            log.warn("Can't get alert stats from Sugo, response code: " + response.getStatusCode());
+            return SugoAlertStats.builder().build();
         }
     }
 

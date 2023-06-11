@@ -1,27 +1,24 @@
-import {createAction} from "@reduxjs/toolkit";
-import {put, takeEvery, call} from "redux-saga/effects";
-import i18n from "i18next";
+import {createAction} from '@reduxjs/toolkit';
+import {put, takeEvery} from 'redux-saga/effects';
 import {v4} from 'uuid';
 
-import {i18nLoadedPromise} from "../i18n";
-
-import {addNotification, createActionType} from "./slice";
+import {addNotification, createActionType} from './slice';
 
 const INFO_SNACKBAR = createActionType('INFO_SNACKBAR');
 const SUCCESS_SNACKBAR = createActionType('SUCCESS_SNACKBAR');
 const WARNING_SNACKBAR =createActionType('WARNING_SNACKBAR');
 const ERROR_SNACKBAR = createActionType('ERROR_SNACKBAR');
 
-const info = createAction(INFO_SNACKBAR, (message) => ({payload: {message}}));
-const success = createAction(SUCCESS_SNACKBAR, (message) => ({payload: {message}}));
-const warning = createAction(WARNING_SNACKBAR, (message) => ({payload: {message}}));
-const error = createAction(ERROR_SNACKBAR, (message) => ({payload: {message}}));
+const info = createAction(INFO_SNACKBAR, (message, props) => ({payload: {message, props}}));
+const success = createAction(SUCCESS_SNACKBAR, (message, props) => ({payload: {message, props}}));
+const warning = createAction(WARNING_SNACKBAR, (message, props) => ({payload: {message, props}}));
+const error = createAction(ERROR_SNACKBAR, (message, props) => ({payload: {message, props}}));
 
 export const snackbar = {
-    info: (message) => info(message),
-    success: (message) => success(message),
-    warning: (message) => warning(message),
-    error: (message) => error(message),
+    info: (message, props) => info(message, props),
+    success: (message, props) => success(message, props),
+    warning: (message, props) => warning(message, props),
+    error: (message, props) => error(message, props),
 }
 
 export default function* watcherSaga() {
@@ -32,29 +29,26 @@ export default function* watcherSaga() {
 }
 
 function* infoSnackbarSaga(action) {
-    yield call(() => i18nLoadedPromise);
-    yield put(addNotification(createSnackbar(i18n.t(action.payload.message), 'info')));
+    yield put(addNotification(createSnackbar(action.payload.message, action.payload.props, 'info')));
 }
 
 function* successSnackbarSaga(action) {
-    yield call(() => i18nLoadedPromise);
-    yield put(addNotification(createSnackbar(i18n.t(action.payload.message), 'success')));
+    yield put(addNotification(createSnackbar(action.payload.message, action.payload.props, 'success')));
 }
 
 function* warningSnackbarSaga(action) {
-    yield call(() => i18nLoadedPromise);
-    yield put(addNotification(createSnackbar(i18n.t(action.payload.message), 'warning')));
+    yield put(addNotification(createSnackbar(action.payload.message, action.payload.props, 'warning')));
 }
 
 function* errorSnackbarSaga(action) {
-    yield call(() => i18nLoadedPromise);
-    yield put(addNotification(createSnackbar(i18n.t(action.payload.message), 'error')));
+    yield put(addNotification(createSnackbar(action.payload.message, action.payload.props, 'error')));
 }
 
-const createSnackbar = (message, variant) => (
+const createSnackbar = (message, props, variant) => (
     {
         key: v4(),
-        variant,
         message,
+        props,
+        variant,
     }
 );

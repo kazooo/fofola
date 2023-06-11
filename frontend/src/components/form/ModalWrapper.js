@@ -1,6 +1,8 @@
 import {Box, Button, Grid, Modal, Typography} from '@material-ui/core';
 import {useTranslation} from 'react-i18next';
 import React, {useState} from 'react';
+import {useClickAway} from '@uidotdev/usehooks';
+import {mainColor} from 'components/common';
 
 const style = {
     position: 'absolute',
@@ -15,19 +17,43 @@ const style = {
     p: 4,
 };
 
-export const ModalWrapper = ({children, callback, title, titleColor, description, okMsg, cancelMsg}) => {
+const buttonStyle = {
+    fontSize: '15px',
+    color: mainColor,
+    textTransform: 'none',
+}
+
+export const ModalWrapper = ({
+    children,
+    onOk,
+    title,
+    titleColor,
+    description,
+    okMsg,
+    cancelMsg,
+    onOpen = () => {},
+    onClose = () => {},
+}) => {
     const [open, setOpen] = useState(false);
     const {t} = useTranslation();
 
-    const openModal = () => setOpen(true);
-    const closeModal = () => setOpen(false);
+    const openModal = () => {
+        onOpen();
+        setOpen(true);
+    }
+    const closeModal = () => {
+        onClose();
+        setOpen(false);
+    }
 
     const handleOk = () => {
-        callback();
+        onOk();
         closeModal();
     }
 
     const handleCancel = () => closeModal();
+
+    const outsideClickRef = useClickAway(() => handleCancel());
 
     return (
         <div>
@@ -42,7 +68,7 @@ export const ModalWrapper = ({children, callback, title, titleColor, description
                 aria-labelledby='modal-modal-title'
                 aria-describedby='modal-modal-description'
             >
-                <Box sx={style}>
+                <Box sx={style} ref={outsideClickRef}>
                     <Grid container direction={'column'} spacing={3}>
                         <Grid item>
                             <Typography id='modal-modal-title' color={titleColor} align={'center'}>
@@ -57,12 +83,18 @@ export const ModalWrapper = ({children, callback, title, titleColor, description
                         <Grid item>
                             <Grid container direction={'row'}>
                                 <Grid item xs={6} align='center'>
-                                    <Button onClick={handleCancel} color={'primary'}>
+                                    <Button
+                                        onClick={handleCancel}
+                                        style={buttonStyle}
+                                    >
                                         {t(cancelMsg)}
                                     </Button>
                                 </Grid>
                                 <Grid item xs={6} align='center'>
-                                    <Button onClick={handleOk} color={'primary'}>
+                                    <Button
+                                        onClick={handleOk}
+                                        style={buttonStyle}
+                                    >
                                         {t(okMsg)}
                                     </Button>
                                 </Grid>

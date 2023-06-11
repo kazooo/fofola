@@ -4,11 +4,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Box, TextField} from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import {HorizontallyCenteredBox} from '../../components/layout/HorizontallyCenteredBox';
-import {RefreshIconButton} from '../../components/button/iconbuttons';
-import {ModalWrapper} from '../../components/form/ModalWrapper';
-import {AddButton, ClearButton} from '../../components/button';
-import {Error} from '../../components/info/Error';
+import {HorizontallyCenteredBox} from 'components/layout/HorizontallyCenteredBox';
+import {RefreshIconButton} from 'components/button/iconbuttons';
+import {ModalWrapper} from 'components/form/ModalWrapper';
+import {AddButton, ClearButton} from 'components/button';
+import {Error} from 'components/info/Error';
 
 import {deleteVirtualCollection, loadVirtualCollections, updateVirtualCollection} from './saga';
 import {Buttons, Panel, VCDescriptions, VCNames} from './components';
@@ -73,7 +73,7 @@ export const EditForm = () => {
 
     const deleteButton = (
         <ModalWrapper
-            callback={deleteVc}
+            onOk={deleteVc}
             title={'common.title.warning'}
             titleColor={'secondary'}
             description={'feature.vcManagement.confirmDelete'}

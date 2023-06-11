@@ -1,12 +1,14 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {Box, Grid} from '@material-ui/core';
 import {useEffect, useState} from 'react';
-import {requestJobPreviews} from './saga';
-import {useInterval} from '../../effects/useInterval';
-import {Checkbox} from '../../components/form/Checkbox';
-import {AddButton} from '../../components/button';
-import {RefreshIconButton} from '../../components/button/iconbuttons';
+
+import {RefreshIconButton} from 'components/button/iconbuttons';
+import {Checkbox} from 'components/form/Checkbox';
+import {useInterval} from 'effects/useInterval';
+import {AddButton} from 'components/button';
+
 import {getJobFormType, getJobFormValues, openCreateJobForm} from './slice';
+import {requestJobPreviews} from './saga';
 import {JobForm} from './JobForm';
 
 export const Header = () => {

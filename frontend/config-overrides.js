@@ -8,6 +8,7 @@ module.exports = function override(config) {
         tools: path.resolve(__dirname, 'src/utils/tools.js'),
         components: path.resolve(__dirname, 'src/components'),
         utils: path.resolve(__dirname, 'src/utils'),
+        effects: path.resolve(__dirname, 'src/effects'),
     };
     return config;
 };

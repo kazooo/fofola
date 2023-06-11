@@ -1,4 +1,4 @@
-import {Button} from "@material-ui/core";
+import {IconButton} from 'components/button';
 
 export const LoadStringsFromFileForm = ({label, submitFunc}) => {
     let fileReader;
@@ -22,17 +22,13 @@ export const LoadStringsFromFileForm = ({label, submitFunc}) => {
         fileReader.readAsText(file);
     };
 
-    return <Button
-        variant="contained"
-        component="label"
-        style={{ fontSize: '12px' }}
-    >
+    return <IconButton>
         {label}
         <input
-            type="file"
+            type='file'
             hidden
             accept='.txt'
             onChange={handleFileChosen}
         />
-    </Button>
+    </IconButton>;
 };

@@ -1,4 +1,4 @@
-package cz.mzk.fofola.model.dnnt;
+package cz.mzk.fofola.model.dnnt.transition;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import cz.mzk.fofola.constants.dnnt.DnntState;

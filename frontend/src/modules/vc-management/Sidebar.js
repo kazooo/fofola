@@ -3,8 +3,8 @@ import {Box} from '@material-ui/core';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 
-import {HorizontallyCenteredBox} from '../../components/layout/HorizontallyCenteredBox';
-import {Loading} from '../../components/info/Loading';
+import {HorizontallyCenteredBox} from 'components/layout/HorizontallyCenteredBox';
+import {Loading} from 'components/info/Loading';
 
 import {getIsLoading} from './slice';
 import {CreateForm} from './CreateForm';

@@ -33,7 +33,9 @@
       "edit": "Upravit",
       "refresh": "Obnovit",
       "delete": "Vymazat",
-      "clear": "Vyčistit"
+      "clear": "Vyčistit",
+      "close": "Zavřít",
+      "done": "Hotovo"
     },
     "table": {
       "loading": {
@@ -43,6 +45,7 @@
       }
     }
   },
+
   "constant": {
     "sugo": {
       "session": {
@@ -136,6 +139,137 @@
         },
         "custom": {
           "title": "Vlastní nastavení"
+        }
+      },
+      "alert": {
+        "type": {
+          "warning": {
+            "title": "Varování"
+          },
+          "error": {
+            "title": "Chyba"
+          }
+        },
+        "issueType": {
+          "foxmNotFound": {
+            "title": "Nenalezena metadata ve FOXML",
+            "shortDescription": "Nenalezena metadata ve FOXML při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> nebyla nalezena metadata ve FOXML při zpracování dokumentu <strong>{{uuid}}</strong>. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Dokumentu může chybět FOXML soubor, nebo FOXML má specifické URL které Sugo neumí vytahnout z Krameria.",
+            "possibleSolutions": "Zkontrolujte, zda je dokument ve správném formátu, zda obsahuje metadata a zopakujte labelizaci."
+          },
+          "foxmXpathException": {
+            "title": "Chyba při zpracování xpath ve FOXML",
+            "shortDescription": "Chyba při zpracování xpath ve FOXML při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě při zpracování xpath ve FOXML při zpracování dokumentu <strong>{{uuid}}</strong>. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "FOXML soubor dokumentu má jinou strukturu než Sugo umí zpracovat. Je také možné, že Sugo používá nevalidní xpath.",
+            "possibleSolutions": "Zkontrolujte, zda je dokument ve správném formátu, zda obsahuje metadata a zopakujte labelizaci."
+          },
+          "fedoraIoError": {
+            "title": "Chyba při komunikaci s Fedorou",
+            "shortDescription": "Chyba při komunikaci s Fedorou při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě při komunikaci s Fedorou při zpracování dokumentu <strong>{{uuid}}</strong>. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Fedora je nedostupná, vytižená nebo chyba vzniká při ukládání zpracovaného dokumentu.",
+            "possibleSolutions": "Zkontrolujte, zda je Fedora dostupná a zopakujte labelizaci."
+          },
+          "solrIoError": {
+            "title": "Chyba při komunikaci s Solrem",
+            "shortDescription": "Chyba při komunikaci s Solrem při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě při komunikaci s Solrem při zpracování dokumentu <strong>{{uuid}}</strong>. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Solr je nedostupný, vytižený nebo chyba vzniká při ukládání zpracovaného dokumentu.",
+            "possibleSolutions": "Zkontrolujte, zda je Solr dostupný a zopakujte labelizaci."
+          },
+          "preparedDocInconsistency": {
+            "title": "Nekonzistence připravených dokumentů",
+            "shortDescription": "Nekonzistence připravených dokumentů při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k nekonzistenci k rozdílnému počtu připravených na labelizaci dokumentů a celkovému počtu dokumentů při zpracování dokumentu <strong>{{uuid}}</strong>. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Nekonzistence může nastat pokud je struktura připravených dokumentů specifická a Sugo ji neumí zpracovat. Je také možné, že proces labelizace obsahuje chybu.",
+            "possibleSolutions": "Zkontrolujte, zda je proces labelizace nastaven správně a zopakujte labelizaci."
+          },
+          "internalNotFoundWhenRollback": {
+            "title": "Nenalezen interní záznam při rollbacku",
+            "shortDescription": "Nenalezen interní záznam při rollbacku při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě při zpracování dokumentu <strong>{{uuid}}</strong>, a při pokusu o vracení do původního stavu se nepodařilo najít interní záznam. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Pravděpodobně během vrácení do původního stavu vznikla chyba komikace se Solrem, dokument byl mezitím smazán nebo proces labelizace obsahuje chybu.",
+            "possibleSolutions": "Zkontrolujte, zda je proces labelizace nastaven správně, zda dokument nebyl mezitím smazán a zopakujte labelizaci."
+          },
+          "internalNotFound": {
+            "title": "Nenalezen interní záznam",
+            "shortDescription": "Nenalezen interní záznam při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> se nepodařilo najít interní záznam při zpracování dokumentu <strong>{{uuid}}</strong>. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Pravděpodobně dokument neexistuje, byl mezitím smazán nebo proces labelizace obsahuje chybu.",
+            "possibleSolutions": "Zkontrolujte, zda dokument opravdu existuje a proces labelizace je nastaven správně a následně zopakujte labelizaci."
+          },
+          "fedoraChangesApplyingFailureWhenRollback": {
+            "title": "Chyba při aplikaci změn v Fedoře při rollbacku",
+            "shortDescription": "Chyba při aplikaci změn v Fedoře při rollbacku při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě při aplikaci změn v Fedoře, a při pokusu o vracení do původního stavu se nepodařilo propsat původní stav do FOXML. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Pravděpodobně během vrácení do původního stavu vznikla chyba komikace s Fedorou, dokument byl mezitím smazán nebo proces labelizace obsahuje chybu.",
+            "possibleSolutions": "Zkontrolujte, zda je proces labelizace nastaven správně, zda dokument nebyl mezitím smazán a zopakujte labelizaci."
+          },
+          "noChangesRequired": {
+            "title": "Nejsou potřeba žádné změny",
+            "shortDescription": "Nejsou potřeba žádné změny při zpracování dokumentu {{uuid}}",
+            "fullDescription": "Dokument <strong>{{uuid}}</strong> nevyžaduje žádné změny, a proto byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Dokument obsahuje všechny potřebné změny nebo byl mezitím labelizován.",
+            "possibleSolutions": "Nejsou potřeba žádné změny."
+          },
+          "fedoraChangesApplyingFailure": {
+            "title": "Chyba při aplikaci změn v Fedoře",
+            "shortDescription": "Chyba při aplikaci změn v Fedoře při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace {{sessionId}} došlo k chybě při aplikaci změn v Fedoře při zpracování dokumentu {{uuid}}. Dokument byl vracen do původního stavu a přeskočen, tedy nebude labelizován.",
+            "possibleReasons": "Pravděpodobně nastala chyba zpracování FOXML dokumentu, nebo proces labelizace obsahuje chybu.",
+            "possibleSolutions": "Zkontrolujte stav dokumentu, chybovou hlášku, případně opravte proces a zopakujte labelizaci."
+          },
+          "solrChangesApplyingFailure": {
+            "title": "Chyba při aplikaci změn v Solru",
+            "shortDescription": "Chyba při aplikaci změn v Solru při zpracování dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě při aplikaci změn v Solru při zpracování dokumentu <strong>{{uuid}}</strong>. Dokument byl vracen do původního stavu a přeskočen, tedy nebude labelizován.",
+            "possibleReasons": "Pravděpodobně nastala chyba komunikace se Solrem, nebo proces labelizace obsahuje chybu.",
+            "possibleSolutions": "Zkontrolujte stav dokumentu, chybovou hlášku, případně opravte proces a zopakujte labelizaci."
+          },
+          "unknownException": {
+            "title": "Neznámá chyba",
+            "shortDescription": "Neznámá chyba při zpracování dokumentů",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k neznámé chybě při zpracování dokumentů. Process byl zastaven.",
+            "possibleReasons": "Pravděpodobně nastala chyba v procesu labelizace, která nebyla ošetřena nebo chyba je specifická a Sugo neumí ji samostatně zpracovat.",
+            "possibleSolutions": "Zkontrolujte stav procesu, chybovou hlášku, případně opravte a nastartujte proces znovu."
+          },
+          "cantPrepareSession": {
+            "title": "Chyba při přípravě session",
+            "shortDescription": "Chyba při přípravě session s id {{sessionId}}",
+            "fullDescription": "Během přípravy procesu labelizace s id <strong>{{sessionId}}</strong> došlo k chybě. Proces nebyl vytvořen.",
+            "possibleReasons": "Pravděpodobně Sugo nedokazal agregovat data z potřebných zdrojů nebo nastala chyba v procesu labelizace.",
+            "possibleSolutions": "Zkontrolujte stav procesu, chybovou hlášku, případně opravte proces a vytvořte proces znovu."
+          },
+          "sddntItemNoUuid": {
+            "title": "Chybí UUID v SDNNT záznamu",
+            "shortDescription": "Chybí UUID v SDNNT záznamu s identifikátorem {{sddntIdentifier}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě, protože v SDNNT záznamu s identifikátorem <strong>{{sddntIdentifier}}</strong> chybí UUID. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "SDNNT zdroj má chybně nastavený záznam, kterému chybí UUID.",
+            "possibleSolutions": "Zkontrolujte, zda je záznam v SDNNT správně nastaven, případně opravte záznam a zopakujte labelizaci."
+          },
+          "searchChildrenFailure": {
+            "title": "Chyba při hledání potomků",
+            "shortDescription": "Chyba při hledání potomků dokumentu {{uuid}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě při hledání potomků dokumentu <strong>{{uuid}}</strong>. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Pravděpodobně Solr je nedostupný, vytižený nebo nastala chyba v procesu labelizace.",
+            "possibleSolutions": "Zkontrolujte připojení k Solru, chybovou hlášku, případně opravte proces a zopakujte labelizaci."
+          },
+          "flushSourceFailure": {
+            "title": "Chyba při flushování zdroje",
+            "shortDescription": "Chyba při flushování zdroje s id {{sourceId}}",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě při flushování zdroje. Dokument byl přeskočen a nebude labelizován.",
+            "possibleReasons": "Pravděpodobně Solr je nedostupný, vytižený nebo nastala chyba v procesu labelizace.",
+            "possibleSolutions": "Zkontrolujte připojení k Solru, chybovou hlášku, případně opravte proces a zopakujte labelizaci."
+          },
+          "batchProcessingFailure": {
+            "title": "Chyba při zpracování dávky",
+            "shortDescription": "Chyba při zpracování dávky dokumentů",
+            "fullDescription": "V ramci procesu labelizace <strong>{{sessionId}}</strong> došlo k chybě při zpracování dávky dokumentů na dokumentu <strong>{{uuid}}</strong>. Dokumenty z dávky byly přeskočeny a nebudou labelizovány.",
+            "possibleReasons": "Pravděpodobně vznikla neočekávaná chyba v procesu labelizace.",
+            "possibleSolutions": "Zkontrolujte chybovou hlášku, případně opravte proces a zopakujte labelizaci."
+          }
         }
       }
     }
@@ -254,6 +388,7 @@
           "direction": "Směr",
           "requestor": "Žadatel",
           "operation": "Operace",
+          "label": "Label",
           "status": "Stav",
           "total": "Celkem",
           "done": "Zpracovano",
@@ -272,7 +407,7 @@
             "tooltip": "Spustit proces"
           },
           "terminate": {
-            "tooltip": "Zastavit proces"
+            "tooltip": "Zrušit proces"
           }
         }
       },
@@ -469,6 +604,98 @@
             "error": {
               "cant": "Není možne načíst automatizované procesy ze serveru!"
             }
+          }
+        }
+      }
+    },
+
+    "dnntAlerts": {
+      "title": "Notifikace",
+      "table": {
+        "columns": {
+          "id": "ID",
+          "type": "Typ",
+          "issueType": "Typ problému",
+          "shortDescription": "Krátký popis",
+          "created": "Vytvořeno",
+          "actions": "Akce"
+        },
+        "loading": {
+          "active": "Načítám notifikace...",
+          "notFound": "Nebyly nalezeny žádné notifikace...",
+          "error": "Chyba při načtení motifikací!"
+        },
+        "buttons": {
+          "openAlert": {
+            "tooltip": "Detaily"
+          }
+        }
+      },
+      "request": {
+        "alert": {
+          "load": {
+            "success": "Notifikace byla úspešně načtena!",
+            "error": {
+              "cant": "Není možne načíst notifikaci!"
+            }
+          },
+          "loadPreviews": {
+            "error": {
+              "cant": "Není možne načíst notifikace ze serveru!"
+            }
+          },
+          "solve": {
+            "success": "Problém byl úspešně vyřešen!",
+            "error": "Není možne vyřešit problém!"
+          }
+        },
+        "stats": {
+          "alert": "Sugo hlasí o {{total}} nevyřešených problémech labelizace. Najdete je v sekci Notifikace.",
+          "load": {
+            "cant": "Není možne načíst statistiky o problémech labelizace! Zkontrolujte prosím připojení k Fofole.",
+            "error": "Při načítání statistik o problémech labelizace došlo k chybě!"
+          }
+        }
+      },
+      "alert": {
+        "section": {
+          "description": {
+            "title": "Popis problému"
+          },
+          "possibleReasons": {
+            "title": "Možné příčiny"
+          },
+          "possibleSolutions": {
+            "title": "Možná řešení"
+          },
+          "documentDetails": {
+            "title": "Detaily dokumentu",
+            "notFound": "Informace o dokumentu není k dispozici",
+            "error": "Chyba při načtení informací o dokumentu",
+            "columns": {
+              "uuid": "UUID",
+              "title": "Název",
+              "root": "Kořenový dokument",
+              "path": "Cesta",
+              "currentLabels": "Aktuální labely",
+              "nextLabels": "Nové labely"
+            }
+          },
+          "sessionDetails": {
+            "title": "Detaily procesu",
+            "notFound": "Informace o procesu není k dispozici",
+            "error": "Chyba při načtení informací o procesu"
+          },
+          "stackTrace": {
+            "title": "Stack trace"
+          }
+        },
+        "button": {
+          "solve": {
+            "title": "Označit jako vyřešené",
+            "tooltip": "Ujištěte se, že problém byl vyřešen a potvrďte tímto tlačítkem",
+            "alreadySolved": "Tento problém je již vyřešen!",
+            "question": "Opravdu chcete označit tento problém jako vyřešený?"
           }
         }
       }

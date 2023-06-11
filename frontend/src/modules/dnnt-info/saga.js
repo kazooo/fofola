@@ -1,9 +1,10 @@
 import {createAction} from '@reduxjs/toolkit';
 import {call, put, takeEvery} from 'redux-saga/effects';
 
-import {cantLoadNextPage, getCantLinkDnntLabelMsg, getLinkDnntLabelMsg} from '../../utils/constants/messages';
-import {snackbar} from '../../utils/snack/saga';
-import {request} from '../../utils/superagent';
+import {cantLoadNextPage, getCantLinkDnntLabelMsg, getLinkDnntLabelMsg} from 'utils/constants/messages';
+import {snackbar} from 'utils/snack/saga';
+import {request} from 'utils/superagent';
+
 import {DnntLinkingMode} from '../constants';
 
 import {

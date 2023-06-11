@@ -13,13 +13,15 @@ import {
     sugoSessionOperations,
 } from '../constants';
 import cronstrue from 'cronstrue';
-import {convertMinutesToMilliseconds, asEndOfDay, asStartOfDay, isValidCron, formatAsDateTime} from '../utils';
+import {asEndOfDay, asStartOfDay, isValidCron, formatAsDateTime} from '../utils';
 import {JobField, JobFormType} from './constants';
-import {useForm} from '../../effects/useForm';
+import {useForm} from 'effects/useForm';
 import {submitCreateJobForm, submitUpdateJobForm} from './saga';
 import {get, set} from 'tools';
 import {fieldProps, rules, labels} from './form';
 import {createFormStyles, containerRowStyle, containerColumnStyle} from './style';
+import {useKeyPress} from 'effects/useKeyPress';
+import {useClickAway} from '@uidotdev/usehooks';
 
 export const JobForm = ({type, values}) => {
     const {t} = useTranslation();
@@ -47,7 +49,16 @@ export const JobForm = ({type, values}) => {
         return () => {
             reset();
         };
-    }, []);
+    }, [reset]);
+
+    useKeyPress('Escape', (e) => {
+        e.preventDefault();
+        dispatch(closeJobForm());
+    });
+
+    const outsideClickRef = useClickAway(() => {
+        dispatch(closeJobForm());
+    });
 
     const fieldStyle = {
         item: true,
@@ -284,7 +295,7 @@ export const JobForm = ({type, values}) => {
             aria-describedby='modal-modal-description'
         >
             <form>
-                <Box className={classes.form}>
+                <Box className={classes.form} ref={outsideClickRef}>
                     <Box className={classes.formBox}>
                         <Grid container direction={'column'} spacing={4}>
                             <Grid item>

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {ServiceContainer} from './ServiceContainer';
 import {ServiceCard} from './ServiceCard';
 import {Service} from './Service';
-import {requestEnvInfo} from './saga';
+import {requestAlertStats, requestEnvInfo} from './saga';
 import {getAppInfo} from './slice';
 import {sections} from './services';
 
@@ -14,6 +14,7 @@ export const Home = () => {
 
     useEffect(() => {
         dispatch(requestEnvInfo());
+        dispatch(requestAlertStats());
     }, [dispatch]);
 
     return (

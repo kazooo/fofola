@@ -1,10 +1,7 @@
-package cz.mzk.fofola.model.dnnt;
+package cz.mzk.fofola.model.dnnt.session;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import cz.mzk.fofola.constants.dnnt.Direction;
-import cz.mzk.fofola.constants.dnnt.Operation;
-import cz.mzk.fofola.constants.dnnt.Requestor;
-import cz.mzk.fofola.constants.dnnt.Status;
+import cz.mzk.fofola.constants.dnnt.*;
 import cz.mzk.fofola.model.dnnt.serializer.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +20,7 @@ public class SugoSessionDto {
     private Direction direction;
     private Requestor requestor;
     private Operation operation;
+    private String label;
     private Long total;
     private Long done;
     private Status status;

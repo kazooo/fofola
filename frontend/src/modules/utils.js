@@ -1,5 +1,5 @@
 import cronstrue from 'cronstrue';
-import {isMoment} from "moment";
+import {isMoment} from 'moment';
 
 export const isValidCron = (cronExpression) => {
     try {
@@ -17,3 +17,5 @@ export const asEndOfDay = (date) => date && isMoment(date) && date.endOf('day');
 export const formatAsDateTime = (date) => date && isMoment(date) && date.format('YYYY-MM-DD HH:mm:ss.SSS');
 
 export const convertMinutesToMilliseconds = (minutes) => minutes * 60 * 1000;
+
+export const isNullOrUndefined = (value) => value === null || value === undefined;

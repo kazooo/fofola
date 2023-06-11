@@ -1,13 +1,13 @@
 import { useForm as originalUseForm } from 'react-hook-form';
-import {FormTextField} from "../components/form/react-form/FormTextField";
-import React from "react";
-import {FormSelector} from "../components/form/react-form/FormSelector";
-import {FormDatepicker} from "../components/form/react-form/FormDatepicker";
-import {FormDurationField} from "../components/form/react-form/FormDurationField";
-import {FormSwitch} from "../components/form/react-form/FormSwitch";
-import {MenuItem} from "@material-ui/core";
-import {useTranslation} from "react-i18next";
-import {get, set} from "tools";
+import {FormTextField} from 'components/form/react-form/FormTextField';
+import React from 'react';
+import {FormSelector} from 'components/form/react-form/FormSelector';
+import {FormDatepicker} from 'components/form/react-form/FormDatepicker';
+import {FormDurationField} from 'components/form/react-form/FormDurationField';
+import {FormSwitch} from 'components/form/react-form/FormSwitch';
+import {MenuItem} from '@material-ui/core';
+import {useTranslation} from 'react-i18next';
+import {get, set} from 'tools';
 
 export const useForm = ({
     labels = new Map(),

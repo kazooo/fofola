@@ -1,4 +1,4 @@
-package cz.mzk.fofola.model.dnnt;
+package cz.mzk.fofola.model.dnnt.transition;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
-public class SugoSessionPageDto {
+public class SugoTransitionPageDto {
     private Long numFound;
-    private List<SugoSessionDto> entities;
+    private List<SugoTransitionDto> entities;
 }

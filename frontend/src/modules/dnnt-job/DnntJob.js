@@ -1,9 +1,9 @@
 import {Box} from '@material-ui/core';
 
-import {SplitPageContainer} from '../../components/page/SplitPageContainer';
-import {VerticalEmptyGap} from '../../components/layout/VerticalEmptyGap';
-import {FeatureContent} from '../../components/page/FeatureContent';
-import {FofolaPage} from '../../components/page/FofolaPage';
+import {SplitPageContainer} from 'components/page/SplitPageContainer';
+import {VerticalEmptyGap} from 'components/layout/VerticalEmptyGap';
+import {FeatureContent} from 'components/page/FeatureContent';
+import {FofolaPage} from 'components/page/FofolaPage';
 import {Table} from './Table';
 import {Header} from './Header';
 
