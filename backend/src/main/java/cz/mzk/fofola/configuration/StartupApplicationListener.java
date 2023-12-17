@@ -12,7 +12,7 @@ import java.util.TimeZone;
 @Slf4j
 public class StartupApplicationListener {
 
-    private final FofolaConfiguration config;
+    private final AppProperties config;
 
     @PostConstruct
     public void setApplicationTimeZone() {

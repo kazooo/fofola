@@ -1,9 +1,9 @@
 import {createAction} from '@reduxjs/toolkit';
 import {call, put, takeEvery} from 'redux-saga/effects';
 
-import {getCantDeleteUuidsMsg, getDeleteUuidsMsg} from '../../utils/constants/messages';
-import {snackbar} from '../../utils/snack/saga';
-import {request} from '../../utils/superagent';
+import {getCantDeleteUuidsMsg, getDeleteUuidsMsg} from 'utils/constants/messages';
+import {snackbar} from 'utils/snack/saga';
+import {request} from 'utils/superagent';
 
 import {clearUuids, createActionType} from './slice';
 
@@ -16,11 +16,10 @@ export default function* watcherSaga() {
 }
 
 function* deleteSaga(action) {
-    const { uuids, deleteFromSolrOnly, deleteRecursively } = action.payload;
+    const { uuids } = action.payload;
     try {
         yield call(() => request
             .delete('/delete')
-            .query({ deleteFromSolrOnly, deleteRecursively })
             .send(uuids)
         );
         yield put(snackbar.success(getDeleteUuidsMsg(uuids.length)));

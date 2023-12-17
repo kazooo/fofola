@@ -1,11 +1,11 @@
 import {DeleteForm} from "./DeleteForm";
 import {DeletePanel} from "./DeletePanel";
-import {FeatureMenu} from "../../components/page/FeatureMenu";
-import {FeatureContent} from "../../components/page/FeatureContent";
-import {SplitPageContainer} from "../../components/page/SplitPageContainer";
-import {FofolaPage} from "../../components/page/FofolaPage";
+import {FeatureMenu} from "components/page/FeatureMenu";
+import {FeatureContent} from "components/page/FeatureContent";
+import {SplitPageContainer} from "components/page/SplitPageContainer";
+import {FofolaPage} from "components/page/FofolaPage";
 import {DeleteUuidsTable} from "./DeleteUuidsTable";
-import {FeatureInfoBox} from "../../components/page/FeatureInfoBox";
+import {FeatureInfoBox} from "components/page/FeatureInfoBox";
 
 export const Delete = () => (
     <FofolaPage>

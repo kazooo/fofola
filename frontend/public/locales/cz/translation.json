@@ -314,13 +314,8 @@
 
     "delete": {
       "title": "Mazání dokumentů",
-      "description": "Tady můžete naplanovat process mazání dokumentů. Fofola definuje process mazání v Krameriu, ten pak můžete vidět v administratorském rozhrání. V závislosti na zaškrtnutých checkboxech, můžete vymazat dokumenty pouze ze Solru, a to jak rekurzivně tak i jenom zadané UUID.",
-      "form": {
-        "deleteFromSolrOnly": "Smazat pouze ze Solru",
-        "deleteRecursively": "Smazat rekurzivně"
-      },
-      "confirmComplete": "Chcete opravdu smazat zadané UUID z Krameria? Reimport je jediná možnost vratit vymazané dokumenty.",
-      "confirmSolrOnly": "Chcete opravdu smazat zadané UUID ze Solru? Reindexací můžete vratit vymazané dokumenty."
+      "description": "Tady můžete naplanovat process mazání dokumentů. Fofola definuje process mazání v Krameriu, ten pak můžete vidět v administratorském rozhrání. Bohužel, v současné době není možné naplanovat konzistentní mazání pouze z indexu kvůli složitostí datového modelu a chybějicímu odpovidajícímu procesu v Krameriu.",
+      "confirmComplete": "Chcete opravdu smazat zadané UUID z Krameria? Reimport je jediná možnost vratit vymazané dokumenty."
     },
 
     "perioPartsPublish": {
@@ -652,7 +647,7 @@
         "stats": {
           "alert": "Sugo hlasí o {{total}} nevyřešených problémech labelizace. Najdete je v sekci Notifikace.",
           "load": {
-            "cant": "Není možne načíst statistiky o problémech labelizace! Zkontrolujte prosím připojení k Fofole.",
+            "cant": "Není možne načíst statistiky o problémech labelizace! Zkontrolujte prosím připojení k Sugo.",
             "error": "Při načítání statistik o problémech labelizace došlo k chybě!"
           }
         }

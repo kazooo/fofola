@@ -3,9 +3,9 @@ import {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 
 import {requestNewPageProcessesInfo, requestProcessesInfo} from "./saga";
-import {RefreshIconButton} from "../../components/button/iconbuttons";
-import {Checkbox} from "../../components/form/Checkbox";
-import {useInterval} from "../../effects/useInterval";
+import {RefreshIconButton} from "components/button/iconbuttons";
+import {Checkbox} from "components/form/Checkbox";
+import {useInterval} from "effects/useInterval";
 
 export const KrameriusProcessMenu = () => {
     const dispatch = useDispatch();

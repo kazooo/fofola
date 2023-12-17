@@ -1,11 +1,11 @@
 import {useDispatch, useSelector} from "react-redux";
 import {Box} from "@material-ui/core";
 
-import {DeleteIconButton, StopIconButton} from "../../components/button/iconbuttons";
+import {DeleteIconButton, StopIconButton} from "components/button/iconbuttons";
 import {getCurrentPage, getIsLoading, getProcessesInfo, setPage} from "./slice";
 import {removeProcess, requestNewPageProcessesInfo, stopProcess} from "./saga";
-import {FofolaTable} from "../../components/table/FofolaTable";
-import {Paginator} from "../../components/table/Paginator";
+import {FofolaTable} from "components/table/FofolaTable";
+import {Paginator} from "components/table/Paginator";
 import {columns} from "./constants";
 
 export const KrameriusProcessTable = () => {
@@ -25,13 +25,13 @@ export const KrameriusProcessTable = () => {
                     {
                         canStop(row.state) && (
                             <StopIconButton
-                                onClick={() => dispatch(stopProcess(row.uuid))}
+                                onClick={() => dispatch(stopProcess(row.id))}
                                 tooltip={"Pozastavit process"}
                             />
                         )
                     }
                     <DeleteIconButton
-                        onClick={() => dispatch(removeProcess(row.uuid))}
+                        onClick={() => dispatch(removeProcess(row.id))}
                         tooltip={"Vymazat process"}
                     />
                 </Box>

@@ -1,6 +1,6 @@
 export const columns = [
     {
-        id: 'def',
+        id: 'defid',
         label: 'Typ',
         width: 100,
         align: 'center',

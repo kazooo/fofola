@@ -1,90 +1,78 @@
 package cz.mzk.fofola.process.perio_parts_publishing;
 
-import cz.mzk.fofola.configuration.ApiConfiguration;
-import cz.mzk.fofola.configuration.FofolaConfiguration;
-import cz.mzk.fofola.service.SolrService;
+import cz.mzk.fofola.api.KrameriusApi;
+import cz.mzk.fofola.constants.AccessType;
+import cz.mzk.fofola.constants.ModelName;
+import cz.mzk.fofola.model.solr.SearchDoc;
+import cz.mzk.fofola.repository.SolrRepository;
 import cz.mzk.fofola.service.UuidService;
-import cz.mzk.fofola.repository.FedoraDocumentRepository;
-import cz.mzk.fofola.service.XMLService;
-import org.apache.solr.client.solrj.SolrClient;
+import cz.mzk.fofola.utils.solr.SolrQueryBuilder;
+import cz.mzk.fofola.utils.solr.SolrSearchField;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrDocument;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class PerioPartsPublisher {
 
-    private final FedoraDocumentRepository fedoraRepository;
-    private final SolrClient solrClient;
+    private final KrameriusApi krameriusApi;
+    private final SolrRepository<SearchDoc> solrRepository;
     private final Logger logger;
-    private final int maxDocs;
 
-    public PerioPartsPublisher(final FofolaConfiguration configuration, final int maxDocsPerQuery, final Logger logger)
-            throws ParserConfigurationException, TransformerConfigurationException, XPathExpressionException {
+    public PerioPartsPublisher(
+            final KrameriusApi krameriusApi,
+            final SolrRepository<SearchDoc> solrRepository,
+            final Logger logger
+    ) {
+        this.krameriusApi = krameriusApi;
+        this.solrRepository = solrRepository;
         this.logger = logger;
-        maxDocs = maxDocsPerQuery;
-        solrClient = SolrService.buildClient(configuration.getSolrHost());
-        fedoraRepository = new FedoraDocumentRepository(new XMLService(), ApiConfiguration.getFedoraApi(configuration));
     }
 
     public void checkPartsAndMakePublic(String rootUuid) {
         rootUuid = UuidService.makeUuid(rootUuid);
-        SolrQuery query = new SolrQuery("PID:\"" + rootUuid + "\"");
-        query.setFields("PID");
         try {
-            SolrDocument perioDoc = SolrService.queryFirstSolrDoc(query, solrClient);
+            final SearchDoc perioDoc = solrRepository.getByUuid(rootUuid);
             checkAndPublishDocsRecursively(perioDoc, "");
-        } catch (IOException | SolrServerException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
         }
     }
 
-    private boolean checkAndPublishDocsRecursively(SolrDocument doc, String indent)
-            throws IOException, SolrServerException{
-        AtomicBoolean makePublic = new AtomicBoolean(false);
-        String uuid = (String) doc.getFieldValue("PID");
-        SolrQuery childQuery = createQueryForChildNodes(uuid);
-        Consumer<SolrDocument> publisherConsumer = solrDoc -> {
-            String accessibility = (String) solrDoc.getFieldValue("dostupnost");
-            if (accessibility.equals("public")) {
+    private boolean checkAndPublishDocsRecursively(final SearchDoc doc, final String indent) {
+        final AtomicBoolean makePublic = new AtomicBoolean(false);
+        final String uuid = doc.getUuid();
+        final SolrQuery childQuery = createQueryForChildNodes(uuid);
+        final Consumer<SearchDoc> publisherConsumer = solrDoc -> {
+            final AccessType accessibility = solrDoc.getAccessibility();
+            if (accessibility == AccessType.PUBLIC) {
                 makePublic.set(true);
-                logger.info(indent+"Public document detected, make its parent public too...");
+                logger.info(indent + "Public document detected, make its parent public too...");
             } else {
-                try {
-                    boolean childArePublic = checkAndPublishDocsRecursively(solrDoc, "    "+indent);
-                    if (childArePublic) makePublic.set(true);
-                } catch (IOException | SolrServerException ignored) { }
+                boolean childArePublic = checkAndPublishDocsRecursively(solrDoc, "    " + indent);
+                if (childArePublic) {
+                    makePublic.set(true);
+                }
             }
         };
-        SolrService.paginateByCursor(
-                childQuery, solrClient, publisherConsumer, maxDocs
-        );
+        solrRepository.paginateByCursor(childQuery, publisherConsumer);
         if (makePublic.get()) {
             logger.info(indent + uuid + " make public!");
-            SolrService.makePublic(uuid, solrClient);
-            fedoraRepository.makePublic(uuid);
+            krameriusApi.makePublic(uuid, "OBJECT");
         }
         return makePublic.get();
     }
 
-    private SolrQuery createQueryForChildNodes(String parentUuid) {
-        String queryStr =
-                "parent_pid:\"" + parentUuid + "\"" +
-                " AND !PID:\"" + parentUuid + "\"" +
-                " AND !fedora.model:\"page\"";
+    private SolrQuery createQueryForChildNodes(final String parentUuid) {
+        final String queryStr = SolrQueryBuilder.start()
+                .is(SolrSearchField.PARENT_UUID, parentUuid, true)
+                .and()
+                .not(SolrSearchField.UUID, parentUuid, true)
+                .and()
+                .not(SolrSearchField.MODEL, ModelName.PAGE, true)
+                .build();
         SolrQuery query = new SolrQuery(queryStr);
-        query.setFields("PID", "dostupnost");
+        query.setFields(SolrSearchField.UUID, SolrSearchField.ACCESSIBILITY);
         return query;
-    }
-
-    public void close() throws IOException {
-        solrClient.close();
     }
 }

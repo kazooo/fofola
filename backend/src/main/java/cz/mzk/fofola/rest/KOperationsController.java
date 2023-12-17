@@ -1,7 +1,7 @@
 package cz.mzk.fofola.rest;
 
-import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.model.UuidStateResponse;
+import cz.mzk.fofola.model.kprocess.KrameriusProcess;
 import cz.mzk.fofola.service.UuidCheckingService;
 import cz.mzk.fofola.service.KProcessService;
 import cz.mzk.fofola.service.UuidService;
@@ -70,24 +70,11 @@ public class KOperationsController {
 
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@RequestParam final boolean deleteFromSolrOnly,
-                       @RequestParam final boolean deleteRecursively,
-                       @RequestBody final List<String> uuids) {
+    public void delete(@RequestBody final List<String> uuids) {
         for (String uuid : uuids) {
             uuid = UuidService.makeUuid(uuid);
-
-            log.info(
-                    String.format(
-                            "Delete: %s, from index: %b, recursively: %b",
-                            uuid, deleteFromSolrOnly, deleteRecursively
-                    )
-            );
-
-            if (deleteFromSolrOnly) {
-                kProcessService.deleteFromIndex(uuid, deleteRecursively);
-            } else {
-                kProcessService.delete(uuid);
-            }
+            log.info(String.format("Delete: %s", uuid));
+            kProcessService.delete(uuid);
         }
     }
 }

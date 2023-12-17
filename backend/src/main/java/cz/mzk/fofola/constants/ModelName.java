@@ -1,4 +1,4 @@
-package cz.mzk.fofola.constants.solr;
+package cz.mzk.fofola.constants;
 
 public class ModelName {
     public static final String MONOGRAPH = "monograph";
@@ -10,4 +10,5 @@ public class ModelName {
     public static final String ARCHIVE = "archive";
     public static final String MANUSCRIPT = "manuscript";
     public static final String MONOGRAPHUNIT = "monographunit";
+    public static final String PAGE = "page";
 }

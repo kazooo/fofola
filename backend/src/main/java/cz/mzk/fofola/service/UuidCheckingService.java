@@ -1,10 +1,8 @@
 package cz.mzk.fofola.service;
 
-import cz.mzk.fofola.model.doc.FedoraDocument;
 import cz.mzk.fofola.model.UuidStateResponse;
-import cz.mzk.fofola.model.doc.SolrDocument;
-import cz.mzk.fofola.repository.FedoraDocumentRepository;
-import cz.mzk.fofola.repository.SolrDocumentRepository;
+import cz.mzk.fofola.model.solr.SearchDoc;
+import cz.mzk.fofola.repository.SolrRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,30 +12,21 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UuidCheckingService {
 
-    private final SolrDocumentRepository solrRepository;
-    private final FedoraDocumentRepository fedoraRepository;
+    private final SolrRepository<SearchDoc> solrRepository;
 
     public UuidStateResponse checkUuidState(String uuid) {
         UuidStateResponse response = new UuidStateResponse(uuid);
-        SolrDocument solrDoc = solrRepository.getByUuid(uuid);
-        FedoraDocument fedoraDoc = fedoraRepository.getByUuid(uuid);
+        SearchDoc solrDoc = solrRepository.getByUuid(uuid);
 
         response.setIndexed(solrDoc != null);
-        response.setStored(fedoraDoc != null);
 
         if (solrDoc != null) {
-            if (solrDoc.getModifiedDate() != null) {
-                response.setSolrModifiedDate(solrDoc.getModifiedDate());
+            if (solrDoc.getModified() != null) {
+                response.setSolrModifiedDate(solrDoc.getModified());
             }
-            response.setAccessibilityInSolr(solrDoc.getAccessibility());
+            response.setAccessibilityInSolr(solrDoc.getAccessibility().getName());
+            response.setModel(solrDoc.getModel());
             response.setRootTitle(solrDoc.getRootTitle());
-        }
-
-        if (fedoraDoc != null) {
-            response.setAccessibilityInFedora(fedoraDoc.getAccesibility());
-            response.setModel(fedoraDoc.getModel());
-            response.setFedoraModifiedDate(fedoraDoc.getModifiedDateStr());
-            response.setImgUrl(fedoraDoc.getImageUrl());
         }
 
         return response;

@@ -15,30 +15,18 @@ public class DocTreeNode {
     public String stored;
     public String indexed;
     public String linkInRelsExt;
-    public String visibilitySolr;
-    public String visibilityFedora;
+    public Boolean visibilitySolr;
+    public Boolean visibilityFedora;
     public String imageUrl;
     public boolean hasProblem;
-    public List<DocTreeNode> children;
     public boolean hasProblematicChild;
 
     public DocTreeNode(String u) {
         uuid = u;
-        children = new ArrayList<>();
         linkInRelsExt = "true"; // for root node
     }
 
-    public void addChild(DocTreeNode child) {
-        children.add(child);
-        hasProblematicChild = child.hasProblem;
-    }
-
     public void checkProblems() {
-        if (visibilityFedora == null || visibilitySolr == null) {
-            hasProblem = true;
-        } else if (!visibilityFedora.equals(visibilitySolr)) {
-            hasProblem = true;
-        }
         if (linkInRelsExt.equals("false")) {
             hasProblem = true;
         }

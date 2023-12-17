@@ -1,6 +1,6 @@
 package cz.mzk.fofola.process.donator_linker;
 
-import cz.mzk.fofola.configuration.FofolaConfiguration;
+import cz.mzk.fofola.configuration.AppProperties;
 import cz.mzk.fofola.model.process.Process;
 import cz.mzk.fofola.model.process.ProcessParams;
 import cz.mzk.fofola.model.process.TerminationReason;
@@ -14,12 +14,12 @@ public class DonatorLinkerProcess extends Process {
     private final String donator;
     private final String mode;
     private final List<String> rootUuids;
-    private final FofolaConfiguration configuration;
+    private final AppProperties props;
 
     @SuppressWarnings("unchecked")
     public DonatorLinkerProcess(ProcessParams params) throws IOException {
         super(params);
-        configuration = params.getConfig();
+        props = params.getConfig();
         Map<String, ?> data = params.getData();
 
         donator = (String) data.get("donator");
@@ -29,7 +29,7 @@ public class DonatorLinkerProcess extends Process {
 
     @Override
     public TerminationReason process() throws Exception {
-        DonatorLinker donatorLinker = new DonatorLinker(configuration, 1500, logger);
+        DonatorLinker donatorLinker = new DonatorLinker(props, 1500, logger);
         for (String rootUuid : rootUuids) {
             switch (mode) {
                 case "link" -> donatorLinker.link(rootUuid, donator);

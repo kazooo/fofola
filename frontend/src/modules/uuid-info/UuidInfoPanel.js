@@ -6,8 +6,8 @@ import {
     LockIconButton,
     RefreshIconButton,
     UnlockIconButton
-} from '../../components/button/iconbuttons';
-import {FofolaTable} from '../../components/table/FofolaTable';
+} from 'components/button/iconbuttons';
+import {FofolaTable} from 'components/table/FofolaTable';
 import {getOneUuidInfo, privateUuids, publicUuids, reindexUuids} from './saga';
 import {getUuidInfo, removeUuidInfo} from './slice';
 import {columns} from './columns';
@@ -34,18 +34,22 @@ export const UuidInfoPanel = () => {
             ...row,
             action:
                 <Box>
-                    <RefreshIconButton
-                        onClick={() => dispatch(reindexUuids([row.uuid]))}
-                        tooltip={'Reindexovat'}
-                    />
-                    <UnlockIconButton
-                        onClick={() => dispatch(publicUuids([row.uuid]))}
-                        tooltip={'Zveřejnit'}
-                    />
-                    <LockIconButton
-                        onClick={() => dispatch(privateUuids([row.uuid]))}
-                        tooltip={'Zneveřejnit'}
-                    />
+                    {
+                        row.indexed != null && row.indexed && <>
+                            <RefreshIconButton
+                                onClick={() => dispatch(reindexUuids([row.uuid]))}
+                                tooltip={'Reindexovat'}
+                            />
+                            <UnlockIconButton
+                                onClick={() => dispatch(publicUuids([row.uuid]))}
+                                tooltip={'Zveřejnit'}
+                            />
+                            <LockIconButton
+                                onClick={() => dispatch(privateUuids([row.uuid]))}
+                                tooltip={'Zneveřejnit'}
+                            />
+                        </>
+                    }
                 </Box>
         }));
     };

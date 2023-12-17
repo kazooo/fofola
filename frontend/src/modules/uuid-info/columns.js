@@ -23,25 +23,12 @@ export const columns = [
         label: 'Indexovano do Solru',
         maxWidth: 70,
         align: 'center',
-        format: (value) => value.toString(),
-    },
-    {
-        id: 'stored',
-        label: 'Uloženo do Fedory',
-        maxWidth: 70,
-        align: 'center',
-        format: (value) => value.toString(),
+        format: (value) => value != null && value.toString(),
     },
     {
         id: 'accessibilityInSolr',
         label: 'Přistup v Solru',
         maxWidth: 70,
-        align: 'center',
-    },
-    {
-        id: 'accessibilityInFedora',
-        label: 'Přistup ve Fedoře',
-        maxWidth: 100,
         align: 'center',
     },
     {
@@ -65,12 +52,6 @@ export const columns = [
     {
         id: 'solrModifiedDate',
         label: 'Datum modifikace v Solru',
-        maxWidth: 100,
-        align: 'center',
-    },
-    {
-        id: 'fedoraModifiedDate',
-        label: 'Datum modifikace ve Fedoře',
         maxWidth: 100,
         align: 'center',
     },

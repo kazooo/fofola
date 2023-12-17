@@ -1,23 +1,22 @@
 package cz.mzk.fofola.rest;
 
-import cz.mzk.fofola.model.KrameriusProcess;
 import cz.mzk.fofola.api.KrameriusApi;
+import cz.mzk.fofola.model.kprocess.KrameriusProcess;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 
 @Controller
 @AllArgsConstructor
 @RequestMapping("/api/k-processes")
 @Slf4j
-public class KProcecessesController {
+public class KProcessesController {
 
     private static final int processPerPage = 15;
     private final KrameriusApi krameriusApi;
@@ -26,10 +25,10 @@ public class KProcecessesController {
     @ResponseBody
     public List<KrameriusProcess> getProcessList(@PathVariable int page) {
         int offset = page * processPerPage;
-        Map<String, String> filterFields = new HashMap<>() {{
-            put("ordering", "DESC");
-            put("resultSize", Integer.toString(processPerPage));
-            put("offset", Integer.toString(offset));
+        MultiValueMap<String, String> filterFields = new LinkedMultiValueMap<>() {{
+            add("ordering", "DESC");
+            add("resultSize", Integer.toString(processPerPage));
+            add("offset", Integer.toString(offset));
         }};
         return krameriusApi.getProcesses(filterFields);
     }
@@ -40,17 +39,17 @@ public class KProcecessesController {
         return krameriusApi.getProcess(uuid);
     }
 
-    @PutMapping("/{uuid}/stop")
+    @PutMapping("/{processId}/stop")
     @ResponseStatus(HttpStatus.OK)
-    public void stopKrameriusProcess(@PathVariable String uuid) {
-        log.info("Kill process: " + uuid);
-        krameriusApi.stopProcess(uuid);
+    public void stopKrameriusProcess(@PathVariable String processId) {
+        log.info("Kill process: " + processId);
+        krameriusApi.stopProcess(processId);
     }
 
-    @DeleteMapping("/{uuid}")
+    @DeleteMapping("/{processId}")
     @ResponseStatus(HttpStatus.OK)
-    public void removeKrameriusProcess(@PathVariable String uuid) {
-        log.info("Remove process: " + uuid);
-        krameriusApi.removeProcessLog(uuid);
+    public void removeKrameriusProcess(@PathVariable String processId) {
+        log.info("Remove process: " + processId);
+        krameriusApi.removeProcess(processId);
     }
 }

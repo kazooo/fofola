@@ -1,6 +1,6 @@
 package cz.mzk.fofola.api;
 
-import cz.mzk.fofola.configuration.ApiConfiguration;
+import cz.mzk.fofola.utils.ApiUtils;
 import cz.mzk.fofola.model.dnnt.*;
 import cz.mzk.fofola.model.dnnt.alert.SugoAlertStats;
 import cz.mzk.fofola.model.dnnt.alert.SugoRawAlertDto;
@@ -11,12 +11,10 @@ import cz.mzk.fofola.model.dnnt.session.SugoSessionPageDto;
 import cz.mzk.fofola.model.dnnt.transition.SugoTransitionPageDto;
 import cz.mzk.fofola.rest.request.dnnt.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -331,7 +329,7 @@ public class SugoApi {
     private <T> ResponseEntity<T> get(final String url, final Object urlParams, final Class<T> responseClass) {
         final String finalUrl;
         if (urlParams != null) {
-            finalUrl = ApiConfiguration.buildUri(sugoHost + url, urlParams);
+            finalUrl = ApiUtils.buildUri(sugoHost + url, urlParams);
         } else {
             finalUrl = sugoHost + url;
         }

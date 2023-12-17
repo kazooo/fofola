@@ -22,7 +22,12 @@ export const Home = () => {
             {sections.map((section, i) => (
                 <ServiceCard key={i} title={section.name}>
                     {section.services.map((service, j) => (
-                            <Service key={j} title={service.name} link={service.route} />
+                            <Service
+                                key={j}
+                                title={service.name}
+                                link={service.route}
+                                enabled={service.enabled}
+                            />
                         ))
                     }
                 </ServiceCard>

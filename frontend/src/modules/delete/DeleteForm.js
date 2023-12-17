@@ -1,5 +1,5 @@
 import {useDispatch} from "react-redux";
-import {LoadUuidsForm} from "../../components/form/LoadUuidsForm";
+import {LoadUuidsForm} from "components/form/LoadUuidsForm";
 import {addUuids} from "./slice";
 
 export const DeleteForm = () => {

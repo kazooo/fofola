@@ -2,8 +2,8 @@ package cz.mzk.fofola.service;
 
 import cz.mzk.fofola.api.SugoApi;
 import cz.mzk.fofola.model.dnnt.alert.*;
-import cz.mzk.fofola.model.doc.SolrDocument;
-import cz.mzk.fofola.repository.SolrDocumentRepository;
+import cz.mzk.fofola.model.solr.SearchDoc;
+import cz.mzk.fofola.repository.SolrRepository;
 import cz.mzk.fofola.rest.request.dnnt.SugoAlertFilter;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class SugoService {
 
     private SugoApi sugoApi;
-    private SolrDocumentRepository solrDocumentRepository;
+    private SolrRepository<SearchDoc> solrRepository;
 
     public SugoAlertPreviewPageDto getAlertPreviews(final SugoAlertFilter filter) {
         final SugoRawAlertPreviewPageDto rawAlertPreviews = sugoApi.getAlertPreviews(filter);
@@ -71,11 +71,11 @@ public class SugoService {
             return null;
         }
 
-        final SolrDocument doc = solrDocumentRepository.getByUuid((String) parameters.get(Parameters.UUID));
+        final SearchDoc doc = solrRepository.getByUuid((String) parameters.get(Parameters.UUID));
         if (doc != null) {
             final SugoDocumentState documentState = new SugoDocumentState();
             documentState.setTitle(doc.getRootTitle());
-            documentState.setRoot(doc.getRootPid());
+            documentState.setRoot(doc.getRootUuid());
             documentState.setUuid((String) parameters.get(Parameters.UUID));
             if (parameters.containsKey(Parameters.PATH)) {
                 final List<String> path = (List<String>) parameters.get(Parameters.PATH);

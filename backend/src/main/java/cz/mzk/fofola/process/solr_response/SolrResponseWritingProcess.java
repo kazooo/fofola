@@ -1,36 +1,34 @@
 package cz.mzk.fofola.process.solr_response;
 
-import cz.mzk.fofola.configuration.FofolaConfiguration;
+import cz.mzk.fofola.configuration.AppProperties;
 import cz.mzk.fofola.constants.dnnt.BasicLabel;
 import cz.mzk.fofola.constants.dnnt.Label;
-import cz.mzk.fofola.constants.solr.ModelName;
-import cz.mzk.fofola.constants.solr.SolrField;
+import cz.mzk.fofola.constants.ModelName;
 import cz.mzk.fofola.model.process.Process;
 import cz.mzk.fofola.model.process.ProcessParams;
 import cz.mzk.fofola.model.process.TerminationReason;
+import cz.mzk.fofola.model.solr.SearchDoc;
+import cz.mzk.fofola.repository.SolrRepository;
 import cz.mzk.fofola.service.FileService;
-import cz.mzk.fofola.service.SolrService;
-import org.apache.solr.client.solrj.SolrClient;
+import cz.mzk.fofola.utils.solr.SolrDocMapper;
+import cz.mzk.fofola.utils.solr.SolrSearchField;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.common.SolrDocument;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SolrResponseWritingProcess extends Process {
 
-    private final String solrHost;
+    private final SolrRepository<SearchDoc> solrSearchRepository;
     private final String model;
     private final String accessibility;
     private final String yearFrom;
     private final String yearTo;
-    private final String dnntLabel;
-    private final String dnntFlag;
+    private final String licence;
     private final String field;
     private final String searchLink;
 
@@ -38,62 +36,53 @@ public class SolrResponseWritingProcess extends Process {
     public static final String NO_FIELD_VALUE = "none";
 
     private static final Map<String, String> CLIENT_SOLR_FIELD_MAPPING = new HashMap<>() {{
-        put("title", SolrField.TITLE);
-        put("licences", SolrField.DNNT_LABELS);
-        put("authors", SolrField.AUTHOR);
-        put("locations", SolrField.PHYSICAL_LOCATION);
-        put("languages", SolrField.LANGUAGE);
-        put("doctypes", SolrField.MODEL);
-        put("geonames", SolrField.GEO_NAMES);
-        put("accessibility", SolrField.ACCESSIBILITY);
-        put("collections", SolrField.COLLECTION);
+        put("title", SolrSearchField.TITLE);
+        put("licences", SolrSearchField.LICENSES);
+        put("authors", SolrSearchField.AUTHORS);
+        put("locations", SolrSearchField.PHYSICAL_LOCATIONS);
+        put("languages", SolrSearchField.LANGUAGES);
+        put("doctypes", SolrSearchField.MODEL);
+        put("geonames", SolrSearchField.GEO_NAMES);
+        put("accessibility", SolrSearchField.ACCESSIBILITY);
+        put("collections", SolrSearchField.IN_COLLECTIONS);
     }};
 
     public SolrResponseWritingProcess(ProcessParams params) throws IOException {
         super(params);
 
-        final FofolaConfiguration fofolaConfig = params.getConfig();
+        final AppProperties props = params.getConfig();
         final Map<String, Object> data = params.getData();
 
         yearFrom = (String) data.get("yearFrom");
         yearTo = (String) data.get("yearTo");
         model = (String) data.getOrDefault("model", ANY_FIELD_VALUE);
         accessibility = (String) data.getOrDefault("access", ANY_FIELD_VALUE);
-        dnntFlag = (String) data.getOrDefault("dnntFlag", ANY_FIELD_VALUE);
         field = (String) data.getOrDefault("field", null);
         searchLink = (String) data.getOrDefault("searchLink", null);
 
-        final String dnntLabelRaw = (String) data.getOrDefault("dnntLabel", ANY_FIELD_VALUE);
-        final Label label = BasicLabel.of(dnntLabelRaw);
+        final String licenceRaw = (String) data.getOrDefault("dnntLabel", ANY_FIELD_VALUE);
+        final Label label = BasicLabel.of(licenceRaw);
         if (label != null) {
-            this.dnntLabel = label.getValue();
+            this.licence = label.getValue();
         } else {
-            this.dnntLabel = dnntLabelRaw;
+            this.licence = licenceRaw;
         }
 
-        solrHost = fofolaConfig.getSolrHost();
+        solrSearchRepository = params.getSolrSearchRepository();
     }
 
     @Override
     public TerminationReason process() throws Exception {
-        final SolrClient solrClient = SolrService.buildClient(solrHost);
         final String readyOutFileName = FileService.fileNameWithDateStampPrefix("solr-response.txt");
         final File notReadyOutFile = FileService.getSolrRespOutputFile("not-ready-" + readyOutFileName);
         final PrintWriter output = new PrintWriter(notReadyOutFile);
         final SolrQuery params = createSolrQuery();
 
-        final Consumer<SolrDocument> logic = solrDoc -> {
-            final String fieldValue = (String) solrDoc.getFieldValue(field);
-            output.println(fieldValue);
-        };
-
         try {
-            SolrService.paginateByCursor(
-                    params,
-                    solrClient,
-                    logic,
-                    5000
-            );
+            solrSearchRepository.paginateByCursor(params, doc -> {
+                final String fieldValue = (String) SolrDocMapper.getValueByFieldName(doc, field, SearchDoc.class);
+                output.println(fieldValue);
+            });
         } catch (Exception e) {
             output.close();
             renameOutFile(notReadyOutFile, "terminated-" + readyOutFileName);
@@ -102,7 +91,6 @@ public class SolrResponseWritingProcess extends Process {
 
         output.flush();
         output.close();
-        solrClient.close();
         renameOutFile(notReadyOutFile, readyOutFileName);
         return null;
     }
@@ -119,25 +107,19 @@ public class SolrResponseWritingProcess extends Process {
         final List<String> queryParts = new ArrayList<>();
 
         if (model != null) {
-            queryParts.add(wrapFieldQuery(SolrField.MODEL, model));
+            queryParts.add(wrapFieldQuery(SolrSearchField.MODEL, model));
         }
 
         if (accessibility != null) {
-            queryParts.add(wrapFieldQuery(SolrField.ACCESSIBILITY, accessibility));
+            queryParts.add(wrapFieldQuery(SolrSearchField.ACCESSIBILITY, accessibility));
 
         }
 
-        if (dnntFlag != null) {
-            queryParts.add(wrapFieldQuery(SolrField.DNNT_FLAG, dnntFlag));
+        if (licence != null) {
+            queryParts.add(wrapFieldQuery(SolrSearchField.CONTAINS_LICENSES, licence));
         }
 
-        if (dnntLabel != null) {
-            queryParts.add(wrapFieldQuery(SolrField.DNNT_LABELS, dnntLabel));
-        }
-
-        if (yearTo != null || yearFrom != null) {
-            queryParts.add(wrapDateRange(SolrField.YEAR_FIELD_NAME, getYearRange(yearFrom, yearTo)));
-        }
+        /* TODO year range */
 
         final String query = String.join(" AND ", queryParts);
         logger.info(query);
@@ -219,7 +201,7 @@ public class SolrResponseWritingProcess extends Process {
                     ModelName.MANUSCRIPT,
                     ModelName.MONOGRAPHUNIT
                 )
-                .map(model -> wrapFieldQuery(SolrField.MODEL, model))
+                .map(model -> wrapFieldQuery(SolrSearchField.MODEL, model))
                 .collect(Collectors.joining(" OR "));
     }
 

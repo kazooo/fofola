@@ -1,12 +1,17 @@
 package cz.mzk.fofola.service;
 
-import cz.mzk.fofola.configuration.FofolaConfiguration;
+import cz.mzk.fofola.api.KrameriusApi;
+import cz.mzk.fofola.api.SugoApi;
+import cz.mzk.fofola.configuration.AppProperties;
 import cz.mzk.fofola.model.process.Process;
 import cz.mzk.fofola.model.process.ProcessDTO;
 import cz.mzk.fofola.model.process.ProcessParams;
 import cz.mzk.fofola.model.process.ProcessType;
+import cz.mzk.fofola.model.solr.ProcessingDoc;
+import cz.mzk.fofola.model.solr.SearchDoc;
 import cz.mzk.fofola.repository.FProcessRepository;
 import cz.mzk.fofola.process.ProcessEventNotifier;
+import cz.mzk.fofola.repository.SolrRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -28,8 +33,13 @@ public class ProcessManagementService {
 
     private final ProcessEventNotifier eventNotifier;
     private final FProcessRepository processRepository;
-    private final FofolaConfiguration fofolaConfiguration;
+    private final AppProperties appProperties;
     private final ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+
+    private final KrameriusApi krameriusApi;
+    private final SugoApi sugoApi;
+    private final SolrRepository<SearchDoc> solrSearchRepository;
+    private final SolrRepository<ProcessingDoc> solrProcessingRepository;
 
     public String start(ProcessType type, Map<String, Object> data)
             throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -37,10 +47,14 @@ public class ProcessManagementService {
 
         ProcessParams params = new ProcessParams();
         params.setId(pid);
-        params.setConfig(fofolaConfiguration);
+        params.setConfig(appProperties);
         params.setData(data);
         params.setEventNotifier(eventNotifier);
         params.setType(type);
+        params.setKrameriusApi(krameriusApi);
+        params.setSugoApi(sugoApi);
+        params.setSolrSearchRepository(solrSearchRepository);
+        params.setSolrProcessingRepository(solrProcessingRepository);
 
         Process process = instantiate(type, params);
         threadPoolExecutor.execute(() -> {

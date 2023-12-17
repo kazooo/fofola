@@ -11,7 +11,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 
-
 public class PlusEncoderInterceptor implements ClientHttpRequestInterceptor {
     // https://stackoverflow.com/questions/54294843/plus-sign-not-encoded-with-resttemplate-using-string-url-but-interpreted
     @Override

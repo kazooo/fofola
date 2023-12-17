@@ -1,7 +1,12 @@
 package cz.mzk.fofola.model.process;
 
+import cz.mzk.fofola.api.KrameriusApi;
+import cz.mzk.fofola.api.SugoApi;
+import cz.mzk.fofola.model.solr.ProcessingDoc;
+import cz.mzk.fofola.model.solr.SearchDoc;
 import cz.mzk.fofola.process.FinishProcessException;
 import cz.mzk.fofola.process.ProcessEventNotifier;
+import cz.mzk.fofola.repository.SolrRepository;
 import cz.mzk.fofola.service.FileService;
 
 import java.io.IOException;
@@ -16,9 +21,19 @@ public abstract class Process {
     private final ProcessEventNotifier eventNotifier;
     protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
+    protected final KrameriusApi krameriusApi;
+    protected final SugoApi sugoApi;
+    protected final SolrRepository<SearchDoc> solrSearchRepository;
+    protected final SolrRepository<ProcessingDoc> solrProcessingRepository;
+
     protected Process(ProcessParams params) throws IOException {
         this.params = params;
         eventNotifier = params.getEventNotifier();
+        krameriusApi = params.getKrameriusApi();
+        sugoApi = params.getSugoApi();
+        solrSearchRepository = params.getSolrSearchRepository();
+        solrProcessingRepository = params.getSolrProcessingRepository();
+
         fileHandler = FileService.getLogFileHandler(params.getId() + ".log");
         fileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(fileHandler);

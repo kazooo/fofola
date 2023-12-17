@@ -1,16 +1,16 @@
 import {createAction} from "@reduxjs/toolkit";
 import {takeEvery, select, call, put} from "redux-saga/effects";
 
-import {createActionType, getCurrentPage, removeProcessInfo, setProcessesInfo, toggleIsLoading} from "./slice";
-import {request} from "../../utils/superagent";
-import {snackbar} from "../../utils/snack/saga";
+import {request} from "utils/superagent";
+import {snackbar} from "utils/snack/saga";
 import {
     cantLoadNextPage,
     cantRemoveProcessMsg,
     cantStopProcessMsg,
     successRemoveProcessMsg,
     successStopProcessMsg
-} from "../../utils/constants/messages";
+} from "utils/constants/messages";
+import {createActionType, getCurrentPage, removeProcessInfo, setProcessesInfo, toggleIsLoading} from "./slice";
 
 const REQUEST_NEW_PAGE_PROCESSES_INFO = createActionType("REQUEST_NEW_PAGE_PROCESSES_INFO");
 const REQUEST_CURRENT_PAGE_PROCESSES_INFO = createActionType("REQUEST_CURRENT_PAGE_PROCESSES_INFO");

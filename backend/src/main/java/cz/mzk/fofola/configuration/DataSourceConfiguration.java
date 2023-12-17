@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 public class DataSourceConfiguration {
 
     @Bean
-    public DataSource getDataSource(final FofolaConfiguration config) {
+    public DataSource getDataSource(final AppProperties config) {
         final DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
         if (externalDbExists(config)) {
             log.info("Existing PostgreSQL database found, configuring connection...");
@@ -31,7 +31,7 @@ public class DataSourceConfiguration {
         return dataSourceBuilder.build();
     }
 
-    private boolean externalDbExists(final FofolaConfiguration config) {
+    private boolean externalDbExists(final AppProperties config) {
         return !config.getPostgresJdbcUrl().isEmpty() &&
                 !config.getPostgresUser().isEmpty() &&
                 !config.getPostgresPswd().isEmpty();

@@ -3,11 +3,14 @@ import {useTranslation} from 'react-i18next';
 
 import './Service.css';
 
-export const Service = ({title, link}) => {
+export const Service = ({title, link, enabled}) => {
     const {t} = useTranslation();
     
     return (
-        <Link to={link} className='button'>
+        <Link
+            to={link}
+            className={enabled ? 'button-enabled' : 'button-disabled'}
+        >
             {t(title)}
         </Link>
     );
